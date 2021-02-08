@@ -1,0 +1,34 @@
+.el-dialog{
+    width: 600px;
+    margin-bottom: 5vh;
+}
+.danger-text{
+    color: #ff4949!important;
+}
+.width-200-px{
+    width: 200px!important;
+}
+.margin-buttom-10{
+    margin-bottom: 10px!important;
+}
+.margin-top-20{
+    margin-top: 20px;
+}
+.upload-demo{
+    margin-bottom: 20px;
+}
+.upload-demo .el-upload--picture-card{
+    line-height:0px;
+}
+.width-800-px{
+    width: 800px;
+}
+
+
+// 表单 下拉框 100%宽度占比
+.el-form{
+    .el-select,
+    .el-input{
+        width: 100%;
+    }
+}

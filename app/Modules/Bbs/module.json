@@ -1,0 +1,13 @@
+{
+    "name": "Bbs",
+    "alias": "bbs",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\Bbs\\Providers\\BbsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

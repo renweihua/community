@@ -15,3 +15,14 @@ storage/*.key
 Homestead.yaml
 Homestead.json
 /.vagrant
+
+
+# vue-webpack
+public/css
+public/fonts
+public/images
+public/js
+
+# other
+.idea
+public/demos-blog

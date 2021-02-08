@@ -1,0 +1,134 @@
+.display-none{
+    display: none!important;
+}
+.width-100-proportion{
+    width: 100%!important;
+}
+.min-height-50-px{
+    min-height:50px!important;
+}
+.min-height-100-px{
+	min-height: 100px!important;
+}
+.line-height-100-px{
+	line-height: 100px!important;
+}
+.list-content h1.title-tw{
+    margin-left: auto;
+    margin-right: auto;
+}
+.min-height-auto{
+    min-height: auto!important;
+}
+.archives span{
+    color: #777;
+    font-size: 14px;
+}
+.margin-left-50-px{
+    margin-left: 50px!important;
+}
+
+
+
+
+/* 页面的样式 */
+.sidebar.fixed {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    margin-left: 230px;
+}
+
+.sidebar.pins {
+    position: absolute;
+    left: 50%;
+    margin-left: 230px;
+    right: 386px
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .dropdown > a:focus, .navbar-default .navbar-nav > .dropdown > a:hover, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
+    color: #45B6F7;
+    background-color: transparent
+}
+
+.btn-info {
+    background-color: #45B6F7;
+    border-color: #45B6F7
+}
+
+.btn-info:hover {
+    background-color: #45B6F7;
+    border-color: #45B6F7
+}
+
+#post-box .post-title, #post-box .post-title {
+    border-left: 5px solid #45B6F7
+}
+
+.panel_cms li a:hover, .posts-default-title h2 a:hover {
+    color: #45B6F7
+}
+
+.pagination ul > .active > span {
+    background: #45B6F7;
+    color: #fff
+}
+
+.related-posts > li .related-posts-panel:hover {
+    border-color: #45B6F7;
+    box-shadow: 0 0 2px #45B6F7;
+    -moz-box-shadow: 0 0 2px #45B6F7
+}
+
+.context img:hover {
+    border-color: #45B6F7;
+    box-shadow: 0 0 2px #45B6F7;
+    -moz-box-shadow: 0 0 2px #45B6F7
+}
+
+.context a {
+    border-bottom: 1px solid #45B6F7
+}
+
+.grid-weibo-show .u-btn-submit {
+    border: 1px solid #45B6F7;
+    background: #45B6F7
+}
+
+.link-li > a:hover, .sidebar-posts-list > li .side-title-r > a:hover, .sidebar-posts-list > li .side-title > a:hover, .sidebar-posts-list > li > a:hover, .author a:hover, .pagination > li > a, .pagination > li > span, .page-navi .current, .page-navi .pages, .page-navi a, .comments-list li .right-box > .comment-meta .edit-link a, .comments-list li .right-box > .comment-meta .reply a, .comments-list li .right-box > .waiting, .tw li:hover .tw-content, .page-tw a, ul.readers-list a:hover em, ul.readers-list a:hover strong, .posts-gallery-content h2 a:hover {
+    color: #45B6F7
+}
+
+.focusmo a:hover h4 {
+    background-color: #45B6F7;
+    opacity: .8
+}
+
+.backtop:hover {
+    background: #45B6F7;
+    border: 1px solid #45B6F7;
+    color: #fff
+}
+
+.comments-list-nav span, .tw li:hover .atitle:after {
+    background: #45B6F7
+}
+
+.page-navi .current, .page-navi a:hover {
+    background: #45B6F7;
+    border-color: #45B6F7;
+    color: #FFF
+}
+
+.page-tw span, .page-tw a:focus, .page-tw a:hover, ul.readers-list img:hover {
+    background-color: #45B6F7
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #45B6F7
+}
+
+.logtop dl p .spbut:hover {
+    border: 1px solid #45B6F7;
+    background-color: #45B6F7
+}
