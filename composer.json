@@ -21,6 +21,7 @@
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
+        "overtrue/laravel-query-logger": "^2.1",
         "barryvdh/laravel-debugbar": "^3.5",
         "beyondcode/laravel-dump-server": "^1.6",
         "facade/ignition": "^2.5",

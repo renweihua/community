@@ -15,6 +15,10 @@ class BbsDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        $this->call([
+            UserTableSeeder::class,
+            UserGradeTableSeeder::class,
+        ]);
 
         // $this->call("OthersTableSeeder");
     }

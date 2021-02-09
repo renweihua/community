@@ -1,0 +1,249 @@
+{
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "主页"
+        // #ifdef APP-PLUS
+        ,"app-plus": {
+          "titleNView": false //禁用原生导航栏
+        }
+        //  #endif
+      }
+    }, {
+      "path": "pages/report/report",
+      "style": {
+        "navigationBarTitleText": "举报"
+      }
+    }, {
+      "path": "pages/user-info/user-info",
+      "style": {
+        "navigationBarTitleText": "用户信息"
+      }
+    }, {
+      "path": "pages/user-info-modify/user-info-modify",
+      "style": {
+        "navigationBarTitleText": "信息编辑"
+      }
+    }, {
+      "path": "pages/trend-details/trend-details",
+      "style": {
+        "navigationBarTitleText": "动态详情"
+      }
+    }, {
+      "path": "pages/huiba-details/huiba-details",
+      "style": {
+        "navigationBarTitleText": "荟吧详情"
+      }
+    }, {
+      "path": "pages/topic-details/topic-details",
+      "style": {
+        "navigationBarTitleText": "话题详情"
+      }
+    }, {
+      "path": "pages/topicreply-details/topicreply-details",
+      "style": {
+        "navigationBarTitleText": "话题讨论详情"
+      }
+    }, {
+      "path": "pages/album-details/album-details",
+      "style": {
+        "navigationBarTitleText": "摄影详情"
+      }
+    }, {
+      "path": "pages/album-rank/album-rank",
+      "style": {
+        "navigationBarTitleText": "摄影榜单"
+      }
+    }, {
+      "path": "pages/video-details/video-details",
+      "style": {
+        "navigationBarTitleText": "视频详情"
+      }
+    }, {
+      "path": "pages/word-details/word-details",
+      "style": {
+        "navigationBarTitleText": "文章详情"
+      }
+    }, {
+      "path": "pages/org-details/org-details",
+      "style": {
+        "navigationBarTitleText": "活动详情"
+      }
+    }, {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/forget/forget",
+      "style": {
+        "navigationBarTitleText": "忘记密码"
+      }
+    }, {
+      "path": "pages/register/register",
+      "style": {
+        "navigationBarTitleText": "注册"
+      }
+    }, {
+      "path": "pages/top-list/top-list",
+      "style": {
+        "navigationBarTitleText": "点赞列表"
+      }
+    }, {
+      "path": "pages/comm-list/comm-list",
+      "style": {
+        "navigationBarTitleText": "评论列表"
+      }
+    }, {
+      "path": "pages/fans-list/fans-list",
+      "style": {
+        "navigationBarTitleText": "粉丝"
+      }
+    }, {
+      "path": "pages/atte-list/atte-list",
+      "style": {
+        "navigationBarTitleText": "关注"
+      }
+    }, {
+      "path": "pages/my-follow/my-follow",
+      "style": {
+        "navigationBarTitleText": "我的关注"
+      }
+    }, {
+      "path": "pages/my-collection/my-collection",
+      "style": {
+        "navigationBarTitleText": "我的收藏"
+      }
+    }, {
+      "path": "pages/ranking-list/ranking-list",
+      "style": {
+        "navigationBarTitleText": "排行榜"
+      }
+    }, {
+      "path": "pages/signin/signin",
+      "style": {
+        "navigationBarTitleText": "签到"
+      }
+    }, {
+      "path": "pages/signin-record/signin-record",
+      "style": {
+        "navigationBarTitleText": "签到记录"
+      }
+    }, {
+      "path": "pages/hanbi-center/hanbi-center",
+      "style": {
+        "navigationBarTitleText": "汉币中心"
+      }
+    }, {
+      "path": "pages/hanbi-record/hanbi-record",
+      "style": {
+        "navigationBarTitleText": "汉币兑换记录"
+      }
+    }, {
+      "path": "pages/punish-list/punish-list",
+      "style": {
+        "navigationBarTitleText": "处罚公示"
+      }
+    }, {
+      "path": "pages/setting/setting",
+      "style": {
+        "navigationBarTitleText": "设置"
+      }
+    }, {
+      "path": "pages/black-list/black-list",
+      "style": {
+        "navigationBarTitleText": "黑名单"
+      }
+    }, {
+      "path": "pages/account-security/account-security",
+      "style": {
+        "navigationBarTitleText": "账户与安全"
+      }
+    }, {
+      "path": "pages/bind-phone/bind-phone",
+      "style": {
+        "navigationBarTitleText": "绑定手机"
+      }
+    }, {
+      "path": "pages/privacy-manage/privacy-manage",
+      "style": {
+        "navigationBarTitleText": "隐私管理"
+      }
+    }, {
+      "path": "pages/about-us/about-us",
+      "style": {
+        "navigationBarTitleText": "关于我们"
+      }
+    }, {
+      "path": "pages/system-rule/system-rule",
+      "style": {
+        "navigationBarTitleText": "软件规则"
+      }
+    }, {
+      "path": "pages/my-news/my-news",
+      "style": {
+        "navigationBarTitleText": "我的消息"
+      }
+    }
+  ],
+  //此配置为小程序的分包加载机制。在5+App里始终为整包。
+  "subPackages": [{
+    "root": "pages/news",
+    "pages": [{
+      "path": "news-notice/news-notice",
+      "style": {
+        "navigationBarTitleText": "公告"
+      }
+    }, {
+      "path": "news-top/news-top",
+      "style": {
+        "navigationBarTitleText": "赞"
+      }
+    }, {
+      "path": "news-remind/news-remind",
+      "style": {
+        "navigationBarTitleText": "提醒"
+      }
+    }, {
+      "path": "news-comment/news-comment",
+      "style": {
+        "navigationBarTitleText": "评论"
+      }
+    }, {
+      "path": "news-topic/news-topic",
+      "style": {
+        "navigationBarTitleText": "话题"
+      }
+    }]
+  }],
+  //模式配置，仅开发期间生效
+  "condition": {
+    "current": 0, //当前激活的模式（list 的索引项）
+    "list": [{
+      "name": "index",
+      "path": "pages/index/index"
+    }, {
+      "name": "trend-details", //模式名称
+      "path": "pages/trend-details/trend-details", //启动页面，必选
+      "query": "id=2638118&fromPage=home&current=0" //启动参数，在页面的onLoad函数里面得到。
+    }]
+  },
+  // 全局样式中去除顶部导航条、原生滚动条、原生回弹阴影
+  "globalStyle": {
+    "navigationBarBackgroundColor": "#ff6699",
+    "navigationBarTextStyle": "white",
+    "app-plus": {
+      // 是否显示软键盘上的导航条 
+      "navBar": "none",
+      // 不显示滚动条
+      "scrollIndicator": "none",
+      // 页面回弹效果
+      "bounce": "none",
+      // 窗口动画
+      "animationType": "pop-in",
+      "animationDuration": 300
+    }
+  }
+}

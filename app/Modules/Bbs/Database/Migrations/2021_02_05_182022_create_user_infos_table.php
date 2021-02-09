@@ -20,13 +20,13 @@ class CreateUserInfosTable extends Migration
             $table->uuid('user_uuid')->default('')->comment('UUID');
             $table->string('pay_pass', 60)->default('')->comment('支付密码');
             $table->string('nick_name', 256)->default('')->comment('昵称');
-            $table->string('user_head', 256)->default('')->comment('头像');
-            $table->boolean('user_sex')->unsigned()->default('0')->comment('性别：0：男；1：女；2.保密');
-            $table->integer('user_birth')->unsigned()->default('0')->comment('出生年月日');
+            $table->string('user_avatar', 256)->default('')->comment('头像');
+            $table->boolean('user_sex')->unsigned()->default(0)->comment('性别：0：男；1：女；2.保密');
+            $table->integer('user_birth')->unsigned()->default(0)->comment('出生年月日');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 256)->default('')->comment('创建时浏览器类型');
             $table->integer('user_grade')->unsigned()->default(0)->comment('用户等级');
-            $table->integer('user_experience')->unsigned()->default('0')->comment('用户经验');
+            $table->integer('user_experience')->unsigned()->default(0)->comment('用户经验');
             $table->boolean('auth_status')->unsigned()->default(0)->comment('实名认证状态：0：否，1：是');
             $table->boolean('auth_mobile')->unsigned()->default(0)->comment('手机号验证状态：0：否，1：是');
             $table->boolean('auth_email')->unsigned()->default(0)->comment('邮箱验证状态：0：否，1：是');

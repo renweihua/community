@@ -17,7 +17,7 @@ class CreateUserEmailVerifiesTable extends Migration
         Schema::create('user_email_verifies', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('verify_id')->unsigned()->comment('邮箱验证表');
-            $table->bigInteger('user_id')->unsigned()->default('0')->comment('会员Id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->string('user_email', 100)->default('')->comment('邮箱');
             $table->string('verify_token', 256)->default('')->comment('验证TOKEN');
             $table->boolean('auth_email')->unsigned()->default(0)->comment('邮箱验证状态：0：否，1：是');
