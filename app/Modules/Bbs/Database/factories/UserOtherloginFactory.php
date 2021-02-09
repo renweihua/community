@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Bbs\Database\factories;
 
+use App\Models\User\UserOtherlogin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserOtherloginFactory extends Factory
@@ -10,7 +11,7 @@ class UserOtherloginFactory extends Factory
      *
      * @var string
      */
-    protected $model = \App\Modules\Bbs\Entities\UserOtherlogin::class;
+    protected $model = UserOtherlogin::class;
 
     /**
      * Define the model's default state.
@@ -20,7 +21,7 @@ class UserOtherloginFactory extends Factory
     public function definition()
     {
         return [
-            //
+
         ];
     }
 }

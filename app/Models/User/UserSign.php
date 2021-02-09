@@ -2,10 +2,9 @@
 
 namespace App\Models\User;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\MonthModel;
 
-class UserSign extends Model
+class UserSign extends MonthModel
 {
-    use HasFactory;
+
 }

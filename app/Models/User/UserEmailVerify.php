@@ -2,10 +2,9 @@
 
 namespace App\Models\User;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class UserEmailVerify extends Model
 {
-    use HasFactory;
+
 }

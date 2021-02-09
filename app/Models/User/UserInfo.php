@@ -2,10 +2,13 @@
 
 namespace App\Models\User;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
+use App\Modules\Bbs\Database\factories\UserInfoFactory;
 
 class UserInfo extends Model
 {
-    use HasFactory;
+    protected static function newFactory()
+    {
+        return UserInfoFactory::new();
+    }
 }

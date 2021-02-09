@@ -13,6 +13,7 @@ class CreateJobBatchesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('job_batches')) return;
         Schema::create('job_batches', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');

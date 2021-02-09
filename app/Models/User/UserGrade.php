@@ -2,10 +2,13 @@
 
 namespace App\Models\User;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
+use App\Modules\Bbs\Database\factories\UserGradeFactory;
 
 class UserGrade extends Model
 {
-    use HasFactory;
+    protected static function newFactory()
+    {
+        return UserGradeFactory::new();
+    }
 }

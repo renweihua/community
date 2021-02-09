@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Bbs\Database\factories;
 
+use App\Models\User\UserGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserGradeFactory extends Factory
@@ -10,7 +11,7 @@ class UserGradeFactory extends Factory
      *
      * @var string
      */
-    protected $model = \App\Modules\Bbs\Entities\UserGrade::class;
+    protected $model = UserGrade::class;
 
     /**
      * Define the model's default state.

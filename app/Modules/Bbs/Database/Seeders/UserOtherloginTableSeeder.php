@@ -2,11 +2,11 @@
 
 namespace App\Modules\Bbs\Database\Seeders;
 
-use App\Models\User\UserGrade;
+use App\Models\User\UserOtherlogin;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class UserGradeTableSeeder extends Seeder
+class UserOtherloginTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,6 +17,6 @@ class UserGradeTableSeeder extends Seeder
     {
         Model::unguard();
 
-        UserGrade::factory()->count(10)->create();
+        UserOtherlogin::factory()->times(100)->create();
     }
 }

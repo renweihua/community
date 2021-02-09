@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Bbs\Database\factories;
 
+use App\Models\User\UserInfo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserInfoFactory extends Factory
@@ -10,7 +11,7 @@ class UserInfoFactory extends Factory
      *
      * @var string
      */
-    protected $model = \App\Modules\Bbs\Entities\UserInfo::class;
+    protected $model = UserInfo::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +23,7 @@ class UserInfoFactory extends Factory
         return [
             'user_uuid' => $this->faker->uuid,
             'nick_name' => $this->faker->name,
-            'user_head' => cnpscy_config('site_web_logo'),
+            'user_avatar' => cnpscy_config('site_web_logo'),
             'user_sex' => rand(0, 2),
             'user_grade' => rand(0, 10),
             'notification_count' => rand(0, 10000),
