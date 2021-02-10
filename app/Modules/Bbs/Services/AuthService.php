@@ -7,6 +7,7 @@ use App\Exceptions\Bbs\AuthTokenException;
 use App\Exceptions\Bbs\FailException;
 use App\Models\Log\UserLoginLog;
 use App\Models\User\User;
+use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class AuthService extends Service
 
     /**
      * 注册流程
-     * 
+     *
      * @param array $params
      * @return array|bool
      */
@@ -46,6 +47,7 @@ class AuthService extends Service
             $ip_agent = get_client_info();
             $user->userInfo()->create([
                 'user_id' => $user->user_id,
+                'user_uuid' => UserInfo::getUniqueUuid(),
                 'nick_name' => $params['nick_name'] ?? $user->user_name,
                 'user_avatar' => cnpscy_config('site_web_logo'),
                 'user_grade' => 1, // 会员等级
