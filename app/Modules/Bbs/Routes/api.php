@@ -23,7 +23,8 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 Route::prefix('')->middleware([])->group(function() {
     // Auth
     Route::prefix('auth')->group(function() {
-        Route::any('login', 'AuthController@login');
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
         Route::post('me', 'AuthController@me')->middleware(CheckAuth::class);
         Route::post('logout', 'AuthController@logout');
     });

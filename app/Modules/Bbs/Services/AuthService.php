@@ -4,32 +4,89 @@ namespace App\Modules\Bbs\Services;
 
 use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\AuthTokenException;
-use App\Exceptions\InvalidRequestException;
+use App\Exceptions\Bbs\FailException;
 use App\Models\Log\UserLoginLog;
 use App\Models\User\User;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthService extends Service
 {
     protected $guard = 'user';
 
     /**
+     * 注册流程
+     * 
+     * @param array $params
+     * @return array|bool
+     */
+    public function register(array $params)
+    {
+        $userInstance = User::getInstance();
+        if (
+            $userInstance->getUserByName($params['user_name'])
+            ||
+            $userInstance->getUserByEmail($params['user_name'])
+            ||
+            $userInstance->getUserByMobile($params['user_name'])
+        ){
+            $this->setError('该账户已被注册！');
+            return false;
+        }
+        DB::beginTransaction();
+        try {
+            // 会员账户
+            $user = $userInstance->create([
+                'user_name' => $params['user_name'],
+                'password' => $params['password'],
+            ]);
+
+            // 会员基本信息
+            $ip_agent = get_client_info();
+            $user->userInfo()->create([
+                'user_id' => $user->user_id,
+                'nick_name' => $params['nick_name'] ?? $user->user_name,
+                'user_avatar' => cnpscy_config('site_web_logo'),
+                'user_grade' => 1, // 会员等级
+                'created_ip'   => $ip_agent['ip'] ?? get_ip(),
+                'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
+            ]);
+
+            // 第三方登录相关
+            $user->userOtherlogin()->create([
+                'user_id' => $user->user_id,
+            ]);
+
+            DB::commit();
+
+            $auth = Auth::guard($this->guard);
+            $auth->setUser($user);
+
+            $this->setError('注册成功！');
+            return $this->respondWithToken($auth->login($user));
+        }catch (FailException $exception){
+            DB::rollBack();
+            $this->setError($exception->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * 登录流程
      *
-     * @param $data
+     * @param $params
      * @return array
      * @throws AuthException
-     * @throws InvalidRequestException
      */
-    public function login($data)
+    public function login($params): array
     {
         $auth = Auth::guard($this->guard);
         $userInstance = User::getInstance();
 
         $auth_success = false;
-        if ($user_name = $userInstance->getUserByName($data['user_name'])){
-            if (hash_verify($data['password'], $user_name->password)){
+        if ($user_name = $userInstance->getUserByName($params['user_name'])){
+            if (hash_verify($params['password'], $user_name->password)){
                 $auth_success = true;
                 $auth->setUser($user_name);
             }
@@ -37,10 +94,10 @@ class AuthService extends Service
         if (
             $auth_success == false
             &&
-            $user_email = $userInstance->getUserByEmail($data['user_name'])
+            $user_email = $userInstance->getUserByEmail($params['user_name'])
         )
         {
-            if (hash_verify($data['password'], $user_email->password)){
+            if (hash_verify($params['password'], $user_email->password)){
                 $auth_success = true;
                 $auth->setUser($user_email);
             }
@@ -48,10 +105,10 @@ class AuthService extends Service
         if (
             $auth_success == false
             &&
-            $user_mobile = $userInstance->getUserByMobile($data['user_name'])
+            $user_mobile = $userInstance->getUserByMobile($params['user_name'])
         )
         {
-            if (hash_verify($data['password'], $user_mobile->password)){
+            if (hash_verify($params['password'], $user_mobile->password)){
                 $auth_success = true;
                 $auth->setUser($user_mobile);
             }
@@ -121,7 +178,7 @@ class AuthService extends Service
      * @param $token
      * @return array
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token): array
     {
         return [
             'access_token' => $token,

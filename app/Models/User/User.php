@@ -35,6 +35,13 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 不可批量赋值的属性
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
