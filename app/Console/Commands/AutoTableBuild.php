@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Log\AdminLog;
 use App\Models\Log\AdminLoginLog;
+use App\Models\Log\UserLog;
+use App\Models\Log\UserLoginLog;
 use App\Models\Log\WebLog;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,6 +41,8 @@ class AutoTableBuild extends Command
         AdminLog::class,
         AdminLoginLog::class,
         WebLog::class,
+        UserLoginLog::class,
+        UserLog::class,
     ];
 
     /**
