@@ -2,12 +2,16 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Traits\Json;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\View;
 
 class BbsController extends Controller
 {
+    use Json;
+
+    protected $service;
+
     /**
      * Display a listing of the resource.
      * @return Renderable

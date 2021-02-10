@@ -17,4 +17,5 @@ use App\Modules\Bbs\Http\Middleware\RestrictIPAccess;
 
 Route::prefix('')->middleware([
 ])->group(function() {
+    Route::get('/', 'BbsController@index');
 });

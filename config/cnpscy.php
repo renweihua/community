@@ -37,7 +37,6 @@
   'web_wx' => 'ren2278757482',
   'web_email' => '2278757482@qq.com',
   'web_qq_group' => '858925280',
-  'api_admin_prefix' => 'admin',
   'web_qq_group_img' => '/assets/qq_group.png',
   'author_pseudonym' => '小丑路人',
   'alipay_image_code' => 'http://blog.localhost.com/storage/202102/6d7xf1b8eLmY8ZwmfO3JsS6VbrdCD6FvheG15xkP.png',

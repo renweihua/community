@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'user_mobile' => $this->faker->unique()->numberBetween(13000000001, 19099999999),
             'user_name' => $this->faker->unique()->userName,
             'user_email' => $this->faker->unique()->email,
-            'password' => bcrypt(123456),
+            'password' => hash_make(123456),
         ];
     }
 }
