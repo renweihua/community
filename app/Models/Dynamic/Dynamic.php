@@ -63,4 +63,29 @@ class Dynamic extends Model
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
+
+
+    // 是否收藏
+    public function isCollection()
+    {
+        return $this->hasOne(DynamicCollection::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    // 收藏
+    public function collection()
+    {
+        return $this->hasMany(DynamicCollection::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    // 是否点赞
+    public function isPraise()
+    {
+        return $this->hasOne(DynamicPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    // 点赞
+    public function praises()
+    {
+        return $this->hasMany(DynamicPraise::class, $this->primaryKey, $this->primaryKey);
+    }
 }

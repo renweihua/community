@@ -38,5 +38,7 @@ Route::prefix('')->middleware([])->group(function () {
         Route::get('/detail', 'DynamicController@detail');
         // 点赞 - 动态
         Route::post('/praise', 'DynamicController@praise')->middleware(CheckAuth::class);
+        // 点赞 - 动态
+        Route::post('/collection', 'DynamicController@collection')->middleware(CheckAuth::class);
     });
 });

@@ -33,7 +33,7 @@ class DynamicController extends BbsController
     }
 
     /**
-     * 动态点赞
+     * 点赞动态
      *
      * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request
      *
@@ -49,4 +49,23 @@ class DynamicController extends BbsController
             return $this->errorJson($this->service->getError());
         }
     }
+
+    /**
+     * 收藏动态
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function collection(DynamicIdRequest $request)
+    {
+        $data = $request->validated();
+
+        if ($result = $this->service->collection($this->user, (int)$data['dynamic_id'])) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
 }

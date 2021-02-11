@@ -101,4 +101,56 @@ class DynamicService extends Service
             return false;
         }
     }
+
+    /**
+     * 动态：收藏流程
+     *
+     * @param       $user
+     * @param  int  $dynamic_id
+     *
+     * @return bool
+     */
+    public function collection($user, int $dynamic_id) : bool
+    {
+        if ( !$dynamic = $this->geyDynamicDetail($dynamic_id, true)) {
+            return false;
+        }
+        $dynamicCollection = DynamicCollection::getInstance();
+        $data = [
+            'user_id' => $user->user_id,
+            'dynamic_id' => $dynamic_id,
+        ];
+        DB::beginTransaction();
+        try {
+            $parise_num = 1;
+            // 是否已点赞过了该动态
+            if ($dynamicCollection->isCollection($user->user_id, $dynamic_id)) {
+                $parise_num = -1;
+                // 删除点赞记录
+                $dynamicCollection->where($data)->delete();
+                $this->setError('取消收藏成功！');
+            } else {
+                $ip_agent = get_client_info();
+                $dynamicCollection->create(array_merge($data, [
+                    'created_time' => time(),
+                    'created_ip' => $ip_agent['ip'] ?? get_ip(),
+                    'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
+                ]));
+
+                // 互动消息：xxx 收藏了您的动态 xxx。
+
+                $this->setError('收藏成功！');
+            }
+
+            // 动态的收藏量实时变动（沉余字段）
+            $dynamic->increment('collection_count', $parise_num);
+
+            DB::commit();
+            return true;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
 }
