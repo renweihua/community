@@ -12,7 +12,7 @@ abstract class Service
     use Instance;
     use Json;
 
-    protected function getSearchMonth()
+    protected function getSearchMonth():string
     {
         $search_month = request()->input('search_month', '');
         if (empty($search_month)) return '';
@@ -26,7 +26,7 @@ abstract class Service
      *
      * @return int
      */
-    protected function getLimit(int $limit = 10)
+    protected function getLimit(int $limit = 10):int
     {
         // 不可为0
         $limit = $limit <= 0 ? 10 : $limit;

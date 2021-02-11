@@ -20,7 +20,7 @@ class CreateDynamicPraisesTable extends Migration
             $table->integer('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->integer('dynamic_id')->unsigned()->default(0)->comment('动态Id-点赞表');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
-            $table->bigInteger('created_ip')->default(0)->comment('创建时的IP-ip2long转换');
+            $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
             $table->index(['user_id']);
             $table->index(['dynamic_id']);
