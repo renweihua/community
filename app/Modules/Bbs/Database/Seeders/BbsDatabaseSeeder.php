@@ -15,11 +15,16 @@ class BbsDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        // 会员相关的数据填充
         $this->call([
             UserTableSeeder::class,
             UserGradeTableSeeder::class,
         ]);
 
-        // $this->call("OthersTableSeeder");
+        // 动态话题相关的数据填充
+        $this->call([
+            TopicTableSeeder::class,
+            DynamicTableSeeder::class,
+        ]);
     }
 }
