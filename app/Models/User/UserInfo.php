@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 class UserInfo extends Model
 {
     protected $primaryKey = 'user_id';
+    // 追加属性
+    protected $appends = ['user_sex_text'];
 
     protected static function newFactory()
     {
@@ -37,6 +39,30 @@ class UserInfo extends Model
         if ( !empty($key) ) {
             $this->attributes['user_avatar'] = str_replace(Storage::url('/'), '', $key);
         }
+    }
+
+    /**
+     * 返回性别文本
+     *
+     * @param $key
+     *
+     * @return string
+     */
+    public function getUserSexTextAttribute($key)
+    {
+        if (isset($this->attributes['user_sex'])){
+            $text = '保密';
+            switch ($this->attributes['user_sex']){
+                case 0:
+                    $text = '男';
+                    break;
+                case 1:
+                    $text = '女';
+                    break;
+            }
+            return $text;
+        }
+        return '';
     }
 
     /**
