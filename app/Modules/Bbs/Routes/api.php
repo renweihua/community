@@ -38,6 +38,13 @@ Route::prefix('')->middleware([])->group(function () {
         // 发现
         Route::get('discover', 'IndexController@discover');
     });
+
+    // 会员相关
+    Route::prefix('user')->group(function () {
+        // 指定会员详情
+        Route::get('/detail', 'UserController@detail');
+    });
+
     // 动态相关
     Route::prefix('dynamic')->group(function () {
         // 动态详情
