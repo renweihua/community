@@ -124,11 +124,11 @@
           getHuibaInfo(this.id),
           getHuibaTop(this.id)
         ]).then(resArray => {
-          this.$store.commit('huiba/setHuibaInfoData', resArray[0].data.data)
-          this.$store.commit('huiba/setHuibaTopData', resArray[1].data.data)
+          this.$store.commit('huiba/setHuibaInfoData', resArray[0].data.Data)
+          this.$store.commit('huiba/setHuibaTopData', resArray[1].data.Data)
           // 导航标题
           uni.setNavigationBarTitle({
-            title: resArray[0].data.data.Name
+            title: resArray[0].data.Data.Name
           });
         })
         // 等待一秒页面渲染,$nextTick使用不能准确
@@ -187,21 +187,21 @@
           // 最热
           if (this.current == 0) {
             if (mescroll.num == 1) {
-              this.$store.commit('huiba/setHuibaHottestListData', res.data.data);
+              this.$store.commit('huiba/setHuibaHottestListData', res.data.Data);
             } else {
-              this.$store.commit('huiba/setHuibaHottestListData', this.huibaHottestListData.concat(res.data.data))
+              this.$store.commit('huiba/setHuibaHottestListData', this.huibaHottestListData.concat(res.data.Data))
             }
           }
           // 最新
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('huiba/setHuibaLatestListData', res.data.data);
+              this.$store.commit('huiba/setHuibaLatestListData', res.data.Data);
             } else {
-              this.$store.commit('huiba/setHuibaLatestListData', this.huibaLatestListData.concat(res.data.data))
+              this.$store.commit('huiba/setHuibaLatestListData', this.huibaLatestListData.concat(res.data.Data))
             }
           }
-          this.maxID[this.current] = res.data.data[0].ID
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          this.maxID[this.current] = res.data.Data[0].ID
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
@@ -213,7 +213,7 @@
         if (mescroll.getScrollTop() >= this.tabbarTop) {
           this.isFixed = true // 显示悬浮菜单
         } else {
-          this.isFixed = false // 隐藏悬浮菜单
+          this.isFixed = false // 隐藏悬浮菜单 
         }
       },
       /// 设置nav到顶部的距离 (滚动条为0, 菜单顶部的数据加载完毕获取到的数值是最精确的)
@@ -273,7 +273,7 @@
             success: res => {
               if (res.confirm) {
                 delHuibaFollows(this.huibaInfoData.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   this.huibaInfoData.FollowCount--
                   this.huibaInfoData.HuibaFollow = false
                 })
@@ -283,7 +283,7 @@
           return
         } else {
           addHuibaFollows(this.huibaInfoData.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.huibaInfoData.FollowCount++
             this.huibaInfoData.HuibaFollow = true
           })
@@ -293,38 +293,38 @@
 
       /// 展卡跳转详情页
       fnCardInfo(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'word') {
+        if (e.ObjectType == 'word') {
           uni.navigateTo({
             url: `/pages/word-details/word-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
           })
@@ -333,39 +333,39 @@
       },
       /// 展卡评论跳转详情页
       fnCardComm(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
       },
-      /// 展卡跳转用户中心页
+      /// 展卡跳转用户中心页 
       fnCardUser(e) {
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.User.ID}`
@@ -378,7 +378,7 @@
           url: `/pages/huiba-details/huiba-details?id=${e.ID}`
         })
       },
-      /// 展卡点赞
+      /// 展卡点赞 
       fnCardTop(e) {
         let filItem = {};
         // 最热
@@ -386,19 +386,19 @@
         // 最新
         if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.ObjectID == e.ObjectID)[0];
         let params = {
-          objecttype: filItem.object_type,
+          objecttype: filItem.ObjectType,
           objectid: filItem.ObjectID
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
           delTop(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.TopCount--;
             filItem.UserTop = false
           })
         } else {
           addTop(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true
           })
@@ -413,18 +413,18 @@
         if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.ObjectID == e.ObjectID)[0];
         let params = {
           objectid: filItem.ObjectID,
-          objecttype: filItem.object_type
+          objecttype: filItem.ObjectType
         }
         // 用户是否已收藏
         if (filItem.UserSave) {
           delSave(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.SaveCount--;
             filItem.UserSave = false
           })
         } else {
           addSave(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.SaveCount++;
             filItem.UserSave = true
           })
@@ -439,7 +439,7 @@
             success: res => {
               if (res.confirm) {
                 delUserAtte(e.User.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   this.huibaHottestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
                     false)
                   this.huibaLatestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
@@ -455,7 +455,7 @@
           return
         } else {
           addUserAtte(e.User.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.huibaHottestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
               true)
             this.huibaLatestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
@@ -475,7 +475,7 @@
       /// 展卡更多-跳转举报页
       fnCardReport(e) {
         uni.navigateTo({
-          url: `/pages/report/report?id=${e.ObjectID}&type=${e.object_type}`
+          url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
         })
       },
       //

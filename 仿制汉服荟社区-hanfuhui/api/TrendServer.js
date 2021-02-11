@@ -27,7 +27,7 @@ export async function getMainList(params = {
   maxid: -1,
   count: 20
 }) {
-  return await request('/dynamics', 'get', params)
+  return await request('/trend/GetTrendListForMain', 'get', params)
 }
 
 /**
@@ -44,10 +44,10 @@ export async function getAtteList(params = {
 
 /**
  * 获取动态详情信息
- * @param {Number} dynamic_id 参数 2616317
+ * @param {Number} id 参数 2616317
  */
-export async function getTrendInfo(dynamic_id = 2616317) {
-  return await request('/dynamic/detail', 'get', {
-    dynamic_id
+export async function getTrendInfo(id = 2616317) {
+  return await request('/trend/GetTrend', 'get', {
+    id
   })
 }

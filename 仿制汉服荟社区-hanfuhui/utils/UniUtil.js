@@ -47,13 +47,13 @@ export async function fnUploadUpyunPic(count = 1) {
 
   // 开始上传发送
   let [uploadFileErr, uploadFileRes] = await uni.uploadFile({
-    url: upyunRes.data.data.url,
+    url: upyunRes.data.Data.url,
     filePath: tempPath,
     name: 'file',
     fileType: 'image',
     formData: {
-      'authorization': upyunRes.data.data.authorization,
-      'policy': upyunRes.data.data.policy
+      'authorization': upyunRes.data.Data.authorization,
+      'policy': upyunRes.data.Data.policy
     },
     header: {
       'x-upyun-api-version': '2',

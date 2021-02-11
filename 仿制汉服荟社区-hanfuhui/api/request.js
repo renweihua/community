@@ -4,10 +4,10 @@
  * ===========
  */
 export default function request(route, method = 'get', data = {}) {
-	console.log('http://bbs.cnpscy.com/api/bbs' + route);
   return new Promise((resolve, reject) => {
     uni.request({
-      url: 'http://bbs.cnpscy.com/api/bbs' + route,
+      // url: 'http://api5.laosha.net' + route,
+      url: 'http://easy-mock.liuup.com/mock/5df764250a2f9f42cfec1a50/api5.hanfugou.com' + route,
       method,
       data,
       header: {
@@ -19,7 +19,7 @@ export default function request(route, method = 'get', data = {}) {
       success: res => {
         // console.log('请求结果', res);
         // token失效
-        if (res.status == 401 || res.statusCode == 401 || res.data.ErrorMessage == '登录过期') {
+        if (res.statusCode == 401 || res.data.ErrorMessage == '登录过期') {
           reject({
             data: 401,
             status: res.statusCode
@@ -42,17 +42,17 @@ export default function request(route, method = 'get', data = {}) {
           return;
         }
         // 含有错误
-        // if (res.data.status != 1) {
-        //   reject({
-        //     data: res.data,
-        //     status: res.statusCode
-        //   })
-        //   uni.showToast({
-        //     title: res.data.ErrorMessage,
-        //     icon: 'none'
-        //   })
-        //   return;
-        // }
+        if (res.data.ErrorMessage != '成功') {
+          reject({
+            data: res.data,
+            status: res.statusCode
+          })
+          uni.showToast({
+            title: res.data.ErrorMessage,
+            icon: 'none'
+          })
+          return;
+        }
         // 正常
         resolve({
           data: res.data,

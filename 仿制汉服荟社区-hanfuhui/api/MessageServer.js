@@ -10,7 +10,7 @@ import request from '@/api/request.js';
  * 获取未读消息数
  */
 export async function getMessageNoReadCount() {
-  return await request('/message/getMessageNoRead')
+  return await request('/message/GetMessageNoRead')
 }
 
 /**

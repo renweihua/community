@@ -85,7 +85,7 @@
           let rsaRes = await getRsaText(`375fe0b80e7c40e9b462865a55a36156,${new Date().getTime()}`);
           let resToken = await getUserAppToken(rsaRes.data)
           await getPhoneCode({
-            apptoken: resToken.data.data,
+            apptoken: resToken.data.Data,
             isnew: true,
             phone: this.mobileNew
           })
@@ -145,7 +145,7 @@
             code: this.code,
             phonesecret: rsaRes.data
           })
-          if (modifyRes.data.data) {
+          if (modifyRes.data.Data) {
             this.isBind = false;
             uni.showToast({
               title: '绑定成功，请重新登录',

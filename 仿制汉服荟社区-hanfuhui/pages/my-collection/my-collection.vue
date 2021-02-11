@@ -115,7 +115,7 @@
         clickRefresh: false,
         // 刷新间隔
         timeOutCollection: 0,
-        // 刷新组件实例
+        // 刷新组件实例 
         mescroll: {
           all: null,
           album: null,
@@ -157,12 +157,12 @@
       mescrollInit(mescroll) {
         this.mescroll[this.scrollInto] = mescroll;
       },
-      /// 下拉刷新的回调
+      /// 下拉刷新的回调  
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.scrollInto].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
       upCallback(mescroll) {
         getUserSaveList({
           page: mescroll.num,
@@ -172,36 +172,36 @@
           // 全部
           if (this.scrollInto == 'all') {
             if (mescroll.num == 1) {
-              this.$store.commit('interact/setUserSaveAllListData', res.data.data)
+              this.$store.commit('interact/setUserSaveAllListData', res.data.Data)
             } else {
-              this.$store.commit('interact/setUserSaveAllListData', this.userSaveAllListData.concat(res.data.data))
+              this.$store.commit('interact/setUserSaveAllListData', this.userSaveAllListData.concat(res.data.Data))
             }
           }
           // 摄影
           if (this.scrollInto == 'album') {
             if (mescroll.num == 1) {
-              this.$store.commit('interact/setUserSaveAlbumListData', res.data.data)
+              this.$store.commit('interact/setUserSaveAlbumListData', res.data.Data)
             } else {
-              this.$store.commit('interact/setUserSaveAlbumListData', this.userSaveAlbumListData.concat(res.data.data))
+              this.$store.commit('interact/setUserSaveAlbumListData', this.userSaveAlbumListData.concat(res.data.Data))
             }
           }
           // 视频
           if (this.scrollInto == 'video') {
             if (mescroll.num == 1) {
-              this.$store.commit('interact/setUserSaveVideoListData', res.data.data)
+              this.$store.commit('interact/setUserSaveVideoListData', res.data.Data)
             } else {
-              this.$store.commit('interact/setUserSaveVideoListData', this.userSaveVideoListData.concat(res.data.data))
+              this.$store.commit('interact/setUserSaveVideoListData', this.userSaveVideoListData.concat(res.data.Data))
             }
           }
           // 文章
           if (this.scrollInto == 'word') {
             if (mescroll.num == 1) {
-              this.$store.commit('interact/setUserSaveWordListData', res.data.data)
+              this.$store.commit('interact/setUserSaveWordListData', res.data.Data)
             } else {
-              this.$store.commit('interact/setUserSaveWordListData', this.userSaveWordListData.concat(res.data.data))
+              this.$store.commit('interact/setUserSaveWordListData', this.userSaveWordListData.concat(res.data.Data))
             }
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size)
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size)
         }).catch(() => {
           mescroll.endErr()
         })
@@ -214,7 +214,7 @@
           this.mescroll[this.scrollInto].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击
+      /// 顶部导航选项点击 
       fnBarClick(e) {
         let current = e.hasOwnProperty("detail") ? e.detail.current : e.current;
         this.scrollInto = this.tabBars[current].id;
@@ -239,9 +239,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中
+          // 改变顶部导航选中 
           this.current = current;
-          // 首次选中激活顶部导航关联页状态
+          // 首次选中激活顶部导航关联页状态 
           if (!this.status.album && current == 1) this.status.album = true;
           if (!this.status.video && current == 2) this.status.video = true;
           if (!this.status.word && current == 3) this.status.word = true;
@@ -256,38 +256,38 @@
 
       /// 展卡跳转详情页
       fnCardInfo(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
-        }
-        if (e.object_type == 'topicreply') {
+        } 
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'word') {
+        if (e.ObjectType == 'word') {
           uni.navigateTo({
             url: `/pages/word-details/word-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
@@ -296,39 +296,39 @@
       },
       /// 展卡评论跳转详情页
       fnCardComm(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
-        }
+        } 
       },
-      /// 展卡跳转用户中心页
+      /// 展卡跳转用户中心页 
       fnCardUser(e) {
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.User.ID}`
@@ -339,19 +339,19 @@
         uni.navigateTo({
           url: `/pages/huiba-details/huiba-details?id=${e.ID}`
         })
-      },
-      /// 展卡点赞
+      }, 
+      /// 展卡点赞 
       fnCardTop(e) {
         let filItem = {};
         let filAllItem = {};
         // 全部
         if (this.current == 0) {
           filAllItem = this.userSaveAllListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          if (e.object_type == 'album') {
+          if (e.ObjectType == 'album') {
             filItem = this.userSaveAlbumListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          } else if (e.object_type == 'video') {
+          } else if (e.ObjectType == 'video') {
             filItem = this.userSaveVideoListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          } else if (e.object_type == 'word') {
+          } else if (e.ObjectType == 'word') {
             filItem = this.userSaveWordListData.filter(item => item.ObjectID == e.ObjectID)[0];
           }
         }
@@ -371,13 +371,13 @@
           filAllItem = this.userSaveAllListData.filter(item => item.ObjectID == e.ObjectID)[0];
         }
         let params = {
-          objecttype: filItem.object_type,
+          objecttype: filItem.ObjectType,
           objectid: filItem.ObjectID
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
           delTop(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.TopCount--;
             filItem.UserTop = false
             filAllItem.TopCount--;
@@ -385,7 +385,7 @@
           })
         } else {
           addTop(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true
             filAllItem.TopCount++;
@@ -400,11 +400,11 @@
         // 全部
         if (this.current == 0) {
           filAllItem = this.userSaveAllListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          if (e.object_type == 'album') {
+          if (e.ObjectType == 'album') {
             filItem = this.userSaveAlbumListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          } else if (e.object_type == 'video') {
+          } else if (e.ObjectType == 'video') {
             filItem = this.userSaveVideoListData.filter(item => item.ObjectID == e.ObjectID)[0];
-          } else if (e.object_type == 'word') {
+          } else if (e.ObjectType == 'word') {
             filItem = this.userSaveWordListData.filter(item => item.ObjectID == e.ObjectID)[0];
           }
         }
@@ -424,13 +424,13 @@
           filAllItem = this.userSaveAllListData.filter(item => item.ObjectID == e.ObjectID)[0];
         }
         let params = {
-          objecttype: filItem.object_type,
+          objecttype: filItem.ObjectType,
           objectid: filItem.ObjectID
         }
         // 用户是否已收藏
         if (filItem.UserSave) {
           delSave(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.SaveCount--;
             filItem.UserSave = false
             filAllItem.SaveCount--;
@@ -438,7 +438,7 @@
           })
         } else {
           addSave(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.SaveCount++;
             filItem.UserSave = true
             filAllItem.SaveCount++;
@@ -451,7 +451,7 @@
         // 用户被关注
         if (e.User.UserAtte) {
           delUserAtte(e.User.ID).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             this.userSaveAllListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
               false)
             this.userSaveAlbumListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
@@ -467,7 +467,7 @@
           })
         } else {
           addUserAtte(e.User.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.userSaveAllListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
               true)
             this.userSaveAlbumListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
@@ -491,10 +491,10 @@
       /// 展卡更多-跳转举报页
       fnCardReport(e) {
         uni.navigateTo({
-          url: `/pages/report/report?id=${e.ObjectID}&type=${e.object_type}`
+          url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
         })
       },
-      //
+      // 
     }
   }
 </script>

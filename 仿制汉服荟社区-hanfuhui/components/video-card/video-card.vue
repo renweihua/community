@@ -2,7 +2,7 @@
   <view class="bgwhite mb18r">
     <!-- 页头 -->
     <view class="flex plr18r ptb18r">
-      <user-avatar @click="$emit('user', infoData.User)" :src="calUserAvater" :tag="infoData.user_info.uuid" size="md"></user-avatar>
+      <user-avatar @click="$emit('user', infoData.User)" :src="calUserAvater" :tag="infoData.User.AuthenticateCode" size="md"></user-avatar>
       <view class="flexc-jsa ml18r mr28r flex-gitem w128r" @tap="$emit('user', infoData.User)">
         <view>
           <text class="f28r fbold mr18r">{{infoData.User.NickName}}</text>
@@ -30,13 +30,13 @@
 </template>
 
 <script>
-  /**
+  /**  
    * 动态信息项卡片组件
-   * @property {Object} infoData 项信息数据
-   * @event {Function} user 用户头像 点击事件
-   * @event {Function} follow 关注 点击事件
-   * @event {Function} huiba 荟吧标签 点击事件
-   * @event {Function} click 卡片 点击事件
+   * @property {Object} infoData 项信息数据  
+   * @event {Function} user 用户头像 点击事件   
+   * @event {Function} follow 关注 点击事件   
+   * @event {Function} huiba 荟吧标签 点击事件  
+   * @event {Function} click 卡片 点击事件  
    */
   export default {
     name: 'video-card',
@@ -103,7 +103,7 @@
       /// 计算显示用户头像
       calUserAvater() {
         let user = this.infoData.User;
-        return !!user ? user.user_head : '/static/default_avatar.png'
+        return !!user ? user.HeadUrl + '_100x100.jpg' : '/static/default_avatar.png'
       },
       /// 计算显示视频封面
       calVideoCover() {

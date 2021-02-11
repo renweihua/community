@@ -30,11 +30,11 @@
         // 启动封面
         getStarCover().then(coverRes => {
           // 保存启动封面
-          this.$store.commit('common/setStarCoverData', coverRes.data.data)
+          this.$store.commit('common/setStarCoverData', coverRes.data.Data)
           // 取得rsa加密文本
           return getRsaText(`${token},${Math.floor(new Date().getTime() / 1000)}`)
         }).then(rsaRes => {
-          // 刷新token值
+          // 刷新token值 
           return refreshUserToken(rsaRes.data)
         }).then(accountRes => {
 
@@ -51,28 +51,28 @@
           // #endif
 
           // 保存账户信息和新token值
-          this.$store.commit('user/setAccountInfoData', accountRes.data.data);
-          uni.setStorageSync('TOKEN', accountRes.data.data.AccessToken);
+          this.$store.commit('user/setAccountInfoData', accountRes.data.Data);
+          uni.setStorageSync('TOKEN', accountRes.data.Data.AccessToken);
           // 获得登录用户信息
-          return getUserInfo(accountRes.data.data.UserID);
+          return getUserInfo(accountRes.data.Data.UserID);
         }).then(userinfoRes => {
           // 保存登录用户信息
-          this.$store.commit('user/setUserInfoData', userinfoRes.data.data);
+          this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
           // 获取未读消息数
           return getMessageNoReadCount()
         }).then(mesRes => {
           // 保存未读消息数
-          this.$store.commit('setNewsCountData', mesRes.data.data)
+          this.$store.commit('setNewsCountData', mesRes.data.Data)
           // 获取签到信息
           return getSigninInfo()
         }).then(signinRes => {
           // 保存签到信息
-          this.$store.commit('setSigninInfoData', signinRes.data.data)
+          this.$store.commit('setSigninInfoData', signinRes.data.Data)
           return true
         }).then(res => {
           console.log('app.vue', res);
 
-          // #ifndef APP-PLUS
+          // #ifndef APP-PLUS 
           // 导航标题
           uni.setNavigationBarTitle({
             title: '主页'
@@ -109,13 +109,13 @@
 </script>
 
 <style>
-  /*每个页面公共css */
+  /* 每个页面公共css */
   @import "/style/common.css";
   @import "/style/relation.css";
   /* HTML富文本解析器样式 */
   @import "/components/gaoyia-parse/parse.css";
 
-  /*页面底色*/
+  /* 页面底色 */
   page {
     background: #F8F8F8;
   }

@@ -4,7 +4,7 @@
     <mescroll-uni @down="downCallback" @up="upCallback">
       <block v-for="(user,index) in userAtteUserListData" :key="index">
         <view class="flex plr18r ptb18r bgwhite bbs2r">
-          <user-avatar @click="fnUserInfo(user.ID)" :src="user.HeadUrl ? user.user_head : '/static/default_avatar.png'"
+          <user-avatar @click="fnUserInfo(user.ID)" :src="user.HeadUrl ? user.HeadUrl + '_100x100.jpg' : '/static/default_avatar.png'"
             :tag="user.AuthenticateCode" size="md"></user-avatar>
           <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
             <view>
@@ -20,7 +20,7 @@
   </view>
 </template>
 
-<script>
+<script> 
   import {
     getUserAtteUserList,
     addUserAtte,
@@ -30,7 +30,7 @@
   export default {
     data() {
       return {
-        id: -1,
+        id: -1, 
       }
     },
     computed: {
@@ -41,7 +41,7 @@
     },
     onLoad(options) {
       if (options && options.id) {
-        this.id = parseInt(options.id)
+        this.id = parseInt(options.id) 
       }
     },
     methods: {
@@ -58,11 +58,11 @@
           userid: this.id
         }).then(atteRes => {
           if (mescroll.num == 1) {
-            this.$store.commit('user/setUserAtteUserListData', atteRes.data.data)
+            this.$store.commit('user/setUserAtteUserListData', atteRes.data.Data)
           } else {
-            this.$store.commit('user/setUserAtteUserListData', this.userAtteUserListData.concat(atteRes.data.data))
-          }
-          mescroll.endSuccess(atteRes.data.data.length, atteRes.data.data.length >= mescroll.size);
+            this.$store.commit('user/setUserAtteUserListData', this.userAtteUserListData.concat(atteRes.data.Data))
+          } 
+          mescroll.endSuccess(atteRes.data.Data.length, atteRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
@@ -82,7 +82,7 @@
             success: res => {
               if (res.confirm) {
                 delUserAtte(e.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   this.userAtteUserListData.filter(item => item.ID == e.ID).map(item => item.UserAtte = false)
                   // 登录用户关注数减
                   let tempUser = this.$store.getters['user/getUserInfoData']
@@ -95,7 +95,7 @@
           return
         } else {
           addUserAtte(e.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.userAtteUserListData.filter(item => item.ID == e.ID).map(item => item.UserAtte = true)
             // 登录用户关注数加
             let tempUser = this.$store.getters['user/getUserInfoData']

@@ -124,13 +124,13 @@
         this.id = parseInt(option.id);
         // 初始获取用户信息
         getUserInfo(this.id).then(userRes => {
-          this.$store.commit('user/setTempUserInfoData', userRes.data.data)
+          this.$store.commit('user/setTempUserInfoData', userRes.data.Data)
           if (this.id == this.$store.getters['user/getUserInfoData'].ID) {
-            this.$store.commit('user/setUserInfoData', userRes.data.data)
+            this.$store.commit('user/setUserInfoData', userRes.data.Data)
           }
           // 导航标题
           uni.setNavigationBarTitle({
-            title: userRes.data.data.NickName
+            title: userRes.data.Data.NickName
           });
         });
         // 等待一秒页面渲染,$nextTick使用不能准确
@@ -143,7 +143,7 @@
     },
 
     computed: {
-      // 所有发布
+      // 所有发布 
       userPublishListData() {
         return this.$store.getters['user/getUserPublishListData']
       },
@@ -184,20 +184,20 @@
           // 发布
           if (this.current == 0) {
             if (mescroll.num == 1) {
-              this.$store.commit('user/setUserPublishListData', res.data.data)
+              this.$store.commit('user/setUserPublishListData', res.data.Data)
             } else {
-              this.$store.commit('user/setUserPublishListData', this.userPublishListData.concat(res.data.data))
+              this.$store.commit('user/setUserPublishListData', this.userPublishListData.concat(res.data.Data))
             }
           }
           // 赞过
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('user/setUserTopListData', res.data.data)
+              this.$store.commit('user/setUserTopListData', res.data.Data)
             } else {
-              this.$store.commit('user/setUserTopListData', this.userTopListData.concat(res.data.data))
+              this.$store.commit('user/setUserTopListData', this.userTopListData.concat(res.data.Data))
             }
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           // mescroll.endErr();
           mescroll.endSuccess(0, false);
@@ -209,7 +209,7 @@
         if (mescroll.getScrollTop() >= this.tabbarTop) {
           this.isFixed = true // 显示悬浮菜单
         } else {
-          this.isFixed = false // 隐藏悬浮菜单
+          this.isFixed = false // 隐藏悬浮菜单 
         }
       },
       /// 设置nav到顶部的距离 (滚动条为0, 菜单顶部的数据加载完毕获取到的数值是最精确的)
@@ -256,7 +256,7 @@
           // 刷新值关
           this.clickRefresh = false;
         }
-        // 滚动上滑
+        // 滚动上滑 
         this.mescroll.scrollTo(this.tabbarTop, 300);
       },
 
@@ -297,7 +297,7 @@
         // 用户被关注
         if (this.tempUserInfoData.UserAtte) {
           delUserAtte(this.tempUserInfoData.ID).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             this.userPublishListData.map(item => item.User.UserAtte = false)
             this.tempUserInfoData.UserAtte = false;
             // 登录用户关注数减
@@ -307,7 +307,7 @@
           })
         } else {
           addUserAtte(this.tempUserInfoData.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.userPublishListData.map(item => item.User.UserAtte = true)
             this.tempUserInfoData.UserAtte = true;
             // 登录用户关注数减
@@ -320,38 +320,38 @@
 
       /// 展卡跳转详情页
       fnCardInfo(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
           return
         }
-        if (e.object_type == 'word') {
+        if (e.ObjectType == 'word') {
           uni.navigateTo({
             url: `/pages/word-details/word-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}`
           })
@@ -360,32 +360,32 @@
       },
       /// 展卡评论跳转详情页
       fnCardComm(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}&comm=true`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=userinfo&current=${this.current}&comm=true`
           })
@@ -406,19 +406,19 @@
         // 赞过
         if (this.current == 1) filItem = this.userTopListData.filter(item => item.ObjectID == e.ObjectID)[0];
         let params = {
-          objecttype: filItem.object_type,
+          objecttype: filItem.ObjectType,
           objectid: filItem.ObjectID
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
           delTop(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.TopCount--;
             filItem.UserTop = false
           })
         } else {
           addTop(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true
           })
@@ -433,18 +433,18 @@
         if (this.current == 1) filItem = this.userTopListData.filter(item => item.ObjectID == e.ObjectID)[0];
         let params = {
           objectid: filItem.ObjectID,
-          objecttype: filItem.object_type
+          objecttype: filItem.ObjectType
         }
         // 用户是否已收藏
         if (filItem.UserSave) {
           delSave(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.SaveCount--;
             filItem.UserSave = false
           })
         } else {
           addSave(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.SaveCount++;
             filItem.UserSave = true
           })

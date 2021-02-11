@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  /**
+  /**  
    * 分享弹出层组件
    * 通过ref调用open打开
    */
@@ -74,7 +74,7 @@
           }
         })
       },
-      /// 调起微信朋友圈分享
+      /// 调起微信朋友圈分享 
       $_circle() {
         uni.showToast({
           icon: 'none',
@@ -84,7 +84,7 @@
           }
         })
       },
-      /// 调起QQ好友分享
+      /// 调起QQ好友分享 
       $_qq() {
         uni.showToast({
           icon: 'none',
@@ -94,7 +94,7 @@
           }
         })
       },
-      /// 调起QQ空间分享
+      /// 调起QQ空间分享 
       $_qzone() {
         uni.showToast({
           icon: 'none',
@@ -104,19 +104,19 @@
           }
         })
       },
-      /// 创建外部链接到剪切板
+      /// 创建外部链接到剪切板 
       $_copy() {
         uni.setClipboardData({
-          data: `https://m.hanfugou.com/hui/details?objecttype=${this.item.object_type}&objectid=${this.item.ObjectID}`,
+          data: `https://m.hanfugou.com/hui/details?objecttype=${this.item.ObjectType}&objectid=${this.item.ObjectID}`,
           success: () => {
             this.visible = false;
           }
         });
       },
-      /// 跳转举报页
+      /// 跳转举报页 
       $_report() {
         uni.navigateTo({
-          url: `/pages/report/report?id=${this.item.ObjectID}&type=${this.item.object_type}`,
+          url: `/pages/report/report?id=${this.item.ObjectID}&type=${this.item.ObjectType}`,
           success: () => {
             this.visible = false;
           }
@@ -142,5 +142,5 @@
     font-size: 24rpx;
     color: #8F8F94;
     margin-top: 12rpx;
-  }
+  } 
 </style>

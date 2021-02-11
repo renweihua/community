@@ -251,7 +251,7 @@
           provinceName: '全国',
           province: 0
         },
-        // 刷新组件实例
+        // 刷新组件实例 
         mescroll: {
           recommend: null,
           album: null,
@@ -260,7 +260,7 @@
           word: null,
           org: null,
         },
-        //
+        // 
       }
     },
 
@@ -272,11 +272,11 @@
     },
 
     computed: {
-      // Banner图
+      // Banner图 
       bannerListData() {
         return this.$store.getters['common/getBannerListData']
       },
-      // 热门话题
+      // 热门话题 
       hotTopicListData() {
         return this.$store.getters['common/getHotTopicListData']
       },
@@ -319,25 +319,25 @@
       mescrollInit(mescroll) {
         this.mescroll[this.scrollInto] = mescroll;
       },
-      /// 下拉刷新的回调
+      /// 下拉刷新的回调  
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.scrollInto].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
       upCallback(mescroll) {
         // 联网获取数据
         console.log(this.scrollInto, this.current);
         // 摄影榜获取数据
         if (this.current == 1 && !this.rankFaceData.hasOwnProperty("week")) {
           getRankFace().then(rankRes => {
-            this.$store.commit('album/setRankFaceData', rankRes.data.data)
+            this.$store.commit('album/setRankFaceData', rankRes.data.Data)
           })
         }
         // 组织活动省市获取数据
         if (this.current == 5 && this.orgProvinceListData.length == 0) {
           getOrgProvinceList().then(orgProvinceRes => {
-            let orgProvince = orgProvinceRes.data.data;
+            let orgProvince = orgProvinceRes.data.Data;
             orgProvince.unshift({
               Datetime: "2016-03-20T03:12:32",
               ID: 0,
@@ -365,49 +365,49 @@
           // 摄影
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('album/setAlbumListData', res.data.data)
+              this.$store.commit('album/setAlbumListData', res.data.Data)
             } else {
-              this.$store.commit('album/setAlbumListData', this.albumListData.concat(res.data.data))
+              this.$store.commit('album/setAlbumListData', this.albumListData.concat(res.data.Data))
             }
           }
           // 视频
           if (this.current == 2) {
             if (mescroll.num == 1) {
-              this.$store.commit('video/setVideoListData', res.data.data)
+              this.$store.commit('video/setVideoListData', res.data.Data)
             } else {
-              this.$store.commit('video/setVideoListData', this.videoListData.concat(res.data.data))
+              this.$store.commit('video/setVideoListData', this.videoListData.concat(res.data.Data))
             }
           }
           // 话题
           if (this.current == 3) {
             if (mescroll.num == 1) {
-              this.$store.commit('topic/setTopicListData', res.data.data)
+              this.$store.commit('topic/setTopicListData', res.data.Data)
             } else {
-              this.$store.commit('topic/setTopicListData', this.topicListData.concat(res.data.data))
+              this.$store.commit('topic/setTopicListData', this.topicListData.concat(res.data.Data))
             }
           }
           // 文章
           if (this.current == 4) {
             if (mescroll.num == 1) {
-              this.$store.commit('word/setWordListData', res.data.data)
+              this.$store.commit('word/setWordListData', res.data.Data)
             } else {
-              this.$store.commit('word/setWordListData', this.wordListData.concat(res.data.data))
+              this.$store.commit('word/setWordListData', this.wordListData.concat(res.data.Data))
             }
           }
           // 组织活动
           if (this.current == 5) {
             if (mescroll.num == 1) {
-              this.$store.commit('org/setOrgListData', res.data.data)
+              this.$store.commit('org/setOrgListData', res.data.Data)
             } else {
-              this.$store.commit('org/setOrgListData', this.orgListData.concat(res.data.data))
+              this.$store.commit('org/setOrgListData', this.orgListData.concat(res.data.Data))
             }
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         });
       },
-      /// 推荐栏-独立下拉加载
+      /// 推荐栏-独立下拉加载 
       downRecommend(mescroll) {
         // console.log(mescroll);
         this.mescroll[this.scrollInto] = mescroll;
@@ -418,9 +418,9 @@
             count: 11
           }),
         ]).then(resArray => {
-          this.$store.commit('common/setBannerListData', resArray[0].data.data.banner)
-          this.$store.commit('common/setHotTopicListData', resArray[0].data.data.hotspot)
-          this.$store.commit('huiba/setHuibaListData', resArray[1].data.data)
+          this.$store.commit('common/setBannerListData', resArray[0].data.Data.banner)
+          this.$store.commit('common/setHotTopicListData', resArray[0].data.Data.hotspot)
+          this.$store.commit('huiba/setHuibaListData', resArray[1].data.Data)
           mescroll.endDownScroll()
         }).catch(() => {
           mescroll.endErr();
@@ -435,7 +435,7 @@
           this.mescroll[this.scrollInto].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击
+      /// 顶部导航选项点击 
       fnBarClick(e) {
         // console.log(e);
         let current = e.hasOwnProperty("detail") ? e.detail.current : e.current;
@@ -461,9 +461,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中
+          // 改变顶部导航选中 
           this.current = current;
-          // 首次选中激活顶部导航关联页状态
+          // 首次选中激活顶部导航关联页状态 
           if (!this.status.album && current == 1) this.status.album = true;
           if (!this.status.video && current == 2) this.status.video = true;
           if (!this.status.topic && current == 3) this.status.topic = true;
@@ -519,7 +519,7 @@
             success: res => {
               if (res.confirm) {
                 delUserAtte(e.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   this.videoListData.filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
                     false)
                   // 登录用户关注数减
@@ -533,7 +533,7 @@
           return
         } else {
           addUserAtte(e.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.videoListData.filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte = true)
             // 登录用户关注数加
             let tempUser = this.$store.getters['user/getUserInfoData']

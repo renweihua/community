@@ -7,7 +7,7 @@
           <!-- 用户 -->
           <view class="flexr-jsb flex-aic">
             <view class="flex">
-              <user-avatar :src="item.User.HeadUrl+'_100x100.jpg'" :tag="item.user_info.uuid" size="md"></user-avatar>
+              <user-avatar :src="item.User.HeadUrl+'_100x100.jpg'" :tag="item.User.AuthenticateCode" size="md"></user-avatar>
               <view class="flexc-jsa ml28r">
                 <view>
                   <text class="f28r fbold mr18r">{{item.User.NickName}}</text>
@@ -69,11 +69,11 @@
           count: mescroll.size
         }).then(violaRes => {
           if (mescroll.num == 1) {
-            this.$store.commit('common/setPunishListData', violaRes.data.data)
+            this.$store.commit('common/setPunishListData', violaRes.data.Data)
           } else {
-            this.$store.commit('common/setPunishListData', this.punishListData.concat(violaRes.data.data))
+            this.$store.commit('common/setPunishListData', this.punishListData.concat(violaRes.data.Data))
           }
-          mescroll.endSuccess(violaRes.data.data.length, violaRes.data.data.length >= mescroll.size);
+          mescroll.endSuccess(violaRes.data.Data.length, violaRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })

@@ -5,18 +5,18 @@
       <block v-for="(item,index) in commentList" :key="index">
         <view class="plr18r ptb18r bbs2r">
           <view class="flex">
-            <user-avatar @click="fnUserInfo(item.user_info.user_id)" :src="item.user_info.user_head" :tag="item.user_info.uuid"
+            <user-avatar @click="fnUserInfo(item.User.ID)" :src="item.User.HeadUrl + '_200x200.jpg'" :tag="item.User.AuthenticateCode"
               size="md"></user-avatar>
             <view class="flexc-jsa ml28r">
               <view>
-                <text class="f28r fbold mr18r">{{item.user_info.nick_name}}</text>
-                <i-icon :type="item.user_info.user_sex_text == '男' ?'nan':'nv' " size="28" :color="item.user_info.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
+                <text class="f28r fbold mr18r">{{item.User.NickName}}</text>
+                <i-icon :type="item.User.Gender == '男' ?'nan':'nv' " size="28" :color="item.User.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
               </view>
-              <view class="f24r cgray">{{calFormatDate(item.created_time)}}</view>
+              <view class="f24r cgray">{{calFormatDate(item.Datetime)}}</view>
             </view>
           </view>
           <view class="ml128r f28r c555 mt18r pt18r">
-            回复<text class="ctheme" @tap="fnUserInfo(item.reply_user.user_id)">{{item.reply_user.nick_name}}</text>：{{item.reply_content}}
+            回复<text class="ctheme" @tap="fnUserInfo(item.ReplyUser.ID)">{{item.ReplyUser.NickName}}</text>：{{item.Content}}
           </view>
         </view>
       </block>
@@ -35,16 +35,13 @@
   export default {
     data() {
       return {
-          dynamic_id: 0,
-          reply_id: 0,
-          last_id : 0,
+        id: -1,
         commentList: []
       }
     },
     onLoad(options) {
-      if (options && options.reply_id) {
-          this.dynamic_id = parseInt(options.dynamic_id);
-        this.reply_id = parseInt(options.reply_id);
+      if (options && options.id) {
+        this.id = parseInt(options.id)
       }
     },
     methods: {
@@ -56,17 +53,16 @@
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         getCommentListByID({
-            dynamic_id: this.dynamic_id,
-          reply_id: this.reply_id,
-          last_id: this.last_id
+          parentid: this.id,
+          page: mescroll.num,
+          count: mescroll.size
         }).then(res => {
-            this.last_id = res.data.last_id;
           if (mescroll.num == 1) {
-            this.commentList = res.data.data
+            this.commentList = res.data.Data
           } else {
-            this.commentList = this.commentList.concat(res.data.data)
+            this.commentList = this.commentList.concat(res.data.Data)
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
@@ -79,7 +75,7 @@
       },
       /// 格式化时间
       calFormatDate(str) {
-        return fnFormatDate(str)
+        return fnFormatDate(new Date(str).getTime())
       }
     }
   }

@@ -37,14 +37,14 @@
 
   // 摄影展示卡组件
   import AlbumCard from '@/components/album-card/album-card'
-
+  
   export default {
     components:{
       AlbumCard
     },
     data() {
       return {
-        // 榜项选中
+        // 榜项选中 
         current: 1,
         // 激活顶部导航关联页状态
         status: {
@@ -103,24 +103,24 @@
         getRankList(params).then(rankRes => {
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('album/setRankWeekListData', rankRes.data.data)
+              this.$store.commit('album/setRankWeekListData', rankRes.data.Data)
             } else {
-              this.$store.commit('album/setRankWeekListData', this.rankWeekListData.concat(rankRes.data.data))
+              this.$store.commit('album/setRankWeekListData', this.rankWeekListData.concat(rankRes.data.Data))
             }
           }
           if (this.current == 2) {
             if (mescroll.num == 1) {
-              this.$store.commit('album/setRankMonthListData', rankRes.data.data)
+              this.$store.commit('album/setRankMonthListData', rankRes.data.Data)
             } else {
-              this.$store.commit('album/setRankMonthListData', this.rankMonthListData.concat(rankRes.data.data))
+              this.$store.commit('album/setRankMonthListData', this.rankMonthListData.concat(rankRes.data.Data))
             }
           }
-          mescroll.endSuccess(rankRes.data.data.length, rankRes.data.data.length >= mescroll.size);
+          mescroll.endSuccess(rankRes.data.Data.length, rankRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
       },
-
+      
       /// 顶部导航选项点击
       fnBarClick(current) {
         // 是否当前项点击
@@ -156,7 +156,7 @@
           // 刷新值关
           this.clickRefresh = false;
         }
-        // 滚动上滑
+        // 滚动上滑 
         this.mescroll.scrollTo(0, 300);
       },
 
@@ -165,7 +165,7 @@
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.ID}`
         })
-      },
+      }, 
       /// 跳转摄影详情页
       fnAlbumInfo(e) {
         uni.navigateTo({
@@ -173,9 +173,9 @@
         })
       },
       //
-    },
+    }, 
   }
 </script>
 
-<style>
+<style> 
 </style>

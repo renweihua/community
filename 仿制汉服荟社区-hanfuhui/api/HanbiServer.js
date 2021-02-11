@@ -10,35 +10,34 @@ import request from '@/api/request.js';
  * 获取汉币签到信息
  */
 export async function getSigninInfo() {
-  return await request('/user/getSign');
+  return await request('/Hanbi/GetSigninInfo')
 }
 
 /**
  * 获取汉币签到添加
  */
 export async function addSignin() {
-  return await request('/user/sign', 'post');
+  return await request('/Hanbi/InsertSignin', 'post')
 }
 
 /**
  * 获取签到时间列表
- * @param {String} date 参数 签到时间
+ * @param {String} date 参数 签到时间 
  * 最小月选择到Remark为开始签到月
  */
-export async function getSignInDateList(date = '') {
-    console.log('/user/getSignListForDate/' + date, 'get');
-  return await request('/user/getSignListForDate/' + date, 'get')
+export async function getSignInDateList(date = '2019/5/01') {
+  return await request('/Hanbi/GetSignInListForDate', 'get', {date})
 }
 
 /**
- * 获取汉币签到记录列表
+ * 获取汉币签到记录列表 
  * @param {Object} params 参数 {page,count}
  */
 export async function getSignInList(params = {
   page: 1,
-  last_id: 0
+  count: 20
 }) {
-  return await request('/user/signlogs', 'get', params)
+  return await request('/Hanbi/GetSignInList', 'get', params)
 }
 
 /**
@@ -59,7 +58,7 @@ export async function getHanbiShopList(params = {
 /**
  * 兑换汉币商品
  * @param {Object} params 参数 {shopid,useraddressid,remark}
- * useraddressid 使用地址ID，没有地址传0
+ * useraddressid 使用地址ID，没有地址传0 
  * remark 备注
  */
 export async function addHanbiOrders(params = {

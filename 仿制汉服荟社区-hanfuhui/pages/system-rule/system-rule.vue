@@ -44,8 +44,8 @@
           mask: true
         })
         getSysParamValue(options.key).then(res => {
-          this.ruleTitle = res.data.data.Describe
-          this.content = res.data.data.Value
+          this.ruleTitle = res.data.Data.Describe
+          this.content = res.data.Data.Value
           // 导航栏标题
           uni.setNavigationBarTitle({
             title: this.ruleTitle

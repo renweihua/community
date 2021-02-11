@@ -53,11 +53,11 @@
           userid: this.id
         }).then(res => {
           if (mescroll.num == 1) {
-            this.$store.commit('topic/setTopicUserFollowData', res.data.data)
+            this.$store.commit('topic/setTopicUserFollowData', res.data.Data)
           } else {
-            this.$store.commit('topic/setTopicUserFollowData', this.topicUserFollowData.concat(res.data.data))
+            this.$store.commit('topic/setTopicUserFollowData', this.topicUserFollowData.concat(res.data.Data))
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })

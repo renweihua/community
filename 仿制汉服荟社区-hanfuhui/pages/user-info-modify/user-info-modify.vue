@@ -89,7 +89,7 @@
       calInfoAvatar() {
         if (this.info.headurl == '') return '/static/default_avatar.png'
         return this.info.headurl + '_200x200.jpg'
-      },
+      }, 
     },
 
     onLoad(option) {
@@ -109,7 +109,7 @@
         this.tempInfo = Object.assign({}, this.info)
         // 获取省列表
         getCityList(0).then(provinceRes => {
-          this.$store.commit('common/setProvinceListData', provinceRes.data.data)
+          this.$store.commit('common/setProvinceListData', provinceRes.data.Data)
         })
       }
     },
@@ -135,35 +135,35 @@
           paramArray.push({
             'option': '4',
             'value': cityid
-          })
+          }) 
         }
         // 修改昵称
         if (nickname != this.tempInfo.nickname) {
           paramArray.push({
             'option': '2',
             'value': nickname
-          })
+          }) 
         }
         // 修改性别
         if (gender != this.tempInfo.gender) {
           paramArray.push({
             'option': '3',
             'value': gender
-          })
+          }) 
         }
         // 修改头像
         if (headurl != this.tempInfo.headurl) {
           paramArray.push({
             'option': '1',
             'value': headurl
-          })
+          }) 
         }
         // 修改简介
         if (describe != this.tempInfo.describe) {
           paramArray.push({
             'option': '5',
             'value': describe
-          })
+          }) 
         }
         // 空修改
         if (paramArray.length == 0) {
@@ -177,18 +177,18 @@
         // 提价修改
         try {
           // 遍历发送修改值
-          paramArray.map(item => {
+          paramArray.map(item => { 
             modifyUserInfo(item).then(res=>{
-              if(res.data.data != true) return
+              if(res.data.Data != true) return
               // 修改地区
-              if (item.option == '4') {
+              if (item.option == '4') { 
                 let cityNames = this.cityNames.toString();
                 accout.User.CityNames = cityNames;
                 accout.User.CityIDs = this.cityIDs.toString();
                 userInfo.CityNames = cityNames;
               }
               // 修改昵称
-              if (item.option == '2') {
+              if (item.option == '2') {  
                 accout.User.NickName = item.value;
                 userInfo.NickName = item.value;
               }
@@ -203,7 +203,7 @@
                 userInfo.HeadUrl = item.value;
               }
               // 修改简介
-              if (item.option == '5') {
+              if (item.option == '5') { 
                 accout.User.Describe = item.value;
                 userInfo.Describe = item.value;
               }
@@ -242,7 +242,7 @@
         if (this.isModify) return
         // 获取城市列表
         getCityList(this.cityIDs[0]).then(cityRes => {
-          this.$store.commit('common/setCityListData', cityRes.data.data)
+          this.$store.commit('common/setCityListData', cityRes.data.Data)
           this.$refs.city.open(this.cityIDs)
           this.isShowArea = false
         })

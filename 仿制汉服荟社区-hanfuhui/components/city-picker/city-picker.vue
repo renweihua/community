@@ -25,11 +25,11 @@
   import {
     getCityList
   } from "@/api/CommonServer.js"
-
-  /**
+  
+  /**  
    * 城市选择弹出层组件
    * 通过ref调用open打开
-   * @event {Function} picker 完成选择 点击事件
+   * @event {Function} picker 完成选择 点击事件  
    */
   export default {
     data() {
@@ -93,9 +93,9 @@
         let parent = this.parentListData[val[0]]
         let city = this.cityListData[val[1]]
          // 选择其他省时改变城市列表
-        if (parent.ID != this.cityIDs[0]) {
+        if (parent.ID != this.cityIDs[0]) { 
           getCityList(parent.ID).then(cityRes => {
-            this.$store.commit('common/setCityListData', cityRes.data.data)
+            this.$store.commit('common/setCityListData', cityRes.data.Data)
             this.cityIDs = [parent.ID, 0]
             this.cityNames = [parent.Name, '□□']
           })

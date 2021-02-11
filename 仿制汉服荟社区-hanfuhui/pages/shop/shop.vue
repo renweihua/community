@@ -156,7 +156,7 @@
       return {
         // 滚动区实例
         mescroll: null,
-        //
+        // 
       }
     },
 
@@ -217,10 +217,10 @@
               count: mescroll.size
             }),
           ]).then(resArray => {
-            this.$store.commit('shop/setSpecialListData', resArray[0].data.data)
-            this.$store.commit('shop/setProductHottestListData', resArray[1].data.data)
-            this.$store.commit('shop/setProductBestListData', resArray[2].data.data)
-            mescroll.endSuccess(resArray[2].data.data.length, resArray[2].data.data.length >= mescroll.size);
+            this.$store.commit('shop/setSpecialListData', resArray[0].data.Data)
+            this.$store.commit('shop/setProductHottestListData', resArray[1].data.Data)
+            this.$store.commit('shop/setProductBestListData', resArray[2].data.Data)
+            mescroll.endSuccess(resArray[2].data.Data.length, resArray[2].data.Data.length >= mescroll.size);
           }).catch(() => {
             mescroll.endSuccess(0, false);
           });
@@ -231,8 +231,8 @@
             page: mescroll.num,
             count: mescroll.size
           }).then(productRes => {
-            this.$store.commit('shop/setProductBestListData', this.productBestListData.concat(productRes.data.data))
-            mescroll.endSuccess(productRes.data.data.length, productRes.data.data.length >= mescroll.size);
+            this.$store.commit('shop/setProductBestListData', this.productBestListData.concat(productRes.data.Data))
+            mescroll.endSuccess(productRes.data.Data.length, productRes.data.Data.length >= mescroll.size);
           }).catch(() => {
             mescroll.endErr();
           });

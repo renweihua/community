@@ -78,7 +78,7 @@
     onLoad(options) {
       // 获取汉币规则
       getSysParamValue('hanbirule').then(res => {
-        this.$store.commit('setHanbiRuleData', res.data.data.Value.match(/[^><]+(?=<\/p>)/img))
+        this.$store.commit('setHanbiRuleData', res.data.Data.Value.match(/[^><]+(?=<\/p>)/img))
       })
     },
 
@@ -92,11 +92,11 @@
           count: mescroll.size
         }).then(shopRes => {
           if (mescroll.num == 1) {
-            this.$store.commit('setSigninShopListData', shopRes.data.data)
+            this.$store.commit('setSigninShopListData', shopRes.data.Data)
           } else {
-            this.$store.commit('setSigninShopListData', this.signinShopListData.concat(shopRes.data.data))
+            this.$store.commit('setSigninShopListData', this.signinShopListData.concat(shopRes.data.Data))
           }
-          mescroll.endSuccess(shopRes.data.data.length, shopRes.data.data.length >= mescroll.size);
+          mescroll.endSuccess(shopRes.data.Data.length, shopRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })

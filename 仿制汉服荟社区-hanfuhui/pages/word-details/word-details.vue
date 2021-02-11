@@ -33,7 +33,7 @@
         <view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
           <block v-for="index in 8" :key="index">
             <view class="mr8r">
-              <user-avatar v-if="topListData[index]" :src="topListData[index].User.HeadUrl +'_100x100.jpg'" :tag="topListData[index].user_info.uuid"
+              <user-avatar v-if="topListData[index]" :src="topListData[index].User.HeadUrl +'_100x100.jpg'" :tag="topListData[index].User.AuthenticateCode"
                 size="sm" @click="fnUserInfo(topListData[index].User)"></user-avatar>
             </view>
           </block>
@@ -208,26 +208,26 @@
         if (mescroll.num == 1) {
           // 获取详情信息
           getWordInfo(this.wordID).then(wordRes => {
-            this.$store.commit('word/setWordInfoData', wordRes.data.data)
+            this.$store.commit('word/setWordInfoData', wordRes.data.Data)
             // 导航标题
             uni.setNavigationBarTitle({
-              title: wordRes.data.data.Title
+              title: wordRes.data.Data.Title
             });
             // 获取详情内容
             return getWordContentHTML(this.wordID)
           }).then(contentRes => {
-            this.$store.commit('word/setWordContentData', contentRes.data.data)
+            this.$store.commit('word/setWordContentData', contentRes.data.Data)
             params.count = 8
             // 获取点赞列表8项
             return getTopList(params)
           }).then(topRes => {
-            this.$store.commit('interact/setTopListData', topRes.data.data)
+            this.$store.commit('interact/setTopListData', topRes.data.Data)
             params.count = mescroll.size
             // 获取评论列表
             return getCommentList(params)
           }).then(commRes => {
-            this.$store.commit('interact/setCommentListData', commRes.data.data)
-            mescroll.endSuccess(commRes.data.data.length, commRes.data.data.length >= mescroll.size);
+            this.$store.commit('interact/setCommentListData', commRes.data.Data)
+            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
           }).catch(() => {
             mescroll.endSuccess(0, false);
           })
@@ -235,8 +235,8 @@
         } else {
           // 继续上拉获取评论
           getCommentList(params).then(commRes => {
-            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.data))
-            mescroll.endSuccess(commRes.data.data.length, commRes.data.data.length >= mescroll.size);
+            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.Data))
+            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
           }).catch(() => {
             mescroll.endErr();
           })
@@ -264,7 +264,7 @@
       /// 分享图标
       fnShare() {
         this.wordInfoData.ObjectID = this.wordID
-        this.wordInfoData.object_type = 'word'
+        this.wordInfoData.ObjectType = 'word'
         this.$refs.share.open(this.wordInfoData);
       },
       /// 详情点赞
@@ -302,7 +302,7 @@
         // 用户是否已经点过赞
         if (filItem.UserTop) {
           delTop(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.TopCount--;
             filItem.UserTop = false
             this.wordInfoData.TopCount--;
@@ -314,7 +314,7 @@
           })
         } else {
           addTop(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true;
             this.wordInfoData.TopCount++;
@@ -331,13 +331,13 @@
         let filItem = this.commentListData.filter(item => item.ID == e.ID)[0];
         if (filItem.UserTop) {
           delCommentTop(filItem.ID).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.TopCount--;
             filItem.UserTop = false
           })
         } else {
           addCommentTop(filItem.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true
           })
@@ -345,10 +345,10 @@
       },
       /// 关注详情发布用户
       fnAtte(e) {
-        // 用户是否已经关注
+        // 用户是否已经关注 
         if (e.UserAtte) {
           delUserAtte(e.ID).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             this.wordInfoData.User.UserAtte = false
             // 来自主要跳转
             if (this.fromPage == 'home') {
@@ -379,7 +379,7 @@
           })
         } else {
           addUserAtte(e.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.wordInfoData.User.UserAtte = true
             // 来自主要跳转
             if (this.fromPage == 'home') {
@@ -445,7 +445,7 @@
         // 用户是否已经收藏
         if (filItem.UserSave) {
           delSave(params).then(delRes => {
-            if (delRes.data.data == false) return
+            if (delRes.data.Data == false) return
             filItem.SaveCount--
             filItem.UserSave = false
             this.wordInfoData.SaveCount--
@@ -453,7 +453,7 @@
           })
         } else {
           addSave(params).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             filItem.SaveCount++
             filItem.UserSave = true
             this.wordInfoData.SaveCount++
@@ -461,7 +461,7 @@
           })
         }
       },
-      /// 显示评论输入框
+      /// 显示评论输入框 
       fnCommOpen() {
         this.$refs.comm.open({
           type: 'comment',
@@ -498,19 +498,19 @@
             if (filCommentList.ChildCount == 0) {
               filCommentList.ChildCount = 1
               filCommentList.CommentChilds = []
-              filCommentList.CommentChilds.unshift(addRes.data.data)
+              filCommentList.CommentChilds.unshift(addRes.data.Data)
             } else {
               filCommentList.ChildCount++
-              filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.data])
+              filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
             }
           } else if (this.replyParentID > 0) {
             // 有回复项追加
             let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0]
             filCommentList.ChildCount++
-            filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.data])
+            filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
           } else {
-            // 评论发布
-            this.commentListData.unshift(addRes.data.data)
+            // 评论发布 
+            this.commentListData.unshift(addRes.data.Data)
             this.$store.commit('setCommContentData', '')
           }
           // 评论数量添加
@@ -565,7 +565,7 @@
                 this.$refs.comm.open({
                   type: 'reply',
                   user: e.User.NickName,
-                  objecttype: e.object_type,
+                  objecttype: e.ObjectType,
                   objectid: this.wordID,
                   objecttype: 'word',
                 });
@@ -583,7 +583,7 @@
                 break;
               case 3:
                 delComment(e.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   if (e.TopParentID > 0) {
                     // 有回复项删减
                     let filCommentList = this.commentListData.filter(item => item.ID == e.TopParentID)[0]

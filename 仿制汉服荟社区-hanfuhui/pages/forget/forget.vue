@@ -62,7 +62,7 @@
       // 导航栏标题
       uni.setNavigationBarTitle({
         title: this.isLogin ? '重置密码':'忘记密码'
-      });
+      }); 
     },
 
     methods: {
@@ -86,7 +86,7 @@
           let rsaRes = await getRsaText(`375fe0b80e7c40e9b462865a55a36156,${new Date().getTime()}`);
           let resToken = await getUserAppToken(rsaRes.data)
           await getPhoneCode({
-            apptoken: resToken.data.data,
+            apptoken: resToken.data.Data,
             isnew: false,
             phone: this.mobile
           })
@@ -146,7 +146,7 @@
             code: this.code,
             phonesecret: rsaRes.data
           })
-          if (modifyRes.data.data) {
+          if (modifyRes.data.Data) {
             this.isForget = false;
             uni.showToast({
               title: '修改成功，请重新登录',

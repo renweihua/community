@@ -80,11 +80,11 @@
           userid: this.id
         }).then(atteRes => {
           if (mescroll.num == 1) {
-            this.$store.commit('user/setUserFansListData', atteRes.data.data)
+            this.$store.commit('user/setUserFansListData', atteRes.data.Data)
           } else {
-            this.$store.commit('user/setUserFansListData', this.userFansListData.concat(atteRes.data.data))
+            this.$store.commit('user/setUserFansListData', this.userFansListData.concat(atteRes.data.Data))
           }
-          mescroll.endSuccess(atteRes.data.data.length, atteRes.data.data.length >= mescroll.size);
+          mescroll.endSuccess(atteRes.data.Data.length, atteRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
@@ -109,7 +109,7 @@
             success: res => {
               if (res.confirm) {
                 delUserAtte(e.ID).then(delRes => {
-                  if (delRes.data.data == false) return
+                  if (delRes.data.Data == false) return
                   this.userFansListData.filter(item => item.ID == e.ID).map(item => item.UserAtte = false)
                   // 登录用户关注数减
                   let tempUser = this.$store.getters['user/getUserInfoData']
@@ -122,7 +122,7 @@
           return
         } else {
           addUserAtte(e.ID).then(addRes => {
-            if (addRes.data.data == false) return
+            if (addRes.data.Data == false) return
             this.userFansListData.filter(item => item.ID == e.ID).map(item => item.UserAtte = true)
             // 登录用户关注数加
             let tempUser = this.$store.getters['user/getUserInfoData']
@@ -138,7 +138,7 @@
           success: res => {
             if (res.confirm) {
               delFans(e.ID).then(delRes => {
-                if (delRes.data.data == false) return
+                if (delRes.data.Data == false) return
                 this.$store.commit('user/setUserFansListData', this.userFansListData.filter(item => item.ID !=
                   e.ID))
                 // 登录用户关注数减

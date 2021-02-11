@@ -1,6 +1,6 @@
 /**
  * ==========
- * 最新动态状态数据
+ * 最新动态状态数据 
  * ==========
  */
 const trend = {
@@ -14,7 +14,7 @@ const trend = {
     // 关注数据
     atteData: [],
     // 动态信息数据
-    dynamics: {}
+    trendData: {}
     //
   },
   getters: {
@@ -31,7 +31,7 @@ const trend = {
     // 关注数据数组对象
     getAtteData: state => state.atteData,
     // 动态信息数据对象
-    getDynamics: state => state.dynamics,
+    getTrendData: state => state.trendData,
     //
   },
   mutations: {
@@ -49,7 +49,7 @@ const trend = {
     },
     // 修改动态信息数据对象
     setTrendData(state, data) {
-      state.dynamics = data
+      state.trendData = data
     },
     //
   }

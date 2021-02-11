@@ -26,10 +26,10 @@
 </template>
 
 <script>
-  /**
+  /**  
    * 评论输入弹出层组件
    * 通过ref调用open打开
-   * @event {Function} send 发送 点击事件
+   * @event {Function} send 发送 点击事件  
    */
   export default {
     name: 'comm-input',
@@ -86,11 +86,11 @@
       $_expres(type) {
         console.log(type);
       },
-      /// 跳转搜索用户页
+      /// 跳转搜索用户页 
       $_aite() {
         console.log('跳转搜索用户页');
         // uni.navigateTo({
-        //   url: `/pages/report/report?id=${this.item.ObjectID}&type=${this.item.object_type}`
+        //   url: `/pages/report/report?id=${this.item.ObjectID}&type=${this.item.ObjectType}`
         // })
       },
     }

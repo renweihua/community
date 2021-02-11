@@ -1,5 +1,4 @@
 import request from '@/api/request.js';
-
 /**
  * ===========
  * 动态互动服务接口
@@ -13,25 +12,38 @@ import request from '@/api/request.js';
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function getTopList(params = {
-    dynamic_id: 2485094,
-    object_type: 'trend',
-    page: 1,
-    count: 20
+  objectid: 2485094,
+  objecttype: 'trend',
+  page: 1,
+  count: 20
 }) {
-    return await request('/dynamic/getPraiseUsers', 'get', params)
+  return await request('/Interact/GetTopList', 'get', params)
 }
 
 /**
- * 动态点赞 添加/取消
+ * 动态点赞添加
  * @param {Object} params 参数 {objecttype:'trend',objectid:2485094}
  * objecttype： album 摄影、trend 趋势动态、topicreply 话题、video 视频
  * objectid： 动态列表中ID或者ObjectID
  */
-export async function setPraise(params = {
-    object_type: 'trend',
-    dynamic_id: 2485094
+export async function addTop(params = {
+  objecttype: 'trend',
+  objectid: 2485094
 }) {
-    return await request('/dynamic/setPraise', 'post', params)
+  return await request('/Interact/InsertTop', 'post', params)
+}
+
+/**
+ * 动态点赞取消
+ * @param {Object} params 参数 {objecttype:'trend',objectid:2485094}
+ * objecttype： album 摄影、trend 趋势动态、topicreply 话题、video 视频
+ * objectid： 动态列表中ID或者ObjectID
+ */
+export async function delTop(params = {
+  objecttype: 'trend',
+  objectid: 2485094
+}) {
+  return await request('/Interact/DeleteTop', 'post', params)
 }
 
 /**
@@ -41,11 +53,12 @@ export async function setPraise(params = {
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function getCommentList(params = {
-    dynamic_id: 2485094,
-    object_type: 'trend',
-    last_id: 0
+  objectid: 2485094,
+  objecttype: 'trend',
+  page: 1,
+  count: 20
 }) {
-    return await request('/dynamic/getComments', 'get', params)
+  return await request('/Interact/GetCommentListByTop', 'get', params)
 }
 
 /**
@@ -56,13 +69,13 @@ export async function getCommentList(params = {
  * parentid：针对评论进行回复需要评论列表中ID，普通发表就不加
  */
 export async function addComment(params = {
-    object_type: 'trend',
-    dynamic_id: 2492160,
-    parent_id: 8783984,
-    content: '居然成这种片[大笑]',
-    fromclient: 'android'
+  objecttype: 'trend',
+  objectid: 2492160,
+  parentid: 8783984,
+  content: '居然成这种片[大笑]',
+  fromclient: 'android'
 }) {
-    return await request('/dynamic/setCommont', 'post', params)
+  return await request('/Interact/InsertComment', 'post', params)
 }
 
 /**
@@ -71,9 +84,9 @@ export async function addComment(params = {
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function delComment(ids = 8784023) {
-    return await request('/Interact/DeleteComment', 'post', {
-        ids
-    })
+  return await request('/Interact/DeleteComment', 'post', {
+    ids
+  })
 }
 
 /**
@@ -82,9 +95,9 @@ export async function delComment(ids = 8784023) {
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function addCommentTop(id = 8783858) {
-    return await request('/Interact/InsertCommentTop', 'post', {
-        id
-    })
+  return await request('/Interact/InsertCommentTop', 'post', {
+    id
+  })
 }
 
 /**
@@ -93,9 +106,9 @@ export async function addCommentTop(id = 8783858) {
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function delCommentTop(id = 8783858) {
-    return await request('/Interact/DeleteCommentTop', 'post', {
-        id
-    })
+  return await request('/Interact/DeleteCommentTop', 'post', {
+    id
+  })
 }
 
 /**
@@ -105,35 +118,48 @@ export async function delCommentTop(id = 8783858) {
  * objectid： 动态列表中ID或者ObjectID
  */
 export async function getUserSaveList(params = {
-    object_type: 'trend',
-    page: 1,
-    count: 20
+  objecttype: 'trend',
+  page: 1,
+  count: 20
 }) {
-    return await request('/Interact/GetSaveList', 'get', params)
+  return await request('/Interact/GetSaveList', 'get', params)
 }
 
 /**
- * 动态用户收藏 添加/取消
+ * 动态用户收藏添加
  * @param {Number} ids 参数 objectid 8783858
  * objecttype：word 文章、video 视频、album 摄影、全部就留空或不传
  * objectid： 动态列表中ID或者ObjectID
  */
-export async function setCollection(params = {
-    dynamic_id: 30952,
-    object_type: 'video'
+export async function addSave(params = {
+  objectid: 30952,
+  objecttype: 'video'
 }) {
-    return await request('/dynamic/setCollection', 'post', params)
+  return await request('/Interact/InsertSave', 'post', params)
+}
+
+/**
+ * 动态用户收藏取消
+ * @param {Number} ids 参数 objectid 8783858
+ * objecttype： word 文章、video 视频、album 摄影、全部就留空或不传
+ * objectid： 动态列表中ID或者ObjectID
+ */
+export async function delSave(params = {
+  objectid: 30952,
+  objecttype: 'video'
+}) {
+  return await request('/Interact/DeleteSave', 'post', params)
 }
 
 /**
  * 获取动态评论项多评论详细列表
- * @param {Object} params 参数 {parentid:9350944,page:1,count:20}
+ * @param {Object} params 参数 {parentid:9350944,page:1,count:20} 
  * objectid： 评论动态列表中ID或者ObjectID
  */
 export async function getCommentListByID(params = {
-    parent_id: 9350944,
-    page: 1,
-    count: 20
+  parentid: 9350944,
+  page: 1,
+  count: 20
 }) {
-    return await request('/dynamic/getCommentReplies', 'get', params)
+  return await request('/Interact/GetCommentListForParent', 'get', params)
 }

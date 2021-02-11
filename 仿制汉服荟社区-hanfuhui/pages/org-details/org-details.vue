@@ -44,7 +44,7 @@
       <view class="f24r c555 fcenter mb28r">{{userArray.length || 0}} 人已报名</view>
       <view class="flexr-jsa flex-fww plr18r" v-if="userArray">
         <block v-for="item in userArray" :key="item.ID">
-          <user-avatar :src="item.User.HeadUrl + '_200x200.jpg'" :tag="item.user_info.uuid ? item.user_info.uuid : ''" size="md"></user-avatar>
+          <user-avatar :src="item.User.HeadUrl + '_200x200.jpg'" :tag="item.User.AuthenticateCode ? item.User.AuthenticateCode : ''" size="md"></user-avatar>
         </block>
       </view>
     </mescroll-uni>
@@ -99,10 +99,10 @@
         })
         getOrgInfo(this.orgID).then(orgRes => {
           this.userArray = orgRes.data.Remark.users
-          this.$store.commit('org/setOrgInfoData', orgRes.data.data)
+          this.$store.commit('org/setOrgInfoData', orgRes.data.Data)
           // 导航标题
           uni.setNavigationBarTitle({
-            title: orgRes.data.data.Name
+            title: orgRes.data.Data.Name
           });
           // 延迟关闭load
           setTimeout(() => {

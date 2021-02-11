@@ -4,10 +4,10 @@
     <mescroll-uni :down="{use:false}" :up="{use:false}">
       <!-- 签到信息 -->
       <view class="bgwhite mb18r fcenter ptb28r">
-        <view class="f32r c555 mb18r">今日第 <text class="f36r ctheme mlr18r">{{signinInfoData.sign_rank}}</text> 个签到</view>
+        <view class="f32r c555 mb18r">今日第 <text class="f36r ctheme mlr18r">{{signinInfoData.order}}</text> 个签到</view>
         <view class="f28r cgray">距明日抢签到还有 <text class="ml8r">{{remaiTime}}</text></view>
-        <button class="btn-sub w44v mtb28r" hover-class="btn-hover" :disabled="signinInfoData.is_sign" @tap="fnSignin">{{signinInfoData.is_sign?'已签到':'签 到'}}</button>
-        <view class="f28r cgray">已连续签到{{signinInfoData.sign_days}}天，共漏签{{signinInfoData.miss_sign}}天</view>
+        <button class="btn-sub w44v mtb28r" hover-class="btn-hover" :disabled="signinInfoData.issignin" @tap="fnSignin">{{signinInfoData.issignin?'已签到':'签 到'}}</button>
+        <view class="f28r cgray">已连续签到{{signinInfoData.connect}}天，共漏签{{signinInfoData.miss}}天</view>
       </view>
       <!-- 签到日历 -->
       <signin-calendar ref="signinCalendar"></signin-calendar>
@@ -68,9 +68,7 @@
     computed: {
       // 签到信息
       signinInfoData() {
-          var data = this.$store.getters['getSigninInfoData'];
-          console.log(data);
-        return data
+        return this.$store.getters['getSigninInfoData']
       },
       // 签到商品列表
       signinShopListData() {
@@ -81,10 +79,10 @@
 
     onLoad(options) {
       if (options && options.id) {
-        // 获取签到信息
+        // 获取签到信息 
         getSigninInfo().then(signinRes => {
           // 保存签到信息
-          this.$store.commit('setSigninInfoData', signinRes.data.data)
+          this.$store.commit('setSigninInfoData', signinRes.data.Data)
           // 获取汉币兑换签到商品
           return getHanbiShopList({
             tag: 'signin',
@@ -95,7 +93,7 @@
           })
         }).then(shopRes => {
           // 保存签到商品列表
-          this.$store.commit('setSigninShopListData', shopRes.data.data)
+          this.$store.commit('setSigninShopListData', shopRes.data.Data)
           // 触发倒计时
           this.calRemaiTime()
         })
@@ -126,15 +124,14 @@
         addSignin().then(res => {
           uni.hideLoading()
           uni.showToast({
-            title: `签到奖励 ${res.data.data} 汉币`,
+            title: `签到奖励 ${res.data.Data} 汉币`,
             icon: 'none'
           })
           // this.signinState = false
           return getSigninInfo()
         }).then(signinRes => {
-          let signinInfo = signinRes.data.data;
           // 保存签到信息
-          this.$store.commit('setSigninInfoData', signinInfo)
+          this.$store.commit('setSigninInfoData', signinRes.data.Data)
           // 重新初始签到日历
           this.$refs.signinCalendar.init()
         }).catch((e) => {

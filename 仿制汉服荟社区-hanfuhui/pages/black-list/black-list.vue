@@ -16,7 +16,7 @@
         <mescroll-uni v-if="status.user" :top="80" @down="downCallback" @up="upCallback" @init="mescrollInit">
           <block v-for="(user,index) in userBlackListData" :key="index">
             <view class="flex plr18r ptb18r bgwhite bbs2r">
-              <user-avatar @click="fnUserInfo(user.ID)" :src="user.user_head" :tag="user.AuthenticateCode"
+              <user-avatar @click="fnUserInfo(user.ID)" :src="user.HeadUrl + '_100x100.jpg'" :tag="user.AuthenticateCode"
                 size="md"></user-avatar>
               <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
                 <view>
@@ -78,7 +78,7 @@
         clickRefresh: false,
         // 刷新间隔
         timeOutBlack: 0,
-        // 刷新组件实例
+        // 刷新组件实例 
         mescroll: [null, null],
         //
       }
@@ -101,12 +101,12 @@
       mescrollInit(mescroll) {
         this.mescroll[this.current] = mescroll;
       },
-      /// 下拉刷新的回调
+      /// 下拉刷新的回调  
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.current].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
       upCallback(mescroll) {
         [getUserBlackList, getTopicBlackList][this.current]({
           page: mescroll.num,
@@ -115,20 +115,20 @@
           // 用户
           if (this.current == 0) {
             if (mescroll.num == 1) {
-              this.$store.commit('user/setUserBlackListData', res.data.data)
+              this.$store.commit('user/setUserBlackListData', res.data.Data)
             } else {
-              this.$store.commit('user/setUserBlackListData', this.userBlackListData.concat(res.data.data))
+              this.$store.commit('user/setUserBlackListData', this.userBlackListData.concat(res.data.Data))
             }
           }
           // 话题
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('topic/setTopicBlackListData', res.data.data)
+              this.$store.commit('topic/setTopicBlackListData', res.data.Data)
             } else {
-              this.$store.commit('topic/setTopicBlackListData', this.topicBlackListData.concat(res.data.data))
+              this.$store.commit('topic/setTopicBlackListData', this.topicBlackListData.concat(res.data.Data))
             }
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size)
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size)
         }).catch(() => {
           mescroll.endErr()
         })
@@ -141,7 +141,7 @@
           this.mescroll[this.current].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击
+      /// 顶部导航选项点击 
       fnBarClick(e) {
         let current = e.hasOwnProperty("detail") ? e.detail.current : e;
 
@@ -166,9 +166,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中
+          // 改变顶部导航选中 
           this.current = current;
-          // 首次选中激活顶部导航关联页状态
+          // 首次选中激活顶部导航关联页状态 
           if (!this.status.topic && current == 1) this.status.topic = true;
           // 清除定时器
           clearTimeout(this.timeOutBlack)
@@ -193,7 +193,7 @@
             if (res.confirm) {
               // 用户是否被列入黑名单
               delUserBlack(id).then(delRes => {
-                if (delRes.data.data == false) return
+                if (delRes.data.Data == false) return
                 this.$store.commit('user/setUserBlackListData', this.userBlackListData.filter(user => user.ID !=
                   id))
                 // 没数据时显示空布局
@@ -217,7 +217,7 @@
             if (res.confirm) {
               // 用户是否被列入黑名单
               delTopicBlack(id).then(delRes => {
-                if (delRes.data.data == false) return
+                if (delRes.data.Data == false) return
                 this.$store.commit('topic/setTopicBlackListData', this.topicBlackListData.filter(topic =>
                   topic.ID !=
                   id))

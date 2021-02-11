@@ -51,7 +51,6 @@ const store = new Vuex.Store({
     getHanbiRuleData: state => state.hanbiRule,
     // 获取消息总数  this.$store.getters['getNewsTotalData']
     getNewsTotalData(state) {
-		return 0;
       let {
         RemindCount,
         CommentCount,

@@ -3,7 +3,8 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "主页"
+        "navigationBarTitleText": "主页",
+        "disableScroll":true // 页面整体不能上下滚动
         // #ifdef APP-PLUS
         ,"app-plus": {
           "titleNView": false //禁用原生导航栏
@@ -18,7 +19,8 @@
     }, {
       "path": "pages/user-info/user-info",
       "style": {
-        "navigationBarTitleText": "用户信息"
+        "navigationBarTitleText": "用户信息",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/user-info-modify/user-info-modify",
@@ -28,47 +30,56 @@
     }, {
       "path": "pages/trend-details/trend-details",
       "style": {
-        "navigationBarTitleText": "动态详情"
+        "navigationBarTitleText": "动态详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/huiba-details/huiba-details",
       "style": {
-        "navigationBarTitleText": "荟吧详情"
+        "navigationBarTitleText": "荟吧详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/topic-details/topic-details",
       "style": {
-        "navigationBarTitleText": "话题详情"
+        "navigationBarTitleText": "话题详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/topicreply-details/topicreply-details",
       "style": {
-        "navigationBarTitleText": "话题讨论详情"
+        "navigationBarTitleText": "话题讨论详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/album-details/album-details",
       "style": {
-        "navigationBarTitleText": "摄影详情"
+        "navigationBarTitleText": "摄影详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/album-rank/album-rank",
       "style": {
-        "navigationBarTitleText": "摄影榜单"
+        "navigationBarTitleText": "摄影榜单",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/video-details/video-details",
       "style": {
-        "navigationBarTitleText": "视频详情"
+        "navigationBarTitleText": "视频详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/word-details/word-details",
       "style": {
-        "navigationBarTitleText": "文章详情"
+        "navigationBarTitleText": "文章详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/org-details/org-details",
       "style": {
-        "navigationBarTitleText": "活动详情"
+        "navigationBarTitleText": "活动详情",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/login/login",
@@ -89,77 +100,92 @@
     }, {
       "path": "pages/top-list/top-list",
       "style": {
-        "navigationBarTitleText": "点赞列表"
+        "navigationBarTitleText": "点赞列表",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/comm-list/comm-list",
       "style": {
-        "navigationBarTitleText": "评论列表"
+        "navigationBarTitleText": "评论列表",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/fans-list/fans-list",
       "style": {
-        "navigationBarTitleText": "粉丝"
+        "navigationBarTitleText": "粉丝",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/atte-list/atte-list",
       "style": {
-        "navigationBarTitleText": "关注"
+        "navigationBarTitleText": "关注",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/my-follow/my-follow",
       "style": {
-        "navigationBarTitleText": "我的关注"
+        "navigationBarTitleText": "我的关注",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/my-collection/my-collection",
       "style": {
-        "navigationBarTitleText": "我的收藏"
+        "navigationBarTitleText": "我的收藏",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/ranking-list/ranking-list",
       "style": {
-        "navigationBarTitleText": "排行榜"
+        "navigationBarTitleText": "排行榜",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/signin/signin",
       "style": {
-        "navigationBarTitleText": "签到"
+        "navigationBarTitleText": "签到",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/signin-record/signin-record",
       "style": {
-        "navigationBarTitleText": "签到记录"
+        "navigationBarTitleText": "签到记录",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/hanbi-center/hanbi-center",
       "style": {
-        "navigationBarTitleText": "汉币中心"
+        "navigationBarTitleText": "汉币中心",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/hanbi-record/hanbi-record",
       "style": {
-        "navigationBarTitleText": "汉币兑换记录"
+        "navigationBarTitleText": "汉币兑换记录",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/punish-list/punish-list",
       "style": {
-        "navigationBarTitleText": "处罚公示"
+        "navigationBarTitleText": "处罚公示",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/setting/setting",
       "style": {
-        "navigationBarTitleText": "设置"
+        "navigationBarTitleText": "设置",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/black-list/black-list",
       "style": {
-        "navigationBarTitleText": "黑名单"
+        "navigationBarTitleText": "黑名单",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/account-security/account-security",
       "style": {
-        "navigationBarTitleText": "账户与安全"
+        "navigationBarTitleText": "账户与安全",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/bind-phone/bind-phone",
@@ -169,7 +195,8 @@
     }, {
       "path": "pages/privacy-manage/privacy-manage",
       "style": {
-        "navigationBarTitleText": "隐私管理"
+        "navigationBarTitleText": "隐私管理",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/about-us/about-us",
@@ -179,7 +206,8 @@
     }, {
       "path": "pages/system-rule/system-rule",
       "style": {
-        "navigationBarTitleText": "软件规则"
+        "navigationBarTitleText": "软件规则",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "pages/my-news/my-news",
@@ -194,27 +222,32 @@
     "pages": [{
       "path": "news-notice/news-notice",
       "style": {
-        "navigationBarTitleText": "公告"
+        "navigationBarTitleText": "公告",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "news-top/news-top",
       "style": {
-        "navigationBarTitleText": "赞"
+        "navigationBarTitleText": "赞",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "news-remind/news-remind",
       "style": {
-        "navigationBarTitleText": "提醒"
+        "navigationBarTitleText": "提醒",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "news-comment/news-comment",
       "style": {
-        "navigationBarTitleText": "评论"
+        "navigationBarTitleText": "评论",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }, {
       "path": "news-topic/news-topic",
       "style": {
-        "navigationBarTitleText": "话题"
+        "navigationBarTitleText": "话题",
+        "disableScroll":true // 页面整体不能上下滚动
       }
     }]
   }],

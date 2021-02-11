@@ -11,20 +11,20 @@
           mode="aspectFill"></image>
         <view class="posir flex hl90r mlr28r" @tap="fnUserInfo">
           <view class="my-avatar">
-            <user-avatar :src="userInfoData.user_head ? userInfoData.user_head : '/static/default_avatar.png'"
+            <user-avatar :src="userInfoData.HeadUrl ? userInfoData.HeadUrl + '_200x200.jpg' : '/static/default_avatar.png'"
               :tag="userInfoData.AuthenticateCode" size="lg"></user-avatar>
           </view>
-          <text class="my-nickname">{{userInfoData.nick_name}}</text>
+          <text class="my-nickname">{{userInfoData.NickName}}</text>
         </view>
       </view>
       <!-- 粉丝关注汉币统计 -->
       <view class="flexr-jsa fcenter bgwhite ptb18r mb18r">
         <view class="flexc-jsc flex-fitem" @tap="fnOpenWin('fans-list')">
-          <view class="f36r fbold c555">{{userInfoData.fans_count || 0}}</view>
+          <view class="f36r fbold c555">{{userInfoData.FansCount || 0}}</view>
           <view class="f24r cgray">粉丝</view>
         </view>
         <view class="flexc-jsc flex-fitem bls2r brs2r" @tap="fnOpenWin('atte-list')">
-          <view class="f36r fbold c555">{{userInfoData.follows_count || 0}}</view>
+          <view class="f36r fbold c555">{{userInfoData.AtteCount || 0}}</view>
           <view class="f24r cgray">关注</view>
         </view>
         <view class="flexc-jsc flex-fitem">
@@ -138,15 +138,11 @@
       },
       // 签到状态
       signinStatusData() {
-          var data = this.$store.getters['getSigninStatusData'];
-          console.log(data);
-        return data;
+        return this.$store.getters['getSigninStatusData']
       },
       // 用户信息
       userInfoData() {
-          var data = this.$store.getters['user/getUserInfoData'];
-          console.log(data);
-        return data;
+        return this.$store.getters['user/getUserInfoData']
       },
     },
 
@@ -195,17 +191,17 @@
         // 获得登录用户信息
         getUserInfo(this.userInfoData.ID).then(userinfoRes => {
           // 保存登录用户信息
-          this.$store.commit('user/setUserInfoData', userinfoRes.data.data);
+          this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
           // 获取未读消息数
           return getMessageNoReadCount()
         }).then(mesRes => {
           // 保存未读消息数
-          this.$store.commit('setNewsCountData', mesRes.data.data)
+          this.$store.commit('setNewsCountData', mesRes.data.Data)
           // 获取签到信息
           return getSigninInfo()
         }).then(signinRes => {
           // 保存签到信息
-          this.$store.commit('setSigninInfoData', signinRes.data.data)
+          this.$store.commit('setSigninInfoData', signinRes.data.Data)
         })
       }
       //

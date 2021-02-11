@@ -5,7 +5,7 @@
       <block v-for="(remind,index) in remindList" :key="index">
         <view class="plr18r ptb18r bgwhite mb18r">
           <view class="flex plr18r ptb18r bbs2r">
-            <user-avatar @click="fnUserInfo(remind.User)" :src="remind.User.HeadUrl + '_200x200.jpg'" :tag="remind.user_info.uuid"
+            <user-avatar @click="fnUserInfo(remind.User)" :src="remind.User.HeadUrl + '_200x200.jpg'" :tag="remind.User.AuthenticateCode"
               size="md"></user-avatar>
             <view class="flexc-jsa ml28r">
               <view>
@@ -52,11 +52,11 @@
           type: 'remind'
         }).then(res => {
           if (mescroll.num == 1) {
-            this.remindList = res.data.data
+            this.remindList = res.data.Data
           } else {
-            this.remindList = this.remindList.concat(res.data.data)
+            this.remindList = this.remindList.concat(res.data.Data)
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })

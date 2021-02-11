@@ -66,7 +66,7 @@
   } from "@/api/HanbiServer.js"
   import {
     getMessageNoReadCount,
-  } from "@/api/MessageServer.js"
+  } from "@/api/MessageServer.js" 
 
   export default {
     data() {
@@ -128,7 +128,7 @@
           let rsaRes = await getRsaText(`375fe0b80e7c40e9b462865a55a36156,${new Date().getTime()}`);
           let resToken = await getUserAppToken(rsaRes.data)
           await getPhoneCode({
-            apptoken: resToken.data.data,
+            apptoken: resToken.data.Data,
             isnew: true,
             phone: this.mobile
           })
@@ -188,7 +188,7 @@
             phonesecret: rsaRes.data,
             code: this.code
           });
-          this.bindUser.tempkey = registerRes.data.data
+          this.bindUser.tempkey = registerRes.data.Data
           clearInterval(this.interval);
           this.second = 120;
           this.isRegister = false;
@@ -215,18 +215,18 @@
         try {
           // 注册成功后保存用户账户信息token
           let accountRes = await registerBindUser(this.bindUser);
-          this.$store.commit('user/setAccountInfoData', accountRes.data.data);
-          uni.setStorageSync('TOKEN', accountRes.data.data.AccessToken);
+          this.$store.commit('user/setAccountInfoData', accountRes.data.Data);
+          uni.setStorageSync('TOKEN', accountRes.data.Data.AccessToken);
           // 保存登录用户信息
-          let userinfoRes = await getUserInfo(accountRes.data.data.UserID);
-          this.$store.commit('user/setUserInfoData', userinfoRes.data.data);
+          let userinfoRes = await getUserInfo(accountRes.data.Data.UserID);
+          this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
           // 获取未读消息数
           let mesRes = await getMessageNoReadCount()
-          this.$store.commit('setNewsCountData', mesRes.data.data)
+          this.$store.commit('setNewsCountData', mesRes.data.Data)
           // 获取签到信息
           let signinRes = await getSigninInfo()
-          this.$store.commit('setSigninInfoData', signinRes.data.data)
-
+          this.$store.commit('setSigninInfoData', signinRes.data.Data)
+           
           // 更新托管信息
           this.$store.getters['nim/getNim'].updateMyInfo({
             avatar: userinfoRes.HeadUrl,

@@ -45,17 +45,17 @@
           count: mescroll.size,
         }).then(res => {
           if (mescroll.num == 1) {
-            this.noticeList = res.data.data
+            this.noticeList = res.data.Data
           } else {
-            this.noticeList = this.noticeList.concat(res.data.data)
+            this.noticeList = this.noticeList.concat(res.data.Data)
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
       },
       /// 计算时间格式 下午 08:12 | 昨日 09:12 | 2019-12-03 20:12
-      calDateTime(str) {
+      calDateTime(str) { 
         return fnFormatTimeHeader(new Date(str).getTime())
       }
     }

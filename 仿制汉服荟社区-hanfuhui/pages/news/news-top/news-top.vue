@@ -5,7 +5,7 @@
       <block v-for="(top,index) in topList" :key="index">
         <view class="plr18r ptb18r bgwhite mb18r">
           <view class="flex plr18r ptb18r bbs2r">
-            <user-avatar @click="fnUserInfo(top.User)" :src="top.User.HeadUrl + '_200x200.jpg'" :tag="top.user_info.uuid"
+            <user-avatar @click="fnUserInfo(top.User)" :src="top.User.HeadUrl + '_200x200.jpg'" :tag="top.User.AuthenticateCode"
               size="md"></user-avatar>
             <view class="flexc-jsa ml28r flex-gitem">
               <view>
@@ -57,11 +57,11 @@
           type: 'top'
         }).then(res => {
           if (mescroll.num == 1) {
-            this.topList = res.data.data
+            this.topList = res.data.Data
           } else {
-            this.topList = this.topList.concat(res.data.data)
+            this.topList = this.topList.concat(res.data.Data)
           }
-          mescroll.endSuccess(res.data.data.length, res.data.data.length >= mescroll.size);
+          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();
         })
@@ -78,32 +78,32 @@
       },
       /// 跳转详情页
       fnOpenInfo(e) {
-        console.log(e.object_type);
-        if (e.object_type == 'trend') {
+        console.log(e.ObjectType);
+        if (e.ObjectType == 'trend') {
           uni.navigateTo({
             url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=comment`
           })
           return
         }
-        if (e.object_type == 'album') {
+        if (e.ObjectType == 'album') {
           uni.navigateTo({
             url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=comment`
           })
           return
         }
-        if (e.object_type == 'topic') {
+        if (e.ObjectType == 'topic') {
           uni.navigateTo({
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=comment`
           })
           return
         }
-        if (e.object_type == 'topicreply') {
+        if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=comment`
           })
           return
         }
-        if (e.object_type == 'video') {
+        if (e.ObjectType == 'video') {
           uni.navigateTo({
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=comment`
           })

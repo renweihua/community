@@ -42,9 +42,9 @@
     getSignInDateList
   } from "@/api/HanbiServer.js"
 
-  /**
+  /**  
    * 签到日历组件
-   * @property {Object} date 指定日期
+   * @property {Object} date 指定日期  
    */
   export default {
     name: 'signin-calendar',
@@ -111,17 +111,14 @@
       },
       /// 获取签到日历
       fnSignInDate(date = '') {
-          console.log(date);
         getSignInDateList(date).then(dateRes => {
-          console.log(dateRes);
-
-          // this.useDate = dateRes.data.Remark.userdate
-          // // 保存签到日历记录信息
-          // this.$store.commit('setSigninDateData', dateRes.data.data)
+          this.useDate = dateRes.data.Remark.userdate
+          // 保存签到日历记录信息
+          this.$store.commit('setSigninDateData', dateRes.data.Data)
           // 刷新日历
           this.canlenderData = this.getCanlender(`${this.year}-${this.month}-${this.day}`)
           // 用户最多回看年月日
-          let _useDate = new Date('2019-04-24T17:41:08')
+          let _useDate = new Date(dateRes.data.Remark.userdate)
           this.useYear = _useDate.getFullYear()
           this.useMonth = _useDate.getMonth() + 1
           this.useDay = _useDate.getDate()

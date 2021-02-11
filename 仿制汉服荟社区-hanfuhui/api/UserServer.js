@@ -79,7 +79,7 @@ export async function delUserBlack(blackuserid = 65910) {
  * userid：用户ID
  */
 export async function getUserExistsBlack(userid = 26081) {
-  return await request('/user/getUserBlackExists', 'get', {
+  return await request('/User/GetUserBlackExists', 'get', {
     userid
   })
 }
@@ -89,7 +89,7 @@ export async function getUserExistsBlack(userid = 26081) {
  * @param {Number} id 参数 985319
  */
 export async function getUserInfo(id = 985319) {
-  return await request('/user/visit/' + id, 'get', {
+  return await request('/user/GetUserInfo', 'get', {
     id
   })
 }
@@ -147,8 +147,10 @@ export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg
  * @param {String} usersecret 参数 login_account,login_pwd 进行加密得到
  * Rsa加密
  */
-export async function loginByPhone(params) {
-  return await request('/auth/login', 'post', params)
+export async function loginByPhone(usersecret = '45a6280==') {
+  return await request('/account/LoginForPhone', 'post', {
+    usersecret
+  })
 }
 
 /**
@@ -190,8 +192,8 @@ export async function modifyPassword(params = {
 /**
  * 用户通过手机号注册
  * @param {Object} params 参数 {phonesecret,code}
- * phonesecret：login_account,login_pwd 进行加密得到
- * code短信验证码
+ * phonesecret：login_account,login_pwd 进行加密得到 
+ * code短信验证码 
  */
 export async function registerByPhone(params = {
   code: 5653,
@@ -230,8 +232,8 @@ export async function refreshUserToken(secret = 'lo8cc=') {
 /**
  * 用户更新绑定手机号
  * @param {Object} params 参数 {phonesecret,code}
- * phonesecret：new_phone,password 进行加密得到
- * code短信验证码
+ * phonesecret：new_phone,password 进行加密得到 
+ * code短信验证码 
  */
 export async function modifyBindPhone(params = {
   phonesecret: 'sdfv==',
@@ -289,7 +291,7 @@ export async function getChatState() {
 
 /**
  * 修改聊天设置状态
- * @param {Number} state 参数 1
+ * @param {Number} state 参数 1 
  * 1 接收所有人聊天  2 仅接受关注的人与认证账号聊天
  */
 export async function modifyChatState(state = 1) {

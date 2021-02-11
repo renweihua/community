@@ -44,7 +44,7 @@
         this.id = parseInt(options.id)
         // 获取聊天设置状态
         getChatState().then(res => {
-          this.chatState = res.data.data
+          this.chatState = res.data.Data
         })
       }
     },
@@ -59,14 +59,14 @@
       /// 聊天设置状态
       fnChat(state) {
         modifyChatState(state).then(modifyRes => {
-          if (modifyRes.data.data == false) return
+          if (modifyRes.data.Data == false) return
           this.chatState = state
         })
       },
       /// 主页赞过开关
       fnHomeTop(e) {
         modifyHideTop(e.detail.value).then(modifyRes => {
-          if (modifyRes.data.data == false) return
+          if (modifyRes.data.Data == false) return
           // 登录用户赞过状态改变
           let tempUser = this.$store.getters['user/getUserInfoData']
           tempUser.HideTop = e.detail.value
