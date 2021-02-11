@@ -62,4 +62,11 @@ Route::prefix('')->middleware([])->group(function () {
         // 关注指定会员
         Route::post('user/follow', 'User\FriendController@follow');
     });
+
+    // 其它系统配置
+    Route::prefix('')->group(function () {
+        // 首页启动图
+        Route::get('start_diagrams', 'WebSitesController@getStartDiagrams');
+    });
+
 });
