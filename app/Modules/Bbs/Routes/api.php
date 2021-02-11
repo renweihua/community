@@ -32,6 +32,12 @@ Route::prefix('')->middleware([])->group(function () {
         // 退出登录
         Route::post('logout', 'AuthController@logout');
     });
+
+    // 首页相关
+    Route::prefix('/')->group(function () {
+        // 发现
+        Route::get('discover', 'IndexController@discover');
+    });
     // 动态相关
     Route::prefix('dynamic')->group(function () {
         // 动态详情
