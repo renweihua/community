@@ -27,7 +27,7 @@ class CreateUserExperienceRecordsTable extends Migration
                 4.验证邮箱【 + 10 】；
                 5.实名认证【 + 20 】');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
-            $table->string('description', 256)->default('')->comment('描述');
+            $table->string('description', 200)->default('')->comment('描述');
             $table->index(['created_time']);
             $table->index(['get_type']);
             $table->index(['user_id']);

@@ -11,6 +11,7 @@ class AuthController extends BbsController
 {
     public function __construct(AuthService $authService)
     {
+        parent::__construct();
         $this->service = $authService;
     }
 

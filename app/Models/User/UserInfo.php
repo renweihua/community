@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class UserInfo extends Model
 {
+    protected $primaryKey = 'user_id';
+
     protected static function newFactory()
     {
         return UserInfoFactory::new();

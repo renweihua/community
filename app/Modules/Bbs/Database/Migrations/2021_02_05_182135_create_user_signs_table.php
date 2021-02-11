@@ -22,7 +22,7 @@ class CreateUserSignsTable extends Migration
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
-            $table->string('description', 256)->default('')->comment('描述');
+            $table->string('description', 200)->default('')->comment('描述');
             $table->string('created_ip', 20)->default('')->comment('创建IP');
             $table->index(['created_time']);
             $table->index(['sign_type']);

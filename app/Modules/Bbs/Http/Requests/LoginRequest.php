@@ -13,7 +13,7 @@ class LoginRequest extends BaseRequest
     {
         return [
             'user_name' => 'required',
-            'password'   => 'required',
+            'password' => 'required',
         ];
     }
 
@@ -21,7 +21,7 @@ class LoginRequest extends BaseRequest
     {
         return [
             'user_name.required' => '账户为必填项！',
-            'password.required'   => '密码为必填项！',
+            'password.required' => '密码为必填项！',
         ];
     }
 }

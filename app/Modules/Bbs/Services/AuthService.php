@@ -51,6 +51,7 @@ class AuthService extends Service
                 'nick_name' => $params['nick_name'] ?? $user->user_name,
                 'user_avatar' => cnpscy_config('site_web_logo'),
                 'user_grade' => 1, // 会员等级
+                'last_actived_time' => time(), // 上一次在线时间
                 'created_ip'   => $ip_agent['ip'] ?? get_ip(),
                 'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ]);
