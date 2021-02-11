@@ -3,8 +3,10 @@
 namespace App\Modules\Bbs\Http\Controllers;
 
 use App\Modules\Bbs\Http\Requests\UserIdRequest;
+use App\Modules\Bbs\Services\DynamicService;
 use App\Modules\Bbs\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends BbsController
 {
@@ -30,5 +32,21 @@ class UserController extends BbsController
         } else {
             return $this->errorJson($this->service->getError());
         }
+    }
+
+    /**
+     * 指定会员的动态列表
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\UserIdRequest  $request
+     * @param  \App\Modules\Bbs\Services\DynamicService      $dynamicService
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dynamics(UserIdRequest $request, DynamicService $dynamicService) : JsonResponse
+    {
+        $data = $request->validated();
+
+        $list = $dynamicService->getDynamics($request, (int)$data['user_id'], (int)$this->login_user);
+        return $this->successJson($list);
     }
 }

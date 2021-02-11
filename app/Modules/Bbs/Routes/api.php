@@ -43,8 +43,8 @@ Route::prefix('')->middleware([])->group(function () {
     Route::prefix('user')->group(function () {
         // 指定会员详情
         Route::get('/detail', 'UserController@detail');
-        // 关注指定会员
-        Route::post('/follow', 'User\FriendController@follow');
+        // 指定会员的动态
+        Route::get('/dynamics', 'UserController@dynamics');
     });
 
     // 动态相关
@@ -55,5 +55,11 @@ Route::prefix('')->middleware([])->group(function () {
         Route::post('/praise', 'DynamicController@praise')->middleware(CheckAuth::class);
         // 点赞 - 动态
         Route::post('/collection', 'DynamicController@collection')->middleware(CheckAuth::class);
+    });
+
+    // 登录会员
+    Route::prefix('')->middleware([CheckAuth::class])->group(function () {
+        // 关注指定会员
+        Route::post('user/follow', 'User\FriendController@follow');
     });
 });

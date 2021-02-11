@@ -24,7 +24,6 @@ class CreateUserSignsTable extends Migration
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->string('description', 200)->default('')->comment('描述');
             $table->string('created_ip', 20)->default('')->comment('创建IP');
-            $table->index(['created_time']);
             $table->index(['sign_type']);
             $table->index(['user_id']);
             $table->index(['is_delete']);

@@ -11,7 +11,7 @@ class FriendService extends Service
 {
     /**
      * 关注指定会员流程
-     * 
+     *
      * @param  int  $login_user
      * @param  int  $friend_id
      *
