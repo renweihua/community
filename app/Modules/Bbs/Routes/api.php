@@ -43,6 +43,8 @@ Route::prefix('')->middleware([])->group(function () {
     Route::prefix('user')->group(function () {
         // 指定会员详情
         Route::get('/detail', 'UserController@detail');
+        // 关注指定会员
+        Route::post('/follow', 'User\FriendController@follow');
     });
 
     // 动态相关

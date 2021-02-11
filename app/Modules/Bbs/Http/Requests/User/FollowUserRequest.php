@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Modules\Bbs\Http\Requests;
+namespace App\Modules\Bbs\Http\Requests\User;
 
-class UserIdRequest extends BaseRequest
+use App\Modules\Bbs\Http\Requests\BaseRequest;
+
+class FollowUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,7 +21,7 @@ class UserIdRequest extends BaseRequest
     public function messages()
     {
         return [
-            'user_id.required' => '请指定会员！',
+            'user_id.required' => '请指定关注会员！',
             'user_id.gt' => '请指定有效会员！',
         ];
     }
