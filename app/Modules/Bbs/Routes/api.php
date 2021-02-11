@@ -20,9 +20,9 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 });
 
 
-Route::prefix('')->middleware([])->group(function() {
+Route::prefix('')->middleware([])->group(function () {
     // Auth
-    Route::prefix('auth')->group(function() {
+    Route::prefix('auth')->group(function () {
         // 注册
         Route::post('register', 'AuthController@register');
         // 登录
@@ -31,5 +31,12 @@ Route::prefix('')->middleware([])->group(function() {
         Route::post('me', 'AuthController@me')->middleware(CheckAuth::class);
         // 退出登录
         Route::post('logout', 'AuthController@logout');
+    });
+    // 动态相关
+    Route::prefix('dynamic')->group(function () {
+        // 动态详情
+        Route::get('/detail', 'DynamicController@detail');
+        // 点赞 - 动态
+        Route::post('/praise', 'DynamicController@praise')->middleware(CheckAuth::class);
     });
 });
