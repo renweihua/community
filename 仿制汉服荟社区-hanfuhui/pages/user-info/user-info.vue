@@ -75,8 +75,8 @@
     delUserAtte,
   } from "@/api/UserServer.js"
   import {
-    addTop,
-    delTop,
+    dynamicPraise,
+
     addSave,
     delSave
   } from "@/api/InteractServer.js"
@@ -143,7 +143,7 @@
     },
 
     computed: {
-      // 所有发布 
+      // 所有发布
       userPublishListData() {
         return this.$store.getters['user/getUserPublishListData']
       },
@@ -209,7 +209,7 @@
         if (mescroll.getScrollTop() >= this.tabbarTop) {
           this.isFixed = true // 显示悬浮菜单
         } else {
-          this.isFixed = false // 隐藏悬浮菜单 
+          this.isFixed = false // 隐藏悬浮菜单
         }
       },
       /// 设置nav到顶部的距离 (滚动条为0, 菜单顶部的数据加载完毕获取到的数值是最精确的)
@@ -256,7 +256,7 @@
           // 刷新值关
           this.clickRefresh = false;
         }
-        // 滚动上滑 
+        // 滚动上滑
         this.mescroll.scrollTo(this.tabbarTop, 300);
       },
 
@@ -411,13 +411,9 @@
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
-          delTop(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.TopCount--;
-            filItem.UserTop = false
-          })
+
         } else {
-          addTop(params).then(addRes => {
+          dynamicPraise(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true

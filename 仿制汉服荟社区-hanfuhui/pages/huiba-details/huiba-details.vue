@@ -71,8 +71,8 @@
     delUserBlack,
   } from "@/api/UserServer.js"
   import {
-    addTop,
-    delTop,
+    dynamicPraise,
+
     addSave,
     delSave
   } from "@/api/InteractServer.js"
@@ -213,7 +213,7 @@
         if (mescroll.getScrollTop() >= this.tabbarTop) {
           this.isFixed = true // 显示悬浮菜单
         } else {
-          this.isFixed = false // 隐藏悬浮菜单 
+          this.isFixed = false // 隐藏悬浮菜单
         }
       },
       /// 设置nav到顶部的距离 (滚动条为0, 菜单顶部的数据加载完毕获取到的数值是最精确的)
@@ -365,7 +365,7 @@
           return
         }
       },
-      /// 展卡跳转用户中心页 
+      /// 展卡跳转用户中心页
       fnCardUser(e) {
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.User.ID}`
@@ -378,7 +378,7 @@
           url: `/pages/huiba-details/huiba-details?id=${e.ID}`
         })
       },
-      /// 展卡点赞 
+      /// 展卡点赞
       fnCardTop(e) {
         let filItem = {};
         // 最热
@@ -391,13 +391,9 @@
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
-          delTop(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.TopCount--;
-            filItem.UserTop = false
-          })
+
         } else {
-          addTop(params).then(addRes => {
+          dynamicPraise(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true

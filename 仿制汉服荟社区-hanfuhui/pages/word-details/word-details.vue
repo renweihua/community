@@ -83,8 +83,8 @@
   } from "@/api/WordServer.js"
   import {
     getTopList,
-    addTop,
-    delTop,
+    dynamicPraise,
+
     getCommentList,
     addComment,
     delComment,
@@ -301,19 +301,9 @@
         }
         // 用户是否已经点过赞
         if (filItem.UserTop) {
-          delTop(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.TopCount--;
-            filItem.UserTop = false
-            this.wordInfoData.TopCount--;
-            this.wordInfoData.UserTop = false;
-            // 点赞列表减头像
-            let filTopList = this.topListData.filter(item => item.User.ID != this.$store.getters[
-              'user/getUserInfoData'].ID)
-            this.$store.commit('interact/setTopListData', filTopList)
-          })
+          
         } else {
-          addTop(params).then(addRes => {
+          dynamicPraise(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true;
@@ -345,7 +335,7 @@
       },
       /// 关注详情发布用户
       fnAtte(e) {
-        // 用户是否已经关注 
+        // 用户是否已经关注
         if (e.UserAtte) {
           delUserAtte(e.ID).then(delRes => {
             if (delRes.data.Data == false) return
@@ -461,7 +451,7 @@
           })
         }
       },
-      /// 显示评论输入框 
+      /// 显示评论输入框
       fnCommOpen() {
         this.$refs.comm.open({
           type: 'comment',
@@ -509,7 +499,7 @@
             filCommentList.ChildCount++
             filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
           } else {
-            // 评论发布 
+            // 评论发布
             this.commentListData.unshift(addRes.data.Data)
             this.$store.commit('setCommContentData', '')
           }

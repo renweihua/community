@@ -18,8 +18,8 @@
 			<swiper-item>
 				<mescroll-uni v-if="status.recommend" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 					<block v-for="(item,index) in mainData" :key="index">
-						<trend-card :item="item" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop"
-						 @comm="fnCardComm" @save="fnCardSave" @follow="fnCardFollow" @black="fnCardBlack" @report="fnCardReport"></trend-card>
+						<trend-card :item="item" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop" @comm="fnCardComm"
+						 @save="fnCardSave" @follow="fnCardFollow" @black="fnCardBlack" @report="fnCardReport"></trend-card>
 					</block>
 				</mescroll-uni>
 			</swiper-item>
@@ -54,8 +54,7 @@
 		getAtteList
 	} from "@/api/TrendServer.js"
 	import {
-		addTop,
-		delTop,
+		dynamicPraise,
 		addSave,
 		delSave
 	} from "@/api/InteractServer.js"
@@ -315,24 +314,25 @@
 				if (this.current == 1) filItem = this.atteData.filter(item => item.ObjectID == e.ObjectID)[0];
 				// 广场
 				if (this.current == 2) filItem = this.squareData.filter(item => item.ObjectID == e.ObjectID)[0];
-				let params = {
-					objecttype: filItem.ObjectType,
-					objectid: filItem.ObjectID
-				}
-				// 用户是否点过赞
-				if (filItem.UserTop) {
-					delTop(params).then(delRes => {
-						if (delRes.data.Data == false) return
-						filItem.TopCount--;
-						filItem.UserTop = false
-					})
-				} else {
-					addTop(params).then(addRes => {
-						if (addRes.data.Data == false) return
-						filItem.TopCount++;
-						filItem.UserTop = true
-					})
-				}
+
+				console.log(filItem);
+				// 点赞动态
+				dynamicPraise(filItem.dynamic_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+
+					// 用户是否点过赞
+					if (filItem.is_praise) {
+						filItem.praise_count--;
+						filItem.is_praise = false;
+					} else {
+						filItem.praise_count++;
+						filItem.is_praise = true
+					}
+				});
 			},
 			/// 展卡收藏
 			fnCardSave(e) {

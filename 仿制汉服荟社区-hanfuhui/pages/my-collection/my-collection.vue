@@ -59,8 +59,8 @@
 
 <script>
   import {
-    addTop,
-    delTop,
+    dynamicPraise,
+
     getUserSaveList,
     addSave,
     delSave
@@ -115,7 +115,7 @@
         clickRefresh: false,
         // 刷新间隔
         timeOutCollection: 0,
-        // 刷新组件实例 
+        // 刷新组件实例
         mescroll: {
           all: null,
           album: null,
@@ -157,12 +157,12 @@
       mescrollInit(mescroll) {
         this.mescroll[this.scrollInto] = mescroll;
       },
-      /// 下拉刷新的回调  
+      /// 下拉刷新的回调
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.scrollInto].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         getUserSaveList({
           page: mescroll.num,
@@ -214,7 +214,7 @@
           this.mescroll[this.scrollInto].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击 
+      /// 顶部导航选项点击
       fnBarClick(e) {
         let current = e.hasOwnProperty("detail") ? e.detail.current : e.current;
         this.scrollInto = this.tabBars[current].id;
@@ -239,9 +239,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中 
+          // 改变顶部导航选中
           this.current = current;
-          // 首次选中激活顶部导航关联页状态 
+          // 首次选中激活顶部导航关联页状态
           if (!this.status.album && current == 1) this.status.album = true;
           if (!this.status.video && current == 2) this.status.video = true;
           if (!this.status.word && current == 3) this.status.word = true;
@@ -274,7 +274,7 @@
             url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
           })
           return
-        } 
+        }
         if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
             url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}`
@@ -326,9 +326,9 @@
             url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=collection&current=${this.current}&comm=true`
           })
           return
-        } 
+        }
       },
-      /// 展卡跳转用户中心页 
+      /// 展卡跳转用户中心页
       fnCardUser(e) {
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.User.ID}`
@@ -339,8 +339,8 @@
         uni.navigateTo({
           url: `/pages/huiba-details/huiba-details?id=${e.ID}`
         })
-      }, 
-      /// 展卡点赞 
+      },
+      /// 展卡点赞
       fnCardTop(e) {
         let filItem = {};
         let filAllItem = {};
@@ -376,15 +376,8 @@
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
-          delTop(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.TopCount--;
-            filItem.UserTop = false
-            filAllItem.TopCount--;
-            filAllItem.UserTop = false
-          })
         } else {
-          addTop(params).then(addRes => {
+          dynamicPraise(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.TopCount++;
             filItem.UserTop = true
@@ -494,7 +487,7 @@
           url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
         })
       },
-      // 
+      //
     }
   }
 </script>

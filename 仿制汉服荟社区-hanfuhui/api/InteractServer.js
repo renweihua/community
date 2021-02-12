@@ -21,29 +21,12 @@ export async function getTopList(params = {
 }
 
 /**
- * 动态点赞添加
- * @param {Object} params 参数 {objecttype:'trend',objectid:2485094}
- * objecttype： album 摄影、trend 趋势动态、topicreply 话题、video 视频
- * objectid： 动态列表中ID或者ObjectID
+ * 动态点赞接口
+ *
+ * dynamic_id： 动态的Id
  */
-export async function addTop(params = {
-  objecttype: 'trend',
-  objectid: 2485094
-}) {
-  return await request('/Interact/InsertTop', 'post', params)
-}
-
-/**
- * 动态点赞取消
- * @param {Object} params 参数 {objecttype:'trend',objectid:2485094}
- * objecttype： album 摄影、trend 趋势动态、topicreply 话题、video 视频
- * objectid： 动态列表中ID或者ObjectID
- */
-export async function delTop(params = {
-  objecttype: 'trend',
-  objectid: 2485094
-}) {
-  return await request('/Interact/DeleteTop', 'post', params)
+export async function dynamicPraise(dynamic_id) {
+  return await request('/dynamic/praise', 'post', {dynamic_id:dynamic_id})
 }
 
 /**
@@ -153,7 +136,7 @@ export async function delSave(params = {
 
 /**
  * 获取动态评论项多评论详细列表
- * @param {Object} params 参数 {parentid:9350944,page:1,count:20} 
+ * @param {Object} params 参数 {parentid:9350944,page:1,count:20}
  * objectid： 评论动态列表中ID或者ObjectID
  */
 export async function getCommentListByID(params = {
