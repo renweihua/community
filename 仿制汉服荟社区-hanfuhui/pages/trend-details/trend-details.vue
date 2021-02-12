@@ -459,23 +459,23 @@
 					}
 					if (this.reply_id == 0) {
 						// 无回复项
-						let filCommentList = this.commentListData.filter(item => item.ID == e.reply_id)[0]
-						if (filCommentList.ChildCount == 0) {
-							filCommentList.ChildCount = 1
-							filCommentList.CommentChilds = []
-							filCommentList.CommentChilds.unshift(addRes.data.Data)
+						let filCommentList = this.commentListData.filter(item => item.comment_id == e.reply_id)[0]
+						if (filCommentList.replies_count == 0) {
+							filCommentList.replies_count = 1
+							filCommentList.replies = []
+							filCommentList.replies.unshift(res.data)
 						} else {
-							filCommentList.ChildCount++
-							filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
+							filCommentList.replies_count++
+							filCommentList.replies = filCommentList.replies.concat([res.data])
 						}
 					} else if (this.reply_id > 0) {
 						// 有回复项追加
-						let filCommentList = this.commentListData.filter(item => item.ID == this.reply_id)[0]
-						filCommentList.ChildCount++
-						filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
+						let filCommentList = this.commentListData.filter(item => item.comment_id == this.reply_id)[0]
+						filCommentList.replies_count++
+						filCommentList.replies = filCommentList.replies.concat([res.data])
 					} else {
 						// 评论发布
-						this.commentListData.unshift(addRes.data.Data)
+						this.commentListData.unshift(res.data)
 						this.$store.commit('setCommContentData', '')
 					}
 					// 评论数量添加
@@ -517,23 +517,22 @@
 			/// 评论项操作
 			fnComm(e) {
 				let itemList = ['回复', '复制', '举报'];
-				if (e.User.ID == this.$store.getters['user/getUserInfoData'].ID) itemList.push('删除')
+				console.log(e);
+				
+				
+				if (e.user_info.user_id == this.$store.getters['user/getUserInfoData'].user_id) itemList.push('删除')
 				uni.showActionSheet({
 					itemList,
 					success: res => {
 						switch (res.tapIndex) {
 							case 0:
-								console.log(e);
-
-								console.log('检查 reply_id ');
-
 								this.$refs.comm.open({
 									type: 'reply',
-									user: e.User.NickName,
+									user: e.user_info.nick_name,
 									dynamic_id: e.dynamic_id,
-									reply_id: e.ID
+									reply_id: e.comment_id
 								});
-								this.reply_id = e.TopParentID
+								this.reply_id = e.comment_id
 								break;
 							case 1:
 								uni.setClipboardData({
@@ -551,9 +550,9 @@
 									if (e.TopParentID > 0) {
 										// 有回复项删减
 										let filCommentList = this.commentListData.filter(item => item.ID == e.TopParentID)[0]
-										let filCommentChilds = filCommentList.CommentChilds.filter(item => item.ID != e.ID)
-										filCommentList.ChildCount--
-										filCommentList.CommentChilds = filCommentChilds
+										let filreplies = filCommentList.replies.filter(item => item.ID != e.ID)
+										filCommentList.replies_count--
+										filCommentList.replies = filreplies
 									} else {
 										// 评论发布项删除
 										let filCommentList = this.commentListData.filter(item => item.ID != e.ID)
