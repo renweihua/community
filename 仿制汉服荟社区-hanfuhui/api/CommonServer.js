@@ -33,7 +33,7 @@ export async function getBannerTopicList() {
  * APP启动封面图
  */
 export async function getStarCover() {
-  return await request('/Poster/GetPosterInfoByAppStart?count=3')
+  return await request('/start_diagrams')
 }
 
 /**

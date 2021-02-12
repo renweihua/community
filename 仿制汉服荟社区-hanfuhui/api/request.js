@@ -25,8 +25,21 @@ export default function request(route, method = 'get', data = {}) {
 						data: 401,
 						status: res.statusCode
 					})
-					uni.redirectTo({
-						url: '/pages/login/login'
+					// console.log(res);
+					// uni.redirectTo({
+					// 	url: '/pages/login/login'
+					// })
+					return;
+				}
+				// 服务器错误
+				if (res.statusCode == 404) {
+					reject({
+						data: {},
+						status: res.statusCode
+					})
+					uni.showToast({
+						title: 'API接口不存在！',
+						icon: 'none'
 					})
 					return;
 				}
