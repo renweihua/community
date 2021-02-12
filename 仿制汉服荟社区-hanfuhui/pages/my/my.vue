@@ -107,7 +107,7 @@
 	} from "@/utils/UniUtil.js"
 	import {
 		modifyUserMainBgPic,
-		getUserInfo
+		getLoginUserInfo
 	} from "@/api/UserServer.js"
 	import {
 		getSigninInfo,
@@ -141,7 +141,7 @@
 			},
 			// 用户信息
 			userInfoData() {
-				let user_info = this.$store.getters['user/getUserInfoData'];
+				let user_info = this.$store.getters['user/getLoginUserInfoData'];
 				if(!user_info || !user_info.user_id){
 					return uni.redirectTo({
 						url: '/pages/login/login'
@@ -173,7 +173,7 @@
 								let userInfo = Object.assign({}, this.$store.getters['user/getUserInfoData']);
 								userInfo.MainBgPic = 'https://pic.hanfugou.com' + uploadRes.url;
 								this.$store.commit('user/setAccountInfoMainBgPicData', userInfo.MainBgPic)
-								this.$store.commit('user/setUserInfoData', userInfo)
+								this.$store.commit('user/setLoginUserInfoData', userInfo)
 								this.$store.commit('user/setTempUserInfoData', userInfo)
 							}).catch(() => {
 								uni.showToast({
@@ -194,11 +194,11 @@
 			/// 刷新用户信息消息
 			fnRefreshUserInfo() {
 				// 获得登录用户信息
-				getUserInfo().then(userinfoRes => {
+				getLoginUserInfo().then(userinfoRes => {
 					console.log(userinfoRes);
 					return;
 					// 保存登录用户信息
-					this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
+					this.$store.commit('user/setLoginUserInfoData', userinfoRes.data.Data);
 					// 获取未读消息数
 					return getMessageNoReadCount()
 				}).then(mesRes => {

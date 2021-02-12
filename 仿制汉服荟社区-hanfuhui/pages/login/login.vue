@@ -37,7 +37,7 @@
 <script>
 	import {
 		login,
-		getUserInfo,
+		getLoginUserInfo,
 		getNeteaseIMToken
 	} from "@/api/UserServer.js"
 	import {
@@ -92,9 +92,9 @@
 					this.$store.commit('user/setAccountInfoData', data);
 					uni.setStorageSync('TOKEN', data.access_token);
 					// 保存登录用户信息
-					let user_info = await getUserInfo();
+					let user_info = await getLoginUserInfo();
 					console.log(user_info);
-					this.$store.commit('user/setUserInfoData', user_info.data);
+					this.$store.commit('user/setLoginUserInfoData', user_info.data);
 					
 					// // 获取未读消息数
 					// let mesRes = await getMessageNoReadCount()

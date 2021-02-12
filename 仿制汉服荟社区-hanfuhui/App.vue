@@ -5,7 +5,7 @@
 	} from "@/api/CommonServer.js"
 	import {
 		refreshUserToken,
-		getUserInfo,
+		getLoginUserInfo,
 	} from "@/api/UserServer.js"
 	import {
 		getSigninInfo,
@@ -59,7 +59,7 @@
 					this.$store.commit('user/setAccountInfoData', []);
 					uni.setStorageSync('TOKEN', accountRes.data.Data.AccessToken);
 					// 获得登录用户信息
-					return getUserInfo();
+					return getLoginUserInfo();
 				}).then(userinfoRes => {
 					return true;
 					

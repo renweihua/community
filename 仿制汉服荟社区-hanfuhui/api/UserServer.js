@@ -85,10 +85,10 @@ export async function getUserExistsBlack(userid = 26081) {
 }
 
 /**
- * 获取登录会员的信息
+ * 获取指定会员的信息
  */
-export async function getUserInfo() {
-  return await request('/auth/me', 'post')
+export async function getUserInfo(user_id) {
+  return await request('/user/detail', 'get', {user_id})
 }
 
 /**
@@ -146,6 +146,14 @@ export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg
  */
 export async function login(params) {
   return await request('/auth/login', 'post', params)
+}
+
+
+/**
+ * 获取登录会员的信息
+ */
+export async function getLoginUserInfo() {
+  return await request('/auth/me', 'post')
 }
 
 /**

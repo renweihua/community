@@ -295,7 +295,7 @@
 			/// 展卡跳转用户中心页
 			fnCardUser(e) {
 				uni.navigateTo({
-					url: `/pages/user-info/user-info?id=${e.User.ID}`
+					url: `/pages/user-info/user-info?user_id=${e.user_id}`
 				})
 			},
 			/// 展卡跳转荟吧页

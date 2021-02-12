@@ -7,6 +7,8 @@ const user = {
   namespaced: true,
 
   state: {
+    // 登录会员信息数据
+    loginUserInfo: {},
     // 用户关注用户列表数据 this.$store.state.user.userAtteUserList
     userAtteUserList: [],
     // 用户的粉丝列表 this.$store.state.user.userFansList
@@ -25,7 +27,9 @@ const user = {
     userPublishList: [], 
     //
   },
-  getters: { 
+  getters: {
+    // 登录会员信息数据对象 this.$store.getters['user/getLoginUserInfoData']
+    getLoginUserInfoData: state => state.loginUserInfo,
     // 用户关注用户列表对象  this.$store.getters['user/getUserAtteUserListData']
     getUserAtteUserListData: state => state.userAtteUserList,
     // 用户的粉丝列表  this.$store.getters['user/getUserFansListData']
@@ -45,6 +49,10 @@ const user = {
     //
   },
   mutations: {
+    // 登录会员信息数据对象  this.$store.commit('user/setLoginUserInfoData', {...})
+    setLoginUserInfoData(state, data) {
+      state.loginUserInfo = data
+    },
     // 修改用户关注用户列表数组对象 this.$store.commit('user/setUserAtteUserListData', [...])
     setUserAtteUserListData(state, data) {
       state.userAtteUserList = data
