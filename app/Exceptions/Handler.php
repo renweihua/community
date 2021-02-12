@@ -57,6 +57,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // Exception类的错误监听
+        if($exception instanceof Exception){
+            return $this->errorJson($exception->getMessage(), $exception->getCode());
+        }
+
         // 验证器类的错误监听
         if($exception instanceof \Illuminate\Validation\ValidationException){
             return $this->errorJson($exception->validator->errors()->first());
