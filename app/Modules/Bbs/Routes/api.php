@@ -53,6 +53,8 @@ Route::prefix('')->middleware([])->group(function () {
         Route::get('/detail', 'DynamicController@detail');
         // 获取动态评论列表
         Route::get('/comments', 'DynamicController@comments');
+        // 加载指定评论，更多的回复列表
+        Route::get('/loadMoreComments', 'DynamicController@loadMoreComments');
     });
 
     // 登录会员

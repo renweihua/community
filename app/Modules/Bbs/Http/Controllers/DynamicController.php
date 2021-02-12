@@ -50,21 +50,17 @@ class DynamicController extends BbsController
     }
 
     /**
-     * 评论动态
+     * 加载指定评论，更多的回复列表
      *
-     * @param  \App\Modules\Bbs\Http\Requests\User\DynamicCommentRequest  $request
+     * @param  \App\Modules\Bbs\Http\Requests\DynamicCommentIdRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function comment(DynamicCommentRequest $request): JsonResponse
+    public function loadMoreComments(DynamicCommentIdRequest $request) : JsonResponse
     {
-        $request->validated();
+        $data = $request->validated();
 
-        if ($data = $this->service->comment($this->user, $request->all())){
-            return $this->successJson($data, $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $comments = $this->service->loadMoreReplyByComments((int)$data['comment_id']);
+        return $this->successJson($comments);
     }
-
 }

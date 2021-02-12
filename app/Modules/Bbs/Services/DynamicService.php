@@ -104,7 +104,7 @@ class DynamicService extends Service
 
     /**
      * 获取动态的评论列表
-     * 
+     *
      * @param  int  $dynamic_id
      *
      * @return array
@@ -135,5 +135,29 @@ class DynamicService extends Service
             ->paginate(10);
 
         return $this->getPaginateFormat($comments);
+    }
+
+    /**
+     * 加载指定评论的更多回复记录
+     *
+     * @param  int  $comment_id
+     *
+     * @return array
+     */
+    public function loadMoreReplyByComments(int $comment_id)
+    {
+        $lists = DynamicComment::where('top_level', $comment_id) // 评论要走多层级，默认查顶级
+                ->with([
+                    'userInfo' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                    },
+                    'replyUser' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                    },
+                ])
+                ->orderBy('comment_id', 'ASC')
+                ->paginate(10);
+
+        return $this->getPaginateFormat($lists);
     }
 }
