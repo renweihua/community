@@ -101,4 +101,39 @@ class DynamicService extends Service
         $this->setError('动态详情获取成功！');
         return $dynamic;
     }
+
+    /**
+     * 获取动态的评论列表
+     * 
+     * @param  int  $dynamic_id
+     *
+     * @return array
+     */
+    public function getDynamicComments(int $dynamic_id)
+    {
+        $comments = DynamicComment::where('dynamic_id', $dynamic_id)
+            ->where('top_level', 0) // 评论要走多层级，默认查顶级
+            ->with([
+                'userInfo' => function($query){
+                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                },
+                'replies' => function($query){
+                    $query->with([
+                        'userInfo' => function($query){
+                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                        },
+                        'replyUser' => function($query){
+                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                        },
+                    ])->limit(5);
+                },
+            ])
+            ->withCount([
+                'replies'
+            ])
+            ->orderBy('created_time', 'DESC')
+            ->paginate(10);
+
+        return $this->getPaginateFormat($comments);
+    }
 }

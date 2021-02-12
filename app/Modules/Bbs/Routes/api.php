@@ -51,6 +51,8 @@ Route::prefix('')->middleware([])->group(function () {
     Route::prefix('dynamic')->group(function () {
         // 动态详情
         Route::get('/detail', 'DynamicController@detail');
+        // 获取动态评论列表
+        Route::get('/comments', 'DynamicController@comments');
     });
 
     // 登录会员

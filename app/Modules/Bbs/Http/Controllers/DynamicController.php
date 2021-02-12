@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Http\Controllers;
 
 use App\Modules\Bbs\Http\Requests\DynamicIdRequest;
+use App\Modules\Bbs\Http\Requests\DynamicCommentIdRequest;
 use App\Modules\Bbs\Services\DynamicService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class DynamicController extends BbsController
     public function detail(DynamicIdRequest $request) : JsonResponse
     {
         $data = $request->validated();
+
         if ($detail = $this->service->detail((int)$data['dynamic_id'], $this->login_user)) {
             return $this->successJson($detail, $this->service->getError());
         } else {
@@ -33,23 +35,18 @@ class DynamicController extends BbsController
     }
 
     /**
-     *
-    /**
-     * 收藏动态
+     * 获取动态的评论列表
      *
      * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function collection(DynamicIdRequest $request)
+    public function comments(DynamicIdRequest $request) : JsonResponse
     {
         $data = $request->validated();
 
-        if ($result = $this->service->collection($this->user, (int)$data['dynamic_id'])) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $comments = $this->service->getDynamicComments((int)$data['dynamic_id']);
+        return $this->successJson($comments);
     }
 
     /**
