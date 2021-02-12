@@ -72,6 +72,8 @@ Route::prefix('')->middleware([])->group(function () {
             Route::get('/fans', 'FriendController@fans');
             // 我的收藏
             Route::get('/collections', 'DynamicController@collections');
+            // 每日签到
+            Route::post('/signIn', 'SignController@signIn');
         });
 
         // 动态相关
