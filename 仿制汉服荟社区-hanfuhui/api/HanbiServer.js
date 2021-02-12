@@ -22,7 +22,7 @@ export async function addSignin() {
 
 /**
  * 获取签到时间列表
- * @param {String} date 参数 签到时间 
+ * @param {String} date 参数 签到时间
  * 最小月选择到Remark为开始签到月
  */
 export async function getSignInDateList(date = '2019/5/01') {
@@ -30,12 +30,12 @@ export async function getSignInDateList(date = '2019/5/01') {
 }
 
 /**
- * 获取汉币签到记录列表 
+ * 获取汉币签到记录列表
  * @param {Object} params 参数 {page,count}
  */
 export async function getSignInList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Hanbi/GetSignInList', 'get', params)
 }
@@ -50,7 +50,7 @@ export async function getHanbiShopList(params = {
   haveorders: true,
   role: 5,
   page: 1,
-  count: 10
+  limit: 10
 }) {
   return await request('/Hanbi/GetHanbiShopList', 'get', params)
 }
@@ -58,7 +58,7 @@ export async function getHanbiShopList(params = {
 /**
  * 兑换汉币商品
  * @param {Object} params 参数 {shopid,useraddressid,remark}
- * useraddressid 使用地址ID，没有地址传0 
+ * useraddressid 使用地址ID，没有地址传0
  * remark 备注
  */
 export async function addHanbiOrders(params = {
@@ -75,7 +75,7 @@ remark:'能买10次',
  */
 export async function getHanbiUserOrdersList(params = {
   page: 1,
-  count: 10
+  limit: 10
 }) {
   return await request('/Hanbi/GetHanbiOrdersListForUser', 'get', params)
 }

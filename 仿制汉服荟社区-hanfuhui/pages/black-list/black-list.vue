@@ -78,7 +78,7 @@
         clickRefresh: false,
         // 刷新间隔
         timeOutBlack: 0,
-        // 刷新组件实例 
+        // 刷新组件实例
         mescroll: [null, null],
         //
       }
@@ -101,16 +101,16 @@
       mescrollInit(mescroll) {
         this.mescroll[this.current] = mescroll;
       },
-      /// 下拉刷新的回调  
+      /// 下拉刷新的回调
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.current].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         [getUserBlackList, getTopicBlackList][this.current]({
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }).then(res => {
           // 用户
           if (this.current == 0) {
@@ -141,7 +141,7 @@
           this.mescroll[this.current].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击 
+      /// 顶部导航选项点击
       fnBarClick(e) {
         let current = e.hasOwnProperty("detail") ? e.detail.current : e;
 
@@ -166,9 +166,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中 
+          // 改变顶部导航选中
           this.current = current;
-          // 首次选中激活顶部导航关联页状态 
+          // 首次选中激活顶部导航关联页状态
           if (!this.status.topic && current == 1) this.status.topic = true;
           // 清除定时器
           clearTimeout(this.timeOutBlack)

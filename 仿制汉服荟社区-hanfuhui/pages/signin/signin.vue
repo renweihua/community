@@ -79,7 +79,7 @@
 
     onLoad(options) {
       if (options && options.id) {
-        // 获取签到信息 
+        // 获取签到信息
         getSigninInfo().then(signinRes => {
           // 保存签到信息
           this.$store.commit('setSigninInfoData', signinRes.data.Data)
@@ -89,7 +89,7 @@
             haveorders: true,
             role: 5,
             page: 1,
-            count: 10
+            limit: 10
           })
         }).then(shopRes => {
           // 保存签到商品列表

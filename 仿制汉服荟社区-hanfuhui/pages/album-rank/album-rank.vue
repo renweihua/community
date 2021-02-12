@@ -37,14 +37,14 @@
 
   // 摄影展示卡组件
   import AlbumCard from '@/components/album-card/album-card'
-  
+
   export default {
     components:{
       AlbumCard
     },
     data() {
       return {
-        // 榜项选中 
+        // 榜项选中
         current: 1,
         // 激活顶部导航关联页状态
         status: {
@@ -97,7 +97,7 @@
         let params = {
           ranktype: this.current,
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         // 获取摄影榜数据
         getRankList(params).then(rankRes => {
@@ -120,7 +120,7 @@
           mescroll.endErr();
         })
       },
-      
+
       /// 顶部导航选项点击
       fnBarClick(current) {
         // 是否当前项点击
@@ -156,7 +156,7 @@
           // 刷新值关
           this.clickRefresh = false;
         }
-        // 滚动上滑 
+        // 滚动上滑
         this.mescroll.scrollTo(0, 300);
       },
 
@@ -165,7 +165,7 @@
         uni.navigateTo({
           url: `/pages/user-info/user-info?id=${e.ID}`
         })
-      }, 
+      },
       /// 跳转摄影详情页
       fnAlbumInfo(e) {
         uni.navigateTo({
@@ -173,9 +173,9 @@
         })
       },
       //
-    }, 
+    },
   }
 </script>
 
-<style> 
+<style>
 </style>

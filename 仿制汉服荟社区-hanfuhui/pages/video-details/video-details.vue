@@ -191,7 +191,7 @@
           objectid: this.videoID,
           objecttype: 'video',
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         if (mescroll.num == 1) {
           uni.showLoading({

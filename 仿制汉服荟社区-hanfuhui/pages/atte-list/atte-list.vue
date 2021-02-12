@@ -20,7 +20,7 @@
   </view>
 </template>
 
-<script> 
+<script>
   import {
     getUserAtteUserList,
     addUserAtte,
@@ -30,7 +30,7 @@
   export default {
     data() {
       return {
-        id: -1, 
+        id: -1,
       }
     },
     computed: {
@@ -41,7 +41,7 @@
     },
     onLoad(options) {
       if (options && options.id) {
-        this.id = parseInt(options.id) 
+        this.id = parseInt(options.id)
       }
     },
     methods: {
@@ -54,14 +54,14 @@
       upCallback(mescroll) {
         getUserAtteUserList({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           userid: this.id
         }).then(atteRes => {
           if (mescroll.num == 1) {
             this.$store.commit('user/setUserAtteUserListData', atteRes.data.Data)
           } else {
             this.$store.commit('user/setUserAtteUserListData', this.userAtteUserListData.concat(atteRes.data.Data))
-          } 
+          }
           mescroll.endSuccess(atteRes.data.Data.length, atteRes.data.Data.length >= mescroll.size);
         }).catch(() => {
           mescroll.endErr();

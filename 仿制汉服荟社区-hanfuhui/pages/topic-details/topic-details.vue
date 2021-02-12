@@ -162,7 +162,7 @@
           topicid: this.id,
           hot: this.current == 0,
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         getTopicReplyList(params).then(res => {
           // 最热

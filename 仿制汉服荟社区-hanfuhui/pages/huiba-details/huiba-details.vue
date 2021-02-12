@@ -177,7 +177,7 @@
           ishot: this.current == 0,
           max_id: this.maxID[this.current],
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         getHuibaTrend(params).then(res => {
           // 最热

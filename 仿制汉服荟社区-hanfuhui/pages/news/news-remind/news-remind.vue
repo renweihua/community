@@ -48,7 +48,7 @@
       upCallback(mescroll) {
         getMessageListByType({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           type: 'remind'
         }).then(res => {
           if (mescroll.num == 1) {

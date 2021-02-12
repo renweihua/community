@@ -66,7 +66,7 @@
       upCallback(mescroll) {
         getUserViolationList({
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }).then(violaRes => {
           if (mescroll.num == 1) {
             this.$store.commit('common/setPunishListData', violaRes.data.Data)

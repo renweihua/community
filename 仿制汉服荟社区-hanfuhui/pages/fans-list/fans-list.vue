@@ -76,7 +76,7 @@
       upCallback(mescroll) {
         getUserFansList({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           userid: this.id
         }).then(atteRes => {
           if (mescroll.num == 1) {

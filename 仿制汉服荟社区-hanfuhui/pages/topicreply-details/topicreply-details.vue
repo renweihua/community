@@ -195,7 +195,7 @@
           objectid: this.topicReplyID,
           objecttype: 'topicreply',
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         if (mescroll.num == 1) {
           // 获取详情信息

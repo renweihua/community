@@ -8,12 +8,12 @@ import request from '@/api/request.js';
 
 /**
  * 获取商城专题列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  * role 权限等级默认5、权限不足2
  */
 export async function getSpecialList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   params.role = 5;
   return await request('/Product/GetSpecialList', 'get', params)
@@ -37,13 +37,13 @@ export async function getProductHottestList(count = 9) {
 
 /**
  * 获取商品精选推荐
- * @param {Object} params 参数 {good: true,page:1,count:20}
+ * @param {Object} params 参数 {good: true,page:1,limit:20}
  * good 是否精选推荐套装
  */
 export async function getProductList(params = {
   good: true,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Product/GetProductListPublic', 'get', params)
 }

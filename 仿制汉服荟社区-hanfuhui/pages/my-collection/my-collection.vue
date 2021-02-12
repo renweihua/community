@@ -163,7 +163,7 @@
       upCallback(mescroll) {
         getUserSaveList({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           objecttype: this.scrollInto == 'all' ? '' : this.scrollInto
         }).then(res => {
           // 全部

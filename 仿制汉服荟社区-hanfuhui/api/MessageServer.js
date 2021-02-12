@@ -27,7 +27,7 @@ export async function getMessageNoticeList() {
  */
 export async function getMessageListByType(params = {
   page: 1,
-  count: 20,
+  limit: 20,
   type: 'comment'
 }) {
   return await request('/message/GetMessageList', 'get', params)

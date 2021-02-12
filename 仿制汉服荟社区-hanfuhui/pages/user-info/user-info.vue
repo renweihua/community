@@ -172,7 +172,7 @@
         let params = {
           userid: this.id,
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         };
         if (this.current == 0) params.objecttype = '';
         // 正常加载数据

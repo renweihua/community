@@ -153,7 +153,7 @@
         clickRefresh: false,
         // 刷新间隔
         timeOutRank: 0,
-        // 刷新组件实例 
+        // 刷新组件实例
         mescroll: {
           album: null,
           hanbi: null,
@@ -195,16 +195,16 @@
       mescrollInit(mescroll) {
         this.mescroll[this.scrollInto] = mescroll;
       },
-      /// 下拉刷新的回调  
+      /// 下拉刷新的回调
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.scrollInto].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         getRankList({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           type: this.scrollInto
         }).then(res => {
           // 摄影
@@ -252,7 +252,7 @@
           this.mescroll[this.scrollInto].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击 
+      /// 顶部导航选项点击
       fnBarClick(e) {
         let current = e.hasOwnProperty("detail") ? e.detail.current : e.current;
         this.scrollInto = this.tabBars[current].id;
@@ -277,9 +277,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中 
+          // 改变顶部导航选中
           this.current = current;
-          // 首次选中激活顶部导航关联页状态 
+          // 首次选中激活顶部导航关联页状态
           if (!this.status.hanbi && current == 1) this.status.hanbi = true;
           if (!this.status.popularity && current == 2) this.status.popularity = true;
           if (!this.status.signin && current == 3) this.status.signin = true;

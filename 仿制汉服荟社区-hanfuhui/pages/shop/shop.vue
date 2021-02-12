@@ -156,7 +156,7 @@
       return {
         // 滚动区实例
         mescroll: null,
-        // 
+        //
       }
     },
 
@@ -208,13 +208,13 @@
           Promise.all([
             getSpecialList({
               page: 1,
-              count: 3
+              limit: 3
             }),
             getProductHottestList(),
             getProductList({
               good: true,
               page: mescroll.num,
-              count: mescroll.size
+              limit: mescroll.size
             }),
           ]).then(resArray => {
             this.$store.commit('shop/setSpecialListData', resArray[0].data.Data)
@@ -229,7 +229,7 @@
           getProductList({
             good: true,
             page: mescroll.num,
-            count: mescroll.size
+            limit: mescroll.size
           }).then(productRes => {
             this.$store.commit('shop/setProductBestListData', this.productBestListData.concat(productRes.data.Data))
             mescroll.endSuccess(productRes.data.Data.length, productRes.data.Data.length >= mescroll.size);

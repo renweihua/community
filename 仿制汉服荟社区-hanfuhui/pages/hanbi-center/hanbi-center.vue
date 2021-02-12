@@ -89,7 +89,7 @@
           haveorders: true,
           role: 5,
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }).then(shopRes => {
           if (mescroll.num == 1) {
             this.$store.commit('setSigninShopListData', shopRes.data.Data)

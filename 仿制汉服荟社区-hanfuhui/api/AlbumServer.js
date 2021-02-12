@@ -8,11 +8,11 @@ import request from '@/api/request.js';
 
 /**
  * 获取摄影列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getAlbumList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/album/GetAlbumListForGood', 'get', params)
 }
@@ -35,13 +35,13 @@ export async function getRankFace(objecttype = 'album') {
 
 /**
  * 获取摄影榜摄影列表
- * @param {Object} params 参数 {ranktype:1,page:1,count:20}
+ * @param {Object} params 参数 {ranktype:1,page:1,limit:20}
  * ranktype 1周榜、2月榜
  */
 export async function getRankList(params = {
   ranktype: 1,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Ranking/GetRankForAlbum', 'get', params)
 }

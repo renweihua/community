@@ -8,12 +8,12 @@ import request from '@/api/request.js';
 
 /**
  * 获取用户关注用户列表
- * @param {Object} params 参数 {userid:985319,page:1,count:20}
+ * @param {Object} params 参数 {userid:985319,page:1,limit:20}
  */
 export async function getUserAtteUserList(params = {
   userid: 985319,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/User/GetUserListForAtte', 'get', params)
 }
@@ -42,11 +42,11 @@ export async function delUserAtte(atteuserids = 137) {
 
 /**
  * 获取用户拉黑信息列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getUserBlackList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/User/GetUserBlackList', 'get', params)
 }
@@ -93,26 +93,26 @@ export async function getUserInfo() {
 
 /**
  * 获取用户发布信息列表
- * @param {Object} params 参数 {userid,objecttype,page:1,count:20}
+ * @param {Object} params 参数 {userid,objecttype,page:1,limit:20}
  * objecttype 全部可不传或传空
  */
 export async function getUserPublishList(params = {
   userid: 26081,
   objecttype: '',
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/trend/GetTrendListForUserID', 'get', params)
 }
 
 /**
  * 获取用户点赞过信息列表
- * @param {Object} params 参数 {userid,page:1,count:20}
+ * @param {Object} params 参数 {userid,page:1,limit:20}
  */
 export async function getUserTopList(params = {
   userid: 26081,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Interact/GetTrendListForTop', 'get', params)
 }
@@ -187,8 +187,8 @@ export async function modifyPassword(params = {
 /**
  * 用户通过手机号注册
  * @param {Object} params 参数 {phonesecret,code}
- * phonesecret：login_account,login_pwd 进行加密得到 
- * code短信验证码 
+ * phonesecret：login_account,login_pwd 进行加密得到
+ * code短信验证码
  */
 export async function registerByPhone(params = {
   code: 5653,
@@ -227,8 +227,8 @@ export async function refreshUserToken(secret = 'lo8cc=') {
 /**
  * 用户更新绑定手机号
  * @param {Object} params 参数 {phonesecret,code}
- * phonesecret：new_phone,password 进行加密得到 
- * code短信验证码 
+ * phonesecret：new_phone,password 进行加密得到
+ * code短信验证码
  */
 export async function modifyBindPhone(params = {
   phonesecret: 'sdfv==',
@@ -245,7 +245,7 @@ export async function modifyBindPhone(params = {
 export async function getUserFansList(params = {
   userid: 985319,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/User/GetUserListForFans', 'get', params)
 }
@@ -286,7 +286,7 @@ export async function getChatState() {
 
 /**
  * 修改聊天设置状态
- * @param {Number} state 参数 1 
+ * @param {Number} state 参数 1
  * 1 接收所有人聊天  2 仅接受关注的人与认证账号聊天
  */
 export async function modifyChatState(state = 1) {

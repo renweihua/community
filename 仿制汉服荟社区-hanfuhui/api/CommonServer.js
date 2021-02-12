@@ -37,7 +37,7 @@ export async function getStarCover() {
 }
 
 /**
- * APP启动检查更新 
+ * APP启动检查更新
  * @param {Object} params 参数 {num:65,client:'android' }
  * num 版本号
  */
@@ -78,7 +78,7 @@ export async function addReport(params = {
 
 /**
  * 获取省市列表
- * @param {Number} parentid 参数 0 省列表 、 通过省ID的市列表 
+ * @param {Number} parentid 参数 0 省列表 、 通过省ID的市列表
  */
 export async function getCityList(parentid = 0) {
   return await request('/Base/GetCityList', 'get', {
@@ -88,7 +88,7 @@ export async function getCityList(parentid = 0) {
 
 /**
  * 获取软件一些协议规则
- * @param {Number} key 参数  
+ * @param {Number} key 参数
  * hui_rule 社区公约、 hanbirule 汉币规则 orgjoin 组织入驻协议、shopjoin 商家入驻协议
  */
 export async function getSysParamValue(key = 'hanbirule') {
@@ -104,7 +104,7 @@ export async function getSysParamValue(key = 'hanbirule') {
  */
 export async function getRankList(params = {
   page: '1',
-  count: '20',
+  limit: '20',
   type: 'album'
 }) {
   return await request('/user/GetUserListForRank', 'get', params)
@@ -116,7 +116,7 @@ export async function getRankList(params = {
  */
 export async function getUserViolationList(params = {
   page: '1',
-  count: '20'
+  limit: '20'
 }) {
   return await request('/User/GetUserViolationList', 'get', params)
 }

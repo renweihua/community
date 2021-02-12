@@ -12,30 +12,30 @@
           <view class="f32r cgray">第{{item.TodayRanking}}个签到，汉币 {{item.Hanbi}} 个</view>
         </view>
       </block>
-      </view> 
+      </view>
     </mescroll-uni>
   </view>
 </template>
 
-<script> 
+<script>
   import {
     getSignInList
   } from "@/api/HanbiServer.js"
 
-  export default { 
+  export default {
     computed: {
       // 签到日期记录数据
       signinListData() {
         return this.$store.getters['getSigninListData']
       },
-    }, 
+    },
     methods: {
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
-        getSignInList({ 
+        getSignInList({
           page: mescroll.num,
-          count: mescroll.size
-        }).then(signinRes => {  
+          limit: mescroll.size
+        }).then(signinRes => {
           if (mescroll.num == 1) {
             this.$store.commit('setSigninListData', signinRes.data.Data)
           } else {
@@ -54,14 +54,14 @@
         let day = _data.getDate(); //日
         // 个位补零
         month = month < 10 ? "0" + month : month
-        day = day < 10 ? "0" + day : day 
+        day = day < 10 ? "0" + day : day
         return `${year}-${month}-${day}`;
       },
     }
   }
 </script>
 
-<style> 
+<style>
   page {
     background: #FFFFFF;
   }

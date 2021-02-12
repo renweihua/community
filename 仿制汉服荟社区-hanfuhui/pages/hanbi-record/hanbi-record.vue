@@ -34,7 +34,7 @@
       upCallback(mescroll) {
         getHanbiUserOrdersList({
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }).then(orderRes => {
           if (mescroll.num == 1) {
             this.orderList = orderRes.data.Data

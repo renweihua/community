@@ -83,7 +83,7 @@
       upCallback(mescroll) {
         getMessageListByType({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           type: 'comment'
         }).then(res => {
           if (mescroll.num == 1) {

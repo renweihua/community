@@ -251,7 +251,7 @@
           provinceName: '全国',
           province: 0
         },
-        // 刷新组件实例 
+        // 刷新组件实例
         mescroll: {
           recommend: null,
           album: null,
@@ -260,7 +260,7 @@
           word: null,
           org: null,
         },
-        // 
+        //
       }
     },
 
@@ -272,11 +272,11 @@
     },
 
     computed: {
-      // Banner图 
+      // Banner图
       bannerListData() {
         return this.$store.getters['common/getBannerListData']
       },
-      // 热门话题 
+      // 热门话题
       hotTopicListData() {
         return this.$store.getters['common/getHotTopicListData']
       },
@@ -319,12 +319,12 @@
       mescrollInit(mescroll) {
         this.mescroll[this.scrollInto] = mescroll;
       },
-      /// 下拉刷新的回调  
+      /// 下拉刷新的回调
       downCallback(mescroll) {
         // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
         this.mescroll[this.scrollInto].resetUpScroll()
       },
-      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 
+      /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         // 联网获取数据
         console.log(this.scrollInto, this.current);
@@ -350,7 +350,7 @@
         // 默认传递参数
         let params = {
           page: mescroll.num,
-          count: mescroll.size
+          limit: mescroll.size
         }
         // 组织活动追加省市参数
         if (this.current == 5) {
@@ -407,7 +407,7 @@
           mescroll.endErr();
         });
       },
-      /// 推荐栏-独立下拉加载 
+      /// 推荐栏-独立下拉加载
       downRecommend(mescroll) {
         // console.log(mescroll);
         this.mescroll[this.scrollInto] = mescroll;
@@ -415,7 +415,7 @@
           getBannerTopicList(),
           getHuibaList({
             page: 1,
-            count: 11
+            limit: 11
           }),
         ]).then(resArray => {
           this.$store.commit('common/setBannerListData', resArray[0].data.Data.banner)
@@ -435,7 +435,7 @@
           this.mescroll[this.scrollInto].resetUpScroll(true)
         }, 1000)
       },
-      /// 顶部导航选项点击 
+      /// 顶部导航选项点击
       fnBarClick(e) {
         // console.log(e);
         let current = e.hasOwnProperty("detail") ? e.detail.current : e.current;
@@ -461,9 +461,9 @@
           }
           return;
         } else {
-          // 改变顶部导航选中 
+          // 改变顶部导航选中
           this.current = current;
-          // 首次选中激活顶部导航关联页状态 
+          // 首次选中激活顶部导航关联页状态
           if (!this.status.album && current == 1) this.status.album = true;
           if (!this.status.video && current == 2) this.status.video = true;
           if (!this.status.topic && current == 3) this.status.topic = true;

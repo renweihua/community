@@ -8,11 +8,11 @@ import request from '@/api/request.js';
 
 /**
  * 获取荟吧列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getHuibaList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Huiba/GetHuibaListForGood', 'get', params)
 }
@@ -35,7 +35,7 @@ export async function getHuibaTop(id = 7566) {
 
 /**
  * 获取荟吧内信息列表
- * @param {Object} params 参数 
+ * @param {Object} params 参数
  * ishot:按最热 true、按最新 false
  * max_id:最大值 以第一页ID或ObjectID
  * {
@@ -43,7 +43,7 @@ export async function getHuibaTop(id = 7566) {
   ishot: false,
   max_id: -1,
   page: 1,
-  count: 20,
+  limit: 20,
 }
  */
 export async function getHuibaTrend(params = {
@@ -51,7 +51,7 @@ export async function getHuibaTrend(params = {
   ishot: false,
   max_id: -1,
   page: 1,
-  count: 20,
+  limit: 20,
 }) {
   return await request('/trend/GetTrendListForHuibaID', 'get', params)
 }
@@ -61,13 +61,13 @@ export async function getHuibaTrend(params = {
  * @param {Object} params 参数  {
 userid:985319,
 page:1,
-count:20,
+limit:20,
 }
  */
 export async function getHuibaUserFollow(params = {
   userid: 985319,
   page: 1,
-  count: 20,
+  limit: 20,
 }) {
   return await request('/huiba/GetHuibaFollowHuiba', 'get', params)
 }
@@ -104,13 +104,13 @@ export async function getHuibaType() {
  * @param {Object} params 参数  {
 typeid:4,
 page:1,
-count:20,
+limit:20,
 }
  */
 export async function getHuibaTypeList(params = {
   typeid: 4,
   page: 1,
-  count: 20,
+  limit: 20,
 }) {
   return await request('/Huiba/GetHuibaListForType', 'get', params)
 }

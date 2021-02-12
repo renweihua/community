@@ -42,7 +42,7 @@
       upCallback(mescroll) {
         getMessageNoticeList({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
         }).then(res => {
           if (mescroll.num == 1) {
             this.noticeList = res.data.Data
@@ -55,7 +55,7 @@
         })
       },
       /// 计算时间格式 下午 08:12 | 昨日 09:12 | 2019-12-03 20:12
-      calDateTime(str) { 
+      calDateTime(str) {
         return fnFormatTimeHeader(new Date(str).getTime())
       }
     }

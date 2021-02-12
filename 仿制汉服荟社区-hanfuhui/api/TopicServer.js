@@ -8,11 +8,11 @@ import request from '@/api/request.js';
 
 /**
  * 获取话题列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getTopicList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Topic/GetTopicListForHot', 'get', params)
 }
@@ -27,14 +27,14 @@ export async function getTopicInfo(id = 6201) {
 
 /**
  * 话题回复列表
- * @param {Object} params 参数 {topicid:142934,hot:false,page:1,count:20}
+ * @param {Object} params 参数 {topicid:142934,hot:false,page:1,limit:20}
  * hot: 按热度 true，按最新 false
  */
 export async function getTopicReplyList(params = {
   topicid: 142934,
   hot: false,
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Topic/GetTopicReplyListForTopic', 'get', params)
 }
@@ -49,7 +49,7 @@ export async function getTopicReplyInfo(id = 6201) {
 
 /**
  * 话题回复评论
- * @param {Object} params 参数 
+ * @param {Object} params 参数
  * images: 是通过upyun上传得到对象，多张组成数组
  * {
   content: '不存在的',
@@ -61,7 +61,7 @@ export async function getTopicReplyInfo(id = 6201) {
     "size": 235850,
     "imgsrc": "/android/2019/6/30/3fd23c3a841748bdbf1202591271ce22.jpg"
   }]
-} 
+}
  */
 export async function addTopicReply(params = {
   content: '不存在的',
@@ -79,11 +79,11 @@ export async function addTopicReply(params = {
 
 /**
  * 获取用户关注话题消息列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getTopicUserFollow(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/topic/GetTopicListForFollow', 'get', params)
 }
@@ -110,11 +110,11 @@ export async function delTopicFollow(id = 142934) {
 
 /**
  * 获取用户话题黑名单列表
- * @param {Object} params 参数 {page:1,count:20}
+ * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getTopicBlackList(params = {
   page: 1,
-  count: 20
+  limit: 20
 }) {
   return await request('/Topic/GetBlackTopicList', 'get', params)
 }

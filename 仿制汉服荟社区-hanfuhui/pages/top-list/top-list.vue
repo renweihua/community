@@ -40,7 +40,6 @@
 			},
 		},
 		onLoad(options) {
-			console.log(options);
 			if (options && options.dynamic_id) {
 				this.dynamic_id = parseInt(options.dynamic_id);
 			}
@@ -58,16 +57,14 @@
 					page: mescroll.num,
 					limit: mescroll.size
 				}).then(res => {
-					data = res.data.data;
-					console.log(res.data.data);
-					
+					let lists = res.data;
 					
 					if (mescroll.num == 1) {
-						this.$store.commit('interact/setTopListData', data)
+						this.$store.commit('interact/setTopListData', lists.data)
 					} else {
-						this.$store.commit('interact/setTopListData', this.topListData.concat(data))
+						this.$store.commit('interact/setTopListData', this.topListData.concat(lists.data))
 					}
-					mescroll.endSuccess(data.length, data.length >= mescroll.size);
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 				}).catch(() => {
 					mescroll.endErr();
 				})

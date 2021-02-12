@@ -49,7 +49,7 @@
       upCallback(mescroll) {
         getTopicUserFollow({
           page: mescroll.num,
-          count: mescroll.size,
+          limit: mescroll.size,
           userid: this.id
         }).then(res => {
           if (mescroll.num == 1) {
