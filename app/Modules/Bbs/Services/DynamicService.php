@@ -125,7 +125,7 @@ class DynamicService extends Service
                         'replyUser' => function($query){
                             $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
                         },
-                    ])->limit(5);
+                    ]);
                 },
             ])
             ->withCount([

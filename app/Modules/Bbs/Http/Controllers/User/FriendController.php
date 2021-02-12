@@ -17,12 +17,23 @@ class FriendController extends BbsController
 
     /**
      * 我的关注
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function follows() : JsonResponse
     {
         $lists = $this->service->getFollows($this->login_user);
+        return $this->successJson($lists);
+    }
+
+    /**
+     * 我的粉丝
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function fans() : JsonResponse
+    {
+        $lists = $this->service->getFans($this->login_user);
         return $this->successJson($lists);
     }
 

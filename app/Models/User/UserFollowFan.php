@@ -9,6 +9,11 @@ class UserFollowFan extends Model
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
 
+    public function userInfo()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'user_id');
+    }
+
     public function friendInfo()
     {
         return $this->hasOne(UserInfo::class, 'user_id', 'friend_id');

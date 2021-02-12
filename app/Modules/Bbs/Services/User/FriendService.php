@@ -27,10 +27,26 @@ class FriendService extends Service
                               ->orderBy('relation_id', 'DESC')
                               ->paginate(10);
 
-        foreach ($lists as $item) {
-            // 默认都是已关注
-            $item->friendInfo->is_follow = true;
-        }
+        return $this->getPaginateFormat($lists);
+    }
+
+    /**
+     * 我的粉丝
+     *
+     * @param  int  $login_user
+     *
+     * @return array
+     */
+    public function getFans(int $login_user)
+    {
+        $lists = UserFollowFan::where('friend_id', $login_user)
+                              ->with([
+                                  'userInfo' => function($query) {
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                  },
+                              ])
+                              ->orderBy('relation_id', 'DESC')
+                              ->paginate(10);
 
         return $this->getPaginateFormat($lists);
     }
