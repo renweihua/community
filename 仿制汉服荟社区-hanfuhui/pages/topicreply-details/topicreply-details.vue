@@ -91,7 +91,7 @@
     getTopicReplyInfo
   } from "@/api/TopicServer.js"
   import {
-    getTopList,
+    getDynamicPraises,
     dynamicPraise,
 
     getCommentList,
@@ -154,7 +154,7 @@
       },
       // 动态点赞列表数据
       topListData() {
-        return this.$store.getters['interact/getTopListData']
+        return this.$store.getters['interact/getDynamicPraisesData']
       },
       // 动态评论列表数据
       commentListData() {
@@ -207,7 +207,7 @@
             });
             params.count = 8
             // 获取点赞列表8项
-            return getTopList(params)
+            return getDynamicPraises(params)
           }).then(topRes => {
             this.$store.commit('interact/setTopListData', topRes.data.Data)
             params.count = mescroll.size

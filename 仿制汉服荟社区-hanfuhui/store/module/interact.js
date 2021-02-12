@@ -21,9 +21,9 @@ const interact = {
     userSaveWordList: [],
     //
   },
-  getters: { 
-    // 动态项点赞列表数组对象  this.$store.getters['interact/getTopListData']
-    getTopListData: state => state.topList, 
+  getters: {
+    // 动态项点赞列表数组对象  this.$store.getters['interact/getDynamicPraisesData']
+    getDynamicPraisesData: state => state.topList,
     // 动态项评论列表数组对象
     getCommentListData: state => state.commentList,
     // 动态用户收藏-全部数据

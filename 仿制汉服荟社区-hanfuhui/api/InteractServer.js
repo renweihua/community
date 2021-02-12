@@ -6,18 +6,17 @@ import request from '@/api/request.js';
  */
 
 /**
- * 获取动态点赞用户列表
- * @param {Object} params 参数 {objectid:2485094,objecttype:'trend',page:1,count:20}
- * objecttype： album 摄影、trend 趋势动态、topicreply 话题、video 视频
- * objectid： 动态列表中ID或者ObjectID
+ * 获取动态的点赞用户列表
+ *
+ * @param {Object} params 参数 {dynamic_id:0,page:1,limit:10}
+ *
+ * dynamic_id： 动态Id
  */
-export async function getTopList(params = {
-  objectid: 2485094,
-  objecttype: 'trend',
+export async function getDynamicPraises(params = {
   page: 1,
-  count: 20
+  limit: 10
 }) {
-  return await request('/Interact/GetTopList', 'get', params)
+  return await request('/dynamic/getPraises', 'get', params);
 }
 
 /**

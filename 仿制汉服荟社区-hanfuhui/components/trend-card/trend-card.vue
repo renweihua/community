@@ -213,9 +213,6 @@
 			/// 计算显示图片格
 			calImageSrcs() {
 				let imgArray = this.item.dynamic_images || [];
-				if (imgArray) {
-					imgArray = imgArray.map(item => item)
-				}
 				return imgArray.length > 9 ? imgArray.slice(0, 9) : imgArray
 			},
 			/// 计算内容截取字符长度 180
