@@ -11,11 +11,11 @@ import request from '@/api/request.js';
  * @param {Object} params 参数 {page:1,maxid:-1,count:20}
  */
 export async function getSquareList(params = {
-  page: 1,
-  maxid: -1,
-  count: 20
+	page: 1,
+	maxid: -1,
+	count: 20
 }) {
-  return await request('/trend/GetTrendListForSquare', 'get', params)
+	return await request('/trend/GetTrendListForSquare', 'get', params)
 }
 
 /**
@@ -23,10 +23,10 @@ export async function getSquareList(params = {
  * @param {Object} params 参数 {page:1,count:20}
  */
 export async function getDiscoverList(params = {
-  page: 1,
-  limit: 20
+	page: 1,
+	limit: 20
 }) {
-  return await request('/discover', 'get', params)
+	return await request('/discover', 'get', params)
 }
 
 /**
@@ -34,19 +34,20 @@ export async function getDiscoverList(params = {
  * @param {Object} params 参数 {page:1,maxid:-1,count:20}
  */
 export async function getAtteList(params = {
-  page: 1,
-  maxid: -1,
-  count: 20
+	page: 1,
+	maxid: -1,
+	count: 20
 }) {
-  return await request('/trend/GetTrendListForAtte', 'get', params)
+	return await request('/trend/GetTrendListForAtte', 'get', params)
 }
 
 /**
  * 获取动态详情信息
- * @param {Number} id 参数 2616317
+ * 
+ * @param {Number} dynamic_id 动态Id
  */
-export async function getTrendInfo(id = 2616317) {
-  return await request('/trend/GetTrend', 'get', {
-    id
-  })
+export async function getDynamicInfo(dynamic_id) {
+	return await request('/dynamic/detail', 'get', {
+		dynamic_id
+	})
 }
