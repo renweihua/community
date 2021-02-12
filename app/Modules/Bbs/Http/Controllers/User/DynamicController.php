@@ -50,6 +50,17 @@ class DynamicController extends BbsController
     }
 
     /**
+     * 我的收藏
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function collections(): JsonResponse
+    {
+        $lists = $this->service->getCollections($this->login_user);
+        return $this->successJson($lists);
+    }
+
+    /**
      * 收藏动态
      *
      * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request

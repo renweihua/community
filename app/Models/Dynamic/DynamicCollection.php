@@ -9,6 +9,11 @@ class DynamicCollection extends Model
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
 
+    public function dynamic()
+    {
+        return $this->hasOne(Dynamic::class, 'dynamic_id', 'dynamic_id');
+    }
+
     /**
      * 指定会员是否已【收藏】了指定动态
      *

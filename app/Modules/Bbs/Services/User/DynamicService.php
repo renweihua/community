@@ -47,6 +47,7 @@ class DynamicService extends Service
                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
                                   },
                               ])->orderBy('created_time', 'ASC')->paginate(10);
+
         return $this->getPaginateFormat($lists);
     }
 
@@ -109,6 +110,28 @@ class DynamicService extends Service
             $this->setError($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * 我的收藏
+     *
+     * @param  int  $login_user
+     *
+     * @return array
+     */
+    public function getCollections(int $login_user)
+    {
+        $lists = DynamicCollection::where('user_id', $login_user)
+                                  ->select('relation_id', 'user_id', 'dynamic_id', 'created_time')
+                                  ->with([
+                                      'dynamic' => function($query) {
+                                          $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'praise_count', 'collection_count', 'comment_count');
+                                      },
+                                  ])
+                                  ->orderBy('relation_id', 'DESC')
+                                  ->paginate(10);
+
+        return $this->getPaginateFormat($lists);
     }
 
     /**

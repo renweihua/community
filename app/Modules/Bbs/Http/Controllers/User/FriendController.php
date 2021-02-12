@@ -28,7 +28,7 @@ class FriendController extends BbsController
 
     /**
      * 我的粉丝
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function fans() : JsonResponse
