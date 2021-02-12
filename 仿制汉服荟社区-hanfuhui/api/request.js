@@ -5,6 +5,7 @@
  */
 export default function request(route, method = 'get', data = {}) {
 	return new Promise((resolve, reject) => {
+		let login_token = uni.getStorageSync('TOKEN') || '';
 		uni.request({
 			// url: 'http://api5.laosha.net' + route,
 			// url: 'http://easy-mock.liuup.com/mock/5df764250a2f9f42cfec1a50/api5.hanfugou.com' + route,
@@ -12,9 +13,9 @@ export default function request(route, method = 'get', data = {}) {
 			method,
 			data,
 			header: {
-				'hanfuhui_version': 3,
-				'hanfuhui_token': uni.getStorageSync('TOKEN') || '',
-				'hanfuhui_fromclient': 'android',
+				'_version': 3,
+				'Authorization': !login_token ? '' : ('bearer ' + login_token),
+				'_fromclient': 'android',
 				'content-type': 'application/x-www-form-urlencoded',
 			},
 			success: res => {

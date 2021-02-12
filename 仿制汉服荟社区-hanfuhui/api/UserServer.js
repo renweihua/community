@@ -85,13 +85,10 @@ export async function getUserExistsBlack(userid = 26081) {
 }
 
 /**
- * 获取用户信息
- * @param {Number} id 参数 985319
+ * 获取登录会员的信息
  */
-export async function getUserInfo(id = 985319) {
-  return await request('/user/GetUserInfo', 'get', {
-    id
-  })
+export async function getUserInfo() {
+  return await request('/auth/me', 'post')
 }
 
 /**
@@ -147,10 +144,8 @@ export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg
  * @param {String} usersecret 参数 login_account,login_pwd 进行加密得到
  * Rsa加密
  */
-export async function loginByPhone(usersecret = '45a6280==') {
-  return await request('/account/LoginForPhone', 'post', {
-    usersecret
-  })
+export async function login(params) {
+  return await request('/auth/login', 'post', params)
 }
 
 /**
