@@ -22,6 +22,11 @@ class UserInfo extends Model
         return $this->hasMany(UserFollowFan::class, $this->primaryKey, $this->primaryKey);
     }
 
+    public function isFollow()
+    {
+        return $this->hasOne(UserFollowFan::class, 'friend_id', $this->primaryKey);
+    }
+
     protected static function newFactory()
     {
         return UserInfoFactory::new();

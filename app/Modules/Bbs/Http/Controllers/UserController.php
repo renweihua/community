@@ -27,7 +27,7 @@ class UserController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['user_id'])) {
+        if ($detail = $this->service->detail((int)$data['user_id'], $this->login_user)) {
             return $this->successJson($detail, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
