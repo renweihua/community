@@ -124,7 +124,6 @@
 				default: false
 			}
 		},
-
 		watch: {
 			refresh(val) {
 				if (val) this.fnRefreshUserInfo();
@@ -143,6 +142,11 @@
 			// 用户信息
 			userInfoData() {
 				let user_info = this.$store.getters['user/getUserInfoData'];
+				if(!user_info || !user_info.user_id){
+					return uni.redirectTo({
+						url: '/pages/login/login'
+					});
+				}
 				console.log(user_info);
 				return user_info;
 			},
@@ -187,11 +191,12 @@
 					url: `/pages/user-info/user-info?id=${this.userInfoData.ID}`
 				})
 			},
-
 			/// 刷新用户信息消息
 			fnRefreshUserInfo() {
 				// 获得登录用户信息
-				getUserInfo(this.userInfoData.ID).then(userinfoRes => {
+				getUserInfo().then(userinfoRes => {
+					console.log(userinfoRes);
+					return;
 					// 保存登录用户信息
 					this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
 					// 获取未读消息数
