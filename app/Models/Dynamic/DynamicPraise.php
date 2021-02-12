@@ -3,11 +3,17 @@
 namespace App\Models\Dynamic;
 
 use App\Models\Model;
+use App\Models\User\UserInfo;
 
 class DynamicPraise extends Model
 {
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
+
+    public function userInfo()
+    {
+        return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
+    }
 
     /**
      * 指定会员是否已【点赞】了指定动态

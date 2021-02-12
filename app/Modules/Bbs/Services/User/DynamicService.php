@@ -32,6 +32,25 @@ class DynamicService extends Service
     }
 
     /**
+     * 获取指定动态的点赞人员记录
+     *
+     * @param  int  $dynamic_id
+     *
+     * @return array
+     */
+    public function getPraises(int $dynamic_id)
+    {
+        $lists = DynamicPraise::where('dynamic_id', $dynamic_id)
+                              ->select('relation_id', 'user_id', 'created_time')
+                              ->with([
+                                  'userInfo' => function($query) {
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
+                                  },
+                              ])->orderBy('created_time', 'ASC')->paginate(10);
+        return $this->getPaginateFormat($lists);
+    }
+
+    /**
      * 动态：点赞流程
      *
      * @param       $login_user
@@ -163,8 +182,8 @@ class DynamicService extends Service
         $reply_user = 0;
         $top_level = 0;
         // 验证回复的评论
-        if ( !empty($reply_id) ) {
-            if ( !$detail = $dynamicCommentInstance->where('comment_id', $params['reply_id'])->first() ) {
+        if ( !empty($reply_id)) {
+            if ( !$detail = $dynamicCommentInstance->where('comment_id', $params['reply_id'])->first()) {
                 $this->setError('回复的评论信息不存在');
                 return false;
             }
@@ -176,15 +195,15 @@ class DynamicService extends Service
         try {
             // 评论信息组装
             $validate_data = [
-                'user_id'          => $login_user->user_id,
-                'reply_user'       => $reply_user,
-                'dynamic_id'       => $dynamic->dynamic_id,
-                'reply_id'         => $reply_id,
-                'top_level'        => $top_level,
-                'comment_content'  => $params['content'],
-                'author_id'        => $dynamic->user_id,
+                'user_id' => $login_user->user_id,
+                'reply_user' => $reply_user,
+                'dynamic_id' => $dynamic->dynamic_id,
+                'reply_id' => $reply_id,
+                'top_level' => $top_level,
+                'comment_content' => $params['content'],
+                'author_id' => $dynamic->user_id,
                 // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
-                'is_read'          => $login_user->user_id == $reply_user ? 1 : 0,
+                'is_read' => $login_user->user_id == $reply_user ? 1 : 0,
             ];
             $comment = $dynamicCommentInstance->create($validate_data);
 
