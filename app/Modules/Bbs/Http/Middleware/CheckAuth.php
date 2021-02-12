@@ -24,7 +24,9 @@ class CheckAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        // var_dump($request->header('Authorization'));
+        if (empty($request->header('Authorization'))){
+            return $this->errorJson('请先登录！', -1);
+        }
         $this->guard = 'user';
         // Auth认证
         $auth = Auth()->guard($this->guard);

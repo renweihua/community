@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Modules\Bbs\Http\Controllers;
+namespace App\Modules\Bbs\Http\Controllers\User;
 
+use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\DynamicIdRequest;
-use App\Modules\Bbs\Services\DynamicService;
+use App\Modules\Bbs\Http\Requests\User\DynamicCommentRequest;
+use App\Modules\Bbs\Services\User\DynamicService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DynamicController extends BbsController
 {
@@ -16,24 +17,23 @@ class DynamicController extends BbsController
     }
 
     /**
-     * 获取动态详情
+     * 点赞动态
      *
      * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function detail(DynamicIdRequest $request) : JsonResponse
+    public function praise(DynamicIdRequest $request) : JsonResponse
     {
         $data = $request->validated();
-        if ($detail = $this->service->detail((int)$data['dynamic_id'], $this->login_user)) {
-            return $this->successJson($detail, $this->service->getError());
+
+        if ($result = $this->service->praise($this->user, (int)$data['dynamic_id'])) {
+            return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
         }
     }
 
-    /**
-     *
     /**
      * 收藏动态
      *
@@ -41,7 +41,7 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function collection(DynamicIdRequest $request)
+    public function collection(DynamicIdRequest $request) : JsonResponse
     {
         $data = $request->validated();
 
@@ -59,15 +59,14 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function comment(DynamicCommentRequest $request): JsonResponse
+    public function comment(DynamicCommentRequest $request) : JsonResponse
     {
         $request->validated();
 
-        if ($data = $this->service->comment($this->user, $request->all())){
+        if ($data = $this->service->comment($this->user, $request->all())) {
             return $this->successJson($data, $this->service->getError());
-        }else{
+        } else {
             return $this->errorJson($this->service->getError());
         }
     }
-
 }
