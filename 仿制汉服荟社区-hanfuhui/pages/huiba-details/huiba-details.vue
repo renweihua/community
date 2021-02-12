@@ -71,11 +71,7 @@
     delUserBlack,
   } from "@/api/UserServer.js"
   import {
-    dynamicPraise,
-
-    addSave,
-    delSave
-  } from "@/api/InteractServer.js"
+    dynamicPraise,} from "@/api/InteractServer.js"
 
   // 动态信息项卡片组件
   import TrendCard from '@/components/trend-card/trend-card'
@@ -413,13 +409,9 @@
         }
         // 用户是否已收藏
         if (filItem.UserSave) {
-          delSave(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.SaveCount--;
-            filItem.UserSave = false
-          })
+
         } else {
-          addSave(params).then(addRes => {
+          dynamicCollection(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.SaveCount++;
             filItem.UserSave = true

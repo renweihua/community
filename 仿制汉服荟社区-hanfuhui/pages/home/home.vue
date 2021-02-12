@@ -55,8 +55,7 @@
 	} from "@/api/TrendServer.js"
 	import {
 		dynamicPraise,
-		addSave,
-		delSave
+		dynamicCollection,
 	} from "@/api/InteractServer.js"
 	import {
 		addUserAtte,
@@ -97,7 +96,7 @@
 				timeOutHome: 0,
 				// 列表最大ID定位
 				maxID: [-1, -1, -1],
-				// 刷新组件实例 
+				// 刷新组件实例
 				mescroll: [],
 				//
 			}
@@ -204,7 +203,7 @@
 					}
 					return;
 				} else {
-					// 改变顶部导航选中 
+					// 改变顶部导航选中
 					this.current = current;
 					// 首次选中激活顶部导航关联页状态
 					if (!this.status.follow && current == 1) this.status.follow = true;
@@ -293,7 +292,7 @@
 					return
 				}
 			},
-			/// 展卡跳转用户中心页 
+			/// 展卡跳转用户中心页
 			fnCardUser(e) {
 				uni.navigateTo({
 					url: `/pages/user-info/user-info?id=${e.User.ID}`
@@ -305,7 +304,7 @@
 					url: `/pages/huiba-details/huiba-details?id=${e.ID}`
 				})
 			},
-			/// 展卡点赞 
+			/// 展卡点赞
 			fnCardTop(e) {
 				let filItem = {};
 				// 推荐
@@ -343,24 +342,23 @@
 				if (this.current == 1) filItem = this.atteData.filter(item => item.ObjectID == e.ObjectID)[0];
 				// 广场
 				if (this.current == 2) filItem = this.squareData.filter(item => item.ObjectID == e.ObjectID)[0];
-				let params = {
-					objectid: filItem.ObjectID,
-					objecttype: filItem.ObjectType
-				}
-				// 用户是否已收藏
-				if (filItem.UserSave) {
-					delSave(params).then(delRes => {
-						if (delRes.data.Data == false) return
-						filItem.SaveCount--;
-						filItem.UserSave = false
-					})
-				} else {
-					addSave(params).then(addRes => {
-						if (addRes.data.Data == false) return
-						filItem.SaveCount++;
-						filItem.UserSave = true
-					})
-				}
+
+				dynamicCollection(filItem.dynamic_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+
+					// 用户是否已收藏
+					if (filItem.is_collection) {
+						filItem.collection_count--;
+						filItem.is_collection = false;
+					} else {
+						filItem.collection_count++;
+						filItem.is_collection = true;
+					}
+				});
 			},
 			/// 展卡更多-关注
 			fnCardFollow(e) {

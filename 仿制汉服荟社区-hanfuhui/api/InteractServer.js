@@ -109,29 +109,12 @@ export async function getUserSaveList(params = {
 }
 
 /**
- * 动态用户收藏添加
- * @param {Number} ids 参数 objectid 8783858
- * objecttype：word 文章、video 视频、album 摄影、全部就留空或不传
- * objectid： 动态列表中ID或者ObjectID
+ * 动态：收藏
+ *
+ * dynamic_id： 动态Id
  */
-export async function addSave(params = {
-  objectid: 30952,
-  objecttype: 'video'
-}) {
-  return await request('/Interact/InsertSave', 'post', params)
-}
-
-/**
- * 动态用户收藏取消
- * @param {Number} ids 参数 objectid 8783858
- * objecttype： word 文章、video 视频、album 摄影、全部就留空或不传
- * objectid： 动态列表中ID或者ObjectID
- */
-export async function delSave(params = {
-  objectid: 30952,
-  objecttype: 'video'
-}) {
-  return await request('/Interact/DeleteSave', 'post', params)
+export async function dynamicCollection(dynamic_id) {
+  return await request('/dynamic/collection', 'post', {dynamic_id:dynamic_id})
 }
 
 /**

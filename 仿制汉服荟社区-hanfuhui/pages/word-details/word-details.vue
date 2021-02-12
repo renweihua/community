@@ -89,10 +89,7 @@
     addComment,
     delComment,
     addCommentTop,
-    delCommentTop,
-    addSave,
-    delSave
-  } from "@/api/InteractServer.js"
+    delCommentTop,} from "@/api/InteractServer.js"
   import {
     addUserAtte,
     delUserAtte,
@@ -301,7 +298,7 @@
         }
         // 用户是否已经点过赞
         if (filItem.UserTop) {
-          
+
         } else {
           dynamicPraise(params).then(addRes => {
             if (addRes.data.Data == false) return
@@ -434,15 +431,9 @@
         }
         // 用户是否已经收藏
         if (filItem.UserSave) {
-          delSave(params).then(delRes => {
-            if (delRes.data.Data == false) return
-            filItem.SaveCount--
-            filItem.UserSave = false
-            this.wordInfoData.SaveCount--
-            this.wordInfoData.UserSave = false
-          })
+
         } else {
-          addSave(params).then(addRes => {
+          dynamicCollection(params).then(addRes => {
             if (addRes.data.Data == false) return
             filItem.SaveCount++
             filItem.UserSave = true
