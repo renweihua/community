@@ -66,6 +66,19 @@ class UserInfo extends Model
     }
 
     /**
+     * 指定会员的获赞数变动操作
+     *
+     * @param  int  $user_id
+     * @param  int  $num
+     *
+     * @return mixed
+     */
+    public function setGetLikes(int $user_id, int $num = 1)
+    {
+        return $this->where('user_id', $user_id)->increment('get_likes', $num);
+    }
+
+    /**
      * 生成唯一的uuid
      *
      * @return string

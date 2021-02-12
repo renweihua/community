@@ -6,6 +6,7 @@ use App\Exceptions\Bbs\FailException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicPraise;
+use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -120,12 +121,19 @@ class DynamicService extends Service
         ];
         DB::beginTransaction();
         try {
+            // 动态的作者
+            $author = $dynamic->user_id;
+
+            $userInfoInstance = UserInfo::getInstance();
             $parise_num = 1;
             // 是否已点赞过了该动态
             if ($dynamicPraise->isPraise($user->user_id, $dynamic_id)) {
                 $parise_num = -1;
                 // 删除点赞记录
                 $dynamicPraise->where($data)->delete();
+                // 会员获赞数递减
+                $userInfoInstance->setGetLikes($author, -1);
+
                 $this->setError('取消点赞成功！');
             } else {
                 $ip_agent = get_client_info();
@@ -134,6 +142,8 @@ class DynamicService extends Service
                     'created_ip' => $ip_agent['ip'] ?? get_ip(),
                     'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
                 ]));
+                // 获赞数递增
+                $userInfoInstance->setGetLikes($author, 1);
 
                 // 互动消息：xxx 点赞了您的动态 xxx。
 

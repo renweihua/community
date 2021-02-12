@@ -17,7 +17,7 @@ class UserService extends Service
     public function detail(int $user_id)
     {
         $user = User::with(['userInfo' => function($query) {
-            $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction']);
+            $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes']);
         }])->find($user_id);
         if (empty($user)) {
             $this->setError('会员不存在！');

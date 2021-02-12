@@ -27,6 +27,7 @@ class UserInfoFactory extends Factory
             'user_sex' => rand(0, 2),
             'user_grade' => rand(0, 10),
             'notification_count' => rand(0, 10000),
+            'get_likes' => rand(0, 10000),
             'created_time' => time(),
             'updated_time' => time(),
         ];
