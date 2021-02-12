@@ -51,16 +51,22 @@ Route::prefix('')->middleware([])->group(function () {
     Route::prefix('dynamic')->group(function () {
         // 动态详情
         Route::get('/detail', 'DynamicController@detail');
-        // 点赞 - 动态
-        Route::post('/praise', 'DynamicController@praise')->middleware(CheckAuth::class);
-        // 点赞 - 动态
-        Route::post('/collection', 'DynamicController@collection')->middleware(CheckAuth::class);
     });
 
     // 登录会员
     Route::prefix('')->middleware([CheckAuth::class])->group(function () {
         // 关注指定会员
         Route::post('user/follow', 'User\FriendController@follow');
+
+        // 动态相关
+        Route::prefix('dynamic')->group(function () {
+            // 点赞 - 动态
+            Route::post('/praise', 'DynamicController@praise');
+            // 点赞 - 动态
+            Route::post('/collection', 'DynamicController@collection');
+            // 评论 - 动态
+            Route::post('/comment', 'DynamicController@comment');
+        });
     });
 
     // 其它系统配置

@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Services;
 use App\Exceptions\Bbs\FailException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
+use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -104,19 +105,19 @@ class DynamicService extends Service
     /**
      * 动态：点赞流程
      *
-     * @param       $user
+     * @param       $login_user
      * @param  int  $dynamic_id
      *
      * @return bool
      */
-    public function praise($user, int $dynamic_id) : bool
+    public function praise($login_user, int $dynamic_id) : bool
     {
         if ( !$dynamic = $this->geyDynamicDetail($dynamic_id, true)) {
             return false;
         }
         $dynamicPraise = DynamicPraise::getInstance();
         $data = [
-            'user_id' => $user->user_id,
+            'user_id' => $login_user->user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
@@ -127,7 +128,7 @@ class DynamicService extends Service
             $userInfoInstance = UserInfo::getInstance();
             $parise_num = 1;
             // 是否已点赞过了该动态
-            if ($dynamicPraise->isPraise($user->user_id, $dynamic_id)) {
+            if ($dynamicPraise->isPraise($login_user->user_id, $dynamic_id)) {
                 $parise_num = -1;
                 // 删除点赞记录
                 $dynamicPraise->where($data)->delete();
@@ -165,26 +166,26 @@ class DynamicService extends Service
     /**
      * 动态：收藏流程
      *
-     * @param       $user
+     * @param       $login_user
      * @param  int  $dynamic_id
      *
      * @return bool
      */
-    public function collection($user, int $dynamic_id) : bool
+    public function collection($login_user, int $dynamic_id) : bool
     {
         if ( !$dynamic = $this->geyDynamicDetail($dynamic_id, true)) {
             return false;
         }
         $dynamicCollection = DynamicCollection::getInstance();
         $data = [
-            'user_id' => $user->user_id,
+            'user_id' => $login_user->user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
         try {
             $parise_num = 1;
             // 是否已点赞过了该动态
-            if ($dynamicCollection->isCollection($user->user_id, $dynamic_id)) {
+            if ($dynamicCollection->isCollection($login_user->user_id, $dynamic_id)) {
                 $parise_num = -1;
                 // 删除点赞记录
                 $dynamicCollection->where($data)->delete();
@@ -210,6 +211,73 @@ class DynamicService extends Service
         } catch (FailException $e) {
             DB::rollBack();
             $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 评论动态的流程
+     * 
+     * @param $login_user
+     * @param $params
+     *
+     * @return bool
+     */
+    public function comment($login_user, $params)
+    {
+        if ( !$dynamic = $this->geyDynamicDetail($params['dynamic_id'], true)) {
+            return false;
+        }
+        $dynamicCommentInstance = DynamicComment::getInstance();
+        $reply_id = $params['reply_id'] ?? 0;
+        // 如果评论，那么默认就是发布者
+        $reply_user = 0;
+        $top_level = 0;
+        // 验证回复的评论
+        if ( !empty($reply_id) ) {
+            if ( !$detail = $dynamicCommentInstance->where('comment_id', $params['reply_id'])->first() ) {
+                $this->setError('回复的评论信息不存在');
+                return false;
+            }
+            // 顶级Id
+            $top_level = $detail->top_level == 0 ? $detail->comment_id : $detail->top_level;
+            $reply_user = $detail->user_id;
+        }
+        DB::beginTransaction();
+        try {
+            // 评论信息组装
+            $validate_data = [
+                'user_id'          => $login_user->user_id,
+                'reply_user'       => $reply_user,
+                'dynamic_id'       => $dynamic->dynamic_id,
+                'reply_id'         => $reply_id,
+                'top_level'        => $top_level,
+                'comment_content'  => $params['content'],
+                'author_id'        => $dynamic->user_id,
+                // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
+                'is_read'          => $login_user->user_id == $reply_user ? 1 : 0,
+            ];
+            $comment = $dynamicCommentInstance->create($validate_data);
+
+            // 动态的评论量实时变动（沉余字段）
+            $dynamic->increment('comment_count');
+
+            // 给动态归属者发送消息：互动消息：谁评论了你的动态
+
+            DB::commit();
+            $this->setError('评论成功！');
+
+            // 评论加载发布者
+            $comment->userInfo;
+            // 默认关联数据设置
+            $comment->replies = [];
+            $comment->is_praise = false;
+            $comment->praise_count = $comment->replies_count = 0;
+
+            return $comment;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError('评论失败！');
             return false;
         }
     }

@@ -68,4 +68,22 @@ class DynamicController extends BbsController
         }
     }
 
+    /**
+     * 评论动态
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\DynamicCommentRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function comment(DynamicCommentRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        if ($data = $this->service->comment($this->user, $request->all())){
+            return $this->successJson($data, $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
 }

@@ -21,8 +21,8 @@ class CreateDynamicCommentsTable extends Migration
             $table->integer('reply_user')->unsigned()->default(0)->comment('会员Id');
             $table->integer('dynamic_id')->unsigned()->default(0)->comment('动态Id');
             $table->bigInteger('author_id')->unsigned()->default(0)->comment('作者Id');
-            $table->text('reply_content')->nullable()->comment('回复内容');
-            $table->integer('parent_reply')->unsigned()->default(0)->comment('归属评论Id');
+            $table->text('comment_content')->nullable()->comment('回复内容');
+            $table->integer('top_level')->unsigned()->default(0)->comment('归属评论Id');
             $table->integer('reply_id')->unsigned()->default(0)->comment('回复评论的Id');
             $table->boolean('is_read')->unsigned()->default(0)->comment('是否已读：0：否；1：是');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
