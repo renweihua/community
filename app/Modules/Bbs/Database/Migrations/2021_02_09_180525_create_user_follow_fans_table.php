@@ -16,7 +16,7 @@ class CreateUserFollowFansTable extends Migration
         if (Schema::hasTable('user_follow_fans')) return;
         Schema::create('user_follow_fans', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('record_id')->unsigned()->comment('会员关注与粉丝记录表');
+            $table->bigIncrements('relation_id')->unsigned()->comment('会员关注与粉丝记录表');
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员主键');
             $table->bigInteger('friend_id')->unsigned()->default(0)->comment('对应会员Id');
             // 两条对应记录同时更新

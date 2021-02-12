@@ -59,8 +59,16 @@ Route::prefix('')->middleware([])->group(function () {
 
     // 登录会员
     Route::prefix('')->middleware([CheckAuth::class])->namespace('User')->group(function () {
+
+        // 好友相关
         // 关注指定会员
         Route::post('user/follow', 'FriendController@follow');
+        Route::prefix('friend')->group(function () {
+            // 我的关注
+            Route::get('/follows', 'FriendController@follows');
+            // 我的粉丝
+            Route::get('/fans', 'FriendController@fans');
+        });
 
         // 动态相关
         Route::prefix('dynamic')->group(function () {

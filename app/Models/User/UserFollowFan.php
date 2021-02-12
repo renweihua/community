@@ -6,8 +6,13 @@ use App\Models\Model;
 
 class UserFollowFan extends Model
 {
-    protected $primaryKey = 'record_id';
+    protected $primaryKey = 'relation_id';
     public $timestamps = false;
+
+    public function friendInfo()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'friend_id');
+    }
 
     /**
      * 会员，是否关注指定会员

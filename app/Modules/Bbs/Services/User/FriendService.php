@@ -10,6 +10,32 @@ use Illuminate\Support\Facades\DB;
 class FriendService extends Service
 {
     /**
+     * 我的关注
+     *
+     * @param  int  $login_user
+     *
+     * @return array
+     */
+    public function getFollows(int $login_user)
+    {
+        $lists = UserFollowFan::where('user_id', $login_user)
+                              ->with([
+                                  'friendInfo' => function($query) {
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                  },
+                              ])
+                              ->orderBy('relation_id', 'DESC')
+                              ->paginate(10);
+
+        foreach ($lists as $item) {
+            // 默认都是已关注
+            $item->friendInfo->is_follow = true;
+        }
+
+        return $this->getPaginateFormat($lists);
+    }
+
+    /**
      * 关注指定会员流程
      *
      * @param  int  $login_user
@@ -32,14 +58,14 @@ class FriendService extends Service
                 'user_id' => $login_user,
                 'friend_id' => $friend_id,
             ];
-            if ($my_follow){
+            if ($my_follow) {
                 // 删除我关注对方
                 $my_follow->delete();
                 // 删除对方与我是互关的状态
                 if ($friend_follow) $friend_follow->save(['cross_correlation' => 0]);
-            }else{
+            } else {
                 // 被关注，那么双方标记为互关，好友；更改对方的互关状态
-                if ($friend_follow){
+                if ($friend_follow) {
                     $friend_follow->save(['cross_correlation' => 1]);
 
                     $data['cross_correlation'] = 1;
@@ -47,15 +73,14 @@ class FriendService extends Service
                 $userFollowFan->create(array_merge($data, [
                     'created_time' => time(),
                 ]));
-
                 // 互动消息：谁关注了您
 
             }
 
             DB::commit();
-            $this->setError( $msg . '成功！');
+            $this->setError($msg . '成功！');
             return ['is_follow' => $my_follow ? false : true];
-        }catch (FailException $e){
+        } catch (FailException $e) {
             DB::rollBack();
             $this->setError($msg . '失败！');
             return false;
