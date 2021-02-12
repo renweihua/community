@@ -1,83 +1,87 @@
 <template>
-  <view>
-    <!-- 滚动内容区 -->
-    <mescroll-uni :down="{use:false}" :up="{use:false}">
-      <view class="mb18r bgwhite plr28r">
-        <view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('account-security')">
-          <text class="f36r c111 flex-gitem">账户与安全</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-        <view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('black-list')">
-          <text class="f36r c111 flex-gitem">黑名单</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-        <view class="flex flex-aic hl90r">
-          <text class="f36r c111 flex-gitem" @tap="fnOpenWin('privacy-manage')">隐私管理</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-      </view>
-      <view class="mb18r bgwhite plr28r">
-        <view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('punish-list')">
-          <text class="f36r c111 flex-gitem">处罚公示</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-        <view class="flex flex-aic hl90r bbs2r">
-          <text class="f36r c111 flex-gitem" @tap="fnCustomer">小荟客服</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-        <view class="flex flex-aic hl90r">
-          <text class="f36r c111 flex-gitem" @tap="fnOpenWin('about-us')">关于我们</text>
-          <i-icon type="you" size="42" color="#8F8F94"></i-icon>
-        </view>
-      </view>
-      <view class="hl90r mlr28r mt64r f36r fcenter cwhite bgtheme br8r" @tap="fnLogout">退出登录</view>
-    </mescroll-uni>
-  </view>
+	<view>
+		<!-- 滚动内容区 -->
+		<mescroll-uni :down="{use:false}" :up="{use:false}">
+			<view class="mb18r bgwhite plr28r">
+				<view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('account-security')">
+					<text class="f36r c111 flex-gitem">账户与安全</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+				<view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('black-list')">
+					<text class="f36r c111 flex-gitem">黑名单</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+				<view class="flex flex-aic hl90r">
+					<text class="f36r c111 flex-gitem" @tap="fnOpenWin('privacy-manage')">隐私管理</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+			</view>
+			<view class="mb18r bgwhite plr28r">
+				<view class="flex flex-aic hl90r bbs2r" @tap="fnOpenWin('punish-list')">
+					<text class="f36r c111 flex-gitem">处罚公示</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+				<view class="flex flex-aic hl90r bbs2r">
+					<text class="f36r c111 flex-gitem" @tap="fnCustomer">小荟客服</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+				<view class="flex flex-aic hl90r">
+					<text class="f36r c111 flex-gitem" @tap="fnOpenWin('about-us')">关于我们</text>
+					<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+				</view>
+			</view>
+			<view class="hl90r mlr28r mt64r f36r fcenter cwhite bgtheme br8r" @tap="fnLogout">退出登录</view>
+		</mescroll-uni>
+	</view>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        // 登录用户ID
-        id: 0,
-      }
-    },
+	import {
+		logout,
+	} from "@/api/UserServer.js"
 
-    onLoad(options) {
-      if (options && options.id) {
-        this.id = parseInt(options.id)
-      }
-    },
-
-    methods: {
-      /// 跳转打开新窗口
-      fnOpenWin(type) {
-        uni.navigateTo({
-          url: `/pages/${type}/${type}?id=${this.id}`
-        })
-      },
-      /// 跳转小荟客服聊天页
-      fnCustomer() {
-        console.log('联系客服');
-      },
-      /// 退出登录
-      fnLogout() { 
-        uni.showLoading({
-          title: '退出登录',
-          mask: true
-        })
-        setTimeout(() => {
-          uni.removeStorageSync('TOKEN');
-          uni.hideLoading()
-          // 跳转登录
-          uni.reLaunch({
-            url: '/pages/login/login'
-          })
-        }, 1500); 
-      }
-    }
-  }
+	export default {
+		data() {
+			return {
+				// 登录用户ID
+				id: 0,
+			}
+		},
+		onLoad(options) {
+			if (options && options.id) {
+				this.id = parseInt(options.id)
+			}
+		},
+		methods: {
+			/// 跳转打开新窗口
+			fnOpenWin(type) {
+				uni.navigateTo({
+					url: `/pages/${type}/${type}?id=${this.id}`
+				})
+			},
+			/// 跳转小荟客服聊天页
+			fnCustomer() {
+				console.log('联系客服');
+			},
+			/// 退出登录
+			fnLogout() {
+				logout().then(res => {
+					uni.showLoading({
+						title: '退出登录',
+						mask: true
+					})
+					setTimeout(() => {
+						uni.removeStorageSync('TOKEN');
+						uni.hideLoading()
+						// 跳转登录
+						uni.reLaunch({
+							url: '/pages/login/login'
+						})
+					}, 1500);
+				});
+			}
+		}
+	}
 </script>
 
 <style>

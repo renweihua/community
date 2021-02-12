@@ -149,6 +149,14 @@ export async function login(params) {
 }
 
 /**
+ * 退出登录
+ */
+export async function logout() {
+  return await request('/auth/login', 'post')
+}
+
+
+/**
  * 获取用户登录APPToken
  * @param {String} signature 参数 signature进行加密得到
  * 375fe0b80e7c40e9b462865a55a36156,时间戳秒级 进行 Rsa加密
