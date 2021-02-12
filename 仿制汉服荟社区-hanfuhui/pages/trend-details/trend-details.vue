@@ -7,12 +7,12 @@
 				<!-- 用户头部 -->
 				<view class="flexr-jsb flex-aic plr18r ptb18r">
 					<view class="flex" @tap="fnUserInfo(calUser)">
-						<user-avatar :src="calUserAvater" :tag="calUser.AuthenticateCode || ''" size="md"></user-avatar>
+						<user-avatar :src="calUserAvater" :tag="''" size="md"></user-avatar>
 						<view class="flexc-jsa ml28r">
 							<view>
 								<text class="f28r fbold mr18r">{{calUser.nick_name || '#'}}</text>
-								<i-icon v-if="[0, 1].indexOf(calUser.user_sex) > -1" :type="calUser.user_sex_text == '男' ? 'nan':'nv' "
-								 size="28" :color="calUser.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
+								<i-icon v-if="[0, 1].indexOf(calUser.user_sex) > -1" :type="calUser.user_sex_text == '男' ? 'nan':'nv' " size="28"
+								 :color="calUser.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
 							</view>
 							<view class="f24r cgray">{{calDatetime}}</view>
 						</view>
@@ -41,11 +41,12 @@
 				<view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
 					<block v-for="index in 8" :key="index">
 						<view class="mr8r">
-							<user-avatar v-if="topListData[index]" :src="topListData[index].user_info.user_avatar" :tag="topListData[index].user_info.AuthenticateCode"
+							<user-avatar v-if="topListData[index]" :src="topListData[index].user_info.user_avatar" :tag="''"
 							 size="sm" @click="fnUserInfo(topListData[index].user_info)"></user-avatar>
 						</view>
 					</block>
-					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList"> {{ dynamic.is_praise ? '已赞' : '赞'}} <text class="f24r cbrown ml18r">{{dynamic.praise_count}}</text></view>
+					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList"> {{ dynamic.is_praise ? '已赞' : '赞'}} <text
+						 class="f24r cbrown ml18r">{{dynamic.praise_count}}</text></view>
 				</view>
 			</view>
 			<!-- 评论区 -->
@@ -127,7 +128,7 @@
 				// 来源页标签数据下标
 				current: -1,
 				// 回复添加父ID
-				replyParentID: -1,
+				reply_id: 0,
 				// mescroll组件实例
 				mescroll: null
 			}
@@ -156,7 +157,9 @@
 			},
 			// 动态评论列表数据
 			commentListData() {
-				return this.$store.getters['interact/getCommentListData']
+				let comments = this.$store.getters['interact/getCommentListData'];
+				console.log(comments);
+				return comments;
 			},
 			// 计算是否得到用户信息
 			calUser() {
@@ -191,8 +194,12 @@
 				if (mescroll.num == 1) {
 					// 获取详情信息
 					getDynamicInfo(this.dynamic_id).then(res => {
-						let {data, msg, status} = res;
-						if(!status){
+						let {
+							data,
+							msg,
+							status
+						} = res;
+						if (!status) {
 							uni.showToast({
 								title: msg,
 								icon: 'none'
@@ -205,16 +212,19 @@
 						// 获取点赞列表
 						return getDynamicPraises(params)
 					}).then(praises => {
+						console.log('获取动态的点赞记录');
 						// 点赞会员记录
 						this.$store.commit('interact/setTopListData', praises.data.data)
-						
-						
+
 						params.limit = mescroll.size
 						// 获取评论列表
 						return getCommentList(params)
-					}).then(commRes => {
-						this.$store.commit('interact/setCommentListData', commRes.data.Data)
-						mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
+					}).then(comments => {
+						console.log('获取动态的评论记录');
+						let data = comments.data.data;
+
+						this.$store.commit('interact/setCommentListData', data)
+						mescroll.endSuccess(data.length, data.length >= mescroll.size);
 					}).catch(() => {
 						mescroll.endSuccess(0, false);
 					})
@@ -248,9 +258,9 @@
 				})
 			},
 			/// 跳转评论列表
-			fnMoreComm(dynamic_id) {
+			fnMoreComm(comment_id) {
 				uni.navigateTo({
-					url: `/pages/comm-list/comm-list?dynamic_id=${dynamic_id}`
+					url: `/pages/comm-list/comm-list?comment_id=${comment_id}`
 				})
 			},
 			/// 分享图标
@@ -263,23 +273,23 @@
 				// 来自主要跳转
 				if (this.fromPage == 'home') {
 					// 推荐
-					if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 关注
-					if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 广场
-					if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 				}
 				// 来自用户详情
 				if (this.fromPage == 'userinfo') {
 					// 发布
-					if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 赞过
-					if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 				}
 				// 用户是否已经点过赞
 				if (filItem.is_praise || false) {
@@ -378,23 +388,23 @@
 				// 来自主要跳转
 				if (this.fromPage == 'home') {
 					// 推荐
-					if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 关注
-					if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 广场
-					if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 				}
 				// 来自用户详情
 				if (this.fromPage == 'userinfo') {
 					// 发布
-					if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 					// 赞过
-					if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
-						this.trendData.ObjectID)[0];
+					if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
+						this.trendData.dynamic_id)[0];
 				}
 				// 用户是否已经收藏
 				if (filItem.is_collection || false) {
@@ -415,12 +425,12 @@
 				this.$refs.comm.open({
 					type: 'comment',
 					content: this.$store.getters['getCommContentData'],
-					objecttype: this.dynamic.ObjectType,
-					objectid: this.dynamic.ObjectID
+					dynamic_id: this.dynamic.dynamic_id
 				});
 			},
 			/// 评论发送
 			fnCommSend(e) {
+				console.log(e);
 				// 不为发送时保存输入值
 				if (e.type == 'comment') this.$store.commit('setCommContentData', e.content)
 				if (e.state == false) return
@@ -438,12 +448,18 @@
 				})
 				delete e.state
 				delete e.type
-				e.fromclient = 'android'
-				addComment(e).then(addRes => {
-					if (addRes.status != 200) return
-					if (this.replyParentID == 0) {
+				addComment(e).then(res => {
+					console.log(e);
+					console.log(res);
+					if (!res.status) {
+						uni.showToast({
+							title: res.msg,
+						})
+						return;
+					}
+					if (this.reply_id == 0) {
 						// 无回复项
-						let filCommentList = this.commentListData.filter(item => item.ID == e.parentid)[0]
+						let filCommentList = this.commentListData.filter(item => item.ID == e.reply_id)[0]
 						if (filCommentList.ChildCount == 0) {
 							filCommentList.ChildCount = 1
 							filCommentList.CommentChilds = []
@@ -452,9 +468,9 @@
 							filCommentList.ChildCount++
 							filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
 						}
-					} else if (this.replyParentID > 0) {
+					} else if (this.reply_id > 0) {
 						// 有回复项追加
-						let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0]
+						let filCommentList = this.commentListData.filter(item => item.ID == this.reply_id)[0]
 						filCommentList.ChildCount++
 						filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data])
 					} else {
@@ -466,34 +482,34 @@
 					if (this.dynamic.comment_count == 0) this.mescroll.removeEmpty()
 					this.dynamic.comment_count++
 					this.$refs.comm.visible = false;
-					this.replyParentID == -1
+					this.reply_id == 0
 					uni.hideLoading()
 					uni.showToast({
 						title: '评论成功'
-					})
+					});
 					// 改变上一窗口的数据
 					let filItem = []
 					// 来自主要跳转
 					if (this.fromPage == 'home') {
 						// 推荐
-						if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
-							this.dynamic.ObjectID)[0];
+						if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
+							this.dynamic.dynamic_id)[0];
 						// 关注
-						if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
-							this.dynamic.ObjectID)[0];
+						if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
+							this.dynamic.dynamic_id)[0];
 						// 广场
-						if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
-							this.dynamic.ObjectID)[0];
+						if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
+							this.dynamic.dynamic_id)[0];
 					}
 					// 来自用户详情
 					if (this.fromPage == 'userinfo') {
 						// 发布
 						if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
-							.ObjectID ==
-							this.dynamic.ObjectID)[0];
+							.dynamic_id ==
+							this.dynamic.dynamic_id)[0];
 						// 赞过
-						if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
-							this.dynamic.ObjectID)[0];
+						if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
+							this.dynamic.dynamic_id)[0];
 					}
 					filItem.comment_count++
 				})
@@ -507,14 +523,17 @@
 					success: res => {
 						switch (res.tapIndex) {
 							case 0:
+								console.log(e);
+
+								console.log('检查 reply_id ');
+
 								this.$refs.comm.open({
 									type: 'reply',
 									user: e.User.NickName,
-									objecttype: e.ObjectType,
-									objectid: e.ObjectID,
-									parentid: e.ID
+									dynamic_id: e.dynamic_id,
+									reply_id: e.ID
 								});
-								this.replyParentID = e.TopParentID
+								this.reply_id = e.TopParentID
 								break;
 							case 1:
 								uni.setClipboardData({
@@ -523,7 +542,7 @@
 								break;
 							case 2:
 								uni.navigateTo({
-									url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
+									url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
 								})
 								break;
 							case 3:
@@ -549,28 +568,28 @@
 									if (this.fromPage == 'home') {
 										// 推荐
 										if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item =>
-											item.ObjectID ==
-											this.dynamic.ObjectID)[0];
+											item.dynamic_id ==
+											this.dynamic.dynamic_id)[0];
 										// 关注
 										if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item =>
-											item.ObjectID ==
-											this.dynamic.ObjectID)[0];
+											item.dynamic_id ==
+											this.dynamic.dynamic_id)[0];
 										// 广场
 										if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item =>
 											item
-											.ObjectID ==
-											this.dynamic.ObjectID)[0];
+											.dynamic_id ==
+											this.dynamic.dynamic_id)[0];
 									}
 									// 来自用户详情
 									if (this.fromPage == 'userinfo') {
 										// 发布
 										if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(
-											item => item.ObjectID ==
-											this.dynamic.ObjectID)[0];
+											item => item.dynamic_id ==
+											this.dynamic.dynamic_id)[0];
 										// 赞过
 										if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(
-											item => item.ObjectID ==
-											this.dynamic.ObjectID)[0];
+											item => item.dynamic_id ==
+											this.dynamic.dynamic_id)[0];
 									}
 									filItem.comment_count--
 								})
