@@ -19,15 +19,14 @@ export async function getSquareList(params = {
 }
 
 /**
- * 获取推荐动态列表
- * @param {Object} params 参数 {page:1,maxid:-1,count:20}
+ * 获取发现-动态列表
+ * @param {Object} params 参数 {page:1,count:20}
  */
-export async function getMainList(params = {
+export async function getDiscoverList(params = {
   page: 1,
-  maxid: -1,
-  count: 20
+  limit: 20
 }) {
-  return await request('/trend/GetTrendListForMain', 'get', params)
+  return await request('/discover', 'get', params)
 }
 
 /**
