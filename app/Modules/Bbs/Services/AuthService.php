@@ -148,7 +148,11 @@ class AuthService extends Service
         if (!$user = Auth::guard($this->guard)->user()){
             throw new AuthTokenException('认证失败！');
         }
-        $user->userInfo;
+        // 加载粉丝与关注人数统计
+        $user->userInfo->loadCount([
+            'fans',
+            'follows'
+        ]);
         return $user;
     }
 

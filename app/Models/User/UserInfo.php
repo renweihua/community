@@ -12,6 +12,16 @@ class UserInfo extends Model
     // 追加属性
     protected $appends = ['user_sex_text'];
 
+    public function fans()
+    {
+        return $this->hasMany(UserFollowFan::class, 'friend_id', $this->primaryKey);
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(UserFollowFan::class, $this->primaryKey, $this->primaryKey);
+    }
+
     protected static function newFactory()
     {
         return UserInfoFactory::new();
