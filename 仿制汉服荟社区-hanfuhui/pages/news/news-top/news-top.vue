@@ -81,31 +81,31 @@
         console.log(e.ObjectType);
         if (e.ObjectType == 'trend') {
           uni.navigateTo({
-            url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=comment`
+            url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=comment`
           })
           return
         }
         if (e.ObjectType == 'album') {
           uni.navigateTo({
-            url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=comment`
+            url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=comment`
           })
           return
         }
         if (e.ObjectType == 'topic') {
           uni.navigateTo({
-            url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=comment`
+            url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=comment`
           })
           return
         }
         if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
-            url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=comment`
+            url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=comment`
           })
           return
         }
         if (e.ObjectType == 'video') {
           uni.navigateTo({
-            url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=comment`
+            url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=comment`
           })
           return
         }

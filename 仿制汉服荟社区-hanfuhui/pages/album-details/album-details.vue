@@ -301,7 +301,7 @@
       },
       /// 分享图标
       fnShare() {
-        this.albumInfoData.ObjectID = this.albumID;
+        this.albumInfoData.dynamic_id = this.albumID;
         this.albumInfoData.ObjectType = 'album';
         this.$refs.share.open(this.albumInfoData);
       },
@@ -316,22 +316,22 @@
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
-          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 关注
-          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 广场
-          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
-          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 赞过
-          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
         }
         // 来自发现-摄影跳转
@@ -447,22 +447,22 @@
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
-          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 关注
-          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 广场
-          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
-          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
           // 赞过
-          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
             this.albumID)[0];
         }
         // 来自发现-摄影跳转
@@ -549,22 +549,22 @@
           // 来自主要跳转
           if (this.fromPage == 'home') {
             // 推荐
-            if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+            if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
               this.albumID)[0];
             // 关注
-            if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+            if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
               this.albumID)[0];
             // 广场
-            if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+            if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
               this.albumID)[0];
           }
           // 来自用户详情
           if (this.fromPage == 'userinfo') {
             // 发布
             if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
-              .ObjectID == this.albumID)[0];
+              .dynamic_id == this.albumID)[0];
             // 赞过
-            if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+            if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
               this.albumID)[0];
           }
           // 来自发现-摄影跳转
@@ -587,7 +587,7 @@
                   type: 'reply',
                   user: e.User.NickName,
                   objecttype: e.ObjectType,
-                  objectid: e.ObjectID,
+                  objectid: e.dynamic_id,
                   parentid: e.ID
                 });
                 this.replyParentID = e.TopParentID
@@ -599,7 +599,7 @@
                 break;
               case 2:
                 uni.navigateTo({
-                  url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
+                  url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
                 })
                 break;
               case 3:
@@ -625,22 +625,22 @@
                   if (this.fromPage == 'home') {
                     // 推荐
                     if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item =>
-                      item.ObjectID == this.albumID)[0];
+                      item.dynamic_id == this.albumID)[0];
                     // 关注
                     if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item =>
-                      item.ObjectID == this.albumID)[0];
+                      item.dynamic_id == this.albumID)[0];
                     // 广场
                     if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item =>
-                      item.ObjectID == this.albumID)[0];
+                      item.dynamic_id == this.albumID)[0];
                   }
                   // 来自用户详情
                   if (this.fromPage == 'userinfo') {
                     // 发布
                     if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(
-                      item => item.ObjectID == this.albumID)[0];
+                      item => item.dynamic_id == this.albumID)[0];
                     // 赞过
                     if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(
-                      item => item.ObjectID == this.albumID)[0];
+                      item => item.dynamic_id == this.albumID)[0];
                   }
                   // 来自发现-摄影跳转
                   if (this.fromPage == 'find') {

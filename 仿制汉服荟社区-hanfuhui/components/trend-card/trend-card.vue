@@ -171,7 +171,8 @@
 		computed: {
 			/// 计算显示用户头像
 			calUserAvater() {
-				return this.item.user_info.user_avatar ? this.item.user_info.user_avatar : '/static/default_avatar.png'
+				
+				return this.item.user_info ? this.item.user_info.user_avatar : '/static/default_avatar.png'
 			},
 			/// 计算摄影信息
 			calAlbum() {

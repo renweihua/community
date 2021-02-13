@@ -24,9 +24,9 @@ export async function getUserAtteUserList(params = {
  * atteuserids：用户ID
  */
 export async function addUserAtte(atteuserids = 137) {
-  return await request('/User/InsertAttentions', 'post', {
-    atteuserids
-  })
+	return await request('/User/InsertAttentions', 'post', {
+		atteuserids
+	})
 }
 
 /**
@@ -35,9 +35,9 @@ export async function addUserAtte(atteuserids = 137) {
  * atteuserids：用户ID
  */
 export async function delUserAtte(atteuserids = 137) {
-  return await request('/User/DeleteAttentions', 'post', {
-    atteuserids
-  })
+	return await request('/User/DeleteAttentions', 'post', {
+		atteuserids
+	})
 }
 
 /**
@@ -45,10 +45,10 @@ export async function delUserAtte(atteuserids = 137) {
  * @param {Object} params 参数 {page:1,limit:20}
  */
 export async function getUserBlackList(params = {
-  page: 1,
-  limit: 20
+	page: 1,
+	limit: 20
 }) {
-  return await request('/User/GetUserBlackList', 'get', params)
+	return await request('/User/GetUserBlackList', 'get', params)
 }
 
 /**
@@ -57,9 +57,9 @@ export async function getUserBlackList(params = {
  * blackuserid：用户ID
  */
 export async function addUserBlack(blackuserid = 65910) {
-  return await request('/user/InsertUserBlack', 'post', {
-    blackuserid
-  })
+	return await request('/user/InsertUserBlack', 'post', {
+		blackuserid
+	})
 }
 
 /**
@@ -68,9 +68,9 @@ export async function addUserBlack(blackuserid = 65910) {
  * blackuserid：用户ID
  */
 export async function delUserBlack(blackuserid = 65910) {
-  return await request('/user/DeleteUserBlack', 'post', {
-    blackuserid
-  })
+	return await request('/user/DeleteUserBlack', 'post', {
+		blackuserid
+	})
 }
 
 /**
@@ -79,16 +79,18 @@ export async function delUserBlack(blackuserid = 65910) {
  * userid：用户ID
  */
 export async function getUserExistsBlack(userid = 26081) {
-  return await request('/User/GetUserBlackExists', 'get', {
-    userid
-  })
+	return await request('/User/GetUserBlackExists', 'get', {
+		userid
+	})
 }
 
 /**
  * 获取指定会员的信息
  */
 export async function getUserInfo(user_id) {
-  return await request('/user/detail', 'get', {user_id})
+	return await request('/user/detail', 'get', {
+		user_id
+	})
 }
 
 /**
@@ -97,12 +99,12 @@ export async function getUserInfo(user_id) {
  * objecttype 全部可不传或传空
  */
 export async function getUserPublishList(params = {
-  userid: 26081,
-  objecttype: '',
-  page: 1,
-  limit: 20
+	userid: 26081,
+	objecttype: '',
+	page: 1,
+	limit: 20
 }) {
-  return await request('/trend/GetTrendListForUserID', 'get', params)
+	return await request('/trend/GetTrendListForUserID', 'get', params)
 }
 
 /**
@@ -110,11 +112,11 @@ export async function getUserPublishList(params = {
  * @param {Object} params 参数 {userid,page:1,limit:20}
  */
 export async function getUserTopList(params = {
-  userid: 26081,
-  page: 1,
-  limit: 20
+	userid: 26081,
+	page: 1,
+	limit: 20
 }) {
-  return await request('/Interact/GetTrendListForTop', 'get', params)
+	return await request('/Interact/GetTrendListForTop', 'get', params)
 }
 
 /**
@@ -123,10 +125,10 @@ export async function getUserTopList(params = {
  * option 操作顺序 1头像 2昵称 3性别 4地区 5签名
  */
 export async function modifyUserInfo(params = {
-  'option': '4',
-  'value': '121'
+	'option': '4',
+	'value': '121'
 }) {
-  return await request('/User/UpdateUser', 'post', params)
+	return await request('/User/UpdateUser', 'post', params)
 }
 
 /**
@@ -134,9 +136,9 @@ export async function modifyUserInfo(params = {
  * @param {String} mainbg 参数 上传图片后的到的url
  */
 export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg') {
-  return await request('/user/UpdateUserMainBg', 'post', {
-    mainbg
-  })
+	return await request('/user/UpdateUserMainBg', 'post', {
+		mainbg
+	})
 }
 
 /**
@@ -145,7 +147,7 @@ export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg
  * Rsa加密
  */
 export async function login(params) {
-  return await request('/auth/login', 'post', params)
+	return await request('/auth/login', 'post', params)
 }
 
 
@@ -153,14 +155,14 @@ export async function login(params) {
  * 获取登录会员的信息
  */
 export async function getLoginUserInfo() {
-  return await request('/auth/me', 'post')
+	return await request('/auth/me', 'post')
 }
 
 /**
  * 退出登录
  */
 export async function logout() {
-  return await request('/auth/login', 'post')
+	return await request('/auth/login', 'post')
 }
 
 
@@ -170,9 +172,9 @@ export async function logout() {
  * 375fe0b80e7c40e9b462865a55a36156,时间戳秒级 进行 Rsa加密
  */
 export async function getUserAppToken(signature = '8ba6280==') {
-  return await request('/account/GetAppToken', 'get', {
-    signature
-  })
+	return await request('/account/GetAppToken', 'get', {
+		signature
+	})
 }
 
 /**
@@ -181,11 +183,11 @@ export async function getUserAppToken(signature = '8ba6280==') {
  * Rsa加密
  */
 export async function getPhoneCode(params = {
-  apptoken: 'ee736',
-  isnew: false,
-  phone: 18866478914
+	apptoken: 'ee736',
+	isnew: false,
+	phone: 18866478914
 }) {
-  return await request('/account/SendPhoneCode', 'post', params)
+	return await request('/account/SendPhoneCode', 'post', params)
 }
 
 /**
@@ -194,10 +196,10 @@ export async function getPhoneCode(params = {
  * phonesecret: phone,password 进行 Rsa加密
  */
 export async function modifyPassword(params = {
-  code: 8680,
-  phonesecret: 'DP364=='
+	code: 8680,
+	phonesecret: 'DP364=='
 }) {
-  return await request('/account/UpdatePassword', 'post', params)
+	return await request('/account/UpdatePassword', 'post', params)
 }
 
 /**
@@ -207,10 +209,10 @@ export async function modifyPassword(params = {
  * code短信验证码
  */
 export async function registerByPhone(params = {
-  code: 5653,
-  phonesecret: 'ET=='
+	code: 5653,
+	phonesecret: 'ET=='
 }) {
-  return await request('/account/RegisterForPhonePwd', 'post', params)
+	return await request('/account/RegisterForPhonePwd', 'post', params)
 }
 
 /**
@@ -221,12 +223,12 @@ export async function registerByPhone(params = {
  * headurl 默认图、又拍云上传图
  */
 export async function registerBindUser(params = {
-  tempkey: '1084f9ac30ef4154a2f920f7af9193b6',
-  nickname: '连连银月',
-  headurl: '/pc/2015/12/3/21/b7a0c03d449e4110863b9f804bdf8c38.jpg',
-  gender: '女'
+	tempkey: '1084f9ac30ef4154a2f920f7af9193b6',
+	nickname: '连连银月',
+	headurl: '/pc/2015/12/3/21/b7a0c03d449e4110863b9f804bdf8c38.jpg',
+	gender: '女'
 }) {
-  return await request('/account/RegisterForPhoneUser', 'post', params)
+	return await request('/account/RegisterForPhoneUser', 'post', params)
 }
 
 /**
@@ -235,9 +237,9 @@ export async function registerBindUser(params = {
  * secret：token,ServerTime 字符进行加密 Math.floor(new Date().getTime() / 1000)
  */
 export async function refreshUserToken(secret = 'lo8cc=') {
-  return await request('/account/RefreshToken', 'post', {
-    secret
-  })
+	return await request('/account/RefreshToken', 'post', {
+		secret
+	})
 }
 
 /**
@@ -271,9 +273,9 @@ export async function getUserFansList(params = {
  * @param {Number} fansuserids 参数 粉丝用户ID
  */
 export async function delFans(fansuserids = 1371760) {
-  return await request('/User/DeleteFans', 'post', {
-    fansuserids
-  })
+	return await request('/User/DeleteFans', 'post', {
+		fansuserids
+	})
 }
 
 /**

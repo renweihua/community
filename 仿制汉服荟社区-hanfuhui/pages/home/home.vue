@@ -229,31 +229,31 @@
 				}
 				if (e.ObjectType == 'album') {
 					uni.navigateTo({
-						url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=home&current=${this.current}`
+						url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})
 					return
 				}
 				if (e.ObjectType == 'topic') {
 					uni.navigateTo({
-						url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=home&current=${this.current}`
+						url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})
 					return
 				}
 				if (e.ObjectType == 'topicreply') {
 					uni.navigateTo({
-						url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=home&current=${this.current}`
+						url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})
 					return
 				}
 				if (e.ObjectType == 'video') {
 					uni.navigateTo({
-						url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=home&current=${this.current}`
+						url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})
 					return
 				}
 				if (e.ObjectType == 'word') {
 					uni.navigateTo({
-						url: `/pages/word-details/word-details?id=${e.ObjectID}&fromPage=home&current=${this.current}`
+						url: `/pages/word-details/word-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})
 					return
 				}
@@ -263,31 +263,31 @@
 				console.log(e.ObjectType);
 				if (e.ObjectType == 'trend') {
 					uni.navigateTo({
-						url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=home&current=${this.current}&comm=true`
+						url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
 					})
 					return
 				}
 				if (e.ObjectType == 'album') {
 					uni.navigateTo({
-						url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=home&current=${this.current}&comm=true`
+						url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
 					})
 					return
 				}
 				if (e.ObjectType == 'topic') {
 					uni.navigateTo({
-						url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=home&current=${this.current}&comm=true`
+						url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
 					})
 					return
 				}
 				if (e.ObjectType == 'topicreply') {
 					uni.navigateTo({
-						url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=home&current=${this.current}&comm=true`
+						url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
 					})
 					return
 				}
 				if (e.ObjectType == 'video') {
 					uni.navigateTo({
-						url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=home&current=${this.current}&comm=true`
+						url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
 					})
 					return
 				}
@@ -308,11 +308,11 @@
 			fnCardTop(e) {
 				let filItem = {};
 				// 推荐
-				if (this.current == 0) filItem = this.mainData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 0) filItem = this.mainData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 				// 关注
-				if (this.current == 1) filItem = this.atteData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 1) filItem = this.atteData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 				// 广场
-				if (this.current == 2) filItem = this.squareData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 2) filItem = this.squareData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 
 				console.log(filItem);
 				// 点赞动态
@@ -337,11 +337,11 @@
 			fnCardSave(e) {
 				let filItem = {};
 				// 推荐
-				if (this.current == 0) filItem = this.mainData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 0) filItem = this.mainData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 				// 关注
-				if (this.current == 1) filItem = this.atteData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 1) filItem = this.atteData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 				// 广场
-				if (this.current == 2) filItem = this.squareData.filter(item => item.ObjectID == e.ObjectID)[0];
+				if (this.current == 2) filItem = this.squareData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 
 				dynamicCollection(filItem.dynamic_id).then(res => {
 					uni.showToast({
@@ -406,7 +406,7 @@
 			/// 展卡更多-跳转举报页
 			fnCardReport(e) {
 				uni.navigateTo({
-					url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
+					url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
 				})
 			},
 			//

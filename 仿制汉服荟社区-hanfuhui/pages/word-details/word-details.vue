@@ -260,7 +260,7 @@
       },
       /// 分享图标
       fnShare() {
-        this.wordInfoData.ObjectID = this.wordID
+        this.wordInfoData.dynamic_id = this.wordID
         this.wordInfoData.ObjectType = 'word'
         this.$refs.share.open(this.wordInfoData);
       },
@@ -274,22 +274,22 @@
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
-          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 关注
-          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 广场
-          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
-          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 赞过
-          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
         }
         // 来自发现-文章跳转
@@ -407,22 +407,22 @@
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
-          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 关注
-          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 广场
-          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+          if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
-          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.ObjectID ==
+          if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
           // 赞过
-          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+          if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
             this.wordID)[0];
         }
         // 来自发现-文章跳转
@@ -508,23 +508,23 @@
           // 来自主要跳转
           if (this.fromPage == 'home') {
             // 推荐
-            if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.ObjectID ==
+            if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
               this.wordID)[0];
             // 关注
-            if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.ObjectID ==
+            if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
               this.wordID)[0];
             // 广场
-            if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.ObjectID ==
+            if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
               this.wordID)[0];
           }
           // 来自用户详情
           if (this.fromPage == 'userinfo') {
             // 发布
             if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
-              .ObjectID ==
+              .dynamic_id ==
               this.wordID)[0];
             // 赞过
-            if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.ObjectID ==
+            if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
               this.wordID)[0];
           }
           // 来自发现-文章跳转
@@ -585,26 +585,26 @@
                   if (this.fromPage == 'home') {
                     // 推荐
                     if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item =>
-                      item.ObjectID ==
+                      item.dynamic_id ==
                       this.wordID)[0];
                     // 关注
                     if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item =>
-                      item.ObjectID ==
+                      item.dynamic_id ==
                       this.wordID)[0];
                     // 广场
                     if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item =>
-                      item.ObjectID ==
+                      item.dynamic_id ==
                       this.wordID)[0];
                   }
                   // 来自用户详情
                   if (this.fromPage == 'userinfo') {
                     // 发布
                     if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(
-                      item => item.ObjectID ==
+                      item => item.dynamic_id ==
                       this.wordID)[0];
                     // 赞过
                     if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(
-                      item => item.ObjectID ==
+                      item => item.dynamic_id ==
                       this.wordID)[0];
                   }
                   // 来自发现-文章跳转

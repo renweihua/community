@@ -292,37 +292,37 @@
         console.log(e.ObjectType);
         if (e.ObjectType == 'trend') {
           uni.navigateTo({
-            url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
         if (e.ObjectType == 'album') {
           uni.navigateTo({
-            url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
         if (e.ObjectType == 'topic') {
           uni.navigateTo({
-            url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
         if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
-            url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
         if (e.ObjectType == 'video') {
           uni.navigateTo({
-            url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
         if (e.ObjectType == 'word') {
           uni.navigateTo({
-            url: `/pages/word-details/word-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}`
+            url: `/pages/word-details/word-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
           })
           return
         }
@@ -332,31 +332,31 @@
         console.log(e.ObjectType);
         if (e.ObjectType == 'trend') {
           uni.navigateTo({
-            url: `/pages/trend-details/trend-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
+            url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
         if (e.ObjectType == 'album') {
           uni.navigateTo({
-            url: `/pages/album-details/album-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
+            url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
         if (e.ObjectType == 'topic') {
           uni.navigateTo({
-            url: `/pages/topic-details/topic-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
+            url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
         if (e.ObjectType == 'topicreply') {
           uni.navigateTo({
-            url: `/pages/topicreply-details/topicreply-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
+            url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
         if (e.ObjectType == 'video') {
           uni.navigateTo({
-            url: `/pages/video-details/video-details?id=${e.ObjectID}&fromPage=huiba&current=${this.current}&comm=true`
+            url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}&comm=true`
           })
           return
         }
@@ -378,12 +378,12 @@
       fnCardTop(e) {
         let filItem = {};
         // 最热
-        if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.ObjectID == e.ObjectID)[0];
+        if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
         // 最新
-        if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.ObjectID == e.ObjectID)[0];
+        if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
         let params = {
           objecttype: filItem.ObjectType,
-          objectid: filItem.ObjectID
+          objectid: filItem.dynamic_id
         }
         // 用户是否点过赞
         if (filItem.UserTop) {
@@ -400,11 +400,11 @@
       fnCardSave(e) {
         let filItem = {};
         // 最热
-        if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.ObjectID == e.ObjectID)[0];
+        if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
         // 最新
-        if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.ObjectID == e.ObjectID)[0];
+        if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
         let params = {
-          objectid: filItem.ObjectID,
+          objectid: filItem.dynamic_id,
           objecttype: filItem.ObjectType
         }
         // 用户是否已收藏
@@ -463,7 +463,7 @@
       /// 展卡更多-跳转举报页
       fnCardReport(e) {
         uni.navigateTo({
-          url: `/pages/report/report?id=${e.ObjectID}&type=${e.ObjectType}`
+          url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
         })
       },
       //
