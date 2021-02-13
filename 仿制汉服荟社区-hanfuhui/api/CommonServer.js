@@ -11,6 +11,9 @@ import request from '@/api/request.js';
  * @param {Object} upload_files
  */
 export async function batchUploads(upload_files) {
+	if(!upload_files.length){
+		return [];
+	}
 	let files = [];
 	let login_token = uni.getStorageSync('TOKEN') || '';
 	upload_files.forEach((value, key) => {
@@ -19,6 +22,9 @@ export async function batchUploads(upload_files) {
 			'file': value,
 		})
 	})
+	if(!files.length){
+		return [];
+	}
 	return new Promise((resolve, reject) => {
 		uni.uploadFile({
 			url: 'http://community.cnpscy.com/api/upload_files', //仅为示例，非真实的接口地址
@@ -28,16 +34,19 @@ export async function batchUploads(upload_files) {
 			files: files,
 			success: (res) => {
 				res = JSON.parse(res.data);
-				uni.showToast({
-					title: res.msg,
-					icon: 'none',
-				});
+				if (!res.status) {
+					uni.showToast({
+						title: res.msg,
+						icon: 'none',
+					});
+					return;
+				}
 				resolve(res.data);
 			},
 			fail() {
 				uni.showToast({
 					title: res.msg,
-					icon: 'error',
+					icon: 'none',
 				});
 				reject(err)
 			}

@@ -53,10 +53,7 @@ export default function request(route, method = 'get', data = {}) {
 				}
 				// 含有错误
 				if (res.data.status != 1) {
-					reject({
-						data: res.data,
-						status: res.data.status
-					})
+					reject(res.data)
 					uni.showToast({
 						title: res.data.msg,
 						icon: 'none'
