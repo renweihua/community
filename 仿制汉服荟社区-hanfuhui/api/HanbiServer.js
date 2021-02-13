@@ -14,10 +14,10 @@ export async function getSigninInfo() {
 }
 
 /**
- * 获取汉币签到添加
+ * 立即签到
  */
-export async function addSignin() {
-  return await request('/Hanbi/InsertSignin', 'post')
+export async function signIn() {
+  return await request('/user/signIn', 'post')
 }
 
 /**
