@@ -19,22 +19,18 @@ export default function request(route, method = 'get', data = {}) {
 				'content-type': 'application/x-www-form-urlencoded',
 			},
 			success: res => {
-				// token失效
+				// token失效时，自动重新登录
 				if (res.statusCode == 401 || res.data.status == -1) {
-					reject({
-						data: 401,
-						status: res.statusCode
+					// 自动跳转登录页
+					uni.redirectTo({
+						url: '/pages/login/login'
 					})
-					// console.log(res);
-					// uni.redirectTo({
-					// 	url: '/pages/login/login'
-					// })
 					return;
 				}
 				// 服务器错误
 				if (res.statusCode == 404) {
 					reject({
-						data: {},
+						data: [],
 						status: res.statusCode
 					})
 					uni.showToast({
@@ -47,7 +43,7 @@ export default function request(route, method = 'get', data = {}) {
 				if (res.statusCode == 500) {
 					reject({
 						data: {},
-						status: res.statusCode
+						status: res.data.status
 					})
 					uni.showToast({
 						title: '服务器错误',
@@ -59,7 +55,7 @@ export default function request(route, method = 'get', data = {}) {
 				if (res.data.status != 1) {
 					reject({
 						data: res.data,
-						status: res.statusCode
+						status: res.data.status
 					})
 					uni.showToast({
 						title: res.data.msg,
