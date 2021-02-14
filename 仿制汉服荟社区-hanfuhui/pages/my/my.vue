@@ -142,12 +142,18 @@
 			// 用户信息
 			userInfoData() {
 				let user_info = this.$store.getters['user/getLoginUserInfoData'];
-				if(!user_info || !user_info.user_id){
-					return uni.redirectTo({
-						url: '/pages/login/login'
-					});
-				}
 				console.log(user_info);
+				// console.log(user_info);
+				// return user_info;
+				// return;
+				if(!user_info || !user_info.user_id){
+					this.fnRefreshUserInfo();
+					user_info = this.$store.getters['user/getLoginUserInfoData'];
+					console.log(user_info);
+					// return uni.redirectTo({
+					// 	url: '/pages/login/login'
+					// });
+				}
 				return user_info;
 			},
 		},
@@ -195,18 +201,24 @@
 			fnRefreshUserInfo() {
 				// 获得登录用户信息
 				getLoginUserInfo().then(userinfoRes => {
-					console.log(userinfoRes);
-					return;
 					// 保存登录用户信息
-					this.$store.commit('user/setLoginUserInfoData', userinfoRes.data.Data);
+					this.$store.commit('user/setLoginUserInfoData', userinfoRes.data);
+					return true;
+					
 					// 获取未读消息数
 					return getMessageNoReadCount()
 				}).then(mesRes => {
+					return true;
+					
+					
 					// 保存未读消息数
 					this.$store.commit('setNewsCountData', mesRes.data.Data)
 					// 获取签到信息
 					return getSigninInfo()
 				}).then(signinRes => {
+					return true;
+					
+					
 					// 保存签到信息
 					this.$store.commit('setSigninInfoData', signinRes.data.Data)
 				})
