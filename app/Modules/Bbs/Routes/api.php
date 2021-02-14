@@ -59,6 +59,10 @@ Route::prefix('')->middleware([])->group(function () {
 
     // 登录会员
     Route::prefix('')->middleware([CheckAuth::class])->namespace('User')->group(function () {
+        // 文件上传
+        Route::any('upload_file', 'UploadController@file');
+        // 多图批量上传
+        Route::any('upload_files', 'UploadController@files');
 
         /**
          * 好友相关

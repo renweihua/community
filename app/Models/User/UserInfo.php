@@ -35,25 +35,23 @@ class UserInfo extends Model
     /**
      * 获取会员头像
      *
-     * @param $key
+     * @param $value
      * @return string
      */
-    public function getUserAvatarAttribute($key)
+    public function getUserAvatarAttribute($value)
     {
-        if (empty($key)) return '';
-        return Storage::url($key);
+        if (empty($value)) return '';
+        return Storage::url($value);
     }
 
     /**
      * 设置会员头像
      *
-     * @param $key
+     * @param $value
      */
-    public function setUserAvatarAttribute($key)
+    public function setUserAvatarAttribute($value)
     {
-        if ( !empty($key) ) {
-            $this->attributes['user_avatar'] = str_replace(Storage::url('/'), '', $key);
-        }
+        $this->attributes['user_avatar'] = str_replace(Storage::url('/'), '', $value);
     }
 
     /**
@@ -105,5 +103,22 @@ class UserInfo extends Model
             return self::getUniqueUuid();
         }
         return $user_uuid;
+    }
+
+    /**
+     * 通过昵称获取会员详情
+     *
+     * @param  string  $nick_name
+     * @param  int     $user_id
+     *
+     * @return mixed
+     */
+    public function getUserInfoByNickName(string $nick_name, int $user_id = 0)
+    {
+        $model = $this;
+        if (!empty($user_id)) {
+            $model = $this->where('user_id', '<>',  $user_id);
+        }
+        return $model->where('nick_name', $nick_name)->first();
     }
 }
