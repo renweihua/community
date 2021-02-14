@@ -60,6 +60,31 @@ class Dynamic extends Model
         }
     }
 
+    /**
+     * 获取视频地址
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function getVideoPathAttribute($value)
+    {
+        if (empty($value)) return '';
+        return Storage::url($value);
+    }
+
+    /**
+     * 设置动态的视频地址
+     * 
+     * @param $value
+     */
+    public function setVideoPathAttribute($value)
+    {
+        if ( !empty($value)) {
+            $this->attributes['video_path'] = str_replace(Storage::url('/'), '', $value);
+        }
+    }
+
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');

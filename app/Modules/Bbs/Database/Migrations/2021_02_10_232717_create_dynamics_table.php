@@ -21,6 +21,7 @@ class CreateDynamicsTable extends Migration
             $table->bigInteger('topic_id')->unsigned()->default(0)->comment('话题/荟吧 Id');
             $table->string('dynamic_title', 200)->default('')->comment('标题');
             $table->string('dynamic_images', 500)->default('')->comment('多图');
+            $table->string('video_path', 200)->default('')->comment('视频地址');
             $table->text('dynamic_content')->nullable()->comment('动态内容');
             $table->boolean('is_check')->unsigned()->default(0)->comment('是否审核：0：待审核；1：通过；2.拒绝');
             $table->boolean('is_public')->unsigned()->default(1)->comment('公开度：0.私密；1.完全公开；2.密码访问');
@@ -30,7 +31,7 @@ class CreateDynamicsTable extends Migration
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
-            $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.文本动态；1.图文；2.视频');
+            $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.图文；1.视频');
             $table->integer('read_num')->unsigned()->default(0)->comment('阅读数量');
             $table->integer('comment_count')->unsigned()->default(0)->comment('评论总量');
             $table->integer('praise_count')->unsigned()->default(0)->comment('点赞量');

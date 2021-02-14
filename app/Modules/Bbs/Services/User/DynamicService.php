@@ -28,8 +28,10 @@ class DynamicService extends Service
             $ip_agent = get_client_info();
             Dynamic::create([
                 'user_id' => $login_user_id,
-                'dynamic_content' => $params['dynamic_content'],
+                'dynamic_type' => $params['dynamic_type'],
                 'dynamic_images' => $params['dynamic_images'] ?? '',
+                'video_path' => $params['video_path'] ?? '',
+                'dynamic_content' => $params['dynamic_content'],
                 'is_check' => 1, // 暂时默认无需审核
                 'is_public' => $params['is_public'] ?? 1,
                 'created_ip' => $ip_agent['ip'] ?? get_ip(),
