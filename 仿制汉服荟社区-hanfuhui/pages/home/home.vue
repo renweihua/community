@@ -219,9 +219,25 @@
 
 			/// 展卡跳转详情页
 			fnCardInfo(e) {
+				console.log(e);
+				switch(e.dynamic_type){
+					case 0: // 图文 
+						uni.navigateTo({
+							url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
+						})
+						break;
+					case 1: // 视频
+						uni.navigateTo({
+							url: `/pages/video-details/video-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
+						})
+						break;
+				}
+				return;
+				
+				
 				e.ObjectType = 'trend';
 				console.log(e);
-				if (e.ObjectType == 'trend') {
+				if (e.dynamic_type == 'trend') {
 					uni.navigateTo({
 						url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 					})

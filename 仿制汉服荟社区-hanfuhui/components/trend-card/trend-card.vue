@@ -204,16 +204,15 @@
 			},
 			/// 计算显示视频封面
 			calVideoCover() {
-				if (this.item.ObjectType != 'video') return false
-				let cover = '/static/default_image.png'
-				let suffix = '_850x300.jpg/format/webp'
-				if (this.item.dynamic_images) cover = this.item.dynamic_images[0] + suffix
-				return cover
+				if (this.item.dynamic_type != 1) return false;
+				let cover = '/static/default_image.png';
+				if (this.item.dynamic_images) cover = this.item.dynamic_images[0];
+				return cover;
 			},
 			/// 计算显示图片格
 			calImageSrcs() {
 				let imgArray = this.item.dynamic_images || [];
-				return imgArray.length > 9 ? imgArray.slice(0, 9) : imgArray
+				return imgArray.length > 9 ? imgArray.slice(0, 9) : imgArray;
 			},
 			/// 计算内容截取字符长度 180
 			calStringCut() {

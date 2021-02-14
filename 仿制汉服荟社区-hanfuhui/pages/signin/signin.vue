@@ -134,7 +134,6 @@
 						title: res.msg,
 						icon: 'none'
 					})
-					// this.signinState = false
 					return getSigninInfo()
 				}).then(signinRes => {
 					console.log(signinRes);
