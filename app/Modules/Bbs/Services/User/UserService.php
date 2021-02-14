@@ -33,7 +33,7 @@ class UserService extends Service
         $user_info->nick_name = $params['nick_name'];
         $user_info->user_sex = $params['user_sex'];
         $user_info->user_avatar = $params['user_avatar'];
-        
+
         if ($user_info->save()){
             $this->setError('个人资料编辑成功！');
             return true;

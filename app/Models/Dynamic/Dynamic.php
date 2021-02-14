@@ -52,6 +52,7 @@ class Dynamic extends Model
     public function setDynamicImagesAttribute($key)
     {
         if ( !empty($key)) {
+            $key = explode(',', $key);
             foreach ($key as &$value) {
                 $value = str_replace(Storage::url('/'), '', $value);
             }
