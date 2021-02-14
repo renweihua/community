@@ -95,8 +95,7 @@
     addCommentTop,
     delCommentTop,} from "@/api/InteractServer.js"
   import {
-    addUserAtte,
-    delUserAtte,
+    followUser,
   } from "@/api/UserServer.js"
 
   // 分享弹出层组件
@@ -336,7 +335,7 @@
       fnAtte(e) {
         // 用户是否已经关注
         if (e.UserAtte) {
-          delUserAtte(e.ID).then(delRes => {
+            getLoginUserInfoData(e.ID).then(delRes => {
             if (delRes.data.Data == false) return
             this.videoInfoData.User.UserAtte = false
             // 来自主要跳转
@@ -362,12 +361,12 @@
                 .UserAtte = false)
             }
             // 登录用户关注数减
-            let tempUser = this.$store.getters['user/getUserInfoData']
-            tempUser.AtteCount--
-            this.$store.commit('user/setUserInfoData', tempUser)
+            let tempUser = this.$store.getters['user/getLoginUserInfoData']
+            tempUser.user_info.follows_count--
+            this.$store.commit('user/setLoginUserInfoData', tempUser)
           })
         } else {
-          addUserAtte(e.ID).then(addRes => {
+          followUser(e.ID).then(addRes => {
             if (addRes.data.Data == false) return
             this.videoInfoData.User.UserAtte = true
             // 来自主要跳转
@@ -393,9 +392,9 @@
                 .UserAtte = true)
             }
             // 登录用户关注数加
-            let tempUser = this.$store.getters['user/getUserInfoData']
-            tempUser.AtteCount++
-            this.$store.commit('user/setUserInfoData', tempUser)
+            let tempUser = this.$store.getters['user/getLoginUserInfoData']
+            tempUser.user_info.follows_count++
+            this.$store.commit('user/setLoginUserInfoData', tempUser)
           })
         }
       },

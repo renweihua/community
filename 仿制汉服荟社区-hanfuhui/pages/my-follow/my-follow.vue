@@ -275,7 +275,7 @@
 									// 登录用户关注数减
 									let tempUser = this.$store.getters['user/getLoginUserInfoData']
 									tempUser.user_info.follows_count--
-									this.$store.commit('user/setUserInfoData', tempUser)
+									this.$store.commit('user/setLoginUserInfoData', tempUser)
 								})
 							}
 						}
@@ -290,7 +290,7 @@
 						let tempUser = this.$store.getters['user/getLoginUserInfoData']
 						console.log(tempUser);
 						tempUser.user_info.follows_count++;
-						this.$store.commit('user/setUserInfoData', tempUser);
+						this.$store.commit('user/setLoginUserInfoData', tempUser);
 					})
 				}
 			},

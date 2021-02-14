@@ -58,8 +58,7 @@
 		dynamicCollection,
 	} from "@/api/InteractServer.js"
 	import {
-		addUserAtte,
-		delUserAtte,
+		followUser,
 		addUserBlack,
 		delUserBlack
 	} from "@/api/UserServer.js"
@@ -221,7 +220,7 @@
 			fnCardInfo(e) {
 				console.log(e);
 				switch(e.dynamic_type){
-					case 0: // 图文 
+					case 0: // 图文
 						uni.navigateTo({
 							url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
 						})
@@ -233,8 +232,8 @@
 						break;
 				}
 				return;
-				
-				
+
+
 				e.ObjectType = 'trend';
 				console.log(e);
 				if (e.dynamic_type == 'trend') {
@@ -384,7 +383,7 @@
 						content: '确定要取消关注TA吗？',
 						success: res => {
 							if (res.confirm) {
-								delUserAtte(e.User.ID).then(delRes => {
+                                followUser(e.User.ID).then(delRes => {
 									if (delRes.data.Data == false) return
 									this.atteData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
 										false)
@@ -393,24 +392,24 @@
 									this.squareData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
 										false)
 									// 登录用户关注数减
-									let tempUser = this.$store.getters['user/getUserInfoData']
-									tempUser.AtteCount--
-									this.$store.commit('user/setUserInfoData', tempUser)
+									let tempUser = this.$store.getters['user/getLoginUserInfoData']
+									tempUser.user_info.follows_count--
+									this.$store.commit('user/setLoginUserInfoData', tempUser)
 								})
 							}
 						}
 					})
 					return
 				} else {
-					addUserAtte(e.User.ID).then(addRes => {
+					followUser(e.User.ID).then(addRes => {
 						if (addRes.data.Data == false) return
 						this.atteData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
 						this.mainData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
 						this.squareData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
 						// 登录用户关注数加
-						let tempUser = this.$store.getters['user/getUserInfoData']
-						tempUser.AtteCount++
-						this.$store.commit('user/setUserInfoData', tempUser)
+						let tempUser = this.$store.getters['user/getLoginUserInfoData']
+						tempUser.user_info.follows_count++
+						this.$store.commit('user/setLoginUserInfoData', tempUser)
 					})
 				}
 			},
