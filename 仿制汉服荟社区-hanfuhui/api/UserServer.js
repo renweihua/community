@@ -7,26 +7,24 @@ import request from '@/api/request.js';
 
 
 /**
- * 获取用户关注用户列表
- * @param {Object} params 参数 {userid:985319,page:1,limit:20}
+ * 获取登录会员：关注用户的列表
+ * @param {Object} params 参数 {page:1,limit:20}
  */
-export async function getUserAtteUserList(params = {
-  userid: 985319,
-  page: 1,
-  limit: 20
+export async function getFollowsList(params = {
+	page: 1,
+	limit: 20
 }) {
-  return await request('/User/GetUserListForAtte', 'get', params)
+	return await request('/user/follows', 'get', params)
 }
 
 /**
- * 用户关注添加
- * @param {Number} atteuserids 参数 137
- * atteuserids：用户ID
+ * 关注指定会员
+ * 
+ * @param {Number} user_id 参数 
+ * user_id：用户ID
  */
-export async function addUserAtte(atteuserids = 137) {
-	return await request('/User/InsertAttentions', 'post', {
-		atteuserids
-	})
+export async function followUser(user_id) {
+	return await request('/user/follow', 'post', {user_id})
 }
 
 /**
