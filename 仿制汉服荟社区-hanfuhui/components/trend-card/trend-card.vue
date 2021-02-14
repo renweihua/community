@@ -171,7 +171,6 @@
 		computed: {
 			/// 计算显示用户头像
 			calUserAvater() {
-				
 				return this.item.user_info ? this.item.user_info.user_avatar : '/static/default_avatar.png'
 			},
 			/// 计算摄影信息
@@ -240,12 +239,11 @@
 				return false;
 			}
 		},
-
 		methods: {
 			/// 预览图片组
 			fnPreviewImage(current) {
-				let urls = this.item.ImageSrcs.map(url => url += "_0.jpg/format/webp")
-				previewImage(current, urls)
+				let urls = this.item.dynamic_images.map(url => url);
+				previewImage(current, urls);
 			},
 			/// 更多菜单操作
 			async fnActionSheet() {
