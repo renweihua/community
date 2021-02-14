@@ -14,6 +14,38 @@ use Illuminate\Support\Facades\DB;
 class DynamicService extends Service
 {
     /**
+     * 发布动态
+     *
+     * @param  int    $login_user_id
+     * @param  array  $params
+     *
+     * @return bool
+     */
+    public function push(int $login_user_id, array $params)
+    {
+        DB::beginTransaction();
+        try {
+            $ip_agent = get_client_info();
+            Dynamic::create([
+                'user_id' => $login_user_id,
+                'dynamic_content' => $params['dynamic_content'],
+                'is_check' => 1, // 暂时默认无需审核
+                'is_public' => $params['is_public'] ?? 1,
+                'created_ip' => $ip_agent['ip'] ?? get_ip(),
+                'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
+            ]);
+            $this->setError('发布成功！');
+
+            DB::commit();
+            return true;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * 验证动态是否存在
      *
      * @param  int   $dynamic_id
@@ -115,13 +147,13 @@ class DynamicService extends Service
     /**
      * 我的收藏
      *
-     * @param  int  $login_user
+     * @param  int  $login_user_id
      *
      * @return array
      */
-    public function getCollections(int $login_user)
+    public function getCollections(int $login_user_id)
     {
-        $lists = DynamicCollection::where('user_id', $login_user)
+        $lists = DynamicCollection::where('user_id', $login_user_id)
                                   ->select('relation_id', 'user_id', 'dynamic_id', 'created_time')
                                   ->with([
                                       'dynamic' => function($query) {

@@ -84,6 +84,8 @@ Route::prefix('')->middleware([])->group(function () {
 
         // 动态相关
         Route::prefix('dynamic')->group(function () {
+            // 发布 - 动态
+            Route::post('/push', 'DynamicController@push');
             // 指定动态：点赞人员记录
             Route::get('/getPraises', 'DynamicController@getPraises');
             // 点赞 - 动态

@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\DynamicIdRequest;
 use App\Modules\Bbs\Http\Requests\User\DynamicCommentRequest;
+use App\Modules\Bbs\Http\Requests\User\DynamicRequest;
 use App\Modules\Bbs\Services\User\DynamicService;
 use Illuminate\Http\JsonResponse;
 
@@ -14,6 +15,24 @@ class DynamicController extends BbsController
     {
         parent::__construct();
         $this->service = $service;
+    }
+
+    /**
+     * 发布动态
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\DynamicRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function push(DynamicRequest $request):JsonResponse
+    {
+        $request->validated();
+
+        if ($result = $this->service->push($this->login_user, $request->all())) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
     }
 
     /**
