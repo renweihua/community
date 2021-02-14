@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 });
 
 
-Route::prefix('')->middleware([])->group(function () {
+Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
         // 注册
