@@ -67,13 +67,15 @@ Route::prefix('')->middleware([])->group(function () {
             // 我的关注
             Route::get('/follows', 'FriendController@follows');
             // 关注指定会员
-            Route::post('user/follow', 'FriendController@follow');
+            Route::post('/follow', 'FriendController@follow');
             // 我的粉丝
             Route::get('/fans', 'FriendController@fans');
             // 我的收藏
             Route::get('/collections', 'DynamicController@collections');
             // 每日签到
             Route::post('/signIn', 'SignController@signIn');
+            // 编辑个人资料
+            Route::any('/update', 'IndexController@update');
         });
 
         // 动态相关
