@@ -75,7 +75,7 @@ class Dynamic extends Model
 
     /**
      * 设置动态的视频地址
-     * 
+     *
      * @param $value
      */
     public function setVideoPathAttribute($value)

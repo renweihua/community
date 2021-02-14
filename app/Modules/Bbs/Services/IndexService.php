@@ -21,8 +21,12 @@ class IndexService extends Service
         $lists = Dynamic::check()
                            ->with(
                                [
-                                   'userInfo' => function($query) {
-                                       $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade']);
+                                   'userInfo' => function($query) use($login_user){
+                                       $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
+                                           'isFollow' => function($query) use ($login_user) {
+                                               $query->where('user_id', $login_user);
+                                           },
+                                       ]);
                                    },
                                    'isPraise' => function($query) use ($login_user) {
                                        $query->where('user_id', $login_user);
@@ -39,7 +43,9 @@ class IndexService extends Service
             $item->is_praise = $login_user == 0 ? false : ($item->isPraise ? true : false);
             // 是否已收藏
             $item->is_collection = $login_user == 0 ? false : ($item->isCollection ? true : false);
-            unset($item->isPraise, $item->isCollection);
+            // 是否关注
+            $item->userInfo->is_follow = $login_user == 0 ? false : ($item->userInfo->isFollow ? true : false);
+            unset($item->isPraise, $item->isCollection, $item->userInfo->isFollow);
         }
         $lists = $this->getPaginateFormat($lists);
         return $lists;
