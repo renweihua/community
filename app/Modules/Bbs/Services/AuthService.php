@@ -11,6 +11,7 @@ use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AuthService extends Service
 {
@@ -45,16 +46,18 @@ class AuthService extends Service
 
             // 会员基本信息
             $ip_agent = get_client_info();
-            $user->userInfo()->create([
+            $user_info = [
                 'user_id' => $user->user_id,
                 'user_uuid' => UserInfo::getUniqueUuid(),
-                'nick_name' => $params['nick_name'] ?? $user->user_name,
-                'user_avatar' => cnpscy_config('site_web_logo'),
+                'nick_name' => $params['nick_name'] ?? '',
+                'user_avatar' => Storage::url(cnpscy_config('site_web_logo')),
+                'user_sex' => $params['user_sex'] ?? 0,
                 'user_grade' => 1, // 会员等级
                 'last_actived_time' => time(), // 上一次在线时间
                 'created_ip'   => $ip_agent['ip'] ?? get_ip(),
                 'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
-            ]);
+            ];
+            $user->userInfo()->create($user_info);
 
             // 第三方登录相关
             $user->userOtherlogin()->create([
@@ -67,7 +70,12 @@ class AuthService extends Service
             $auth->setUser($user);
 
             $this->setError('注册成功！');
-            return $this->respondWithToken($auth->login($user));
+            $result = $this->respondWithToken($auth->login($user));
+            return array_merge($result, [
+                'nick_name' => $user_info['nick_name'],
+                'user_avatar' => $user_info['user_avatar'],
+                'user_sex' => $user_info['user_sex'],
+            ]);
         }catch (FailException $exception){
             DB::rollBack();
             $this->setError($exception->getMessage());
