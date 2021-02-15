@@ -7,6 +7,7 @@ use App\Models\Log\AdminLoginLog;
 use App\Models\Log\UserLog;
 use App\Models\Log\UserLoginLog;
 use App\Models\Log\WebLog;
+use App\Models\User\UserSign;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,6 +44,7 @@ class AutoTableBuild extends Command
         WebLog::class,
         UserLoginLog::class,
         UserLog::class,
+        UserSign::class, // 会员签到
     ];
 
     /**
