@@ -52,6 +52,8 @@ class DynamicService extends Service
             $item->is_collection = $login_user == 0 ? false : ($item->isCollection ? true : false);
             // 是否关注
             $item->userInfo->is_follow = $login_user == 0 ? false : ($item->userInfo->isFollow ? true : false);
+            // 是否为登录会员
+            $item->userInfo->is_self = $login_user == 0 ? false : ($item->user_id == $login_user ? true : false);
             unset($item->isPraise, $item->isCollection, $item->userInfo->isFollow);
         }
         $lists = $this->getPaginateFormat($lists);
@@ -109,6 +111,8 @@ class DynamicService extends Service
         $dynamic->is_collection = $login_user == 0 ? false : ($dynamic->isCollection ? true : false);
         // 是否关注
         $dynamic->userInfo->is_follow = $login_user == 0 ? false : ($dynamic->userInfo->isFollow ? true : false);
+        // 是否为登录会员
+        $dynamic->userInfo->is_self = $login_user == 0 ? false : ($dynamic->user_id == $login_user ? true : false);
         unset($dynamic->isPraise, $dynamic->isCollection, $dynamic->userInfo->isFollow);
         $this->setError('动态详情获取成功！');
         return $dynamic;
