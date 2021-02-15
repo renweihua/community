@@ -118,15 +118,10 @@ export async function getUserTopList(params = {
 }
 
 /**
- * 更新用户信息
- * @param {Object} params 参数 {option,value}
- * option 操作顺序 1头像 2昵称 3性别 4地区 5签名
+ * 编辑个人资料
  */
-export async function modifyUserInfo(params = {
-	'option': '4',
-	'value': '121'
-}) {
-	return await request('/User/UpdateUser', 'post', params)
+export async function modifyUserInfo(params) {
+	return await request('/user/update', 'put', params)
 }
 
 /**
@@ -160,7 +155,7 @@ export async function getLoginUserInfo() {
  * 退出登录
  */
 export async function logout() {
-	return await request('/auth/login', 'post')
+	return await request('/auth/logout', 'post')
 }
 
 
@@ -201,32 +196,10 @@ export async function modifyPassword(params = {
 }
 
 /**
- * 用户通过手机号注册
- * @param {Object} params 参数 {phonesecret,code}
- * phonesecret：login_account,login_pwd 进行加密得到
- * code短信验证码
+ * 注册
  */
-export async function registerByPhone(params = {
-	code: 5653,
-	phonesecret: 'ET=='
-}) {
-	return await request('/account/RegisterForPhonePwd', 'post', params)
-}
-
-/**
- * 用户注册后绑定用户信息
- * @param {Object} params 参数 {tempkey,nickname,headurl,gender}
- * tempkey：缓存键在手机验证注册后得到
- * nickname：昵称唯一，检测通过为成功注册
- * headurl 默认图、又拍云上传图
- */
-export async function registerBindUser(params = {
-	tempkey: '1084f9ac30ef4154a2f920f7af9193b6',
-	nickname: '连连银月',
-	headurl: '/pc/2015/12/3/21/b7a0c03d449e4110863b9f804bdf8c38.jpg',
-	gender: '女'
-}) {
-	return await request('/account/RegisterForPhoneUser', 'post', params)
+export async function register(params) {
+	return await request('/auth/register', 'post', params)
 }
 
 /**
@@ -281,23 +254,23 @@ export async function delFans(fansuserids = 1371760) {
  * @param {Boolean} state 参数 true/false
  */
 export async function modifyHideTop(state = false) {
-  return await request('/User/UpdateHideTop', 'post', {
-    state
-  })
+	return await request('/User/UpdateHideTop', 'post', {
+		state
+	})
 }
 
 /**
  * 获取网易IM云信TOKEN值
  */
 export async function getNeteaseIMToken() {
-  return await request('/IM/GetNeteaseToken')
+	return await request('/IM/GetNeteaseToken')
 }
 
 /**
  * 获取用户聊天设置状态
  */
 export async function getChatState() {
-  return await request('/user/GetShowIM')
+	return await request('/user/GetShowIM')
 }
 
 /**
@@ -306,7 +279,7 @@ export async function getChatState() {
  * 1 接收所有人聊天  2 仅接受关注的人与认证账号聊天
  */
 export async function modifyChatState(state = 1) {
-  return await request('/User/UpdateShowIM', 'post', {
-    state
-  })
+	return await request('/User/UpdateShowIM', 'post', {
+		state
+	})
 }

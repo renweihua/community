@@ -90,6 +90,7 @@
 						icon: 'success'
 					});
 					this.$store.commit('user/setAccountInfoData', data);
+					// 存储Token
 					uni.setStorageSync('TOKEN', data.access_token);
 					// 保存登录用户信息
 					let user_info = await getLoginUserInfo();
@@ -132,7 +133,22 @@
 			},
 			//调起QQ登录
 			fnQQ() {
-				if (this.isLogin) return
+				if (this.isLogin) return;
+				// uni.login({
+				// 	provider: 'qq',	//微信:wx   QQ:qq
+				// 	success: function (loginRes) {
+				// 		console.log(loginRes.authResult);
+				// 		// 获取用户信息
+				// 		uni.getUserInfo({
+				// 			provider: 'qq',	//微信:wx   QQ:qq
+				// 			success: function (infoRes) {
+				// 				console.log('用户昵称为：' + infoRes.userInfo.nickName);
+				// 			}
+				// 		});
+				// 	}
+				// });
+				
+				
 				console.log('QQ登录');
 				uni.showLoading({
 					title: 'QQ登录'
