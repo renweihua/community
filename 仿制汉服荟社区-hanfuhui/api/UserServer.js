@@ -220,23 +220,22 @@ export async function refreshUserToken(secret = 'lo8cc=') {
  * code短信验证码
  */
 export async function modifyBindPhone(params = {
-  phonesecret: 'sdfv==',
-  code: 1323,
+	phonesecret: 'sdfv==',
+	code: 1323,
 }) {
-  return await request('/account/BindUserPhone', 'post', params)
+	return await request('/account/BindUserPhone', 'post', params)
 }
 
 /**
- * 用户的粉丝列表
- * @param {Object} params 参数 {userid,page,count}
+ * 登录会员的粉丝列表
+ * @param {Object} params 参数 {page,count}
  * secret：token,ServerTime 字符进行加密 Math.floor(new Date().getTime() / 1000)
  */
 export async function getUserFansList(params = {
-  userid: 985319,
-  page: 1,
-  limit: 20
+	page: 1,
+	limit: 20
 }) {
-  return await request('/User/GetUserListForFans', 'get', params)
+	return await request('/user/fans', 'get', params)
 }
 
 /**

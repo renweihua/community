@@ -9,8 +9,8 @@ const user = {
   state: {
     // 登录会员信息数据
     loginUserInfo: {},
-    // 用户关注用户列表数据 this.$store.state.user.userAtteUserList
-    userAtteUserList: [],
+    // 登录会员的关注人列表数据 this.$store.state.user.followsList
+    followsList: [],
     // 用户的粉丝列表 this.$store.state.user.userFansList
     userFansList: [],
     // 用户拉黑名单列表数据
@@ -22,16 +22,16 @@ const user = {
     // 账户信息数据
     accountInfo: {},
     // 用户点赞过动态列表
-    userTopList: [], 
+    userTopList: [],
     // 用户发布所有类型列表
-    userPublishList: [], 
+    userPublishList: [],
     //
   },
   getters: {
     // 登录会员信息数据对象 this.$store.getters['user/getLoginUserInfoData']
     getLoginUserInfoData: state => state.loginUserInfo,
-    // 用户关注用户列表对象  this.$store.getters['user/getUserAtteUserListData']
-    getUserAtteUserListData: state => state.userAtteUserList,
+    // 用户关注用户列表对象  this.$store.getters['user/getFollowsListData']
+    getFollowsListData: state => state.followsList,
     // 用户的粉丝列表  this.$store.getters['user/getUserFansListData']
     getUserFansListData: state => state.userFansList,
     // 用户拉黑名单列表数据  this.$store.getters['user/getUserBlackListData']
@@ -53,18 +53,18 @@ const user = {
     setLoginUserInfoData(state, data) {
       state.loginUserInfo = data
     },
-    // 修改用户关注用户列表数组对象 this.$store.commit('user/setUserAtteUserListData', [...])
-    setUserAtteUserListData(state, data) {
-      state.userAtteUserList = data
-    }, 
+    // 修改用户关注用户列表数组对象 this.$store.commit('user/setFollowsListData', [...])
+    setFollowsListData(state, data) {
+      state.followsList = data
+    },
     // 修改用户粉丝列表数组对象 this.$store.commit('user/setUserFansListData', [...])
     setUserFansListData(state, data) {
       state.userFansList = data
-    }, 
+    },
     // 修改用户拉黑名单列表数据 this.$store.commit('user/setUserBlackListData', [...])
     setUserBlackListData(state, data) {
       state.userBlackList = data
-    }, 
+    },
     // 修改用户信息数据对象  this.$store.commit('user/setUserInfoData', {...})
     setUserInfoData(state, data) {
       state.userInfo = data
@@ -80,7 +80,7 @@ const user = {
     // 修改账户信息数据对象 this.$store.commit('user/setAccountInfoMainBgPicData', 'url')
     setAccountInfoMainBgPicData(state, url) {
       state.accountInfo.User.MainBgPic = url
-    }, 
+    },
     // 修改用户点赞过动态列表  this.$store.commit('user/setUserTopListData', [...])
     setUserTopListData(state, data) {
       state.userTopList = data
