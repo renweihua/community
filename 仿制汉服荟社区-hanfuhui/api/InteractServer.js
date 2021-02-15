@@ -92,17 +92,14 @@ export async function delCommentTop(id = 8783858) {
 }
 
 /**
- * 获取用户收藏信息列表
- * @param {Object} params 参数 {objecttype:trend,page:1,limit:20}
- * objecttype：word 文章、video 视频、album 摄影、全部就留空或不传
- * objectid： 动态列表中ID或者ObjectID
+ * 我的收藏
+ * @param {Object} params 参数 {page:1,limit:20}
  */
-export async function getUserSaveList(params = {
-	objecttype: 'trend',
+export async function getCollectionList(params = {
 	page: 1,
 	limit: 20
 }) {
-	return await request('/Interact/GetSaveList', 'get', params)
+	return await request('/user/collections', 'get', params)
 }
 
 /**
