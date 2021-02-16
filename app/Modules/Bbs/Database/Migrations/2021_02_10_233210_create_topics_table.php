@@ -19,7 +19,7 @@ class CreateTopicsTable extends Migration
             $table->bigIncrements('topic_id')->unsigned()->comment('话题 表');
             $table->string('topic_name', 200)->default('')->comment('名称');
             $table->string('topic_description', 200)->default('')->comment('描述');
-            $table->string('topic_icon', 200)->default('')->comment('图标/封面');
+            $table->string('topic_cover', 200)->default('')->comment('封面');
             $table->smallInteger('topic_sort')->unsigned()->default(0)->comment('排序');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');

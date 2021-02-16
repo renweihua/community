@@ -57,6 +57,16 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('/loadMoreComments', 'DynamicController@loadMoreComments');
     });
 
+    /**
+     * 荟吧相关
+     */
+    // 荟吧列表
+    Route::get('topics', 'TopicController@lists');
+    Route::prefix('topic')->group(function () {
+        // 荟吧详情
+        Route::get('/detail', 'TopicController@detail');
+    });
+
     // 登录会员
     Route::prefix('')->middleware([CheckAuth::class])->namespace('User')->group(function () {
         // 文件上传
@@ -101,8 +111,6 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     Route::prefix('')->group(function () {
         // 首页启动图
         Route::get('start_diagrams', 'WebSitesController@getStartDiagrams');
-        // 荟吧列表
-        Route::get('topics', 'WebSitesController@topics');
         // 注册协议
         Route::get('register_agreement', 'WebSitesController@registerAgreement');
         // 关于我们

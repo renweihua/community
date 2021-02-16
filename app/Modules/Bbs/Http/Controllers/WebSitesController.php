@@ -2,7 +2,6 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
-use App\Models\Dynamic\Topic;
 use App\Models\System\StartDiagram;
 use Illuminate\Http\JsonResponse;
 
@@ -15,22 +14,9 @@ class WebSitesController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getStartDiagrams(StartDiagram $startDiagrams):JsonResponse
+    public function getStartDiagrams(StartDiagram $startDiagrams) : JsonResponse
     {
         $lists = $startDiagrams->select(['diagram_name', 'diagram_cover'])->orderBy('diagram_sort', 'ASC')->get();
-        return $this->successJson($lists);
-    }
-
-    /**
-     * 荟吧列表
-     *
-     * @param  \App\Models\Dynamic\Topic  $topic
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function topics(Topic $topic)
-    {
-        $lists = $topic->orderBy('topic_sort', 'ASC')->get();
         return $this->successJson($lists);
     }
 
@@ -39,7 +25,7 @@ class WebSitesController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function registerAgreement():JsonResponse
+    public function registerAgreement() : JsonResponse
     {
         return $this->successJson(cnpscy_config('register_agreement'));
     }
@@ -49,7 +35,7 @@ class WebSitesController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function aboutUs(): JsonResponse
+    public function aboutUs() : JsonResponse
     {
         return $this->successJson(cnpscy_config('about_us'));
     }

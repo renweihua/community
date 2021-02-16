@@ -14,4 +14,9 @@ class Topic extends Model
     {
         return TopicFactory::new();
     }
+
+    public function isFollow()
+    {
+        return $this->hasOne(TopicFollow::class, $this->primaryKey, $this->primaryKey);
+    }
 }
