@@ -121,4 +121,32 @@ class UserInfo extends Model
         }
         return $model->where('nick_name', $nick_name)->first();
     }
+
+    /**
+     * 设置连续签天数
+     *
+     * @param $user_info
+     *
+     * @return mixed
+     */
+    public function setContinuousAttendance($user_info)
+    {
+        $time = time();
+        $yesterday_time = strtotime('-1 day');
+        if (
+            $user_info->last_sign_time == 0
+            ||
+            !(
+                $user_info->last_sign_time >= strtotime(date('Y-m-d', $yesterday_time) . ' 00:00:00')
+                &&
+                $user_info->last_sign_time <= strtotime(date('Y-m-d', $yesterday_time) . ' 23:59:59')
+            )
+        ){
+            $user_info->sign_days = 1;
+        }else{
+            ++$user_info->sign_days;
+        }
+        $user_info->last_sign_time = $time;
+        return $user_info->save();
+    }
 }

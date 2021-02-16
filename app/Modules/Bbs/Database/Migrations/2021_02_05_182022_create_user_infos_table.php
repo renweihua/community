@@ -33,6 +33,8 @@ class CreateUserInfosTable extends Migration
             $table->boolean('auth_email')->unsigned()->default(0)->comment('邮箱验证状态：0：否，1：是');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
+            $table->integer('sign_days')->unsigned()->default(0)->comment('连续签到天数');
+            $table->integer('last_sign_time')->unsigned()->default(0)->comment('上次签到时间');
             $table->integer('last_actived_time')->unsigned()->default(0)->comment('上次活跃时间');
             $table->integer('notification_count')->unsigned()->default(0)->comment('未读消息');
             $table->string('user_introduction', 500)->default('')->comment('个人介绍');

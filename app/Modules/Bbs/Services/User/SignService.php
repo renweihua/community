@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Models\User\UserInfo;
 use App\Models\User\UserSign;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
@@ -30,14 +31,24 @@ class SignService extends Service
             $this->setError('今日您已签到！');
             return true;
         }
-        if ($userSignInstance->create([
-            'user_id' => $login_user,
-            'created_ip' => get_ip(),
-        ])) {
+        DB::beginTransaction();
+        $user_info = UserInfo::lock(true)->find($login_user);
+        try{
+            // 录入签到记录
+            $userSignInstance->create([
+                'user_id' => $login_user,
+                'created_ip' => get_ip(),
+            ]);
+
+            // 计算登录会员的签到累计天数
+            $user_info->setContinuousAttendance($user_info);
+
+            DB::commit();
             $this->setError('签到成功！');
             return true;
-        } else {
-            $this->setError('签到失败！');
+        }catch (FailException $e){
+            DB::rollBack();
+            $this->setError('签到失败，请重试！');
             return false;
         }
     }

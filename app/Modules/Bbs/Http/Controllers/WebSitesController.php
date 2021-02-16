@@ -22,7 +22,7 @@ class WebSitesController extends BbsController
 
     /**
      * 注册协议
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function registerAgreement():JsonResponse
