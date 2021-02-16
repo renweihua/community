@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Models\Dynamic\Topic;
 use App\Models\System\StartDiagram;
 use Illuminate\Http\JsonResponse;
 
@@ -16,8 +17,21 @@ class WebSitesController extends BbsController
      */
     public function getStartDiagrams(StartDiagram $startDiagrams):JsonResponse
     {
-        $list = $startDiagrams->select(['diagram_name', 'diagram_cover'])->orderBy('diagram_sort', 'ASC')->get();
-        return $this->successJson($list);
+        $lists = $startDiagrams->select(['diagram_name', 'diagram_cover'])->orderBy('diagram_sort', 'ASC')->get();
+        return $this->successJson($lists);
+    }
+
+    /**
+     * 荟吧列表
+     *
+     * @param  \App\Models\Dynamic\Topic  $topic
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function topics(Topic $topic)
+    {
+        $lists = $topic->orderBy('topic_sort', 'ASC')->get();
+        return $this->successJson($lists);
     }
 
     /**

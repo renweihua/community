@@ -101,6 +101,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     Route::prefix('')->group(function () {
         // 首页启动图
         Route::get('start_diagrams', 'WebSitesController@getStartDiagrams');
+        // 荟吧列表
+        Route::get('topics', 'WebSitesController@topics');
         // 注册协议
         Route::get('register_agreement', 'WebSitesController@registerAgreement');
         // 关于我们
