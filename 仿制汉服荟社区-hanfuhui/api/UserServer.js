@@ -73,12 +73,13 @@ export async function delUserBlack(blackuserid = 65910) {
 
 /**
  * 检查用户是否在黑名单中
- * @param {Number} userid 参数 26081
- * userid：用户ID
+ * 
+ * @param {Number} user_id 参数 
+ * user_id：用户ID
  */
-export async function getUserExistsBlack(userid = 26081) {
-	return await request('/User/GetUserBlackExists', 'get', {
-		userid
+export async function getUserExistsBlack(user_id) {
+	return await request('/user/getUserBlackExists', 'get', {
+		user_id
 	})
 }
 

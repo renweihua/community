@@ -89,7 +89,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 每日签到
             Route::post('/signIn', 'SignController@signIn');
             // 编辑个人资料
-            Route::any('/update', 'IndexController@update');
+            Route::put('/update', 'IndexController@update');
+
+            // 指定会员是否在黑名单：前期先测试数据返回
+            Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
         });
 
         // 动态相关
