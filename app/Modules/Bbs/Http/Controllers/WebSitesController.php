@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Models\System\Banner;
 use App\Models\System\StartDiagram;
 use Illuminate\Http\JsonResponse;
 
@@ -38,5 +39,16 @@ class WebSitesController extends BbsController
     public function aboutUs() : JsonResponse
     {
         return $this->successJson(cnpscy_config('about_us'));
+    }
+
+    /**
+     * Banner图
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function banners(): JsonResponse
+    {
+        $lists = Banner::getBannersByWeb();
+        return $this->successJson($lists);
     }
 }

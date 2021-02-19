@@ -124,6 +124,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('register_agreement', 'WebSitesController@registerAgreement');
         // 关于我们
         Route::get('about_us', 'WebSitesController@aboutUs');
+        // Banner图
+        Route::get('banners', 'WebSitesController@banners');
     });
 
 });
