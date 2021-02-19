@@ -366,19 +366,20 @@
 			},
 			/// 展卡更多-关注
 			fnCardFollow(e) {
+				console.log(e.user_id);
 				// 用户被关注
-				if (e.User.UserAtte) {
+				if (e.user_info.is_follow) {
 					uni.showModal({
 						content: '确定要取消关注TA吗？',
 						success: res => {
 							if (res.confirm) {
-                                followUser(e.User.ID).then(delRes => {
+                                followUser(e.user_id).then(delRes => {
 									if (delRes.data.Data == false) return
-									this.atteData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
+									this.atteData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow =
 										false)
-									this.mainData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
+									this.mainData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow =
 										false)
-									this.squareData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
+									this.squareData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow =
 										false)
 									// 登录用户关注数减
 									let tempUser = this.$store.getters['user/getLoginUserInfoData']
@@ -390,11 +391,11 @@
 					})
 					return
 				} else {
-					followUser(e.User.ID).then(addRes => {
+					followUser(e.user_id).then(addRes => {
 						if (addRes.data.Data == false) return
-						this.atteData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
-						this.mainData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
-						this.squareData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte = true)
+						this.atteData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow = true)
+						this.mainData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow = true)
+						this.squareData.filter(item => item.user_id == e.user_id).map(item => item.user_info.is_follow = true)
 						// 登录用户关注数加
 						let tempUser = this.$store.getters['user/getLoginUserInfoData']
 						tempUser.user_info.follows_count++
@@ -405,7 +406,7 @@
 			/// 展卡更多-拉黑
 			fnCardBlack(e) {
 				// 用户是否被列入黑名单
-				e.User.Black ? delUserBlack(e.User.ID) : addUserBlack(e.User.ID)
+				e.User.Black ? delUserBlack(e.user_id) : addUserBlack(e.user_id)
 			},
 			/// 展卡更多-跳转举报页
 			fnCardReport(e) {

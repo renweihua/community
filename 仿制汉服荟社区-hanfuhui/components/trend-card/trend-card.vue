@@ -59,15 +59,21 @@
 		<view class="flexr-jsa bts2r">
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('top')">
 				<i-icon type="dianzan" size="48" :color="item.is_praise?'#FF6699':'#8f8f94'"></i-icon>
-				<text class="ml8r f28r cgray">{{item.praise_count || '赞'}}</text>
+				<text class="ml8r f28r cgray">
+				{{item.is_praise?'已赞':'赞'}}
+				<span v-if="item.praise_count > 0">({{item.praise_count}})</span>
+				</text>
 			</view>
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('comm')">
 				<i-icon type="pinglun" size="48" color="#8f8f94"></i-icon>
-				<text class="ml8r f28r cgray">{{item.reply_count || '评论'}}</text>
+				<text class="ml8r f28r cgray">{{item.comment_count || '评论'}}</text>
 			</view>
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('save')">
 				<i-icon type="shoucang" size="48" :color="item.is_collection?'#FF6699':'#8f8f94'"></i-icon>
-				<text class="ml8r f28r cgray">{{item.collection_count || '收藏'}}</text>
+				<text class="ml8r f28r cgray">
+				{{item.is_collection?'已收藏':'收藏'}}
+				<span v-if="item.collection_count > 0">({{item.collection_count}})</span>
+				</text>
 			</view>
 		</view>
 	</view>
@@ -246,6 +252,8 @@
 			},
 			/// 更多菜单操作
 			async fnActionSheet() {
+				let login_user = this.$store.getters['user/getLoginUserInfoData'];
+				
 				let atteTitle = this.item.user_info.is_follow ? '取消关注' : '关注TA';
 				// this.item.user_info.is_black 一直为false 这里用网络来判断存在咯
 				let blackRes = await getUserExistsBlack(this.item.user_info.user_id);
@@ -284,7 +292,7 @@
 <style>
 	/*底部项的宽度*/
 	.trend-w20v {
-		width: 20%;
+		width: 30%;
 	}
 
 	/*视频格固定高度*/
