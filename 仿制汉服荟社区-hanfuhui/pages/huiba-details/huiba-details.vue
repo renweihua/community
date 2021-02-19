@@ -9,15 +9,15 @@
           <view class="flex plr28r ptb18r">
             <image class="hw128r br8r" style="overflow: hidden;" :src="calHuibaIcon" mode="aspectFill"></image>
             <view class="flex-fitem flexc-jsa plr18r">
-              <view class="f32r cwhite">{{huibaInfoData.Name}}</view>
+              <view class="f32r cwhite">{{huibaInfoData.topic_name}}</view>
               <view class="f24r cwhite">
-                {{huibaInfoData.FollowCount || 0}} 人关注
+                {{huibaInfoData.follow_count || 0}} 人关注
                 <text class="mlr8r">|</text>
-                {{huibaInfoData.TrendCount || 0}} 条动态
+                {{huibaInfoData.dynamic_count || 0}} 条动态
               </view>
             </view>
-            <view class="bgwhite f28r fcenter w128r br8r ptb8r flex-asc" :class="[huibaInfoData.HuibaFollow ? 'cgray':'ctheme']"
-              @tap="fnHuibaFollow">{{huibaInfoData.HuibaFollow?'已关注':'关注'}}</view>
+            <view class="bgwhite f28r fcenter w128r br8r ptb8r flex-asc" :class="[huibaInfoData.is_follow ? 'cgray':'ctheme']"
+              @tap="fnHuibaFollow">{{huibaInfoData.is_follow?'已关注':'关注'}}</view>
           </view>
           <view class="plr28r ptb18r bgblack-a3 f28r cwhite">{{huibaInfoData.Describe}}</view>
         </view>
@@ -117,13 +117,13 @@
         // 获取荟吧信息和置顶信息
         Promise.all([
           getHuibaInfo(this.topic_id),
-          getHuibaTop(this.topic_id)
+          // getHuibaTop(this.topic_id)
         ]).then(resArray => {
-          this.$store.commit('huiba/setHuibaInfoData', resArray[0].data.Data)
-          this.$store.commit('huiba/setHuibaTopData', resArray[1].data.Data)
+          this.$store.commit('huiba/setHuibaInfoData', resArray[0].data)
+          // this.$store.commit('huiba/setHuibaTopData', resArray[1].data.Data)
           // 导航标题
           uni.setNavigationBarTitle({
-            title: resArray[0].data.Data.Name
+            title: resArray[0].data.topic_name
           });
         })
         // 等待一秒页面渲染,$nextTick使用不能准确
@@ -156,13 +156,13 @@
       },
       /// 计算荟吧icon图
       calHuibaIcon() {
-        let faceUrl = this.huibaInfoData.FaceUrl;
-        return !!faceUrl ? faceUrl + '_200x200.jpg' : '/static/default_avatar.png'
+        let topic_cover = this.huibaInfoData.topic_cover;
+        return !!topic_cover ? topic_cover : '/static/default_avatar.png'
       },
       /// 计算荟吧背景封面
       calHuibaFacePic() {
-        let faceUrl = this.huibaInfoData.FaceUrl;
-        return !!faceUrl ? faceUrl + '_500x200.blur.jpg/format/webp' : '/static/default_image.png'
+        let topic_cover = this.huibaInfoData.topic_cover;
+        return !!topic_cover ? topic_cover : '/static/default_image.png'
       },
     },
 

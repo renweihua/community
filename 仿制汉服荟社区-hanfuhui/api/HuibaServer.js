@@ -15,10 +15,10 @@ export async function getHuibaList() {
 
 /**
  * 获取荟吧信息
- * @param {Number} id 参数 荟吧列表中ID
+ * @param {Number} topic_id 参数 荟吧ID
  */
-export async function getHuibaInfo(id = 7566) {
-  return await request(`/Huiba/GetHuibaPublic?id=${id}`)
+export async function getHuibaInfo(topic_id) {
+  return await request(`/topic/detail`, 'get', {topic_id})
 }
 
 /**
