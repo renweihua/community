@@ -23,11 +23,50 @@ class DynamicService extends Service
      */
     public function push(int $login_user_id, array $params)
     {
+        switch (intval($params['dynamic_type'])){
+            case 0: // 动态
+                if (!isset($params['dynamic_content']) || empty($params['dynamic_content'])){
+                    $this->setError('请输入动态内容！');
+                    return false;
+                }
+                break;
+            case 1: // 文章
+                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                    $this->setError('请输入文章标题！');
+                    return false;
+                }
+                if (!isset($params['dynamic_content']) || empty($params['dynamic_content'])){
+                    $this->setError('请输入动态内容！');
+                    return false;
+                }
+                break;
+            case 2: // 视频
+                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                    $this->setError('请输入标题！');
+                    return false;
+                }
+                if (!isset($params['video_path']) || empty($params['video_path'])){
+                    $this->setError('请上传视频！');
+                    return false;
+                }
+                break;
+            case 3: // 相册
+                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                    $this->setError('请输入相册标题！');
+                    return false;
+                }
+                if (!isset($params['dynamic_images']) || empty($params['dynamic_images'])){
+                    $this->setError('请上传相册图片！');
+                    return false;
+                }
+                break;
+        }
         DB::beginTransaction();
         try {
             $ip_agent = get_client_info();
             Dynamic::create([
                 'user_id' => $login_user_id,
+                'dynamic_title' => $params['dynamic_title'] ?? '',
                 'dynamic_type' => $params['dynamic_type'],
                 'dynamic_images' => $params['dynamic_images'] ?? '',
                 'video_path' => $params['video_path'] ?? '',

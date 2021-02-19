@@ -14,14 +14,14 @@ class DynamicRequest extends BaseRequest
     public function rules()
     {
         return [
-            'dynamic_content' => 'required',
+            'dynamic_type' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'dynamic_content.required' => '请输入发布内容！',
+            'dynamic_type.required' => '请设置发布类型！',
         ];
     }
 }

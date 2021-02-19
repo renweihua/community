@@ -31,7 +31,7 @@ class CreateDynamicsTable extends Migration
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
-            $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.图文；1.视频');
+            $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.动态；1.文章；2.视频；3.相册');
             $table->integer('read_num')->unsigned()->default(0)->comment('阅读数量');
             $table->integer('comment_count')->unsigned()->default(0)->comment('评论总量');
             $table->integer('praise_count')->unsigned()->default(0)->comment('点赞量');
