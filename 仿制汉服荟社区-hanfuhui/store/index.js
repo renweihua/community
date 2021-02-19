@@ -52,13 +52,10 @@ const store = new Vuex.Store({
     // 获取消息总数  this.$store.getters['getNewsTotalData']
     getNewsTotalData(state) {
       let {
-        RemindCount,
-        CommentCount,
-        TopCount,
-        NoticeCount,
-        TopicCount
+        interact_unreads,
+        system_unreads,
       } = state.newsCount
-      return RemindCount + CommentCount + TopCount + NoticeCount + TopicCount
+      return interact_unreads + system_unreads;
     },
     //
   },

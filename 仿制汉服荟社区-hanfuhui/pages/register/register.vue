@@ -186,9 +186,9 @@
 					let user_info = await getLoginUserInfo();
 					console.log(user_info);
 					this.$store.commit('user/setLoginUserInfoData', user_info.data);
-					// // 获取未读消息数
-					// let mesRes = await getMessageNoReadCount()
-					// this.$store.commit('setNewsCountData', mesRes.data.Data)
+					// 获取未读消息数
+					let mesRes = await getMessageNoReadCount()
+					this.$store.commit('setNewsCountData', mesRes.data)
 					// // 获取签到信息
 					// let signinRes = await getSigninInfo()
 					// this.$store.commit('setSigninInfoData', signinRes.data.Data)

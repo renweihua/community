@@ -130,7 +130,7 @@
     onShow() {
       // 获取聊天设置状态
       getMessageNoReadCount().then(res => {
-        this.$store.commit('setNewsCountData', res.data.Data)
+        this.$store.commit('setNewsCountData', res.data)
       })
     },
 

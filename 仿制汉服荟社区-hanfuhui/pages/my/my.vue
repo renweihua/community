@@ -50,13 +50,6 @@
 						<i-icon type="you" size="42" color="#8F8F94"></i-icon>
 					</view>
 				</view>
-				<view class="flex flex-aic">
-					<image class="hw64r plr28r" src="/static/icon-nav-my/icon_chat.png" mode="aspectFit"></image>
-					<view class="flex-fitem flex flex-aic hl90r pr28r">
-						<text class="f36r c111 flex-gitem">我的聊天</text>
-						<i-icon type="you" size="42" color="#8F8F94"></i-icon>
-					</view>
-				</view>
 			</view>
 			<view class="mb18r bgwhite">
 				<view class="flex flex-aic" @tap="fnOpenWin('my-follow')">
@@ -129,11 +122,13 @@
 				if (val) this.fnRefreshUserInfo();
 			}
 		},
-
 		computed: {
 			// 未读消息数量
 			newsTotalData() {
-				return this.$store.getters['getNewsTotalData']
+				let nums = this.$store.getters['getNewsTotalData'];
+				console.log('---nums---');
+				console.log(nums);
+				return nums;
 			},
 			// 签到状态
 			signinStatusData() {
@@ -203,16 +198,15 @@
 				getLoginUserInfo().then(userinfoRes => {
 					// 保存登录用户信息
 					this.$store.commit('user/setLoginUserInfoData', userinfoRes.data);
-					return true;
 					
 					// 获取未读消息数
 					return getMessageNoReadCount()
 				}).then(mesRes => {
+					// 保存未读消息数
+					this.$store.commit('setNewsCountData', mesRes.data)
 					return true;
 					
 					
-					// 保存未读消息数
-					this.$store.commit('setNewsCountData', mesRes.data.Data)
 					// 获取签到信息
 					return getSigninInfo()
 				}).then(signinRes => {

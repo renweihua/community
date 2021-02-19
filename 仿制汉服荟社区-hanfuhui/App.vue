@@ -61,19 +61,17 @@
 					// 获得登录用户信息
 					return getLoginUserInfo();
 				}).then(userinfoRes => {
-					return true;
-					
 					console.log(userinfoRes);
 					// 保存登录用户信息
-					this.$store.commit('user/setUserInfoData', userinfoRes.data.Data);
+					this.$store.commit('user/setUserInfoData', userinfoRes.data);
+					
 					// 获取未读消息数
 					return getMessageNoReadCount()
 				}).then(mesRes => {
-					return true;
-					
-					
 					// 保存未读消息数
-					this.$store.commit('setNewsCountData', mesRes.data.Data)
+					this.$store.commit('setNewsCountData', mesRes.data)
+					
+					return true;
 					// 获取签到信息
 					return getSigninInfo()
 				}).then(signinRes => {
