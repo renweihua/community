@@ -19,22 +19,13 @@ export async function getFollowsList(params = {
 
 /**
  * 关注指定会员
- * 
- * @param {Number} user_id 参数 
+ *
+ * @param {Number} user_id 参数
  * user_id：用户ID
  */
 export async function followUser(user_id) {
-	return await request('/user/follow', 'post', {user_id})
-}
-
-/**
- * 用户关注取消
- * @param {Number} atteuserids 参数 137
- * atteuserids：用户ID
- */
-export async function delUserAtte(atteuserids = 137) {
-	return await request('/User/DeleteAttentions', 'post', {
-		atteuserids
+	return await request('/user/follow', 'post', {
+		user_id
 	})
 }
 
