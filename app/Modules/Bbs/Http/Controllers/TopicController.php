@@ -60,7 +60,7 @@ class TopicController extends BbsController
 
     /**
      * 关注指定荟吧
-     * 
+     *
      * @param  \App\Modules\Bbs\Http\Requests\TopicIdRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse

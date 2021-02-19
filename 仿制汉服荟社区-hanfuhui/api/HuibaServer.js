@@ -64,22 +64,12 @@ export async function getHuibaUserFollow(params = {
 }
 
 /**
- * 用户关注荟吧添加
+ * 用户关注荟吧
  * @param {Object} id 参数 荟吧ID
  */
-export async function addHuibaFollows(ids = 6499) {
-  return await request('/huiba/InsertHuibaFollows', 'post', {
-    ids
-  })
-}
-
-/**
- * 用户关注荟吧取消
- * @param {Object} id 参数 荟吧ID
- */
-export async function delHuibaFollows(id = 6499) {
-  return await request('/huiba/DeleteHuibaFollow', 'post', {
-    id
+export async function addHuibaFollows(topic_id) {
+  return await request('/topic/follow', 'post', {
+    topic_id
   })
 }
 
