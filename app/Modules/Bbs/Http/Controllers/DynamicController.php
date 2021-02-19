@@ -16,6 +16,12 @@ class DynamicController extends BbsController
         $this->service = $service;
     }
 
+    public function lists()
+    {
+        $lists = $this->service->getDynamics();
+        return $this->successJson($lists);
+    }
+
     /**
      * 获取动态详情
      *

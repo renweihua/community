@@ -37,6 +37,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     Route::prefix('/')->group(function () {
         // 发现
         Route::get('discover', 'IndexController@discover');
+        // 关注
+        Route::get('follow', 'IndexController@follows')->middleware(CheckAuth::class);
+        // 推荐
+        Route::get('recommend', 'IndexController@recommend');
     });
 
     // 会员相关

@@ -22,10 +22,17 @@ class DynamicService extends Service
      *
      * @return array
      */
-    public function getDynamics($request, int $user_id, int $login_user = 0)
+    public function getDynamicsByUser($request, int $user_id, int $login_user = 0)
+    {
+        return $this->getDynamics($request, $user_id);
+    }
+
+    public function getDynamics($request, int $user_id = 0, int $login_user = 0)
     {
         $lists = Dynamic::check()
-                        ->where('user_id', $user_id)
+                        ->where(function($query)use($user_id){
+                            if ($user_id) $query->where('user_id', $user_id);
+                        })
                         ->with(
                             [
                                 'userInfo' => function($query) use ($login_user) {

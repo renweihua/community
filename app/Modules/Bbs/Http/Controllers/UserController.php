@@ -46,7 +46,7 @@ class UserController extends BbsController
     {
         $data = $request->validated();
 
-        $list = $dynamicService->getDynamics($request, (int)$data['user_id'], (int)$this->login_user);
+        $list = $dynamicService->getDynamicsByUser($request, (int)$data['user_id'], (int)$this->login_user);
         return $this->successJson($list);
     }
 }

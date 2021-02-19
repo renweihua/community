@@ -53,4 +53,59 @@ class SignService extends Service
         }
     }
 
+    public function index()
+    {
+        $where = [
+            ['user_id', '=', $this->user_id],
+        ];
+
+        $primarykey = BbsUserSign::PRIMARYKEY;
+
+        // 按照Id降序进行分页
+        if ( !empty($this->request_data['last_id'])) {
+            $where[] = [$primarykey, '<', $this->request_data['last_id']];
+        }
+
+        $list = BbsUserSign::operationWhere()
+                           ->where($where)
+                           ->limit($this->request_data['limit'])
+                           ->orderBy($primarykey, 'DESC')
+                           ->get();
+
+        if ( !empty($list) && count($list)) {
+            foreach ($list as &$v) {
+                // 登录IP地址
+                $v['created_ip'] = long2ip($v['created_ip']);
+            }
+            $last_id = min(array_column($list->toArray(), $primarykey));
+        } else $last_id = 0;
+
+        return self::apiWebReturn([
+            'data' => $list,
+            'last_id' => $last_id,
+            'status' => 1,
+        ]);
+    }
+    public function getSign()
+    {
+        // 今日是否签到
+        $data['is_sign'] = 0;
+        if ($sign = BbsUserSign::operationWhere()
+                               ->where([
+                                   ['created_time', '>=', strtotime(date('Y-m-d', time()) . ' 00:00:00')],
+                                   ['created_time', '<=', strtotime(date('Y-m-d', time()) . ' 23:59:59')],
+                               ])
+                               ->first()) {
+            $data = array_merge($data, $sign->toArray());
+            $data['is_sign'] = 1;
+        }
+        // 连续签到次数
+        $data['sign_days'] = rand(0, 100);
+        // 漏签次数
+        $data['miss_sign'] = rand(0, 100);
+        // 今日签到第几名
+        $data['sign_rank'] = rand(1, 1000);
+
+        return self::apiWebReturn(['data' => $data]);
+    }
 }

@@ -26,4 +26,13 @@ class IndexController extends BbsController
         $lists = $this->service->discover($this->user, $request);
         return $this->successJson($lists);
     }
+
+    /**
+     * 首页：关注
+     */
+    public function follows() : JsonResponse
+    {
+        $lists = $this->service->follows($this->login_user_id);
+        return $this->successJson($lists);
+    }
 }
