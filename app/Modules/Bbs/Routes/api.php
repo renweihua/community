@@ -114,6 +114,14 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 评论 - 动态
             Route::post('/comment', 'DynamicController@comment');
         });
+
+        /**
+         * 消息相关
+         */
+        Route::prefix('notify')->group(function () {
+            // 我的未读消息
+            Route::get('/unread', 'NotifyController@unread');
+        });
     });
 
     // 其它系统配置
