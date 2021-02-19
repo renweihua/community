@@ -2,9 +2,12 @@
 
 namespace App\Modules\Bbs\Services;
 
+use App\Exceptions\Bbs\FailException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\Topic;
+use App\Models\Dynamic\TopicFollow;
 use App\Services\Service;
+use Illuminate\Support\Facades\DB;
 
 class TopicService extends Service
 {
@@ -104,5 +107,60 @@ class TopicService extends Service
         }
         $lists = $this->getPaginateFormat($lists);
         return $lists;
+    }
+
+    /**
+     * 关注荟吧详情
+     *
+     * @param  int  $login_user_id
+     * @param  int  $topic_id
+     *
+     * @return bool|bool[]
+     */
+    public function setFollow(int $login_user_id, int $topic_id)
+    {
+        $topicFollowFan = TopicFollow::getInstance();
+        // 获取当前荟吧详情
+        $topic = Topic::lock(true)->find($topic_id);
+        if (!$topic){
+            $this->setError('荟吧详情获取失败！');
+            return false;
+        }
+        // 登录会员是否关注荟吧
+        $follow = $topicFollowFan->checkFollow($login_user_id, $topic_id);
+
+        $msg = $follow ? '取关' : '关注';
+        DB::beginTransaction();
+        try {
+            $data = [
+                'user_id' => $login_user_id,
+                'topic_id' => $topic_id,
+            ];
+            if ($follow) {
+                // 删除我关注荟吧记录
+                $follow->delete();
+
+                // 荟吧记录，关注人数：递减
+                $topic->decrement('follow_count');
+            } else {
+                // 关注荟吧记录
+                $topicFollowFan->create(array_merge($data, [
+                    'created_time' => time(),
+                ]));
+
+                // 荟吧记录，关注人数：递增
+                $topic->increment('follow_count');
+
+                // 互动消息：我关注了荟吧<xxx>
+            }
+
+            DB::commit();
+            $this->setError($msg . '成功！');
+            return ['is_follow' => $follow ? false : true];
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError($msg . '失败！');
+            return false;
+        }
     }
 }

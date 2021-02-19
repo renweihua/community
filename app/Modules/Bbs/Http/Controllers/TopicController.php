@@ -57,4 +57,22 @@ class TopicController extends BbsController
         $lists = $this->service->dynamics($request, $this->login_user);
         return $this->successJson($lists);
     }
+
+    /**
+     * 关注指定荟吧
+     * 
+     * @param  \App\Modules\Bbs\Http\Requests\TopicIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function follow(TopicIdRequest $request) : JsonResponse
+    {
+        $data = $request->validated();
+
+        if ($res = $this->service->setFollow($this->login_user, (int)$data['topic_id'])) {
+            return $this->successJson([], $this->service->getError(), $res);
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
 }

@@ -67,6 +67,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('/detail', 'TopicController@detail');
         // 荟吧的动态列表
         Route::get('/dynamics', 'TopicController@dynamics');
+        // 关注指定荟吧
+        Route::post('/follow', 'TopicController@follow')->middleware(CheckAuth::class);
     });
 
     // 登录会员
@@ -97,7 +99,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
         });
 
-        // 动态相关
+        /**
+         * 动态相关
+         */
         Route::prefix('dynamic')->group(function () {
             // 发布 - 动态
             Route::post('/push', 'DynamicController@push');
