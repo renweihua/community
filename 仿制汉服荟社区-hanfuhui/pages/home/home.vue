@@ -62,6 +62,10 @@
 		addUserBlack,
 		delUserBlack
 	} from "@/api/UserServer.js"
+	
+	import{
+		dynamicDetailPage
+	} from "@/utils/common.js";
 
 	// 动态信息项卡片组件
 	import TrendCard from '@/components/trend-card/trend-card'
@@ -70,7 +74,6 @@
 		components: {
 			TrendCard
 		},
-
 		props: {
 			// 底部导航双击连续触发刷新
 			refresh: {
@@ -78,7 +81,6 @@
 				default: false
 			}
 		},
-
 		data() {
 			return {
 				// 顶部导航选中
@@ -215,22 +217,9 @@
 					this.clickRefresh = false;
 				}
 			},
-
 			/// 展卡跳转详情页
 			fnCardInfo(e) {
-				console.log(e);
-				switch(e.dynamic_type){
-					case 0: // 图文
-						uni.navigateTo({
-							url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
-						})
-						break;
-					case 1: // 视频
-						uni.navigateTo({
-							url: `/pages/video-details/video-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
-						})
-						break;
-				}
+				dynamicDetailPage(e, this);
 				return;
 
 

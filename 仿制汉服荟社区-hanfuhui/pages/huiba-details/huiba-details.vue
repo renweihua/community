@@ -81,6 +81,9 @@
 import { getHuibaInfo, getHuibaTop, getHuibaTrend, addHuibaFollows, delHuibaFollows } from '@/api/HuibaServer.js';
 import { followUser, addUserBlack } from '@/api/UserServer.js';
 import { dynamicPraise, dynamicCollection } from '@/api/InteractServer.js';
+	import{
+		dynamicDetailPage
+	} from "@/utils/common.js";
 
 // 动态信息项卡片组件
 import TrendCard from '@/components/trend-card/trend-card';
@@ -311,47 +314,7 @@ export default {
 		},
 		/// 展卡跳转详情页
 		fnCardInfo(e) {
-			uni.navigateTo({
-				url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-			});
-
-			console.log(e.ObjectType);
-			if (e.ObjectType == 'trend') {
-				uni.navigateTo({
-					url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
-			if (e.ObjectType == 'album') {
-				uni.navigateTo({
-					url: `/pages/album-details/album-details?dynamic_id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topic') {
-				uni.navigateTo({
-					url: `/pages/topic-details/topic-details?topic_id=${e.topic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topicreply') {
-				uni.navigateTo({
-					url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
-			if (e.ObjectType == 'video') {
-				uni.navigateTo({
-					url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
-			if (e.ObjectType == 'word') {
-				uni.navigateTo({
-					url: `/pages/word-details/word-details?id=${e.dynamic_id}&fromPage=huiba&current=${this.current}`
-				});
-				return;
-			}
+			dynamicDetailPage(e, this);
 		},
 		/// 展卡评论跳转详情页
 		fnCardComm(e) {
