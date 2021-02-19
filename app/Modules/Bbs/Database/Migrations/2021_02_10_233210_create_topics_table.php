@@ -21,6 +21,8 @@ class CreateTopicsTable extends Migration
             $table->string('topic_description', 200)->default('')->comment('描述');
             $table->string('topic_cover', 200)->default('')->comment('封面');
             $table->smallInteger('topic_sort')->unsigned()->default(0)->comment('排序');
+            $table->integer('dynamic_count')->unsigned()->default(0)->comment('动态数量');
+            $table->integer('follow_count')->unsigned()->default(0)->comment('关注人数');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');

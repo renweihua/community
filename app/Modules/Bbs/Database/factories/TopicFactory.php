@@ -24,6 +24,8 @@ class TopicFactory extends Factory
             'topic_name' => $this->faker->name,
             'topic_description' => $this->faker->text,
             'topic_sort' => $this->faker->numberBetween(1, 99),
+            'dynamic_count' => $this->faker->numberBetween(0, 1000),
+            'follow_count' => $this->faker->numberBetween(0, 100),
             'created_time' => time(),
             'updated_time' => time(),
         ];

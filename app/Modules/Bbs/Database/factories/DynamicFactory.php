@@ -22,11 +22,12 @@ class DynamicFactory extends Factory
     {
         $img = cnpscy_config('site_web_logo');
         return [
-            'user_id' => $this->faker->numberBetween(1, 201),
+            'user_id' => $this->faker->numberBetween(1, 100),
             'topic_id' => $this->faker->numberBetween(1, 10),
             'dynamic_title' => $this->faker->unique()->name,
             'dynamic_images' => rand(0, 1) == 1 ? $img : ($img . ',' . $img),
             'dynamic_content' => $this->faker->text,
+            'is_check' => 1,
             'is_public' => $this->faker->numberBetween(0, 2),
             'access_password' => hash_make(123456),
             'dynamic_type' => $this->faker->numberBetween(0, 2),
