@@ -78,7 +78,7 @@ export async function getRsaText(text = '你好') {
  * 主页banner与热门话题
  */
 export async function getBannerTopicList() {
-	return await request('/system/GetDefault')
+	return await request('/banners')
 }
 
 /**

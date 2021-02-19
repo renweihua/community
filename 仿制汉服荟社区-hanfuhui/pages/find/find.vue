@@ -23,9 +23,9 @@
           <!-- 轮播 -->
           <swiper autoplay="true" interval="3000" duration="300" circular="true" indicator-dots="true"
             indicator-active-color="#FF6699">
-            <block v-for="banner in bannerListData" :key="banner.ID">
+            <block v-for="banner in bannerListData" :key="banner.banner_id">
               <swiper-item>
-                <image style="width: 100%;height: 100%;" :src="banner.ImgSrc+'_850x300.jpg/format/webp'" mode="scaleToFill"
+                <image style="width: 100%;height: 100%;" :src="banner.banner_cover" mode="scaleToFill"
                   :lazy-load="true" />
               </swiper-item>
             </block>
@@ -413,15 +413,22 @@
         // console.log(mescroll);
         this.mescroll[this.scrollInto] = mescroll;
         Promise.all([
-          // getBannerTopicList(),
+          getBannerTopicList(),
           getHuibaList(),
         ]).then(resArray => {
-          // this.$store.commit('common/setBannerListData', resArray[0].data.Data.banner)
-          // this.$store.commit('common/setHotTopicListData', resArray[0].data.Data.hotspot)
+			// Banner
+          this.$store.commit('common/setBannerListData', resArray[0].data)
+		  // 推荐demo数据
+          this.$store.commit('common/setHotTopicListData', [
+			  {'ID' : 1, 'Title' : '穿汉服给祖国庆生', 'Link': 'huiapp://open?topic=147207', 'FaceSrc' : '', 'Datetime': '2019-10-03T20:37:21', 'ClickCount': 1},
+			  {'ID' : 2, 'Title' : '袍子的第一件入坑汉服', 'Link': 'huiapp://open?topic=147207', 'FaceSrc' : '', 'Datetime': '2019-10-03T20:37:21', 'ClickCount': 1},
+			  {'ID' : 3, 'Title' : '汉服小剧本征集', 'Link': 'huiapp://open?topic=147207', 'FaceSrc' : '', 'Datetime': '2019-10-03T20:37:21', 'ClickCount': 1},
+			  {'ID' : 4, 'Title' : '喜欢什么样的汉服搭配', 'Link': 'huiapp://open?topic=147207', 'FaceSrc' : '', 'Datetime': '2019-10-03T20:37:21', 'ClickCount': 1},
+		  ])
 		  
 		  // 荟吧列表
 		  console.log(resArray[0].data);
-          this.$store.commit('huiba/setHuibaListData', resArray[0].data);
+          this.$store.commit('huiba/setHuibaListData', resArray[1].data);
           mescroll.endDownScroll()
         }).catch(() => {
           mescroll.endErr();
