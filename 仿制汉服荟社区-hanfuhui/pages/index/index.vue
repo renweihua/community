@@ -5,7 +5,9 @@
     <!-- 发现 -->
     <find v-if="status.find" :style="{display: current==1 ? 'block' :'none'}" :refresh="current==1 && clickRefresh"></find>
     <!-- 商城 -->
-    <shop v-if="status.shop" :style="{display: current==3 ? 'block' :'none'}" :refresh="current==3 && clickRefresh"></shop>
+    <!-- <shop v-if="status.shop" :style="{display: current==3 ? 'block' :'none'}" :refresh="current==3 && clickRefresh"></shop> -->
+    <!-- 消息 -->
+    <chat v-if="status.chat" :style="{display: current==3 ? 'block' :'none'}" :refresh="current==3 && clickRefresh"></chat>
     <!-- 我的 -->
     <my v-if="status.my" :style="{display: current==4 ? 'block' :'none'}" :refresh="current==4 && clickRefresh"></my>
 
@@ -30,7 +32,9 @@
   // 底部导航栏组件-我的
   import My from '@/pages/my/my'
   // 底部导航栏组件-商城
-  import Shop from '@/pages/shop/shop'
+  // import Shop from '@/pages/shop/shop'
+  // 底部导航栏组件-消息
+  import Chat from '@/pages/chat/chat'
   // 底部导航栏组件-发布
   import Release from '@/pages/release/release'
   // 启动封面组件
@@ -44,7 +48,7 @@
       BottomNav,
       Home,
       Find,
-      Shop,
+      Chat,
       My,
       Release,
       StartCover
@@ -80,7 +84,7 @@
               "selectedIcon": '/static/icon-bottom-nav/send.png'
             },
             {
-              "text": "商城",
+              "text": "消息",
               "icon": "/static/icon-bottom-nav/shop_normal.png",
               "selectedIcon": "/static/icon-bottom-nav/shop_select.png"
             },
@@ -95,7 +99,7 @@
         status: {
           home: false,
           find: false,
-          shop: false,
+		  chat: false,
           my: false,
           release: false,
           start: true
@@ -107,19 +111,18 @@
         //
       }
     },
-
     // 初始跳转
     onLoad(option) {
       // 带参数时改变选中项关闭启动封面
       if (option && option.current) {
         this.current = parseInt(option.current);
         this.status.start = false;
-        this.status[['home', 'find', 'shop', 'my'][this.current]] = true;
+        this.status[['home', 'find', 'chat', 'my'][this.current]] = true;
         return
       }
       // 定时关闭启动页
       setTimeout(() => {
-        this.status[['home', 'find', 'shop', 'my'][this.current]] = true;
+        this.status[['home', 'find', 'chat', 'my'][this.current]] = true;
         this.status.start = false;
       }, 5000);
     },
@@ -174,7 +177,7 @@
           }
           // 首次选中激活底部导航关联页状态
           if (!this.status.find && index == 1) this.status.find = true;
-          if (!this.status.shop && index == 3) this.status.shop = true;
+          if (!this.status.chat && index == 3) this.status.chat = true;
           if (!this.status.my && index == 4) this.status.my = true;
           // 清除定时器
           clearTimeout(this.timeOut)
