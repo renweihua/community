@@ -8,13 +8,9 @@ import request from '@/api/request.js';
 
 /**
  * 获取荟吧列表
- * @param {Object} params 参数 {page:1,limit:20}
  */
-export async function getHuibaList(params = {
-  page: 1,
-  limit: 20
-}) {
-  return await request('/Huiba/GetHuibaListForGood', 'get', params)
+export async function getHuibaList() {
+  return await request('/topics', 'get')
 }
 
 /**

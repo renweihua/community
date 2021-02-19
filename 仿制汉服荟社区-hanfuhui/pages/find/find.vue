@@ -40,10 +40,10 @@
           <view class="plr18r ptb18r bgwhite">
             <view class="f32r fbold c555 mb18r">推荐荟吧</view>
             <view class="flexr-jsb flex-fww flex-aic fcenter">
-              <view v-for="huiba in huibaListData" :key="huiba.ID" class="w32v-mb2v">
+              <view v-for="huiba in huibaListData" :key="huiba.topic_id" class="w32v-mb2v">
                 <huiba-card :info-data="huiba" @click="fnHuibaInfo"></huiba-card>
               </view>
-              <view class="w32v-mb2v">
+              <view class="w32v-mb2v" v-if="false">
                 <i-icon v-if="huibaListData.length" type="jinru" size="96" color="#555555"></i-icon>
               </view>
             </view>
@@ -281,7 +281,9 @@
       },
       // 热门荟吧
       huibaListData() {
-        return this.$store.getters['huiba/getHuibaListData']
+		  let topics = this.$store.getters['huiba/getHuibaListData'];
+		  console.log(topics);
+        return topics
       },
       // 摄影榜封面
       rankFaceData() {
@@ -411,15 +413,15 @@
         // console.log(mescroll);
         this.mescroll[this.scrollInto] = mescroll;
         Promise.all([
-          getBannerTopicList(),
-          getHuibaList({
-            page: 1,
-            limit: 11
-          }),
+          // getBannerTopicList(),
+          getHuibaList(),
         ]).then(resArray => {
-          this.$store.commit('common/setBannerListData', resArray[0].data.Data.banner)
-          this.$store.commit('common/setHotTopicListData', resArray[0].data.Data.hotspot)
-          this.$store.commit('huiba/setHuibaListData', resArray[1].data.Data)
+          // this.$store.commit('common/setBannerListData', resArray[0].data.Data.banner)
+          // this.$store.commit('common/setHotTopicListData', resArray[0].data.Data.hotspot)
+		  
+		  // 荟吧列表
+		  console.log(resArray[0].data);
+          this.$store.commit('huiba/setHuibaListData', resArray[0].data);
           mescroll.endDownScroll()
         }).catch(() => {
           mescroll.endErr();
@@ -506,7 +508,7 @@
       /// 跳转荟吧信息页
       fnHuibaInfo(e) {
         uni.navigateTo({
-          url: `/pages/huiba-details/huiba-details?id=${e.ID}`
+          url: `/pages/huiba-details/huiba-details?topic_id=${e.topic_id}`
         })
       },
       /// 用户关注

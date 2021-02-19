@@ -1,8 +1,8 @@
 <template>
   <view class="flexc-jsc flex-aic bgf8 br8r ptb28r" @tap="$emit('click',infoData)">
     <image class="hw128r br18r" :src="calHuibaFaceUrl" mode="aspectFit"></image>
-    <view class="f28r c555 fcenter ellipsis mt18r mb8r plr8r">{{infoData.Name || '#'}}</view>
-    <view class="f24r cgray">{{infoData.TrendCount || 0}} 条动态</view>
+    <view class="f28r c555 fcenter ellipsis mt18r mb8r plr8r">{{infoData.topic_name || '#'}}</view>
+    <view class="f24r cgray">{{infoData.dynamic_count || 0}} 条动态</view>
   </view>
 </template>
 
@@ -39,8 +39,8 @@
     computed: {
       /// 计算荟吧Icon
       calHuibaFaceUrl() {
-        let faceUrl = this.infoData.FaceUrl;
-        return !!faceUrl ? faceUrl + '_200x200.jpg/format/webp' : '/static/default_avatar.png'
+        let topic_cover = this.infoData.topic_cover;
+        return !!topic_cover ? topic_cover : '/static/default_avatar.png'
       },
     }
 
