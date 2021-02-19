@@ -106,9 +106,15 @@
 
 					// 开始调整主页
 					this.isLogin = false;
-					uni.reLaunch({
-						url: '/pages/index/index?current=0'
-					})
+					let page = getCurrentPages();
+					// 登录之后，要么返回上一页，要么返回主页
+					if(uni.navigateBack()){
+						
+					}else{
+						uni.reLaunch({
+							url: '/pages/index/index?current=0'
+						})
+					}
 				} catch (e) {
 					this.isLogin = false;
 				}

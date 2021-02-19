@@ -43,7 +43,7 @@ class WebSitesController extends BbsController
 
     /**
      * Banner图
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function banners(): JsonResponse

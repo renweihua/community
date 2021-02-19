@@ -52,7 +52,7 @@
       </swiper-item>
 
       <!-- 摄影 -->
-      <swiper-item>
+      <swiper-item v-if="false">
         <mescroll-uni v-if="status.album" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
           <!-- 周、月榜单 -->
           <view class="flex plr18r ptb18r bgwhite mb18r">
@@ -86,7 +86,7 @@
       </swiper-item>
 
       <!-- 话题 -->
-      <swiper-item>
+      <swiper-item  v-if="false">
         <mescroll-uni v-if="status.topic" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
           <block v-for="(topic,index) in topicListData" :key="index">
             <topic-card :info-data="topic" @huiba="fnHuibaInfo" @click="fnTopicInfo"></topic-card>
@@ -104,7 +104,7 @@
       </swiper-item>
 
       <!-- 活动 -->
-      <swiper-item>
+      <swiper-item v-if="false">
         <mescroll-uni v-if="status.org" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
           <!-- 活动地区、状态 -->
           <view class="flexr-jsa" @tap="fnOrgProvinceState">
