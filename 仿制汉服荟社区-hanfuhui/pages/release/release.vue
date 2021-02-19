@@ -33,6 +33,22 @@
 
 <script>
 	export default {
+		props: {
+			/**
+			 * 选中值
+			 */
+			status: {
+				type: Object,
+				default: {
+					home: false,
+					find: false,
+					shop: false,
+					my: false,
+					release: false,
+					start: true
+				}
+			},
+		},
 		onReady() {
 			console.log('release');
 		},
@@ -42,6 +58,7 @@
 		methods: {
 			/// 跳转规则页
 			push() {
+				this.status.release = false;
 				uni.navigateTo({
 					url: '/pages/dynamic/push'
 				})

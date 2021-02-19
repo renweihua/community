@@ -17,7 +17,8 @@
 							<view class="f24r cgray">{{calDatetime}}</view>
 						</view>
 					</view>
-					<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.UserAtte?'已关注':'关注'}}</view>
+					<!-- 如果是登录会员，那么不展示 -->
+					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.is_follow?'已关注':'关注'}}</view>
 				</view>
 				<!-- 中心内容 -->
 				<view class="plr18r pb18r">
@@ -156,6 +157,7 @@
 			},
 			// 动态评论列表数据
 			commentListData() {
+				console.log('---commentListData---');
 				let comments = this.$store.getters['interact/getCommentListData'];
 				console.log(comments);
 				return comments;
@@ -220,19 +222,21 @@
 						return getCommentList(params)
 					}).then(comments => {
 						console.log('获取动态的评论记录');
-						let data = comments.data.data;
+							let lists = comments.data;
+							console.log(lists.data);
 
-						this.$store.commit('interact/setCommentListData', data)
-						mescroll.endSuccess(data.length, data.length >= mescroll.size);
+						this.$store.commit('interact/setCommentListData', lists.data)
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					}).catch(() => {
 						mescroll.endSuccess(0, false);
 					})
 					return
 				} else {
 					// 继续上拉获取评论
-					getCommentList(params).then(commRes => {
-						this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.Data))
-						mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
+					getCommentList(params).then(comments => {
+							let lists = comments.data;
+						this.$store.commit('interact/setCommentListData', this.commentListData.concat(lists.data) )
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					}).catch(() => {
 						mescroll.endErr();
 					})
@@ -327,26 +331,26 @@
 			/// 关注详情发布用户
 			fnAtte(e) {
 				// 用户是否已经关注
-				if (e.UserAtte) {
-                    followUser(e.ID).then(delRes => {
+				if (e.is_follow) {
+                    followUser(e.user_id).then(delRes => {
 						if (delRes.data.Data == false) return
-						this.dynamic.User.UserAtte = false
+						this.dynamic.User.is_follow = false
 						// 来自主要跳转
 						if (this.fromPage == 'home') {
-							this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+							this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
 								false)
-							this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+							this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
 								false)
-							this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => item.User
-								.UserAtte = false)
+							this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info
+								.is_follow = false)
 						}
 						// 来自用户详情
 						if (this.fromPage == 'userinfo') {
-							this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item =>
-								item.User.UserAtte =
+							this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+								item.user_info.is_follow =
 								false)
-							this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => item.User
-								.UserAtte = false)
+							this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info
+								.is_follow = false)
 						}
 						// 登录用户关注数减
 						let tempUser = this.$store.getters['user/getLoginUserInfoData']
@@ -354,25 +358,25 @@
 						this.$store.commit('user/setLoginUserInfoData', tempUser)
 					})
 				} else {
-					followUser(e.ID).then(addRes => {
+					followUser(e.user_id).then(res => {
 						if (addRes.data.Data == false) return
-						this.dynamic.User.UserAtte = true
+						this.dynamic.User.is_follow = true
 						// 来自主要跳转
 						if (this.fromPage == 'home') {
-							this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+							this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
 								true)
-							this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+							this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
 								true)
-							this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => item.User
-								.UserAtte = true)
+							this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info
+								.is_follow = true)
 						}
 						// 来自用户详情
 						if (this.fromPage == 'userinfo') {
-							this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item =>
-								item.User.UserAtte =
+							this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+								item.user_info.is_follow =
 								true)
-							this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => item.User
-								.UserAtte = true)
+							this.$store.getters['user/getUserTopListData'].filter(item => item.User.user_id == e.user_id).map(item => item.user_info
+								.is_follow = true)
 						}
 						// 登录用户关注数加
 						let tempUser = this.$store.getters['user/getLoginUserInfoData']
@@ -450,75 +454,54 @@
 				addComment(e).then(res => {
 					console.log(e);
 					console.log(res);
+					uni.showToast({
+						title: res.msg,
+						icon: !res.status ? 'none' : 'success',
+					});
 					if (!res.status) {
-						uni.showToast({
-							title: res.msg,
-						})
 						return;
 					}
-					if (this.reply_id == 0) {
-						// 无回复项
-						let filCommentList = this.commentListData.filter(item => item.comment_id == e.reply_id)[0]
-						if (filCommentList.replies_count == 0) {
-							filCommentList.replies_count = 1
-							filCommentList.replies = []
-							filCommentList.replies.unshift(res.data)
-						} else {
-							filCommentList.replies_count++
-							filCommentList.replies = filCommentList.replies.concat([res.data])
-						}
-					} else if (this.reply_id > 0) {
+					
+					// 动态的评论数
+					this.dynamic.comment_count++;
+					if (this.reply_id == 0) { // 直接评论
+					
+					} else if (this.reply_id > 0) { // 回复
 						// 有回复项追加
 						let filCommentList = this.commentListData.filter(item => item.comment_id == this.reply_id)[0]
 						filCommentList.replies_count++
 						filCommentList.replies = filCommentList.replies.concat([res.data])
+						
+						
+						
+						
+						// let filCommentList = this.commentListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
+						// console.log(filCommentList);
+						// if (filCommentList.replies_count == 0) {
+						// 	filCommentList.replies_count = 1
+						// 	filCommentList.replies = []
+						// 	filCommentList.replies.unshift(res.data)
+						// } else {
+						// 	filCommentList.replies_count++
+						// 	filCommentList.replies = filCommentList.replies.concat([res.data])
+						// }
 					} else {
 						// 评论发布
 						this.commentListData.unshift(res.data)
 						this.$store.commit('setCommContentData', '')
 					}
 					// 评论数量添加
-					if (this.dynamic.comment_count == 0) this.mescroll.removeEmpty()
+					if (this.dynamic.comment_count == 0) this.mescroll.removeEmpty();
 					this.dynamic.comment_count++
 					this.$refs.comm.visible = false;
-					this.reply_id == 0
-					uni.hideLoading()
-					uni.showToast({
-						title: '评论成功'
-					});
-					// 改变上一窗口的数据
-					let filItem = []
-					// 来自主要跳转
-					if (this.fromPage == 'home') {
-						// 推荐
-						if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-							this.dynamic.dynamic_id)[0];
-						// 关注
-						if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-							this.dynamic.dynamic_id)[0];
-						// 广场
-						if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-							this.dynamic.dynamic_id)[0];
-					}
-					// 来自用户详情
-					if (this.fromPage == 'userinfo') {
-						// 发布
-						if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
-							.dynamic_id ==
-							this.dynamic.dynamic_id)[0];
-						// 赞过
-						if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-							this.dynamic.dynamic_id)[0];
-					}
-					filItem.comment_count++
+					this.reply_id == 0;
+					uni.hideLoading();
 				})
 			},
 			/// 评论项操作
 			fnComm(e) {
 				let itemList = ['回复', '复制', '举报'];
 				console.log(e);
-
-
 				if (e.user_info.user_id == this.$store.getters['user/getUserInfoData'].user_id) itemList.push('删除')
 				uni.showActionSheet({
 					itemList,

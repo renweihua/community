@@ -2,13 +2,12 @@
 	<view>
 		<view class="uni-navbar__header-btns uni-navbar__content_view push-text" @tap="onClickRight">
 			<!-- 优先显示图标 -->
-			<view class="uni-navbar-btn-text uni-navbar__content_view"
-			style="font-size: 32upx;">发布</view>
+			<view class="uni-navbar-btn-text uni-navbar__content_view" style="font-size: 32upx;">发布</view>
 			<slot name="right" />
 		</view>
 		<!--输入的内容-->
 		<view class="uni-textarea">
-			<textarea v-model="text" placeholder="说点什么吧..." />
+			<textarea v-model="dynamic_content" placeholder="说点什么吧..." />
 			</view>
 		<!--选择图片-->
 		<uploadImage
@@ -16,7 +15,7 @@
 		@deleted="deleted($event)"
 		@previewImage="previewImage"
 		@chooseImage="chooseImage"
-		>	
+		>
 		</uploadImage>
 		<!--弹出公告-->
 		  <uni-popup :show="show">
@@ -33,6 +32,13 @@
 </template>
 
 <script>
+	import {
+		batchUploads,
+	} from "@/api/CommonServer.js";
+	import {
+		pushDynamic,
+	} from "@/api/dynamic.js";
+
 	import uploadImage from '@/components/common/upload-image.vue';
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
 	let arry=['所有人可见','仅自己可见'];
@@ -51,35 +57,16 @@
 			uploadImage,
 			uniPopup
 		},
-		onBackPress(ev){
-			if(this.text==''&&this.imageList.length==0){return;}
-			if(this.fanhui){
-				uni.showModal({
-				    content: '是否保存',
-				    success:  (res)=> {
-				        if (res.confirm) {
-				            console.log('保存');
-				        } else if (res.cancel) {
-				            console.log('不保存');
-				        }
-						this.fanhui=false;
-						uni.navigateBack({
-							delta:1
-						})
-				    }
-				});
-				return true;
-			}
-				
-		},
 		data() {
 			return {
+				push_finish: false,
 				fanhui:true,
 				donghua:'animated zoomInDown',
 				show:true,
 				yinsi:'所有人可见',
-				text:'',
+                dynamic_content:'',
 				imageList: [],
+				image_files:[],
 				sourceTypeIndex: 2,
 				sourceType: ['拍照', '相册', '拍照或相册'],
 				sizeTypeIndex: 2,
@@ -89,6 +76,47 @@
 			}
 		},
 		methods: {
+			onClickRight() {
+				this.$emit('click-right');
+				// if (this.pushing) return;
+				this.pushing = true;
+				uni.showLoading({
+					title: '发布中',
+					mask: true
+				})
+				uni.hideLoading();
+				// 启动封面
+				batchUploads(this.image_files).then(files => {
+					return pushDynamic({
+						'dynamic_images': files.join(','),
+						'dynamic_content' : this.dynamic_content,
+					});
+				}).then(res => {
+					if(!res.status){
+						uni.showToast({
+							title: res.msg,
+							icon: 'error'
+						})
+						return;
+					}else{
+						this.push_finish = true;
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						});
+						
+						setTimeout(() => {
+							// 返回上一页
+							uni.navigateBack({
+								delta:2
+							});
+						}, 1500);
+					}
+				}).catch((e) => {
+					console.log(e);
+				})
+				this.pushing = false;
+			},
 			ttt(){
 				this.donghua='animated zoomInDown'
 				this.show=false
@@ -96,11 +124,12 @@
 			deleted(index){
 				uni.showModal({
 				    title: '提示',
-				    content: '是否删除',
+				    content: '确定移除该图片？',
 				    success: (res) =>{
 				        if (res.confirm) {
 				           this.imageList.splice(index,1)
-				        } 
+						   this.image_files.splice(index,1)
+				        }
 				    }
 				});
 			},
@@ -114,7 +143,7 @@
 			        }
 			    }
 			    // #endif
-			
+
 			    if (this.imageList.length === 9) {
 			        let isContinue = await this.isFullImg();
 			        console.log("是否继续?", isContinue);
@@ -128,7 +157,10 @@
 			        count: this.imageList.length + this.count[this.countIndex] > 9 ? 9 - this.imageList.length :
 			            this.count[this.countIndex],
 			        success: (res) => {
+						console.log(res);
+
 			            this.imageList = this.imageList.concat(res.tempFilePaths);
+						this.image_files = this.image_files.concat(res.tempFiles);
 			        },
 			        fail: (err) => {
 			            // #ifdef APP-PLUS
@@ -140,12 +172,12 @@
 			    })
 			},
 			previewImage: function(e) {
-				console.log(e); 
+				console.log(e);
 			    var current = e.target.dataset.src
 			    uni.previewImage({
 			        current: current,
 			        urls: this.imageList,
-					indicator:'default'   
+					indicator:'default'
 			    })
 			},
 			back(){
@@ -154,7 +186,7 @@
 				})
 			},
 			submit(){
-				
+
 			},
 			changeyinsi(){
 				uni.showActionSheet({
@@ -165,7 +197,7 @@
 				    }
 				});
 			}
-		
+
 		}
 	}
 </script>
@@ -185,7 +217,7 @@
 		    z-index: 999;
 		    top: -31px;
 	}
-	
+
 	.widthatch{
 		margin: 0 auto;
 		padding-right: 20upx;
@@ -212,7 +244,7 @@
 		text-align: left;
 		}
 		uni-textarea{
-			
+
 			width: 96%;
 			padding: 9px 2%;
 			line-height: 1.6;

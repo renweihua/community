@@ -12,7 +12,7 @@
     <my v-if="status.my" :style="{display: current==4 ? 'block' :'none'}" :refresh="current==4 && clickRefresh"></my>
 
     <!-- 发布 -->
-    <release v-if="status.release" @close="status.release = false"></release>
+    <release v-if="status.release" :status="status" @close="status.release = false"></release>
 
     <!-- 启动封面 -->
     <start-cover v-if="status.start"></start-cover>
