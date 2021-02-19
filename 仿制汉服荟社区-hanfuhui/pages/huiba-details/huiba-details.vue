@@ -80,7 +80,7 @@
 <script>
 import { getHuibaInfo, getHuibaTop, getHuibaTrend, addHuibaFollows, delHuibaFollows } from '@/api/HuibaServer.js';
 import { followUser, addUserBlack } from '@/api/UserServer.js';
-import { dynamicPraise } from '@/api/InteractServer.js';
+import { dynamicPraise, dynamicCollection } from '@/api/InteractServer.js';
 
 // 动态信息项卡片组件
 import TrendCard from '@/components/trend-card/trend-card';
@@ -407,19 +407,21 @@ export default {
 			if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			// 最新
 			if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
-			let params = {
-				objecttype: filItem.ObjectType,
-				objectid: filItem.dynamic_id
-			};
 			// 用户是否点过赞
-			if (filItem.UserTop) {
-			} else {
-				dynamicPraise(params).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.TopCount++;
-					filItem.UserTop = true;
+			dynamicPraise(filItem.dynamic_id).then(res => {
+				if (!res.status) return;
+				uni.showToast({
+					title: res.msg,
+					icon: 'none'
 				});
-			}
+				if (filItem.is_praise) {
+					filItem.praise_count--;
+					filItem.is_praise = false;
+				} else {
+					filItem.praise_count++;
+					filItem.is_praise = true;
+				}
+			});
 		},
 		/// 展卡收藏
 		fnCardSave(e) {
@@ -428,19 +430,21 @@ export default {
 			if (this.current == 0) filItem = this.huibaHottestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			// 最新
 			if (this.current == 1) filItem = this.huibaLatestListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
-			let params = {
-				objectid: filItem.dynamic_id,
-				objecttype: filItem.ObjectType
-			};
 			// 用户是否已收藏
-			if (filItem.UserSave) {
-			} else {
-				dynamicCollection(params).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.SaveCount++;
-					filItem.UserSave = true;
+			dynamicCollection(filItem.dynamic_id).then(res => {
+				if (!res.status) return;
+				uni.showToast({
+					title: res.msg,
+					icon: 'none'
 				});
-			}
+				if (filItem.is_collection) {
+					filItem.collection_count++;
+					filItem.is_collection = false;
+				} else {
+				filItem.collection_count++;
+				filItem.is_collection = true;
+				}
+			});
 		},
 		/// 展卡更多-关注
 		fnCardFollow(e) {
