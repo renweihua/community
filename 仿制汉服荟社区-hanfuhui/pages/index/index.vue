@@ -86,7 +86,7 @@
             {
               "text": "消息",
               "icon": "/static/icon-bottom-nav/shop_normal.png",
-              "selectedIcon": "/static/icon-bottom-nav/shop_select.png"
+              "selectedIcon": "/static/icon-nav-my/icon_chat.png"
             },
             {
               "text": "我的",
