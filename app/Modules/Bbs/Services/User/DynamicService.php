@@ -7,6 +7,7 @@ use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
+use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
@@ -128,19 +129,19 @@ class DynamicService extends Service
     /**
      * 动态：点赞流程
      *
-     * @param       $login_user
+     * @param  int  $login_user_id
      * @param  int  $dynamic_id
      *
      * @return bool
      */
-    public function praise($login_user, int $dynamic_id) : bool
+    public function praise(int $login_user_id, int $dynamic_id) : bool
     {
         if ( !$dynamic = $this->checkDynamic($dynamic_id, true)) {
             return false;
         }
         $dynamicPraise = DynamicPraise::getInstance();
         $data = [
-            'user_id' => $login_user->user_id,
+            'user_id' => $login_user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
@@ -151,7 +152,7 @@ class DynamicService extends Service
             $userInfoInstance = UserInfo::getInstance();
             $parise_num = 1;
             // 是否已点赞过了该动态
-            if ($dynamicPraise->isPraise($login_user->user_id, $dynamic_id)) {
+            if ($dynamicPraise->isPraise($login_user_id, $dynamic_id)) {
                 $parise_num = -1;
                 // 删除点赞记录
                 $dynamicPraise->where($data)->delete();
@@ -170,6 +171,19 @@ class DynamicService extends Service
                 $userInfoInstance->setGetLikes($author, 1);
 
                 // 互动消息：xxx 点赞了您的动态 xxx。
+                if ($author != $login_user_id){
+                    if (!Notify::insert([
+                        'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
+                        'user_id'      => $author,
+                        'target_id'    => $dynamic_id,
+                        'target_type'  => Notify::TARGET_TYPE['DYNAMIC'],
+                        'sender_id'    => $login_user_id,
+                        'sender_type'  => Notify::SYSTEM_SENDER,
+                        'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['PRAISE'],
+                    ]) ) {
+                        throw new FailException('互动消息录入失败！');
+                    }
+                }
 
                 $this->setError('点赞成功！');
             }
@@ -211,26 +225,26 @@ class DynamicService extends Service
     /**
      * 动态：收藏流程
      *
-     * @param       $login_user
+     * @param  int  $login_user_id
      * @param  int  $dynamic_id
      *
      * @return bool
      */
-    public function collection($login_user, int $dynamic_id) : bool
+    public function collection(int $login_user_id, int $dynamic_id) : bool
     {
         if ( !$dynamic = $this->checkDynamic($dynamic_id, true)) {
             return false;
         }
         $dynamicCollection = DynamicCollection::getInstance();
         $data = [
-            'user_id' => $login_user->user_id,
+            'user_id' => $login_user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
         try {
             $parise_num = 1;
             // 是否已点赞过了该动态
-            if ($dynamicCollection->isCollection($login_user->user_id, $dynamic_id)) {
+            if ($dynamicCollection->isCollection($login_user_id, $dynamic_id)) {
                 $parise_num = -1;
                 // 删除点赞记录
                 $dynamicCollection->where($data)->delete();
@@ -244,6 +258,19 @@ class DynamicService extends Service
                 ]));
 
                 // 互动消息：xxx 收藏了您的动态 xxx。
+                if ($dynamic->user_id != $login_user_id){
+                    if (!Notify::insert([
+                        'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
+                        'user_id'      => $dynamic->user_id,
+                        'target_id'    => $dynamic_id,
+                        'target_type'  => Notify::TARGET_TYPE['DYNAMIC'],
+                        'sender_id'    => $login_user_id,
+                        'sender_type'  => Notify::SYSTEM_SENDER,
+                        'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['COLLECTION'],
+                    ]) ) {
+                        throw new FailException('互动消息录入失败！');
+                    }
+                }
 
                 $this->setError('收藏成功！');
             }
@@ -263,12 +290,12 @@ class DynamicService extends Service
     /**
      * 评论动态的流程
      *
-     * @param $login_user
-     * @param $params
+     * @param  int    $login_user_id
+     * @param  array  $params
      *
      * @return bool
      */
-    public function comment($login_user, $params)
+    public function comment(int $login_user_id, array $params)
     {
         if ( !$dynamic = $this->checkDynamic($params['dynamic_id'], true)) {
             return false;
@@ -292,7 +319,7 @@ class DynamicService extends Service
         try {
             // 评论信息组装
             $validate_data = [
-                'user_id' => $login_user->user_id,
+                'user_id' => $login_user_id,
                 'reply_user' => $reply_user,
                 'dynamic_id' => $dynamic->dynamic_id,
                 'reply_id' => $reply_id,
@@ -300,7 +327,7 @@ class DynamicService extends Service
                 'comment_content' => $params['content'],
                 'author_id' => $dynamic->user_id,
                 // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
-                'is_read' => $login_user->user_id == $reply_user ? 1 : 0,
+                'is_read' => $login_user_id == $reply_user ? 1 : 0,
             ];
             $comment = $dynamicCommentInstance->create($validate_data);
 
@@ -308,6 +335,19 @@ class DynamicService extends Service
             $dynamic->increment('comment_count');
 
             // 给动态归属者发送消息：互动消息：谁评论了你的动态
+            if ($dynamic->user_id != $login_user_id){
+                if (!Notify::insert([
+                    'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
+                    'user_id'      => $dynamic->user_id,
+                    'target_id'    => $dynamic->dynamic_id,
+                    'target_type'  => Notify::TARGET_TYPE['DYNAMIC'],
+                    'sender_id'    => $login_user_id,
+                    'sender_type'  => Notify::SYSTEM_SENDER,
+                    'dynamic_type' => $reply_id == 0 ? Notify::DYNAMIC_TARGET_TYPE['COMMENT'] : Notify::DYNAMIC_TARGET_TYPE['REPLY_COMMENT'],
+                ]) ) {
+                    throw new FailException('互动消息录入失败！');
+                }
+            }
 
             DB::commit();
             $this->setError('评论成功！');

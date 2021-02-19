@@ -6,6 +6,7 @@ use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\AuthTokenException;
 use App\Exceptions\Bbs\FailException;
 use App\Models\Log\UserLoginLog;
+use App\Models\System\Notify;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -69,7 +70,16 @@ class AuthService extends Service
             $auth = Auth::guard($this->guard);
             $auth->setUser($user);
 
-            $this->setError('注册成功！');
+            // 注册成功：站内系统消息发送
+            Notify::insert([
+                'notify_type' => Notify::NOTIFY_TYPE['SYSTEM_MSG'],
+                'user_id' => $user->user_id,
+                'target_type' => Notify::TARGET_TYPE['REGISTER'],
+                'sender_type' => Notify::SYSTEM_SENDER,
+                'notify_content' => '注册成功，请完善个人资料！',
+            ]);
+
+            $this->setError('注册成功，请完善个人资料！');
             $result = $this->respondWithToken($auth->login($user));
             return array_merge($result, [
                 'nick_name' => $user_info['nick_name'],

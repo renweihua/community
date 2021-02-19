@@ -61,7 +61,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($result = $this->service->praise($this->user, (int)$data['dynamic_id'])) {
+        if ($result = $this->service->praise($this->login_user, (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -90,7 +90,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($result = $this->service->collection($this->user, (int)$data['dynamic_id'])) {
+        if ($result = $this->service->collection($this->login_user, (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -108,7 +108,7 @@ class DynamicController extends BbsController
     {
         $request->validated();
 
-        if ($data = $this->service->comment($this->user, $request->all())) {
+        if ($data = $this->service->comment($this->login_user, $request->all())) {
             return $this->successJson($data, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

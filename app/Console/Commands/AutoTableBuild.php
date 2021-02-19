@@ -7,6 +7,7 @@ use App\Models\Log\AdminLoginLog;
 use App\Models\Log\UserLog;
 use App\Models\Log\UserLoginLog;
 use App\Models\Log\WebLog;
+use App\Models\System\Notify;
 use App\Models\User\UserSign;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,12 +40,13 @@ class AutoTableBuild extends Command
     }
 
     protected $model_lists = [
-        AdminLog::class,
-        AdminLoginLog::class,
-        WebLog::class,
-        UserLoginLog::class,
-        UserLog::class,
-        UserSign::class, // 会员签到
+        AdminLog::class, // 管理员操作日志表
+        AdminLoginLog::class, // 管理员登录日志表
+        WebLog::class, // WEB访问日志表
+        UserLoginLog::class, // 会员登录日志表
+        UserLog::class, // 会员操作日志表
+        UserSign::class, // 会员签到记录表
+        Notify::class, // 系统消息表
     ];
 
     /**
