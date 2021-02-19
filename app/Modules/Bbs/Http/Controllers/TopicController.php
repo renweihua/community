@@ -42,4 +42,19 @@ class TopicController extends BbsController
             return $this->errorJson($this->service->getError());
         }
     }
+
+    /**
+     * 指定荟吧的动态列表
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\TopicIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dynamics(TopicIdRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        $lists = $this->service->dynamics($request, $this->login_user);
+        return $this->successJson($lists);
+    }
 }

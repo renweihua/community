@@ -65,6 +65,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     Route::prefix('topic')->group(function () {
         // 荟吧详情
         Route::get('/detail', 'TopicController@detail');
+        // 荟吧的动态列表
+        Route::get('/dynamics', 'TopicController@dynamics');
     });
 
     // 登录会员
