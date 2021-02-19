@@ -30,26 +30,21 @@ export async function getHuibaTop(id = 7566) {
 }
 
 /**
- * 获取荟吧内信息列表
+ * 获取荟吧内的动态列表
+ * 
  * @param {Object} params 参数
  * ishot:按最热 true、按最新 false
  * max_id:最大值 以第一页ID或ObjectID
  * {
-  huibaid: 7566,
+  topic_id: 1,
   ishot: false,
   max_id: -1,
   page: 1,
   limit: 20,
 }
  */
-export async function getHuibaTrend(params = {
-  huibaid: 7566,
-  ishot: false,
-  max_id: -1,
-  page: 1,
-  limit: 20,
-}) {
-  return await request('/trend/GetTrendListForHuibaID', 'get', params)
+export async function getHuibaTrend(params) {
+  return await request('/topic/dynamics', 'get', params)
 }
 
 /**

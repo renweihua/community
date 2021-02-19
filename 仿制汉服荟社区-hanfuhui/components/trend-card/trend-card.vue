@@ -3,7 +3,7 @@
 		<!-- 头部显示信息含时间  -->
 		<view class="flexr-jsb flex-aic plr18r ptb18r" v-if="head">
 			<view class="flex" @tap="$_click('user')">
-				<user-avatar :src="calUserAvater" :tag="item.user_info.AuthenticateCode" size="md"></user-avatar>
+				<user-avatar :src="calUserAvater" tag="" size="md"></user-avatar>
 				<view class="flexc-jsa ml28r">
 					<view>
 						<text class="f28r fbold mr18r">{{item.user_info.nick_name}}</text>

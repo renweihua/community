@@ -41,14 +41,14 @@
       <!-- 最热 -->
       <view v-if="status.hottest" :style="{display: current==0 ? 'block' :'none'}">
         <block v-for="(infoData,index) in huibaHottestListData" :key="index">
-          <trend-card :info-data="infoData" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop"
-            @comm="fnCardComm" @save="fnCardSave" @follow="fnCardFollow" @black="fnCardBlack" @report="fnCardReport"></trend-card>
+			<trend-card :item="infoData" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop"
+			  @comm="fnCardComm" @save="fnCardSave" @follow="fnCardFollow" @black="fnCardBlack" @report="fnCardReport"></trend-card>
         </block>
       </view>
       <!-- 最新 -->
       <view v-if="status.latest" :style="{display: current==1 ? 'block' :'none'}">
         <block v-for="(infoData,index) in huibaLatestListData" :key="index">
-          <trend-card :info-data="infoData" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop"
+          <trend-card :item="infoData" @click="fnCardInfo" @user="fnCardUser" @huiba="fnCardHuiba" @top="fnCardTop"
             @comm="fnCardComm" @save="fnCardSave" @follow="fnCardFollow" @black="fnCardBlack" @report="fnCardReport"></trend-card>
         </block>
       </view>
@@ -91,7 +91,7 @@
         // 滚动动实例
         mescroll: null,
         // 荟吧id
-        id: 0,
+        topic_id: 0,
         maxID: [-1, -1],
         // 双击刷新
         clickRefresh: false,
@@ -108,16 +108,16 @@
     },
 
     onLoad(option) {
-      if (option && option.id) {
+      if (option && option.topic_id) {
         uni.showLoading({
           title: "加载中",
           mask: true
         })
-        this.id = parseInt(option.id);
+        this.topic_id = parseInt(option.topic_id);
         // 获取荟吧信息和置顶信息
         Promise.all([
-          getHuibaInfo(this.id),
-          getHuibaTop(this.id)
+          getHuibaInfo(this.topic_id),
+          getHuibaTop(this.topic_id)
         ]).then(resArray => {
           this.$store.commit('huiba/setHuibaInfoData', resArray[0].data.Data)
           this.$store.commit('huiba/setHuibaTopData', resArray[1].data.Data)
@@ -150,7 +150,9 @@
       },
       // 荟吧最热信息
       huibaHottestListData() {
-        return this.$store.getters['huiba/getHuibaHottestListData']
+		  let dynamics = this.$store.getters['huiba/getHuibaHottestListData'];
+		  console.log(dynamics);
+        return dynamics
       },
       /// 计算荟吧icon图
       calHuibaIcon() {
@@ -172,31 +174,33 @@
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         let params = {
-          huibaid: this.id,
+          topic_id: this.topic_id,
           ishot: this.current == 0,
-          max_id: this.maxID[this.current],
+          // max_id: this.maxID[this.current],
           page: mescroll.num,
           limit: mescroll.size
         }
         getHuibaTrend(params).then(res => {
+			let lists = res.data;
           // 最热
           if (this.current == 0) {
             if (mescroll.num == 1) {
-              this.$store.commit('huiba/setHuibaHottestListData', res.data.Data);
+              this.$store.commit('huiba/setHuibaHottestListData', lists.data);
             } else {
-              this.$store.commit('huiba/setHuibaHottestListData', this.huibaHottestListData.concat(res.data.Data))
+              this.$store.commit('huiba/setHuibaHottestListData', this.huibaHottestListData.concat(lists.data))
             }
           }
           // 最新
           if (this.current == 1) {
             if (mescroll.num == 1) {
-              this.$store.commit('huiba/setHuibaLatestListData', res.data.Data);
+              this.$store.commit('huiba/setHuibaLatestListData', lists.data);
             } else {
-              this.$store.commit('huiba/setHuibaLatestListData', this.huibaLatestListData.concat(res.data.Data))
+              this.$store.commit('huiba/setHuibaLatestListData', this.huibaLatestListData.concat(lists.data))
             }
           }
-          this.maxID[this.current] = res.data.Data[0].ID
-          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
+          // this.maxID[this.current] = lists.data[0].dynamic_id
+		  
+		  mescroll.endSuccess(lists.data.length, mescroll.num < res.data.count_page);
         }).catch(() => {
           mescroll.endErr();
         })
