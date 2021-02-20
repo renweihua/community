@@ -99,6 +99,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/collections', 'DynamicController@collections');
             // 每日签到
             Route::post('/signIn', 'SignController@signIn');
+            // 指定月份的签到状态
+            Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
+
             // 编辑个人资料
             Route::put('/update', 'IndexController@update');
 

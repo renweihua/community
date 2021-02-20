@@ -53,6 +53,35 @@ class SignService extends Service
         }
     }
 
+    /**
+     * 指定月份的签到状态
+     *
+     * @param  int     $login_user_id
+     * @param  string  $month
+     *
+     * @return array
+     */
+    public function getSignsByMonth(int $login_user_id, string $month): array
+    {
+        // 获取指定月份的签到记录
+        $data = UserSign::getInstance()->setMonthTable($month)->where('user_id', $login_user_id)->pluck('created_time');
+        // 获取当月的所有日期天
+        $days = get_month_days(strtotime($month));
+        $lists = [];
+        foreach ($days as $day){
+            $lists[$day] = false;
+            if (!empty($data)){
+                foreach ($data as $created_time){
+                    if (date('Y-m-d', $created_time) == $day){
+                        $lists[$day] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return $lists;
+    }
+
     public function index()
     {
         $where = [
