@@ -51,7 +51,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('/dynamics', 'UserController@dynamics');
     });
 
-    // 动态相关
+    /**
+     * 动态相关
+     */
+    Route::get('dynamics', 'DynamicController@lists');
     Route::prefix('dynamic')->group(function () {
         // 动态详情
         Route::get('/detail', 'DynamicController@detail');

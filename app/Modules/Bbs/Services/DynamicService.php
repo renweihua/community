@@ -24,43 +24,69 @@ class DynamicService extends Service
      */
     public function getDynamicsByUser($request, int $user_id, int $login_user = 0)
     {
-        return $this->getDynamics($request, $user_id);
+        return $this->getDynamics($request, $login_user, ['user_id' => $user_id]);
     }
 
-    public function getDynamics($request, int $user_id = 0, int $login_user = 0)
+    /**
+     * 动态列表
+     *
+     * @param       $request
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
+    public function lists($request, int $login_user_id = 0)
+    {
+        return $this->getDynamics($request, $login_user_id);
+    }
+
+    /**
+     * 获取动态列表：全部调用此方法
+     *
+     * @param         $request
+     * @param  int    $login_user_id
+     * @param  array  $screen_params
+     *
+     * @return array
+     */
+    protected function getDynamics($request, int $login_user_id = 0, array $screen_params = [])
     {
         $lists = Dynamic::check()
-                        ->where(function($query)use($user_id){
-                            if ($user_id) $query->where('user_id', $user_id);
+                        ->where(function($query)use($screen_params, $request){
+                            // 筛选所属会员动态
+                            if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
+                            // 筛选动态类型
+                            $dynamic_type = (int)$request->input('dynamic_type', -1);
+                            if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
                         })
                         ->with(
                             [
-                                'userInfo' => function($query) use ($login_user) {
+                                'userInfo' => function($query) use ($login_user_id) {
                                     $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
-                                        'isFollow' => function($query) use ($login_user) {
-                                            $query->where('user_id', $login_user);
+                                        'isFollow' => function($query) use ($login_user_id) {
+                                            $query->where('user_id', $login_user_id);
                                         }
                                     ]);
                                 },
-                                'isPraise' => function($query) use ($login_user) {
-                                    $query->where('user_id', $login_user);
+                                'isPraise' => function($query) use ($login_user_id) {
+                                    $query->where('user_id', $login_user_id);
                                 },
-                                'isCollection' => function($query) use ($login_user) {
-                                    $query->where('user_id', $login_user);
+                                'isCollection' => function($query) use ($login_user_id) {
+                                    $query->where('user_id', $login_user_id);
                                 },
                             ]
                         )
                         ->orderBy('dynamic_id', 'DESC')
-                        ->paginate($this->getLimit($request->input('limit', 10)));
+                        ->paginate($this->getLimit(request()->input('limit', 10)));
         foreach ($lists as $item) {
             // 是否已赞
-            $item->is_praise = $login_user == 0 ? false : ($item->isPraise ? true : false);
+            $item->is_praise = $login_user_id == 0 ? false : ($item->isPraise ? true : false);
             // 是否已收藏
-            $item->is_collection = $login_user == 0 ? false : ($item->isCollection ? true : false);
+            $item->is_collection = $login_user_id == 0 ? false : ($item->isCollection ? true : false);
             // 是否关注
-            $item->userInfo->is_follow = $login_user == 0 ? false : ($item->userInfo->isFollow ? true : false);
+            $item->userInfo->is_follow = $login_user_id == 0 ? false : ($item->userInfo->isFollow ? true : false);
             // 是否为登录会员
-            $item->userInfo->is_self = $login_user == 0 ? false : ($item->user_id == $login_user ? true : false);
+            $item->userInfo->is_self = $login_user_id == 0 ? false : ($item->user_id == $login_user_id ? true : false);
             unset($item->isPraise, $item->isCollection, $item->userInfo->isFollow);
         }
         $lists = $this->getPaginateFormat($lists);
@@ -97,7 +123,7 @@ class DynamicService extends Service
     {
         if ( !$dynamic = $this->getDynamicDetail($dynamic_id, false, [
             'userInfo' => function($query) use($login_user){
-                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
+                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info'])->with([
                     'isFollow' => function($query) use ($login_user) {
                         $query->where('user_id', $login_user);
                     }

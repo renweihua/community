@@ -16,9 +16,16 @@ class DynamicController extends BbsController
         $this->service = $service;
     }
 
-    public function lists()
+    /**
+     * 动态列表
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function lists(Request $request)
     {
-        $lists = $this->service->getDynamics();
+        $lists = $this->service->lists($request, $this->login_user);
         return $this->successJson($lists);
     }
 
