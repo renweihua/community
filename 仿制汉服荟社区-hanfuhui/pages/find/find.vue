@@ -454,7 +454,7 @@ export default {
 		/// 跳转文章详情页
 		fnWordInfo(e) {
 			uni.navigateTo({
-				url: `/pages/word-details/word-details?id=${e.ID}&fromPage=find&current=${this.current}`
+				url: `/pages/word-details/word-details?dynamic_id=${e.dynamic_id}&fromPage=find&current=${this.current}`
 			});
 		},
 		/// 跳转摄影详情页
