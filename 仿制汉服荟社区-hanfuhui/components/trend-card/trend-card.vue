@@ -210,10 +210,13 @@
 			},
 			/// 计算显示视频封面
 			calVideoCover() {
-				if (this.item.dynamic_type != 1) return false;
-				let cover = '/static/default_image.png';
-				if (this.item.dynamic_images) cover = this.item.dynamic_images[0];
-				return cover;
+				if (this.item.dynamic_type == 2){
+					let cover = '/static/default_image.png';
+					if (this.item.dynamic_images) cover = this.item.dynamic_images[0];
+					return cover;
+				}else{
+					 return false;
+				}
 			},
 			/// 计算显示图片格
 			calImageSrcs() {
@@ -236,10 +239,8 @@
 			},
 			/// 计算标题字符转json
 			calTitle() {
-				if (['topic', 'topicreply', 'word'].includes(this.item.ObjectType)) {
-					let topic = JSON.parse(this.item.ObjectData)
-					if (topic == null) return '';
-					return topic.name;
+				if (this.item.dynamic_title && this.item.dynamic_type != 0) {
+					return this.item.dynamic_title;
 				}
 				return false;
 			}

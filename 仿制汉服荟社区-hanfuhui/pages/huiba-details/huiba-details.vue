@@ -314,7 +314,7 @@ export default {
 		},
 		/// 展卡跳转详情页
 		fnCardInfo(e) {
-			dynamicDetailPage(e, this);
+			dynamicDetailPage(e, this, 'huiba');
 		},
 		/// 展卡评论跳转详情页
 		fnCardComm(e) {
