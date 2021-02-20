@@ -100,6 +100,7 @@
 		delComment,
 		addCommentTop,
 		delCommentTop,
+		dynamicCollection
 	} from "@/api/InteractServer.js"
 	import {
 		followUser,
@@ -312,7 +313,7 @@
 						filItem.praise_count++;
 						this.trendData.is_praise = filItem.is_praise = true;
 						this.trendData.praise_count++;
-						if(login_user){
+						if (login_user.user_id) {
 							// 点赞列表加会员信息
 							this.topListData.unshift({
 								user_id: login_user.user_id,
@@ -420,18 +421,25 @@
 					if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
 						this.trendData.dynamic_id)[0];
 				}
-				// 用户是否已经收藏
-				if (filItem.is_collection || false) {
-
-				} else {
-					dynamicCollection(filItem.dynamic_id).then(addRes => {
-						if (addRes.data.Data == false) return
-						filItem.SaveCount++
-						filItem.is_collection = true
-						this.trendData.SaveCount++
-						this.trendData.is_collection = true
-					})
-				}
+		
+				dynamicCollection(filItem.dynamic_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+				
+					// 用户是否已收藏
+					if (filItem.is_collection) {
+						filItem.collection_count--;
+						this.trendData.is_collection = filItem.is_collection = false;
+						this.trendData.collection_count--;
+					} else {
+						filItem.collection_count++;
+						this.trendData.is_collection = filItem.is_collection = true;
+						this.trendData.collection_count++
+					}
+				});
 			},
 
 			/// 显示评论输入框

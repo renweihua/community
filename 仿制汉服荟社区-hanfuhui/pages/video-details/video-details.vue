@@ -107,7 +107,9 @@
     addComment,
     delComment,
     addCommentTop,
-    delCommentTop,} from "@/api/InteractServer.js"
+    delCommentTop,
+	dynamicCollection
+	} from "@/api/InteractServer.js"
   import {
     followUser,
   } from "@/api/UserServer.js"
@@ -167,7 +169,7 @@
 			if (this.videoInfoData.dynamic_images) cover = this.videoInfoData.dynamic_images[0];
 			return cover;
 		}else{
-			 return false;
+			 return '';
 		}
       },
       // 动态点赞列表数据
@@ -305,6 +307,8 @@
 			});
 			if (!res.status) return;
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			console.log('---login_user---');
+			console.log(login_user);
 			// 用户是否点过赞
 			if (filItem.is_praise) {
 				filItem.praise_count--;
@@ -317,7 +321,7 @@
 				filItem.praise_count++;
 				this.videoInfoData.is_praise = filItem.is_praise = true;
 				this.videoInfoData.praise_count++;
-				if (login_user) {
+				if (login_user.user_id) {
 					// 点赞列表加会员信息
 					this.topListData.unshift({
 						user_id: login_user.user_id,
@@ -414,10 +418,6 @@
       /// 详情收藏
       fnSave() {
         let filItem = {};
-        let params = {
-          objectid: this.dynamic_id,
-          objecttype: 'video',
-        }
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
@@ -441,22 +441,28 @@
         }
         // 来自发现-视频跳转
         if (this.fromPage == 'find') {
-          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[0];
+          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
         }
-        // 用户是否已经收藏
-        if (filItem.UserSave) {
-
-        } else {
-          dynamicCollection(params).then(addRes => {
-            if (addRes.data.Data == false) return
-            filItem.SaveCount++
-            filItem.UserSave = true
-            this.videoInfoData.SaveCount++
-            this.videoInfoData.UserSave = true
-          })
-        }
+		
+		dynamicCollection(filItem.dynamic_id).then(res => {
+			uni.showToast({
+				title: res.msg,
+				icon: res.status == 1 ? 'success' : 'none'
+			});
+			if (!res.status) return;
+		
+			// 用户是否已收藏
+			if (filItem.is_collection) {
+				filItem.collection_count--;
+				this.videoInfoData.is_collection = filItem.is_collection = false;
+				this.videoInfoData.collection_count--;
+			} else {
+				filItem.collection_count++;
+				this.videoInfoData.is_collection = filItem.is_collection = true;
+				this.videoInfoData.collection_count++
+			}
+		});
       },
-
       /// 显示评论输入框
       fnCommOpen() {
         this.$refs.comm.open({

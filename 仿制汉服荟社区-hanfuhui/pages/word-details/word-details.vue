@@ -86,7 +86,7 @@
 <script>
 import { fnFormatDate } from '@/utils/CommonUtil.js';
 import { getDynamicInfo } from '@/api/TrendServer.js';
-import { getDynamicPraises, dynamicPraise, getCommentList, addComment, delComment, addCommentTop, delCommentTop } from '@/api/InteractServer.js';
+import { getDynamicPraises, dynamicPraise, getCommentList, addComment, delComment, addCommentTop, delCommentTop, dynamicCollection } from '@/api/InteractServer.js';
 import { followUser } from '@/api/UserServer.js';
 
 // 分享弹出层组件
@@ -307,7 +307,7 @@ export default {
 					filItem.praise_count++;
 					this.wordInfoData.is_praise = filItem.is_praise = true;
 					this.wordInfoData.praise_count++;
-					if (login_user) {
+					if (login_user.user_id) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
 							user_id: login_user.user_id,
@@ -413,19 +413,26 @@ export default {
 			}
 			// 来自发现-文章跳转
 			if (this.fromPage == 'find') {
-				filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
+				filItem = this.$store.getters['word/getWordListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 			}
-			// 用户是否已经收藏
-			if (filItem.UserSave) {
-			} else {
-				dynamicCollection(params).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.SaveCount++;
-					filItem.UserSave = true;
-					this.wordInfoData.SaveCount++;
-					this.wordInfoData.UserSave = true;
+			dynamicCollection(filItem.dynamic_id).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: res.status == 1 ? 'success' : 'none'
 				});
-			}
+				if (!res.status) return;
+			
+				// 用户是否已收藏
+				if (filItem.is_collection) {
+					filItem.collection_count--;
+					this.wordInfoData.is_collection = filItem.is_collection = false;
+					this.wordInfoData.collection_count--;
+				} else {
+					filItem.collection_count++;
+					this.wordInfoData.is_collection = filItem.is_collection = true;
+					this.wordInfoData.collection_count++
+				}
+			});
 		},
 		/// 显示评论输入框
 		fnCommOpen() {
