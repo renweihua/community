@@ -85,6 +85,19 @@ class Dynamic extends Model
         }
     }
 
+    /**
+     * 获取视频信息
+     * 
+     * @param $value
+     *
+     * @return mixed|object
+     */
+    public function getVideoInfoAttribute($value)
+    {
+        if (empty($value)) return (object)[];
+        return my_json_decode($value);
+    }
+
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
