@@ -104,27 +104,7 @@
 					<block v-for="(topic, index) in topicListData" :key="index"><topic-card :info-data="topic" @huiba="fnHuibaInfo" @click="fnTopicInfo"></topic-card></block>
 				</mescroll-uni>
 			</swiper-item>
-
-			<!-- 活动 -->
-			<swiper-item v-if="false">
-				<mescroll-uni v-if="status.org" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
-					<!-- 活动地区、状态 -->
-					<view class="flexr-jsa" @tap="fnOrgProvinceState">
-						<view class="flex-fitem f32r fcenter c555 hl90r">
-							<text class="mr18r">{{ org.provinceName }}</text>
-							<i-icon type="xia" size="36" color="#8F8F94"></i-icon>
-						</view>
-						<view class="flex-fitem f32r fcenter c555 hl90r">
-							<text class="mr18r">{{ org.stateName }}</text>
-							<i-icon type="xia" size="36" color="#8F8F94"></i-icon>
-						</view>
-					</view>
-					<block v-for="(org, index) in orgListData" :key="index"><org-card :info-data="org" @click="fnOrgInfo"></org-card></block>
-				</mescroll-uni>
-			</swiper-item>
 		</swiper>
-		<!-- 组织活动省状态选择弹出层 -->
-		<org-province-state-picker ref="orgProvinceState" @picker="fnOrgPicker"></org-province-state-picker>
 	</view>
 </template>
 
@@ -135,11 +115,9 @@ import { getAlbumList, getRankFace } from '@/api/AlbumServer.js';
 import { getVideoList } from '@/api/VideoServer.js';
 import { getTopicList } from '@/api/TopicServer.js';
 import { getWordList } from '@/api/WordServer.js';
-import { getOrgList, getOrgProvinceList } from '@/api/OrgServer.js';
 import { followUser } from '@/api/UserServer.js';
+import { getDynamics } from '@/api/TrendServer.js';
 
-// 组织活动展示卡组件
-import OrgCard from '@/components/org-card/org-card';
 // 文章展示卡组件
 import WordCard from '@/components/word-card/word-card';
 // 话题展示卡组件
@@ -150,15 +128,12 @@ import VideoCard from '@/components/video-card/video-card';
 import AlbumCard from '@/components/album-card/album-card';
 // 荟吧展示卡组件
 import HuibaCard from '@/components/huiba-card/huiba-card';
-// 组织活动省状态选择弹出层组件
-import OrgProvinceStatePicker from '@/components/org-province-state-picker/org-province-state-picker';
 
 let listData = {
 	1: getAlbumList,
 	2: getVideoList,
 	3: getTopicList,
-	4: getWordList,
-	5: getOrgList
+	4: getWordList
 };
 
 export default {
@@ -167,9 +142,7 @@ export default {
 		AlbumCard,
 		VideoCard,
 		TopicCard,
-		WordCard,
-		OrgCard,
-		OrgProvinceStatePicker
+		WordCard
 	},
 
 	props: {
@@ -199,7 +172,7 @@ export default {
 					current: 1
 				},
 				{
-					id: 'video',
+					id: 'album',
 					name: '视频',
 					current: 2
 				},
@@ -209,20 +182,10 @@ export default {
 					current: 3
 				},
 				// {
-				// 	id: 'album',
-				// 	name: '摄影',
-				// 	current: 1
-				// },
-				// {
 				// 	id: 'topic',
 				// 	name: '话题',
-				// 	current: 3
+				// 	current: 4
 				// },
-				// {
-				// 	id: 'org',
-				// 	name: '活动',
-				// 	current: 5
-				// }
 			],
 			// 激活顶部导航关联页状态
 			status: {
@@ -230,40 +193,28 @@ export default {
 				album: false,
 				video: false,
 				topic: false,
-				word: false,
-				org: false
+				word: false
 			},
 			// 双击刷新
 			clickRefresh: false,
 			// 刷新间隔
 			timeOutFind: 0,
-			// 组织活动地区状态
-			org: {
-				stateName: '全部状态',
-				state: 0,
-				provinceName: '全国',
-				province: 0
-			},
 			// 刷新组件实例
 			mescroll: {
 				recommend: null,
 				album: null,
 				video: null,
 				topic: null,
-				word: null,
-				org: null
+				word: null
 			}
-			//
 		};
 	},
-
 	watch: {
 		// 监听底部导航双击触发
 		refresh(val) {
 			if (val && !this.clickRefresh) this.fnRefreshData();
 		}
 	},
-
 	computed: {
 		// Banner图
 		bannerListData() {
@@ -276,7 +227,6 @@ export default {
 		// 热门荟吧
 		huibaListData() {
 			let topics = this.$store.getters['huiba/getHuibaListData'];
-			console.log(topics);
 			return topics;
 		},
 		// 摄影榜封面
@@ -297,18 +247,12 @@ export default {
 		},
 		// 文章列表
 		wordListData() {
-			return this.$store.getters['word/getWordListData'];
+			let dynamics = this.$store.getters['word/getWordListData'];
+			console.log('---dynamics---')
+			console.log(dynamics);
+			return dynamics;
 		},
-		// 组织活动列表
-		orgListData() {
-			return this.$store.getters['org/getOrgListData'];
-		},
-		// 组织活动省市列表
-		orgProvinceListData() {
-			return this.$store.getters['org/getOrgProvinceListData'];
-		}
 	},
-
 	methods: {
 		/// mescroll组件初始化的回调,可获取到mescroll对象
 		mescrollInit(mescroll) {
@@ -323,82 +267,55 @@ export default {
 		upCallback(mescroll) {
 			// 联网获取数据
 			console.log(this.scrollInto, this.current);
-			// 摄影榜获取数据
-			if (this.current == 1 && !this.rankFaceData.hasOwnProperty('week')) {
-				getRankFace().then(rankRes => {
-					this.$store.commit('album/setRankFaceData', rankRes.data.Data);
-				});
-			}
-			// 组织活动省市获取数据
-			if (this.current == 5 && this.orgProvinceListData.length == 0) {
-				getOrgProvinceList().then(orgProvinceRes => {
-					let orgProvince = orgProvinceRes.data.Data;
-					orgProvince.unshift({
-						Datetime: '2016-03-20T03:12:32',
-						ID: 0,
-						Name: '全国',
-						ParentID: 0
-					});
-					this.$store.commit('org/setOrgProvinceListData', orgProvince);
-				});
-			}
+			// // 摄影榜获取数据
+			// if (this.current == 1 && !this.rankFaceData.hasOwnProperty('week')) {
+			// 	getRankFace().then(rankRes => {
+			// 		this.$store.commit('album/setRankFaceData', rankRes.data.data);
+			// 	});
+			// }
 			// 默认传递参数
 			let params = {
+				dynamic_tyle: this.current, // 动态类型
 				page: mescroll.num,
 				limit: mescroll.size
 			};
-			// 组织活动追加省市参数
-			if (this.current == 5) {
-				params = Object.assign(params, {
-					state: this.org.state,
-					province: this.org.province,
-					role: 5
-				});
-			}
 			// 多组请求数据保存分类
-			listData[this.current](params)
+			getDynamics(params)
 				.then(res => {
-					// 摄影
+					let lists = res.data;
+					// 文章
 					if (this.current == 1) {
 						if (mescroll.num == 1) {
-							this.$store.commit('album/setAlbumListData', res.data.Data);
+							this.$store.commit('word/setWordListData', lists.data);
 						} else {
-							this.$store.commit('album/setAlbumListData', this.albumListData.concat(res.data.Data));
+							this.$store.commit('word/setWordListData', this.wordListData.concat(lists.data));
 						}
 					}
 					// 视频
 					if (this.current == 2) {
 						if (mescroll.num == 1) {
-							this.$store.commit('video/setVideoListData', res.data.Data);
+							this.$store.commit('video/setVideoListData', lists.data);
 						} else {
-							this.$store.commit('video/setVideoListData', this.videoListData.concat(res.data.Data));
+							this.$store.commit('video/setVideoListData', this.videoListData.concat(lists.data));
+						}
+					}
+					// 摄影
+					if (this.current == 3) {
+						if (mescroll.num == 1) {
+							this.$store.commit('album/setAlbumListData', lists.data);
+						} else {
+							this.$store.commit('album/setAlbumListData', this.albumListData.concat(lists.data));
 						}
 					}
 					// 话题
-					if (this.current == 3) {
-						if (mescroll.num == 1) {
-							this.$store.commit('topic/setTopicListData', res.data.Data);
-						} else {
-							this.$store.commit('topic/setTopicListData', this.topicListData.concat(res.data.Data));
-						}
-					}
-					// 文章
 					if (this.current == 4) {
 						if (mescroll.num == 1) {
-							this.$store.commit('word/setWordListData', res.data.Data);
+							this.$store.commit('topic/setTopicListData', lists.data);
 						} else {
-							this.$store.commit('word/setWordListData', this.wordListData.concat(res.data.Data));
+							this.$store.commit('topic/setTopicListData', this.topicListData.concat(lists.data));
 						}
 					}
-					// 组织活动
-					if (this.current == 5) {
-						if (mescroll.num == 1) {
-							this.$store.commit('org/setOrgListData', res.data.Data);
-						} else {
-							this.$store.commit('org/setOrgListData', this.orgListData.concat(res.data.Data));
-						}
-					}
-					mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 				})
 				.catch(() => {
 					mescroll.endErr();
@@ -419,7 +336,6 @@ export default {
 						{ ID: 3, Title: '汉服小剧本征集', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 },
 						{ ID: 4, Title: '喜欢什么样的汉服搭配', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 }
 					]);
-
 					// 荟吧列表
 					console.log(resArray[0].data);
 					this.$store.commit('huiba/setHuibaListData', resArray[1].data);
@@ -442,6 +358,8 @@ export default {
 		fnBarClick(e) {
 			let current = e.hasOwnProperty('detail') ? e.detail.current : e.current;
 			console.log(current);
+			console.log(this.tabBars[current]);
+			console.log(this.tabBars[current].id);
 			this.scrollInto = this.tabBars[current].id;
 			// 是否当前项点击
 			if (e.hasOwnProperty('id') && this.current == current) {
@@ -467,8 +385,9 @@ export default {
 				// 改变顶部导航选中
 				this.current = current;
 				// 首次选中激活顶部导航关联页状态
-				if (!this.status.album && current == 1) this.status.word = true;
+				if (!this.status.word && current == 1) this.status.word = true;
 				if (!this.status.video && current == 2) this.status.video = true;
+				if (!this.status.album && current == 3) this.status.album = true;
 				// 清除定时器
 				clearTimeout(this.timeOutFind);
 				// 连续触发记录重置
@@ -477,27 +396,6 @@ export default {
 				this.clickRefresh = false;
 			}
 		},
-
-		/// 组织活动城市选择
-		fnOrgProvinceState() {
-			this.$refs.orgProvinceState.open(this.org);
-		},
-		/// 组织活动状态选择
-		fnOrgPicker(e) {
-			if (e.provinceID == -1) return;
-			this.org = {
-				state: e.stateID,
-				stateName: e.stateName,
-				province: e.provinceID,
-				provinceName: e.provinceName
-			};
-			// 回顶刷新
-			this.mescroll[this.scrollInto].scrollTo(0, 300);
-			setTimeout(() => {
-				this.mescroll[this.scrollInto].resetUpScroll(true);
-			}, 1000);
-		},
-
 		/// 跳转用户信息页
 		fnUserInfo(e) {
 			uni.navigateTo({
@@ -557,12 +455,6 @@ export default {
 		fnWordInfo(e) {
 			uni.navigateTo({
 				url: `/pages/word-details/word-details?id=${e.ID}&fromPage=find&current=${this.current}`
-			});
-		},
-		/// 跳转组织活动详情页
-		fnOrgInfo(e) {
-			uni.navigateTo({
-				url: `/pages/org-details/org-details?id=${e.ID}&fromPage=find&current=${this.current}`
 			});
 		},
 		/// 跳转摄影详情页

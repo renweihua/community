@@ -42,6 +42,14 @@ export async function getAtteList(params = {
 }
 
 /**
+ * 获取动态列表
+ */
+export async function getDynamics(params) {
+	return await request('/dynamics', 'get', params)
+}
+
+
+/**
  * 获取动态详情信息
  *
  * @param {Number} dynamic_id 动态Id
