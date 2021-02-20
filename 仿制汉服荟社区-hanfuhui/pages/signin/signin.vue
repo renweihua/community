@@ -64,7 +64,6 @@
 				orderState: false
 			}
 		},
-
 		computed: {
 			// 签到信息
 			signinInfoData() {
@@ -74,29 +73,30 @@
 			signinShopListData() {
 				return this.$store.getters['getSigninShopListData']
 			},
-			//
 		},
-
 		onLoad(options) {
 			if (options && options.id) {
-				// 获取签到信息
-				getSigninInfo().then(signinRes => {
-					// 保存签到信息
-					this.$store.commit('setSigninInfoData', signinRes.data.Data)
-					// 获取汉币兑换签到商品
-					return getHanbiShopList({
-						tag: 'signin',
-						haveorders: true,
-						role: 5,
-						page: 1,
-						limit: 10
-					})
-				}).then(shopRes => {
-					// 保存签到商品列表
-					this.$store.commit('setSigninShopListData', shopRes.data.Data)
-					// 触发倒计时
-					this.calRemaiTime()
-				})
+				// // 获取签到信息
+				// getSigninInfo().then(signinRes => {
+				// 	// 保存签到信息
+				// 	this.$store.commit('setSigninInfoData', signinRes.data.Data)
+				// 	// 获取汉币兑换签到商品
+				// 	return getHanbiShopList({
+				// 		tag: 'signin',
+				// 		haveorders: true,
+				// 		role: 5,
+				// 		page: 1,
+				// 		limit: 10
+				// 	})
+				// }).then(shopRes => {
+				// 	// 保存签到商品列表
+				// 	this.$store.commit('setSigninShopListData', shopRes.data.Data)
+				// 	// 触发倒计时
+				// 	this.calRemaiTime()
+				// })
+
+				// 触发倒计时
+				this.calRemaiTime()
 			}
 		},
 
@@ -123,7 +123,7 @@
 				})
 				signIn().then(res => {
 					uni.hideLoading()
-					if(!res.status){
+					if (!res.status) {
 						uni.showToast({
 							title: res.msg,
 							icon: 'error'
@@ -137,9 +137,9 @@
 					return getSigninInfo()
 				}).then(signinRes => {
 					console.log(signinRes);
-					
+
 					// 保存签到信息
-					this.$store.commit('setSigninInfoData', signinRes.data.Data)
+					this.$store.commit('setSigninInfoData', signinRes.data.data)
 					// 重新初始签到日历
 					this.$refs.signinCalendar.init()
 				}).catch((e) => {
@@ -188,9 +188,7 @@
 					}
 				})
 			}
-			//
 		},
-
 		beforeDestroy() {
 			clearInterval(this.timeInter)
 		}

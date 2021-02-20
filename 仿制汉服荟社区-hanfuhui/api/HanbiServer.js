@@ -21,12 +21,12 @@ export async function signIn() {
 }
 
 /**
- * 获取签到时间列表
- * @param {String} date 参数 签到时间
- * 最小月选择到Remark为开始签到月
+ * 指定月份的签到状态
+ * 
+ * @param {String} month 参数 月份
  */
-export async function getSignInDateList(date = '2019/5/01') {
-  return await request('/Hanbi/GetSignInListForDate', 'get', {date})
+export async function getSignInDateList(month) {
+  return await request('/user/getSignsByMonth', 'get', {month})
 }
 
 /**

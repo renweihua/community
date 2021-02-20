@@ -69,17 +69,17 @@ class SignService extends Service
         $days = get_month_days(strtotime($month));
         $lists = [];
         foreach ($days as $day){
-            $lists[$day] = false;
+            $lists[$day] = ['day' => $day, 'is_sign' => false];
             if (!empty($data)){
                 foreach ($data as $created_time){
                     if (date('Y-m-d', $created_time) == $day){
-                        $lists[$day] = true;
+                        $lists[$day] = ['day' => $day, 'is_sign' => true];
                         break;
                     }
                 }
             }
         }
-        return $lists;
+        return array_values($lists);
     }
 
     public function index()
