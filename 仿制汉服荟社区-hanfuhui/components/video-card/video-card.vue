@@ -2,15 +2,17 @@
   <view class="bgwhite mb18r">
     <!-- 页头 -->
     <view class="flex plr18r ptb18r">
-      <user-avatar @click="$emit('user', infoData.User)" :src="calUserAvater" :tag="infoData.User.AuthenticateCode" size="md"></user-avatar>
-      <view class="flexc-jsa ml18r mr28r flex-gitem w128r" @tap="$emit('user', infoData.User)">
+      <user-avatar @click="$emit('user', infoData.user_info)" :src="calUserAvater" tag="" size="md"></user-avatar>
+      <view class="flexc-jsa ml18r mr28r flex-gitem w128r" @tap="$emit('user', infoData.user_info)">
         <view>
-          <text class="f28r fbold mr18r">{{infoData.User.NickName}}</text>
-          <i-icon :type="infoData.User.Gender == '男' ?'nan':'nv' " size="28" :color="infoData.User.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
+          <text class="f28r fbold mr18r">{{infoData.user_info.nick_name}}</text>
+		  <i-icon v-if="[0, 1].indexOf(infoData.user_info.user_sex) > -1" :type="infoData.user_info.user_sex_text == '男' ? 'nan':'nv' "
+		   size="28" :color="infoData.user_info.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
         </view>
-        <view class="f24r cgray ellipsis">{{infoData.User.Describe || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
+        <view class="f24r cgray ellipsis">{{infoData.user_info.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
       </view>
-      <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="$emit('follow', infoData.User)">{{ infoData.User.UserAtte?'已关注':'关注'}}</view>
+	  <!-- 如果登录会员就是发布者，那么不展示 -->
+      <view v-if="!infoData.user_info.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="$emit('follow', infoData.user_info)">{{ infoData.user_info.is_follow?'已关注':'关注'}}</view>
     </view>
     <!-- 容器 -->
     <view class="plr18r pb18r">
@@ -21,7 +23,7 @@
         <view class="video-time">{{calTimeLong}}</view>
       </view>
       <!-- 标题 -->
-      <view class="f32r fbold hl90r ellipsis" @tap="$emit('click', infoData)">{{infoData.Title}}</view>
+      <view class="f32r fbold hl90r ellipsis" @tap="$emit('click', infoData)">{{infoData.dynamic_title}}</view>
       <!-- 荟吧标签 -->
       <text class="huiba-tag" @tap="$emit('huiba', infoData.Huiba)" v-if="infoData.Huiba">{{infoData.Huiba.Name}}</text>
     </view>
@@ -98,28 +100,31 @@
         }
       }
     },
-
     computed: {
       /// 计算显示用户头像
       calUserAvater() {
-        let user = this.infoData.User;
-        return !!user ? user.HeadUrl + '_100x100.jpg' : '/static/default_avatar.png'
+        let user_info = this.infoData.user_info;
+        return !!user_info ? user_info.user_avatar : '/static/default_avatar.png'
       },
       /// 计算显示视频封面
       calVideoCover() {
-        let cover = '/static/default_image.png'
-        let suffix = '_850x300.jpg/format/webp'
-        if (this.infoData.FaceSrc) cover = this.infoData.FaceSrc + suffix
-        return cover
+		if (this.infoData.dynamic_type == 2){
+			let cover = '/static/default_image.png';
+			if (this.infoData.dynamic_images) cover = this.infoData.dynamic_images[0];
+			return cover;
+		}else{
+			 return false;
+		}
       },
       /**
        * 视频时长
        */
       calTimeLong() {
-        return `${Math.floor(this.infoData.WhenLong / 60)}:${this.infoData.WhenLong % 60}`;
+		  if(!this.infoData.video_info.times){
+			  return '00:00';
+		  }else return `${Math.floor(this.infoData.video_info.times / 60)}:${this.infoData.video_info.times % 60}`;
       },
     },
-
   }
 </script>
 

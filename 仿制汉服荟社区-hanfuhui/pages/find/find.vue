@@ -111,10 +111,8 @@
 <script>
 import { getBannerTopicList } from '@/api/CommonServer.js';
 import { getHuibaList } from '@/api/HuibaServer.js';
-import { getAlbumList, getRankFace } from '@/api/AlbumServer.js';
-import { getVideoList } from '@/api/VideoServer.js';
+import { getRankFace } from '@/api/AlbumServer.js';
 import { getTopicList } from '@/api/TopicServer.js';
-import { getWordList } from '@/api/WordServer.js';
 import { followUser } from '@/api/UserServer.js';
 import { getDynamics } from '@/api/TrendServer.js';
 
@@ -130,10 +128,7 @@ import AlbumCard from '@/components/album-card/album-card';
 import HuibaCard from '@/components/huiba-card/huiba-card';
 
 let listData = {
-	1: getAlbumList,
-	2: getVideoList,
 	3: getTopicList,
-	4: getWordList
 };
 
 export default {
@@ -144,7 +139,6 @@ export default {
 		TopicCard,
 		WordCard
 	},
-
 	props: {
 		// 底部导航双击连续触发刷新
 		refresh: {
@@ -152,7 +146,6 @@ export default {
 			default: false
 		}
 	},
-
 	data() {
 		return {
 			// 导航项滑动初始id
@@ -172,12 +165,12 @@ export default {
 					current: 1
 				},
 				{
-					id: 'album',
+					id: 'video',
 					name: '视频',
 					current: 2
 				},
 				{
-					id: 'video',
+					id: 'album',
 					name: '摄影',
 					current: 3
 				},
@@ -442,13 +435,13 @@ export default {
 		/// 跳转视频详情页
 		fnVideoInfo(e) {
 			uni.navigateTo({
-				url: `/pages/video-details/video-details?id=${e.ID}&fromPage=find&current=${this.current}`
+				url: `/pages/video-details/video-details?dynamic_id=${e.dynamic_id}&fromPage=find&current=${this.current}`
 			});
 		},
 		/// 跳转话题详情页
 		fnTopicInfo(e) {
 			uni.navigateTo({
-				url: `/pages/topic-details/topic-details?id=${e.ID}&fromPage=find&current=${this.current}`
+				url: `/pages/topic-details/topic-details?dynamic_id=${e.dynamic_id}&fromPage=find&current=${this.current}`
 			});
 		},
 		/// 跳转文章详情页
@@ -460,7 +453,7 @@ export default {
 		/// 跳转摄影详情页
 		fnAlbumInfo(e) {
 			uni.navigateTo({
-				url: `/pages/album-details/album-details?id=${e.ID}&fromPage=find&current=${this.current}`
+				url: `/pages/album-details/album-details?dynamic_id=${e.dynamic_id}&fromPage=find&current=${this.current}`
 			});
 		},
 		/// 跳转摄影榜单页

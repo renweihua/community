@@ -7,25 +7,6 @@ import request from '@/api/request.js';
 
 
 /**
- * 获取摄影列表
- * @param {Object} params 参数 {page:1,limit:20}
- */
-export async function getAlbumList(params = {
-  page: 1,
-  limit: 20
-}) {
-  return await request('/album/GetAlbumListForGood', 'get', params)
-}
-
-/**
- * 获取摄影信息
- * @param {Number} id 参数 摄影列表中ID
- */
-export async function getAlbumInfo(id = 85857) {
-  return await request(`/Album/GetAlbum?id=${id}`)
-}
-
-/**
  * 摄影榜封面图
  * @param {String} objecttype 参数 album
  */
