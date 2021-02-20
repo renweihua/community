@@ -324,16 +324,16 @@
 			},
 			/// 评论点赞
 			fnTopComm(e) {
-				let filItem = this.commentListData.filter(item => item.ID == e.ID)[0];
+				let filItem = this.commentListData.filter(item => item.comment_id == e.comment_id)[0];
 				if (filItem.is_praise) {
-					delCommentTop(filItem.ID).then(delRes => {
-						if (delRes.data.Data == false) return
+					delCommentTop(filItem.comment_id).then(res => {
+						if (!res.status) return;
 						filItem.praise_count--;
 						filItem.is_praise = false
 					})
 				} else {
-					addCommentTop(filItem.ID).then(addRes => {
-						if (addRes.data.Data == false) return
+					addCommentTop(filItem.comment_id).then(res => {
+						if (!res.status) return;
 						filItem.praise_count++;
 						filItem.is_praise = true
 					})
@@ -343,8 +343,8 @@
 			fnAtte(e) {
 				// 用户是否已经关注
 				if (e.is_follow) {
-                    followUser(e.user_id).then(delRes => {
-						if (delRes.data.Data == false) return
+                    followUser(e.user_id).then(res => {
+						if (!res.status) return
 						this.dynamic.User.is_follow = false
 						// 来自主要跳转
 						if (this.fromPage == 'home') {
@@ -370,7 +370,7 @@
 					})
 				} else {
 					followUser(e.user_id).then(res => {
-						if (addRes.data.Data == false) return
+						if (!res.status) return
 						this.dynamic.User.is_follow = true
 						// 来自主要跳转
 						if (this.fromPage == 'home') {
