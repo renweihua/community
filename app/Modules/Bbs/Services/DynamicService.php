@@ -123,7 +123,7 @@ class DynamicService extends Service
     {
         if ( !$dynamic = $this->getDynamicDetail($dynamic_id, false, [
             'userInfo' => function($query) use($login_user){
-                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info'])->with([
+                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_introduction'])->with([
                     'isFollow' => function($query) use ($login_user) {
                         $query->where('user_id', $login_user);
                     }

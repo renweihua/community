@@ -2,7 +2,7 @@
   <view>
     <!-- 顶部导航栏 -->
     <view class="posif posi-tlr0 bgf8 z500">
-      <video class="video-player" :src="videoUrlData" :poster="calVideoCover" :controls="true" :page-gesture="true"></video>
+      <video class="video-player" :src="videoInfoData.video_path" :poster="calVideoCover" :controls="true" :page-gesture="true"></video>
     </view>
 
     <!-- 滚动内容区 -->
@@ -12,37 +12,51 @@
         <!-- 中心内容 -->
         <view class="plr18r">
           <!-- 标题 -->
-          <view class="f36r c111 fbold ptb18r">{{videoInfoData.Title}}</view>
+          <view class="f36r c111 fbold ptb18r">{{videoInfoData.dynamic_title}}</view>
           <!-- 时间 -->
           <view class="f24r cgray mb18r">{{calDatetime}}</view>
           <!-- 内容 -->
-          <view class="f28r c555 fword">{{videoInfoData.Describe}}</view>
+          <view class="f28r c555 fword">{{videoInfoData.dynamic_content}}</view>
         </view>
         <!-- 用户信息 -->
         <view class="flex plr18r ptb18r">
-          <user-avatar @click="fnUserInfo(calUser)" :src="calUserAvater" :tag="calUser.AuthenticateCode || ''" size="md"></user-avatar>
+          <user-avatar @click="fnUserInfo(calUser)" :src="calUserAvater" tag="" size="md"></user-avatar>
           <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
             <view>
-              <text class="f28r fbold mr18r">{{calUser.NickName || '#'}}</text>
-              <i-icon :type="calUser.Gender == '男' ?'nan':'nv' " size="28" :color="calUser.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
+              <text class="f28r fbold mr18r">{{calUser.nick_name || '#'}}</text>
+			  <i-icon
+			  	v-if="[0, 1].indexOf(calUser.user_sex) > -1"
+			  	:type="calUser.user_sex_text == '男' ? 'nan' : 'nv'"
+			  	size="28"
+			  	:color="calUser.user_sex_text == '男' ? '#479bd4' : '#FF6699'"
+			  ></i-icon>
             </view>
-            <view class="f24r cgray ellipsis">{{calUser.Describe || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
+            <view class="f24r cgray ellipsis">{{calUser.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
           </view>
-          <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnAtte(calUser)">{{ calUser.UserAtte?'已关注':'关注'}}</view>
+			<!-- 如果登录会员就是发布者，那么不展示 -->
+			<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{ calUser.is_follow ? '已关注' : '关注' }}</view>
         </view>
         <!-- 点赞列表 -->
         <view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
           <block v-for="index in 8" :key="index">
-            <view class="mr8r">
-              <user-avatar v-if="topListData[index]" :src="topListData[index].User.HeadUrl +'_100x100.jpg'" :tag="topListData[index].User.AuthenticateCode"
-                size="sm" @click="fnUserInfo(topListData[index].User)"></user-avatar>
-            </view>
+          	<view class="mr8r">
+          		<user-avatar
+          			v-if="topListData[index - 1]"
+          			:src="topListData[index - 1].user_info.user_avatar"
+          			tag=""
+          			size="sm"
+          			@click="fnUserInfo(topListData[index - 1].user_info)"
+          		></user-avatar>
+          	</view>
           </block>
-          <view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">赞 <text class="f24r cbrown ml18r">{{videoInfoData.TopCount}}</text></view>
+		  <view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">
+		  	{{ videoInfoData.is_praise ? '已赞' : '赞' }}
+		  	<text class="f24r cbrown ml18r">{{ videoInfoData.praise_count }}</text>
+		  </view>
         </view>
       </view>
       <!-- 评论区 -->
-      <view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{videoInfoData.CommCount || 0}}）</view>
+      <view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{videoInfoData.comment_count || 0}}）</view>
       <block v-for="(commData,index) in commentListData" :key="index">
         <comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
       </block>
@@ -55,18 +69,17 @@
         <text class="f28r cgray ml8r">想说点什么？</text>
       </view>
       <view class="plr28r bls2r brs2r" @tap="fnTop">
-        <i-icon type="dianzan" size="48" :color="videoInfoData.UserTop?'#FF6699':'#8F8F94'"></i-icon>
-        <text class="f28r cgray ml8r">{{videoInfoData.TopCount || 0}}</text>
+        <i-icon type="dianzan" size="48" :color="videoInfoData.is_praise?'#FF6699':'#8F8F94'"></i-icon>
+        <text class="f28r cgray ml8r">{{videoInfoData.praise_count || 0}}</text>
       </view>
       <view class="plr28r" @tap="fnSave">
-        <i-icon type="shoucang" size="48" :color="videoInfoData.UserSave?'#FF6699':'#8F8F94'"></i-icon>
-        <text class="f28r cgray ml8r">{{videoInfoData.SaveCount || 0}}</text>
+        <i-icon type="shoucang" size="48" :color="videoInfoData.is_collection?'#FF6699':'#8F8F94'"></i-icon>
+        <text class="f28r cgray ml8r">{{videoInfoData.collection_count || 0}}</text>
       </view>
       <view class="pl28r pr8r bls2r" @tap="fnShare">
         <i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon>
       </view>
     </view>
-
     <!-- 分享弹出层 -->
     <share-popup ref="share"></share-popup>
     <!-- 评论输入弹出层 -->
@@ -81,6 +94,7 @@
   import {
     getRsaText
   } from "@/api/CommonServer.js"
+  import { getDynamicInfo } from '@/api/TrendServer.js';
   import {
     getVideoInfo,
     getVideoUrl
@@ -115,7 +129,7 @@
     data() {
       return {
         // 视频项ID
-        videoID: -1,
+        dynamic_id: -1,
         // 跳转来源页
         fromPage: '',
         // 来源页标签数据下标
@@ -128,9 +142,9 @@
     },
 
     onLoad(options) {
-      if (options && options.id) {
+      if (options && options.dynamic_id) {
         console.log(options);
-        this.videoID = parseInt(options.id);
+        this.dynamic_id = parseInt(options.dynamic_id);
         if (typeof options.fromPage == 'string') this.fromPage = options.fromPage
         if (typeof options.current == 'string') this.current = parseInt(options.current)
         if (typeof options.comm == 'string') {
@@ -146,14 +160,15 @@
       videoInfoData() {
         return this.$store.getters['video/getVideoInfoData']
       },
-      // 视频播放地址信息
-      videoUrlData() {
-        return this.$store.getters['video/getVideoUrlData']
-      },
       /// 计算显示视频封面
       calVideoCover() {
-        return !!this.videoInfoData.FaceSrc ? this.videoInfoData.FaceSrc + '_850x300.jpg/format/webp' :
-          '/static/default_image.png'
+		if (this.videoInfoData.dynamic_type == 2){
+			let cover = '/static/default_image.png';
+			if (this.videoInfoData.dynamic_images) cover = this.videoInfoData.dynamic_images[0];
+			return cover;
+		}else{
+			 return false;
+		}
       },
       // 动态点赞列表数据
       topListData() {
@@ -165,20 +180,17 @@
       },
       // 计算是否得到用户信息
       calUser() {
-        return this.videoInfoData.User || false
+        return this.videoInfoData.user_info || false
       },
       /// 计算显示用户头像
       calUserAvater() {
-        return !!this.calUser ? this.calUser.HeadUrl + '_200x200.jpg' : '/static/default_avatar.png'
+        return !!this.calUser ? this.calUser.user_avatar : '/static/default_avatar.png'
       },
       /// 计算格式友好时间 几天前
       calDatetime() {
-        let timestamp = new Date(this.videoInfoData.Datetime || '2020-01-01 01:01').getTime();
-        return fnFormatDate(timestamp);
+        return fnFormatDate(this.videoInfoData.created_time);
       },
-      //
     },
-
     methods: {
       /// mescroll组件初始化完成的回调
       mescrollInit(mescroll) {
@@ -187,8 +199,7 @@
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         let params = {
-          objectid: this.videoID,
-          objecttype: 'video',
+          dynamic_id: this.dynamic_id,
           page: mescroll.num,
           limit: mescroll.size
         }
@@ -197,31 +208,27 @@
             title: "加载中",
             mask: true
           })
+          console.log(this.dynamic_id);
           // 获取详情信息
-          getVideoInfo(this.videoID).then(videoRes => {
-            this.$store.commit('video/setVideoInfoData', videoRes.data.Data)
+          getDynamicInfo(this.dynamic_id).then(dynamic => {
+          console.log('---dynamic---');
+          console.log(dynamic);
+            this.$store.commit('video/setVideoInfoData', dynamic.data)
             // 导航标题
             uni.setNavigationBarTitle({
-              title: videoRes.data.Data.Title
+              title: dynamic.data.dynamic_title
             });
             params.count = 8
             // 获取点赞列表8项
             return getDynamicPraises(params)
           }).then(topRes => {
-            this.$store.commit('interact/setTopListData', topRes.data.Data)
+						this.$store.commit('interact/setTopListData', topRes.data.data);
             params.count = mescroll.size
             // 获取评论列表
             return getCommentList(params)
           }).then(commRes => {
-            this.$store.commit('interact/setCommentListData', commRes.data.Data)
-            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
-            // 加密播放地址
-            return getRsaText(this.videoInfoData.VideoUrl)
-          }).then(rsaRes => {
-            // 获取真实播放地址
-            return getVideoUrl(JSON.stringify(rsaRes.data))
-          }).then(urlRes => {
-            this.$store.commit('video/setVideoUrlData', urlRes.data.Data);
+            this.$store.commit('interact/setCommentListData', commRes.data.data)
+			mescroll.endSuccess(commRes.data.data.length, mescroll.num < commRes.data.count_page);
           }).catch((e) => {
             mescroll.endSuccess(0, false);
           })
@@ -232,24 +239,23 @@
         } else {
           // 继续上拉获取评论
           getCommentList(params).then(commRes => {
-            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.Data))
-            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
+            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.data))
+            mescroll.endSuccess(commRes.data.data.length, mescroll.num < commRes.data.count_page);
           }).catch(() => {
             mescroll.endErr();
           })
         }
       },
-
       /// 跳转用户信息页
       fnUserInfo(e) {
         uni.navigateTo({
-          url: `/pages/user-info/user-info?id=${e.ID}`
+          url: `/pages/user-info/user-info?user_id=${e.user_id}`
         })
       },
       /// 跳转点赞列表
       fnTopList() {
         uni.navigateTo({
-          url: `/pages/top-list/top-list?id=${this.videoID}&type=video`
+          url: `/pages/top-list/top-list?dynamic_id=${this.dynamic_id}&type=video`
         })
       },
       /// 跳转评论列表
@@ -260,59 +266,66 @@
       },
       /// 分享图标
       fnShare() {
-        this.videoInfoData.dynamic_id = this.videoID
-        this.videoInfoData.ObjectType = 'video'
+        this.videoInfoData.dynamic_id = this.dynamic_id;
         this.$refs.share.open(this.videoInfoData);
       },
-
       /// 详情点赞
       fnTop() {
         let filItem = {};
-        let params = {
-          objectid: this.videoID,
-          objecttype: 'video',
-        }
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
           if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 关注
           if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 广场
           if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
           if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 赞过
           if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
         }
         // 来自发现-视频跳转
         if (this.fromPage == 'find') {
-          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.videoID)[0];
+          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
         }
-        // 用户是否已经点过赞
-        if (filItem.UserTop) {
-
-        } else {
-          dynamicPraise(params).then(addRes => {
-            if (addRes.data.Data == false) return
-            filItem.TopCount++;
-            filItem.UserTop = true;
-            this.videoInfoData.TopCount++;
-            this.videoInfoData.UserTop = true;
-            // 点赞列表加头像
-            this.topListData.unshift({
-              User: this.$store.getters['user/getUserInfoData']
-            })
-          })
-        }
+		// 点赞动态
+		dynamicPraise(filItem.dynamic_id).then(res => {
+			uni.showToast({
+				title: res.msg,
+				icon: res.status == 1 ? 'success' : 'none'
+			});
+			if (!res.status) return;
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			// 用户是否点过赞
+			if (filItem.is_praise) {
+				filItem.praise_count--;
+				this.videoInfoData.is_praise = filItem.is_praise = false;
+				this.videoInfoData.praise_count--;
+				// 点赞列表减头像
+				let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
+				this.$store.commit('interact/setTopListData', filTopList);
+			} else {
+				filItem.praise_count++;
+				this.videoInfoData.is_praise = filItem.is_praise = true;
+				this.videoInfoData.praise_count++;
+				if (login_user) {
+					// 点赞列表加会员信息
+					this.topListData.unshift({
+						user_id: login_user.user_id,
+						user_info: login_user.user_info
+					});
+				}
+			}
+		});
       },
       /// 评论点赞
       fnTopComm(e) {
@@ -402,33 +415,33 @@
       fnSave() {
         let filItem = {};
         let params = {
-          objectid: this.videoID,
+          objectid: this.dynamic_id,
           objecttype: 'video',
         }
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
           if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 关注
           if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 广场
           if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
           if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
           // 赞过
           if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-            this.videoID)[0];
+            this.dynamic_id)[0];
         }
         // 来自发现-视频跳转
         if (this.fromPage == 'find') {
-          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.videoID)[0];
+          filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[0];
         }
         // 用户是否已经收藏
         if (filItem.UserSave) {
@@ -449,7 +462,7 @@
         this.$refs.comm.open({
           type: 'comment',
           content: this.$store.getters['getCommContentData'],
-          objectid: this.videoID,
+          objectid: this.dynamic_id,
           objecttype: 'video',
         });
       },
@@ -511,27 +524,27 @@
           if (this.fromPage == 'home') {
             // 推荐
             if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-              this.videoID)[0];
+              this.dynamic_id)[0];
             // 关注
             if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-              this.videoID)[0];
+              this.dynamic_id)[0];
             // 广场
             if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-              this.videoID)[0];
+              this.dynamic_id)[0];
           }
           // 来自用户详情
           if (this.fromPage == 'userinfo') {
             // 发布
             if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
               .dynamic_id ==
-              this.videoID)[0];
+              this.dynamic_id)[0];
             // 赞过
             if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-              this.videoID)[0];
+              this.dynamic_id)[0];
           }
           // 来自发现-视频跳转
           if (this.fromPage == 'find') {
-            filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.videoID)[0];
+            filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[0];
           }
           filItem.CommCount++
         })
@@ -549,7 +562,7 @@
                   type: 'reply',
                   user: e.User.NickName,
                   objecttype: e.ObjectType,
-                  objectid: this.videoID,
+                  objectid: this.dynamic_id,
                   objecttype: 'video',
                 });
                 this.replyParentID = e.TopParentID
@@ -561,7 +574,7 @@
                 break;
               case 2:
                 uni.navigateTo({
-                  url: `/pages/report/report?id=${this.videoID}&type=video`
+                  url: `/pages/report/report?id=${this.dynamic_id}&type=video`
                 })
                 break;
               case 3:
@@ -588,30 +601,30 @@
                     // 推荐
                     if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item =>
                       item.dynamic_id ==
-                      this.videoID)[0];
+                      this.dynamic_id)[0];
                     // 关注
                     if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item =>
                       item.dynamic_id ==
-                      this.videoID)[0];
+                      this.dynamic_id)[0];
                     // 广场
                     if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item =>
                       item.dynamic_id ==
-                      this.videoID)[0];
+                      this.dynamic_id)[0];
                   }
                   // 来自用户详情
                   if (this.fromPage == 'userinfo') {
                     // 发布
                     if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(
                       item => item.dynamic_id ==
-                      this.videoID)[0];
+                      this.dynamic_id)[0];
                     // 赞过
                     if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(
                       item => item.dynamic_id ==
-                      this.videoID)[0];
+                      this.dynamic_id)[0];
                   }
                   // 来自发现-视频跳转
                   if (this.fromPage == 'find') {
-                    filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.videoID)[
+                    filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[
                       0];
                   }
                   filItem.CommCount--

@@ -30,6 +30,7 @@
 							<view class="f24r cgray">{{ calAddress }}</view>
 						</view>
 					</view>
+					<!-- 如果登录会员就是发布者，那么不展示 -->
 					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{ calUser.is_follow ? '已关注' : '关注' }}</view>
 				</view>
 				<!-- 点赞列表 -->
@@ -203,16 +204,13 @@ export default {
 						this.$store.commit('word/setWordInfoData', res.data);
 						// 导航标题
 						uni.setNavigationBarTitle({
-							title: res.data.dynamic_title.Title
+							title: res.data.dynamic_title
 						});
 
 						// 获取点赞列表8项
 						return getDynamicPraises(params);
 					})
 					.then(topRes => {
-						console.log('---topRes---');
-						console.log(topRes);
-
 						this.$store.commit('interact/setTopListData', topRes.data.data);
 						params.count = mescroll.size;
 						// 获取评论列表
@@ -231,7 +229,7 @@ export default {
 				getCommentList(params)
 					.then(commRes => {
 						this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.data));
-						mescroll.endSuccess(commRes.data.data.length, commRes.data.data.length >= mescroll.size);
+						mescroll.endSuccess(commRes.data.data.length, mescroll.num < commRes.data.count_page);
 					})
 					.catch(() => {
 						mescroll.endErr();
@@ -287,9 +285,8 @@ export default {
 			}
 			// 来自发现-文章跳转
 			if (this.fromPage == 'find') {
-				filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
+				filItem = this.$store.getters['word/getWordListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 			}
-
 			// 点赞动态
 			dynamicPraise(filItem.dynamic_id).then(res => {
 				uni.showToast({

@@ -17,7 +17,7 @@
 							<view class="f24r cgray">{{calDatetime}}</view>
 						</view>
 					</view>
-					<!-- 如果是登录会员，那么不展示 -->
+					<!-- 如果登录会员就是发布者，那么不展示 -->
 					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.is_follow?'已关注':'关注'}}</view>
 				</view>
 				<!-- 中心内容 -->
@@ -538,7 +538,7 @@
 								})
 								break;
 							case 3:
-								delComment(e.ID).then(delRes => {
+								delComment(e.comment_id).then(delRes => {
 									if (delRes.data.Data == false) return
 									if (e.TopParentID > 0) {
 										// 有回复项删减
