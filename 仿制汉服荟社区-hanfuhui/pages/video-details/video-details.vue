@@ -142,7 +142,6 @@
         mescroll: null
       }
     },
-
     onLoad(options) {
       if (options && options.dynamic_id) {
         console.log(options);
@@ -156,7 +155,6 @@
         }
       }
     },
-
     computed: {
       // 视频信息
       videoInfoData() {

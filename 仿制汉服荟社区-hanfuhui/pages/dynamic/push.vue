@@ -64,7 +64,6 @@
 				donghua:'animated zoomInDown',
 				show:true,
 				yinsi:'所有人可见',
-                dynamic_content:'',
 				imageList: [],
 				image_files:[],
 				sourceTypeIndex: 2,
@@ -72,13 +71,21 @@
 				sizeTypeIndex: 2,
 				sizeType: ['压缩', '原图', '压缩或原图'],
 				countIndex: 8,
-				count: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+				count: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+				
+				// 发布信息
+				dynamic_title: '',
+				dynamic_content:'',
+				dynamic_type: 0,
 			}
+		},
+		onLoad(options) {
+			this.dynamic_type = options.dynamic_type || 0;
 		},
 		methods: {
 			onClickRight() {
 				this.$emit('click-right');
-				// if (this.pushing) return;
+				if (this.pushing) return;
 				this.pushing = true;
 				uni.showLoading({
 					title: '发布中',
@@ -88,6 +95,8 @@
 				// 启动封面
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
+						'dynamic_title': this.dynamic_title,
+						'dynamic_type': this.dynamic_type,
 						'dynamic_images': files.join(','),
 						'dynamic_content' : this.dynamic_content,
 					});

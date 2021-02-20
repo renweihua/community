@@ -1,6 +1,13 @@
 <template>
 	<view>
-		<mescroll-uni :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
+    <!-- 商城顶部导航栏 -->
+    <view class="posif posi-tlr0 z500 bgtheme">
+      <!-- #ifdef APP-PLUS -->
+      <view class="status-bar"></view>
+      <!-- #endif -->
+      <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;">静态页面！！！</view>
+    </view>
+		<mescroll-uni top="100" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 			<view class="list">
 				<view
 					class="flex_col"
