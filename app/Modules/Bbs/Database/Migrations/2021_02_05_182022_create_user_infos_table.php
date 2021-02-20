@@ -23,6 +23,7 @@ class CreateUserInfosTable extends Migration
             $table->string('user_avatar', 200)->default('')->comment('头像');
             $table->boolean('user_sex')->unsigned()->default(0)->comment('性别：0：男；1：女；2.保密');
             $table->integer('user_birth')->unsigned()->default(0)->comment('出生年月日');
+            $table->string('city_info', 200)->default('')->comment('城市信息：省份,城市');
             $table->integer('get_likes')->unsigned()->default(0)->comment('获赞数');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
