@@ -16,19 +16,3 @@ export async function getWordList(params = {
 }) {
   return await request('/Word/GetWordListForGood', 'get', params)
 }
-
-/**
- * 获取文章基本信息
- * @param {Number} id 参数 文章列表中ID
- */
-export async function getWordInfo(id = 3960) {
-  return await request(`/word/GetWord?id=${id}`)
-}
-
-/**
- * 获取文章内容信息
- * @param {Number} id 参数 文章列表中ID
- */
-export async function getWordContentHTML(wordid = 3960) {
-  return await request(`/word/GetWordContent?wordid=${wordid}`)
-}

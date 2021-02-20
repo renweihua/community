@@ -165,7 +165,7 @@
 						this.$store.commit('trend/setSquareData', arrayData)
 					}
 					// 数据获取成功关闭loading区
-					mescroll.endSuccess(res.data.data.length, res.data.data.length > 0);
+					mescroll.endSuccess(res.data.data.length, mescroll.num < res.data.count_page);
 				}).catch(() => {
 					// mescroll.endErr();
 					mescroll.endSuccess(0, false);

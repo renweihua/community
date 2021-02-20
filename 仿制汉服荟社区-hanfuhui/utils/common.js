@@ -9,22 +9,22 @@ export function dynamicDetailPage(dynamic, _this, fromPage = 'home'){
 	switch(dynamic.dynamic_type){
 		case 0: // 动态
 			uni.navigateTo({
-				url: `/pages/trend-details/trend-details?dynamic_id=${dynamic.dynamic_id}&fromPage={fromPage}&current=${_this.current}`
+				url: `/pages/trend-details/trend-details?dynamic_id=${dynamic.dynamic_id}&fromPage=${fromPage}&current=${_this.current}`
 			});
 			break;
 		case 1: // 图文
 			uni.navigateTo({
-				url: `/pages/word-details/word-details?dynamic_id=${dynamic.dynamic_id}&fromPage={fromPage}&current=${_this.current}`
+				url: `/pages/word-details/word-details?dynamic_id=${dynamic.dynamic_id}&fromPage=${fromPage}&current=${_this.current}`
 			});
 			break;
 		case 2: // 视频
 			uni.navigateTo({
-				url: `/pages/video-details/video-details?dynamic_id=${dynamic.dynamic_id}&fromPage={fromPage}&current=${_this.current}`
+				url: `/pages/video-details/video-details?dynamic_id=${dynamic.dynamic_id}&fromPage=${fromPage}&current=${_this.current}`
 			});
 			break;
 		case 3: // 相册/摄影
 			uni.navigateTo({
-				url: `/pages/album-details/album-details?dynamic_id=${e.dynamic_id}&fromPage={fromPage}&current=${this.current}`
+				url: `/pages/album-details/album-details?dynamic_id=${e.dynamic_id}&fromPage=${fromPage}&current=${this.current}`
 			});
 			break;
 	}

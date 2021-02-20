@@ -42,8 +42,7 @@
 				<view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
 					<block v-for="index in 8" :key="index">
 						<view class="mr8r">
-							<user-avatar v-if="topListData[index]" :src="topListData[index].user_info.user_avatar" :tag="''"
-							 size="sm" @click="fnUserInfo(topListData[index].user_info)"></user-avatar>
+							<user-avatar v-if="topListData[index-1]" :src="topListData[index-1].user_info.user_avatar" tag="" size="sm" @click="fnUserInfo(topListData[index-1].user_info)"></user-avatar>
 						</view>
 					</block>
 					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList"> {{ dynamic.is_praise ? '已赞' : '赞'}} <text
@@ -295,21 +294,33 @@
 						this.trendData.dynamic_id)[0];
 				}
 				// 用户是否已经点过赞
-				if (filItem.is_praise || false) {
-
-				} else {
-					dynamicPraise(filItem.dynamic_id).then(addRes => {
-						if (addRes.data.Data == false) return
+				dynamicPraise(filItem.dynamic_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+					let login_user = this.$store.getters['user/getLoginUserInfoData'];
+					if(filItem.is_praise){
+						filItem.praise_count--;
+						this.trendData.is_praise = filItem.is_praise = false;
+						this.trendData.praise_count--;
+						// 点赞列表减头像
+						let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
+						this.$store.commit('interact/setTopListData', filTopList)
+					}else{
 						filItem.praise_count++;
-						filItem.is_praise = true;
+						this.trendData.is_praise = filItem.is_praise = true;
 						this.trendData.praise_count++;
-						this.trendData.is_praise = true;
-						// 点赞列表加头像
-						this.topListData.unshift({
-							User: this.$store.getters['user/getUserInfoData']
-						})
-					})
-				}
+						if(login_user){
+							// 点赞列表加会员信息
+							this.topListData.unshift({
+								user_id: login_user.user_id,
+								user_info: login_user.user_info,
+							});
+						}
+					}
+				})
 			},
 			/// 评论点赞
 			fnTopComm(e) {

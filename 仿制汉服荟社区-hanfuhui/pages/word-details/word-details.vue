@@ -5,43 +5,43 @@
       <!-- 基本 -->
       <view class="mb18r bgwhite">
         <!-- 标题 -->
-        <view class="f36r c111 fbold plr18r ptb18r">{{wordInfoData.Title}}</view>
+        <view class="f36r c111 fbold plr18r ptb18r">{{wordInfoData.dynamic_title}}</view>
         <!-- 时间和发布者 -->
         <view class="plr18r">
           <text class="f24r cgray">{{calDatetime}}</text>
-          <text class="f28r ctheme-aux ml18r">{{!!calUser ? calUser.NickName : '#'}}</text>
+          <text class="f28r ctheme-aux ml18r">{{!!calUser ? calUser.nick_name : '#'}}</text>
         </view>
         <!-- 内容 -->
         <view class="f28r c555 fword plr18r ptb18r">
-          <u-parse :content="wordContentData" :loading="!wordContentData"></u-parse>
+          <u-parse :content="wordInfoData.dynamic_content" :loading="!wordInfoData.dynamic_content"></u-parse>
         </view>
         <!-- 用户信息 -->
         <view class="flexr-jsb flex-aic plr18r ptb18r br8r bgf8 mtb18r mlr18r">
           <view class="flex" @tap="fnUserInfo(calUser)">
-            <user-avatar :src="calUserAvater" :tag="!!calUser ? calUser.AuthenticateCode : ''" size="md"></user-avatar>
+            <user-avatar :src="calUserAvater" tag="" size="md"></user-avatar>
             <view class="flexc-jsa ml28r">
               <view>
-                <text class="f28r fbold mr18r">{{!!calUser ? calUser.NickName : '#'}}</text>
-                <i-icon :type="calUser.Gender == '男' ?'nan':'nv' " size="28" :color="calUser.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
+                <text class="f28r fbold mr18r">{{!!calUser ? calUser.nick_name : '#'}}</text>
+                <i-icon v-if="[0, 1].indexOf(calUser.user_sex) > -1" :type="calUser.user_sex_text == '男' ? 'nan':'nv' " size="28"
+                 :color="calUser.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
               </view>
               <view class="f24r cgray">{{calAddress}}</view>
             </view>
           </view>
-          <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.UserAtte?'已关注':'关注'}}</view>
+          <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.is_follow?'已关注':'关注'}}</view>
         </view>
         <!-- 点赞列表 -->
         <view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
           <block v-for="index in 8" :key="index">
             <view class="mr8r">
-              <user-avatar v-if="topListData[index]" :src="topListData[index].User.HeadUrl +'_100x100.jpg'" :tag="topListData[index].User.AuthenticateCode"
-                size="sm" @click="fnUserInfo(topListData[index].User)"></user-avatar>
+              <user-avatar v-if="topListData[index-1]" :src="topListData[index-1].user_info.user_avatar" tag="" size="sm" @click="fnUserInfo(topListData[index-1].user_info)"></user-avatar>
             </view>
           </block>
-          <view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">赞 <text class="f24r cbrown ml18r">{{wordInfoData.TopCount}}</text></view>
+          <view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">{{ wordInfoData.is_praise ? '已赞' : '赞'}} <text class="f24r cbrown ml18r">{{wordInfoData.praise_count}}</text></view>
         </view>
       </view>
       <!-- 评论区 -->
-      <view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{wordInfoData.CommCount || 0}}）</view>
+      <view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{wordInfoData.comment_count || 0}}）</view>
       <block v-for="(commData,index) in commentListData" :key="index">
         <comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
       </block>
@@ -54,12 +54,12 @@
         <text class="f28r cgray ml8r">想说点什么？</text>
       </view>
       <view class="plr28r bls2r brs2r" @tap="fnTop">
-        <i-icon type="dianzan" size="48" :color="wordInfoData.UserTop?'#FF6699':'#8F8F94'"></i-icon>
-        <text class="f28r cgray ml8r">{{wordInfoData.TopCount || 0}}</text>
+        <i-icon type="dianzan" size="48" :color="wordInfoData.is_praise?'#FF6699':'#8F8F94'"></i-icon>
+        <text class="f28r cgray ml8r">{{wordInfoData.praise_count || 0}}</text>
       </view>
       <view class="plr28r" @tap="fnSave">
-        <i-icon type="shoucang" size="48" :color="wordInfoData.UserSave?'#FF6699':'#8F8F94'"></i-icon>
-        <text class="f28r cgray ml8r">{{wordInfoData.SaveCount || 0}}</text>
+        <i-icon type="shoucang" size="48" :color="wordInfoData.is_collection?'#FF6699':'#8F8F94'"></i-icon>
+        <text class="f28r cgray ml8r">{{wordInfoData.collection_count || 0}}</text>
       </view>
       <view class="pl28r pr8r bls2r" @tap="fnShare">
         <i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon>
@@ -75,12 +75,11 @@
 
 <script>
   import {
-    fnFormatLocalDate
+    fnFormatDate
   } from "@/utils/CommonUtil.js"
   import {
-    getWordInfo,
-    getWordContentHTML
-  } from "@/api/WordServer.js"
+    getDynamicInfo
+  } from "@/api/TrendServer.js"
   import {
     getDynamicPraises,
     dynamicPraise,
@@ -110,11 +109,10 @@
       CommInput,
       uParse
     },
-
     data() {
       return {
         // 文章项ID
-        wordID: -1,
+        dynamic_id: -1,
         // 跳转来源页
         fromPage: '',
         // 来源页标签数据下标
@@ -125,15 +123,14 @@
         mescroll: null
       }
     },
-
     onLoad(options) {
-      if (options && options.id) {
+      if (options && options.dynamic_id) {
         console.log(options);
         uni.showLoading({
           title: "加载中",
           mask: true
         })
-        this.wordID = parseInt(options.id);
+        this.dynamic_id = parseInt(options.dynamic_id);
         setTimeout(() => {
           uni.hideLoading()
           if (typeof options.fromPage == 'string') this.fromPage = options.fromPage
@@ -152,13 +149,12 @@
       wordInfoData() {
         return this.$store.getters['word/getWordInfoData']
       },
-      // 文章内容数据
-      wordContentData() {
-        return this.$store.getters['word/getWordContentData']
-      },
       // 动态点赞列表数据
       topListData() {
-        return this.$store.getters['interact/getDynamicPraisesData']
+		  console.log('---topListData---')
+		  let praises = this.$store.getters['interact/getDynamicPraisesData'];
+		  console.log(praises);
+        return praises;
       },
       // 动态评论列表数据
       commentListData() {
@@ -166,28 +162,25 @@
       },
       // 计算是否得到用户信息
       calUser() {
-        return this.wordInfoData.User || false
+        return this.wordInfoData.user_info || false
       },
       /// 计算显示用户头像
       calUserAvater() {
-        return !!this.calUser ? this.calUser.HeadUrl + '_200x200.jpg' : '/static/default_avatar.png'
+        return !!this.calUser ? this.calUser.user_avatar : '/static/default_avatar.png'
       },
-      /// 时间格式 2019-12-03 20:12
+      /// 时间格式
       calDatetime() {
-        let now = new Date(this.wordInfoData.Datetime || '2020-01-01 01:01');
-        return fnFormatLocalDate(now);
+        return fnFormatDate(this.wordInfoData.created_time);
       },
       /// 地址逗号换空格
       calAddress() {
         if (!!this.calUser) {
-          return this.calUser.CityNames ? this.calUser.CityNames.split(',').join(' ') : '未知 未知'
+          return this.calUser.city_info ? this.calUser.city_info.split(',').join(' ') : ''
         } else {
-          return '未知 未知'
+          return ''
         }
       }
-      //
     },
-
     methods: {
       /// mescroll组件初始化完成的回调
       mescrollInit(mescroll) {
@@ -196,34 +189,40 @@
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
         let params = {
-          objectid: this.wordID,
-          objecttype: 'word',
+          dynamic_id: this.dynamic_id,
           page: mescroll.num,
           limit: mescroll.size
         }
+		console.log(mescroll);
         if (mescroll.num == 1) {
           // 获取详情信息
-          getWordInfo(this.wordID).then(wordRes => {
-            this.$store.commit('word/setWordInfoData', wordRes.data.Data)
+          getDynamicInfo(this.dynamic_id).then(res => {
+			  if(!res.status){
+					uni.showToast({
+						title: res.msg,
+						icon: 'none'
+					})
+					return;
+			  }
+            this.$store.commit('word/setWordInfoData', res.data)
             // 导航标题
             uni.setNavigationBarTitle({
-              title: wordRes.data.Data.Title
+              title: res.data.dynamic_title.Title
             });
-            // 获取详情内容
-            return getWordContentHTML(this.wordID)
-          }).then(contentRes => {
-            this.$store.commit('word/setWordContentData', contentRes.data.Data)
-            params.count = 8
+			
             // 获取点赞列表8项
             return getDynamicPraises(params)
           }).then(topRes => {
-            this.$store.commit('interact/setTopListData', topRes.data.Data)
+			  console.log('---topRes---')
+			  console.log(topRes);
+			  
+            this.$store.commit('interact/setTopListData', topRes.data.data)
             params.count = mescroll.size
             // 获取评论列表
             return getCommentList(params)
           }).then(commRes => {
-            this.$store.commit('interact/setCommentListData', commRes.data.Data)
-            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
+            this.$store.commit('interact/setCommentListData', commRes.data.data)
+			mescroll.endSuccess(commRes.data.data.length, mescroll.num < commRes.data.count_page);
           }).catch(() => {
             mescroll.endSuccess(0, false);
           })
@@ -231,24 +230,23 @@
         } else {
           // 继续上拉获取评论
           getCommentList(params).then(commRes => {
-            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.Data))
-            mescroll.endSuccess(commRes.data.Data.length, commRes.data.Data.length >= mescroll.size);
+            this.$store.commit('interact/setCommentListData', this.commentListData.concat(commRes.data.data))
+            mescroll.endSuccess(commRes.data.data.length, commRes.data.data.length >= mescroll.size);
           }).catch(() => {
             mescroll.endErr();
           })
         }
       },
-
       /// 跳转用户信息页
       fnUserInfo(e) {
         uni.navigateTo({
-          url: `/pages/user-info/user-info?id=${e.ID}`
+          url: `/pages/user-info/user-info?user_id=${e.user_id}`
         })
       },
       /// 跳转点赞列表
       fnTopList() {
         uni.navigateTo({
-          url: `/pages/top-list/top-list?id=${this.wordID}&type=word`
+          url: `/pages/top-list/top-list?id=${this.dynamic_id}&type=word`
         })
       },
       /// 跳转评论列表
@@ -259,7 +257,7 @@
       },
       /// 分享图标
       fnShare() {
-        this.wordInfoData.dynamic_id = this.wordID
+        this.wordInfoData.dynamic_id = this.dynamic_id
         this.wordInfoData.ObjectType = 'word'
         this.$refs.share.open(this.wordInfoData);
       },
@@ -267,50 +265,64 @@
       fnTop() {
         let filItem = {};
         let params = {
-          objectid: this.wordID,
+          objectid: this.dynamic_id,
           objecttype: 'word',
         }
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
           if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 关注
           if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 广场
           if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
           if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 赞过
           if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
         }
         // 来自发现-文章跳转
         if (this.fromPage == 'find') {
-          filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.wordID)[0];
+          filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
         }
-        // 用户是否已经点过赞
-        if (filItem.UserTop) {
-
-        } else {
-          dynamicPraise(params).then(addRes => {
-            if (addRes.data.Data == false) return
-            filItem.TopCount++;
-            filItem.UserTop = true;
-            this.wordInfoData.TopCount++;
-            this.wordInfoData.UserTop = true;
-            // 点赞列表加头像
-            this.topListData.unshift({
-              User: this.$store.getters['user/getUserInfoData']
-            })
-          })
-        }
+		
+		// 点赞动态
+		dynamicPraise(filItem.dynamic_id).then(res => {
+			uni.showToast({
+				title: res.msg,
+				icon: res.status == 1 ? 'success' : 'none'
+			});
+			if (!res.status) return;
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			// 用户是否点过赞
+			if (filItem.is_praise) {
+				filItem.praise_count--;
+				this.wordInfoData.is_praise = filItem.is_praise = false;
+				this.wordInfoData.praise_count--;
+				// 点赞列表减头像
+				let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
+				this.$store.commit('interact/setTopListData', filTopList)
+			} else {
+				filItem.praise_count++;
+				this.wordInfoData.is_praise = filItem.is_praise = true;
+				this.wordInfoData.praise_count++;
+				if(login_user){
+					// 点赞列表加会员信息
+					this.topListData.unshift({
+						user_id: login_user.user_id,
+						user_info: login_user.user_info,
+					});
+				}
+			}
+		});
       },
       /// 评论点赞
       fnTopComm(e) {
@@ -400,33 +412,33 @@
       fnSave() {
         let filItem = {};
         let params = {
-          objectid: this.wordID,
+          objectid: this.dynamic_id,
           objecttype: 'word',
         }
         // 来自主要跳转
         if (this.fromPage == 'home') {
           // 推荐
           if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 关注
           if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 广场
           if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
         }
         // 来自用户详情
         if (this.fromPage == 'userinfo') {
           // 发布
           if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
           // 赞过
           if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-            this.wordID)[0];
+            this.dynamic_id)[0];
         }
         // 来自发现-文章跳转
         if (this.fromPage == 'find') {
-          filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.wordID)[0];
+          filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
         }
         // 用户是否已经收藏
         if (filItem.UserSave) {
@@ -446,7 +458,7 @@
         this.$refs.comm.open({
           type: 'comment',
           content: this.$store.getters['getCommContentData'],
-          objectid: this.wordID,
+          objectid: this.dynamic_id,
           objecttype: 'word',
         });
       },
@@ -508,27 +520,27 @@
           if (this.fromPage == 'home') {
             // 推荐
             if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item => item.dynamic_id ==
-              this.wordID)[0];
+              this.dynamic_id)[0];
             // 关注
             if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item => item.dynamic_id ==
-              this.wordID)[0];
+              this.dynamic_id)[0];
             // 广场
             if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item => item.dynamic_id ==
-              this.wordID)[0];
+              this.dynamic_id)[0];
           }
           // 来自用户详情
           if (this.fromPage == 'userinfo') {
             // 发布
             if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(item => item
               .dynamic_id ==
-              this.wordID)[0];
+              this.dynamic_id)[0];
             // 赞过
             if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id ==
-              this.wordID)[0];
+              this.dynamic_id)[0];
           }
           // 来自发现-文章跳转
           if (this.fromPage == 'find') {
-            filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.wordID)[0];
+            filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
           }
           filItem.CommCount++
         })
@@ -546,7 +558,7 @@
                   type: 'reply',
                   user: e.User.NickName,
                   objecttype: e.ObjectType,
-                  objectid: this.wordID,
+                  objectid: this.dynamic_id,
                   objecttype: 'word',
                 });
                 this.replyParentID = e.TopParentID
@@ -558,7 +570,7 @@
                 break;
               case 2:
                 uni.navigateTo({
-                  url: `/pages/report/report?id=${this.wordID}&type=word`
+                  url: `/pages/report/report?id=${this.dynamic_id}&type=word`
                 })
                 break;
               case 3:
@@ -585,30 +597,30 @@
                     // 推荐
                     if (this.current == 0) filItem = this.$store.getters['trend/getMainData'].filter(item =>
                       item.dynamic_id ==
-                      this.wordID)[0];
+                      this.dynamic_id)[0];
                     // 关注
                     if (this.current == 1) filItem = this.$store.getters['trend/getAtteData'].filter(item =>
                       item.dynamic_id ==
-                      this.wordID)[0];
+                      this.dynamic_id)[0];
                     // 广场
                     if (this.current == 2) filItem = this.$store.getters['trend/getSquareData'].filter(item =>
                       item.dynamic_id ==
-                      this.wordID)[0];
+                      this.dynamic_id)[0];
                   }
                   // 来自用户详情
                   if (this.fromPage == 'userinfo') {
                     // 发布
                     if (this.current == 0) filItem = this.$store.getters['user/getUserPublishListData'].filter(
                       item => item.dynamic_id ==
-                      this.wordID)[0];
+                      this.dynamic_id)[0];
                     // 赞过
                     if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(
                       item => item.dynamic_id ==
-                      this.wordID)[0];
+                      this.dynamic_id)[0];
                   }
                   // 来自发现-文章跳转
                   if (this.fromPage == 'find') {
-                    filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.wordID)[
+                    filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[
                       0];
                   }
                   filItem.CommCount--
