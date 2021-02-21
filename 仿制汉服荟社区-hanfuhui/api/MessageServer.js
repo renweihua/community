@@ -32,3 +32,16 @@ export async function getMessageListByType(params = {
 }) {
   return await request('/message/GetMessageList', 'get', params)
 }
+
+
+
+/**
+ * 我的点赞消息通知
+ */
+export async function getPraiseByNotify(params = {
+	search_month:'',
+  page: 1,
+  limit: 20,
+}) {
+  return await request('/user/getPraiseByNotify', 'get', params)
+}

@@ -39,29 +39,30 @@ class NotifyService extends Service
      * 我的点赞消息通知
      *
      * @param  int  $login_user_id
-     * @param       $request
      *
      * @return array
      */
-    public function getPraiseByNotify(int $login_user_id, $request)
+    public function getPraiseByNotify(int $login_user_id)
     {
-        return $this->getNotify($login_user_id, $request, ['target_type'  => Notify::TARGET_TYPE['DYNAMIC'], 'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['PRAISE']]);
+        return $this->getNotify($login_user_id, ['target_type'  => Notify::TARGET_TYPE['DYNAMIC'], 'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['PRAISE']]);
     }
 
-    public function getCommentByNotify(int $login_user_id, $request)
+    public function getCommentByNotify(int $login_user_id)
     {
-        return $this->getNotify($login_user_id, $request, function($query){
+        return $this->getNotify($login_user_id, function($query){
             $query->where(['notify_type' => Notify::NOTIFY_TYPE['INTERACT_MSG'], 'target_type'  => Notify::TARGET_TYPE['DYNAMIC']])->where(function($query){
                 $query->where('dynamic_type', Notify::DYNAMIC_TARGET_TYPE['COMMENT'])->whereOr('dynamic_type', Notify::DYNAMIC_TARGET_TYPE['REPLY_COMMENT']);
             });
         });
     }
 
-    protected function getNotify(int $login_user_id, $request, $where = [])
+    protected function getNotify(int $login_user_id, $where = [], $default_search_month = '')
     {
-        $search_month = $request->input('search_month', '');
-        // laravel 默认空数据会自动转换成Null
-        $search_month = empty($search_month) ? '' : $search_month;
+        if (empty($default_search_month)){
+            $search_month = request()->input('search_month', '');
+            // laravel 默认空数据会自动转换成Null
+            $search_month = empty($search_month) ? '' : $search_month;
+        }else $search_month = $default_search_month;
 
         $notifyInstance = Notify::getInstance();
 
@@ -116,8 +117,8 @@ class NotifyService extends Service
         if (empty($lists['data'])) {
             // 大于最小月份时，继续查询
             if ( date(Notify::MONTH_FORMAT, strtotime($search_month)) > Notify::MIN_TABLE ) {
-                $search_month = date('Y-m', strtotime('-1 month', strtotime($search_month)));
-                return $this->getNotify($login_user_id, $search_month);
+                $default_search_month = date('Y-m', strtotime('-1 month', strtotime($search_month)));
+                return $this->getNotify($login_user_id, $where, $default_search_month);
             }
             $lists['month_table'] = $search_month;
         } else {

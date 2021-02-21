@@ -94,24 +94,24 @@ class Notify extends MonthModel
                     default:
                         switch ($v->dynamic_type){
                             case self::DYNAMIC_TARGET_TYPE['PRAISE']: // 点赞
-                                $v->explain = '点赞了您的‘' . $v->relation->dynamic_title . '’';
+                                $v->explain = '点赞了您的动态';
                                 break;
                             case self::DYNAMIC_TARGET_TYPE['COLLECTION']: // 收藏
-                                $v->explain = '喜欢了您的‘' . $v->relation->dynamic_title . '’';
+                                $v->explain = '喜欢了您的动态';
                                 break;
                             case self::DYNAMIC_TARGET_TYPE['COMMENT']: // 评论
-                                $v->explain = '评论了您的‘' . $v->relation->dynamic_title . '’';
+                                $v->explain = '评论了您的动态';
                                 break;
-                            case self::SHARE_DYNAMIC_TYPE: // 分享动态
-                                $v->explain = '分享了您的‘' . $v->relation->dynamic_title . '’';
+                            case self::DYNAMIC_TARGET_TYPE['SHARE']: // 分享动态
+                                $v->explain = '分享了您的动态';
                                 break;
-                            case self::COMMENT_PRAISE_DYNAMIC_TYPE: // 点赞评论
+                            case self::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE']: // 点赞评论
                                 $v->explain = '喜欢了您的评论';
                                 break;
                             case self::DYNAMIC_TARGET_TYPE['REPLY_COMMENT']:
                                 $v->explain = '回复了您的评论';
                                 break;
-                            case self::DELETE_DYNAMIC_TYPE:
+                            case self::DYNAMIC_TARGET_TYPE['DELETE']:
                                 $v->explain = '您有一个动态被管理员删除';
                                 break;
                         }

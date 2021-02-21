@@ -25,7 +25,7 @@
 
 <script>
 import { getSignInList } from '@/api/HanbiServer.js';
-import { fnFormatLocalDate } from '@/utils/CommonUtil.js';
+import { fnFormatLocalDate, getYearMonth } from '@/utils/CommonUtil.js';
 
 export default {
 	computed: {
@@ -40,9 +40,7 @@ export default {
 		};
 	},
 	onLoad() {
-		let date = new Date();
-		this.search_month = date.getFullYear() + '-' + (date.getMonth() + 1);
-		console.log(this.search_month);
+		this.search_month = getYearMonth();
 	},
 	methods: {
 		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
@@ -55,22 +53,22 @@ export default {
 				.then(res => {
 					let lists = res.data;
 					
-					if (mescroll.num == 1) {
-						this.$store.commit('setSigninListData', lists.data);
-					} else {
-						this.$store.commit('setSigninListData', this.signinListData.concat(lists.data));
-					}
+					this.$store.commit('setSigninListData', this.signinListData.concat(lists.data));
 					
 					/**
 					 * 如果当前月份记录查询完成，那么继续查询上一个月份的
 					 */
-					let search_month = this.search_month;
 					this.search_month = lists.month_table;
+					// 如果月份不一致，那么page需要重置
+					if(search_month != this.search_month){
+						mescroll.setPageNum(1);
+					}
+					console.log(mescroll)
 					
-					if(lists.data.length <= 0 && search_month == this.search_month){
+					if (lists.data.length <= 0 && search_month == this.search_month) {
 						// 数据加载完毕
 						mescroll.endSuccess(0, false);
-					}else{
+					} else {
 						mescroll.endSuccess(lists.per_page, true);
 					}
 				})
