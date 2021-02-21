@@ -81,16 +81,18 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     // 登录会员
     Route::prefix('')->middleware([CheckAuth::class])->namespace('User')->group(function () {
         // 文件上传
-        Route::any('upload_file', 'UploadController@file');
-        // 多图批量上传
-        Route::any('upload_files', 'UploadController@files');
+        Route::post('upload_file', 'UploadController@file');
+        // 批量文件上传
+        Route::post('upload_files', 'UploadController@files');
 
         /**
          * 好友相关
          */
         Route::prefix('user')->group(function () {
-            // 我的关注
+            // 我关注的会员
             Route::get('/follows', 'FriendController@follows');
+            // 我关注的荟吧
+            Route::get('/follow_topics', 'TopicController@follows');
             // 关注指定会员
             Route::post('/follow', 'FriendController@follow');
             // 我的粉丝
@@ -101,9 +103,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::post('/signIn', 'SignController@signIn');
             // 指定月份的签到状态
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
-
             // 编辑个人资料
             Route::put('/update', 'IndexController@update');
+
+
 
             // 指定会员是否在黑名单：前期先测试数据返回
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
@@ -119,7 +122,7 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/getPraises', 'DynamicController@getPraises');
             // 点赞 - 动态
             Route::post('/praise', 'DynamicController@praise');
-            // 点赞 - 动态
+            // 收藏 - 动态
             Route::post('/collection', 'DynamicController@collection');
             // 评论 - 动态
             Route::post('/comment', 'DynamicController@comment');
@@ -145,5 +148,4 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         // Banner图
         Route::get('banners', 'WebSitesController@banners');
     });
-
 });

@@ -163,4 +163,17 @@ class TopicService extends Service
             return false;
         }
     }
+
+    /**
+     * 指定会员关注的荟吧列表
+     *
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
+    public function getFollows(int $login_user_id)
+    {
+        $lists = TopicFollow::where('user_id', $login_user_id)->with('topic')->paginate($this->getLimit(request()->input('limit', 10)));
+        return $this->getPaginateFormat($lists);
+    }
 }

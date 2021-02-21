@@ -21,4 +21,9 @@ class TopicFollow extends Model
     {
         return $this->where('user_id', $login_user)->where('topic_id', $topic_id)->first();
     }
+
+    public function topic()
+    {
+        return $this->hasOne(Topic::class, 'topic_id', $this->primaryKey);
+    }
 }
