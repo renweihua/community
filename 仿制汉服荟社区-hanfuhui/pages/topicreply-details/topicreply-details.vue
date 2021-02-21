@@ -337,10 +337,10 @@
 		  let login_user = this.$store.getters['user/getLoginUserInfoData'];
         // 用户是否已经关注
         if (e.is_follow) {
-            followUser(e.user_id).then(follow => {
+            followUser(e.user_id).then(res => {
           uni.showToast({
-            title: follow.msg,
-            icon: follow.status == 1 ? 'success' : 'none'
+            title: res.msg,
+            icon: 'none'
           });
           if (!res.status) return;
             this.topicReplyInfoData.user_info.is_follow = false
@@ -376,10 +376,10 @@
             this.$store.commit('user/setLoginUserInfoData', login_user);
           })
         } else {
-          followUser(e.user_id).then(follow => {
+          followUser(e.user_id).then(res => {
           uni.showToast({
-            title: follow.msg,
-            icon: follow.status == 1 ? 'success' : 'none'
+            title: res.msg,
+            icon: res.status == 1 ? 'success' : 'none'
           });
           if (!res.status) return;
             this.topicReplyInfoData.user_info.is_follow = true

@@ -280,6 +280,10 @@ export default {
 					success: res => {
 						if (res.confirm) {
 							followUser(e.friend_id).then(result => {
+								uni.showToast({
+									title: result.msg,
+									icon: 'none'
+								});
 								if (!result.status) return;
 								this.userAtteUserListData.filter(item => item.friend_id == e.friend_id).map(item => (item.cross_correlation = false));
 								// 登录用户关注数减
@@ -293,6 +297,10 @@ export default {
 				return;
 			} else {
 				followUser(e.friend_id).then(result => {
+					uni.showToast({
+						title: result.msg,
+						icon: result.status == 1 ? 'success' : 'none'
+					});
 					if (!result.status) return;
 					this.userAtteUserListData.filter(item => item.friend_id == e.friend_id).map(item => (item.cross_correlation = true));
 					// 登录用户关注数加

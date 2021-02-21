@@ -101,8 +101,12 @@
 						content: '确定要取消关注TA吗？',
 						success: res => {
 							if (res.confirm) {
-                                followUser(e.user_id).then(res => {
-									if (!res.status) return
+                                followUser(e.user_id).then(follow => {
+									uni.showToast({
+										title: follow.msg,
+										icon: 'none'
+									});
+									if (!follow.status) return
 									this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = false)
 									// 登录用户关注数减
 									if(!login_user.user_info) return;
@@ -114,8 +118,12 @@
 					})
 					return
 				} else {
-					followUser(e.user_id).then(res => {
-						if (!res.status) return
+					followUser(e.user_id).then(follow => {
+						uni.showToast({
+							title: follow.msg,
+							icon: follow.status == 1 ? 'success' : 'none'
+						});
+						if (!follow.status) return
 						this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = true)
 						// 登录用户关注数加
 						if(!login_user.user_info) return;

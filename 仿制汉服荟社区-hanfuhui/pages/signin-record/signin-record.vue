@@ -25,6 +25,7 @@
 
 <script>
 import { getSignInList } from '@/api/HanbiServer.js';
+import { fnFormatLocalDate } from '@/utils/CommonUtil.js';
 
 export default {
 	computed: {
@@ -77,16 +78,17 @@ export default {
 					mescroll.endErr();
 				});
 		},
-		/// 计算格式时间 2019-02-02
+		/// 计算格式时间
 		calDatetime(str) {
-			let _data = new Date(str * 1000);
-			let year = _data.getFullYear(); //年
-			let month = _data.getMonth() + 1; //月
-			let day = _data.getDate(); //日
-			// 个位补零
-			month = month < 10 ? '0' + month : month;
-			day = day < 10 ? '0' + day : day;
-			return `${year}-${month}-${day}`;
+			return fnFormatLocalDate(str * 1000);
+			// let _data = new Date(str * 1000);
+			// let year = _data.getFullYear(); //年
+			// let month = _data.getMonth() + 1; //月
+			// let day = _data.getDate(); //日
+			// // 个位补零
+			// month = month < 10 ? '0' + month : month;
+			// day = day < 10 ? '0' + day : day;
+			// return `${year}-${month}-${day}`;
 		}
 	}
 };

@@ -352,7 +352,7 @@ export default {
 							followUser(e.user_id).then(follow => {
 								uni.showToast({
 									title: follow.msg,
-									icon: follow.status == 1 ? 'success' : 'none'
+									icon: 'none'
 								});
 								if (!follow.status) return;
 								this.atteData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));

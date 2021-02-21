@@ -414,10 +414,10 @@ export default {
 					content: '确定要取消关注TA吗？',
 					success: res => {
 						if (res.confirm) {
-							followUser(e.user_info.user_id).then(delRes => {
+							followUser(e.user_info.user_id).then(follow => {
 								uni.showToast({
 									title: follow.msg,
-									icon: follow.status == 1 ? 'success' : 'none'
+									icon: 'none'
 								});
 								if (!follow.status) return;
 								this.huibaHottestListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = false));

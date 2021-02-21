@@ -338,7 +338,7 @@ export default {
 				followUser(e.user_id).then(res => {
 					uni.showToast({
 						title: res.msg,
-						icon: res.status == 1 ? 'success' : 'none'
+						icon: 'none'
 					});
 					if (!res.status) return;
 					this.wordInfoData.user_info.is_follow = false;

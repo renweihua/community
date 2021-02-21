@@ -336,7 +336,7 @@ export default {
 				followUser(e.user_id).then(res => {
 					uni.showToast({
 						title: res.msg,
-						icon: res.status == 1 ? 'success' : 'none'
+						icon: 'none'
 					});
 					if (!res.status) return;
 					this.videoInfoData.user_info.user_id = false;

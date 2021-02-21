@@ -176,12 +176,17 @@ export default {
 		},
 		/// 展卡更多-关注
 		fnCardFollow(e) {
+			console.log(e);
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户被关注
 			if (e.user_info.is_follow) {
 				followUser(e.user_info.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: 'none'
+					});
 					if (!res.status) return;
-					this.userSaveAllListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = false));
+					this.userSaveAllListData.filter(item => item.dynamic.user_info.user_id == e.user_info.user_id).map(item => (item.dynamic.user_info.is_follow = false));
 					// 登录用户关注数减
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count--;
@@ -189,8 +194,12 @@ export default {
 				});
 			} else {
 				followUser(e.user_info.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
 					if (!res.status) return;
-					this.userSaveAllListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = true));
+					this.userSaveAllListData.filter(item => item.dynamic.user_info.user_id == e.user_info.user_id).map(item => (item.dynamic.user_info.is_follow = true));
 					// 登录用户关注数加
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count++;

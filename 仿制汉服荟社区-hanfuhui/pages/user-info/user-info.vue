@@ -297,8 +297,12 @@
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				// 用户被关注
 				if (this.tempUserInfoData.is_follow) {
-                    getLoginUserInfoData(this.tempUserInfoData.user_id).then(delRes => {
-						if (delRes.data.Data == false) return
+                    followUser(this.tempUserInfoData.user_id).then(res => {
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						});
+						if (!res.status) return
 						this.userPublishListData.map(item => item.user_info.is_follow = false)
 						this.tempUserInfoData.is_follow = false;
 						// 登录用户关注数减
@@ -307,8 +311,12 @@
 						this.$store.commit('user/setLoginUserInfoData', login_user);
 					})
 				} else {
-					followUser(this.tempUserInfoData.user_id).then(addRes => {
-						if (addRes.data.Data == false) return
+					followUser(this.tempUserInfoData.user_id).then(res => {
+						uni.showToast({
+							title: res.msg,
+							icon: res.status == 1 ? 'success' : 'none'
+						});
+						if (!res.status) return
 						this.userPublishListData.map(item => item.user_info.is_follow = true)
 						this.tempUserInfoData.is_follow = true;
 						// 登录用户关注数减
