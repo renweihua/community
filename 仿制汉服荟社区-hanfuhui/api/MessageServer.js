@@ -35,8 +35,12 @@ export async function getMessageListByType(params = {
 
 
 
+
+
+
+
 /**
- * 我的点赞消息通知
+ * 我的{点赞}消息通知
  */
 export async function getPraiseByNotify(params = {
 	search_month:'',
@@ -44,4 +48,16 @@ export async function getPraiseByNotify(params = {
   limit: 20,
 }) {
   return await request('/user/getPraiseByNotify', 'get', params)
+}
+
+
+/**
+ * 我的{提醒|系统}消息通知
+ */
+export async function getSystemByNotify(params = {
+	search_month:'',
+  page: 1,
+  limit: 20,
+}) {
+  return await request('/user/getSystemByNotify', 'get', params)
 }

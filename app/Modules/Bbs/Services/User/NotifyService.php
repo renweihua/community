@@ -126,6 +126,10 @@ class NotifyService extends Service
                     $item->relation = (object)$user_infos[$item->sender_id];
                     $item->explain = '关注了您';
                     break;
+                default:
+                    $item->relation = (object)[];
+                    $item->explain = $item->notify_content;
+                    break;
             }
         }
 

@@ -2,24 +2,24 @@
 	<view>
 		<!-- 滚动内容区 -->
 		<mescroll-uni @down="downCallback" @up="upCallback">
-			<block v-for="(top, index) in topList" :key="index">
+			<block v-for="(item, index) in topList" :key="index">
 				<view class="plr18r ptb18r bgwhite mb18r">
 					<view class="flex plr18r ptb18r bbs2r">
-						<user-avatar @click="fnUserInfo(top.sender)" :src="top.sender.user_avatar" tag="" size="md"></user-avatar>
+						<user-avatar @click="fnUserInfo(item.sender)" :src="item.sender.user_avatar" tag="" size="md"></user-avatar>
 						<view class="flexc-jsa ml28r flex-gitem">
 							<view>
-								<text class="f28r fbold mr18r">{{ top.sender.nick_name }}</text>
-								<i-icon v-if="[0, 1].indexOf(top.sender.user_sex) > -1" :type="top.sender.user_sex_text == '男' ? 'nan':'nv' " size="28"
-								 :color="top.sender.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
+								<text class="f28r fbold mr18r">{{ item.sender.nick_name }}</text>
+								<i-icon v-if="[0, 1].indexOf(item.sender.user_sex) > -1" :type="item.sender.user_sex_text == '男' ? 'nan':'nv' " size="28"
+								 :color="item.sender.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
 							</view>
-							<view class="f24r cgray">{{ calDateTime(top.created_time) }}</view>
+							<view class="f24r cgray">{{ calDateTime(item.created_time) }}</view>
 						</view>
-						<view class="f28r cgray flex-asc">{{ top.explain }}</view>
+						<view class="f28r cgray flex-asc">{{ item.explain }}</view>
 					</view>
 					<!-- 动态 -->
-					<view class="flex flex-ais br4r" @tap="fnOpenInfo(top)">
-						<image class="hw128r br4r" v-if="top.relation.dynamic_images" :src="top.relation.dynamic_images[0]" mode="aspectFill"></image>
-						<view class="flex-fitem f28r ptb8r plr18r bgf8 c555 flex flex-aic">{{ top.relation.dynamic_title }}</view>
+					<view class="flex flex-ais br4r" @tap="fnOpenInfo(item)">
+						<image class="hw128r br4r" v-if="item.relation.dynamic_images" :src="item.relation.dynamic_images[0]" mode="aspectFill"></image>
+						<view class="flex-fitem f28r ptb8r plr18r bgf8 c555 flex flex-aic">{{ item.relation.dynamic_title }}</view>
 					</view>
 				</view>
 			</block>
@@ -51,7 +51,6 @@ export default {
 		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
 		upCallback(mescroll) {
 			let search_month = this.search_month;
-			console.log(mescroll)
 			getPraiseByNotify({
 				search_month: search_month,
 				page: mescroll.num,
@@ -59,8 +58,14 @@ export default {
 			})
 				.then(res => {
 					let lists = res.data;
-					
 					this.topList = this.topList.concat(lists.data);
+					
+					// 更新未读消息数量
+					if(lists.set_read_nums){
+						let newsCount = this.$store.getters['getNewsCountData'];
+						newsCount.praise_unreads = newsCount.praise_unreads - lists.set_read_nums;
+						this.$store.commit('setNewsCountData', newsCount);
+					}
 
 					/**
 					 * 如果当前月份记录查询完成，那么继续查询上一个月份的
