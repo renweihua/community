@@ -4,7 +4,7 @@ namespace App\Models;
 
 class MonthModel extends Model
 {
-    const MIN_TABLE    = '2020_12';// 表名最小的月份
+    const MIN_TABLE    = '2021_01';// 表名最小的月份
     const MONTH_FORMAT = 'Y_m';
 
     /**

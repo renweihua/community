@@ -23,21 +23,23 @@ export async function signIn() {
 /**
  * 指定月份的签到状态
  * 
- * @param {String} month 参数 月份
+ * @param {String} search_month 参数 月份
  */
-export async function getSignInDateList(month) {
-  return await request('/user/getSignsByMonth', 'get', {month})
+export async function getSignInDateList(search_month) {
+  return await request('/user/getSignsStatusByMonth', 'get', {search_month})
 }
 
 /**
- * 获取汉币签到记录列表
- * @param {Object} params 参数 {page,count}
+ * 获取登录会员的签到记录
+ * 
+ * @param {Object} params 参数 {search_month, page,count}
  */
 export async function getSignInList(params = {
+	search_month: '',
   page: 1,
   limit: 20
 }) {
-  return await request('/Hanbi/GetSignInList', 'get', params)
+  return await request('/user/getSignsByMonth', 'get', params)
 }
 
 /**

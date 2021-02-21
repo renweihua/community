@@ -13,6 +13,7 @@
 					<view class="f24r cgray">{{calDatetime}}</view>
 				</view>
 			</view>
+			<!-- 更多按钮，暂时隐藏，功能还没有完善起来 -->
 			<view class="w128r hl80r fcenter">
 				<i-icon type="xia" size="48" color="#999999" @click="fnActionSheet"></i-icon>
 			</view>
@@ -208,11 +209,13 @@
 				// 黑名单状态
 				let blackTitle = this.item.user_info.is_black ? '移出黑名单' : '将TA拉黑';
 				let blackContent = this.item.user_info.is_black ? '是否将该用户移出黑名单' : '拉黑后再广场将看不到TA的动态，TA将无法对你发消息、评论。';
+				console.log('---this.item---')
+				console.log(this.item)
 				uni.showActionSheet({
 					itemList: this.item.user_info.is_self ? [blackTitle, '举报'] : [atteTitle, blackTitle, '举报'],
 					success: res => {
-						if (res.tapIndex == 0) return this.$emit('follow', this.item)
-						if (res.tapIndex == 2) return this.$emit('report', this.item)
+						if (res.tapIndex == 0) return this.$emit('follow', this.item);
+						if (res.tapIndex == 2) return this.$emit('report', this.item);
 						if (res.tapIndex == 1) {
 							uni.showModal({
 								content: blackContent,

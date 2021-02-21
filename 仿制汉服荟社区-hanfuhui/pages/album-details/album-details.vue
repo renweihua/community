@@ -233,7 +233,7 @@ export default {
 					.then(res => {
 						let lists = res.data;
 						this.$store.commit('interact/setCommentListData', lists.data);
-						mescroll.endSuccess(lists.data.length, mescroll.num < res.data.count_page);
+						mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					})
 					.catch(() => {
 						mescroll.endSuccess(0, false);
@@ -245,7 +245,7 @@ export default {
 					.then(res => {
 						let lists = res.data;
 						this.$store.commit('interact/setCommentListData', this.commentListData.concat(lists.data));
-						mescroll.endSuccess(lists.data.length, mescroll.num < res.data.count_page);
+						mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					})
 					.catch(() => {
 						mescroll.endErr();

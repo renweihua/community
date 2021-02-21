@@ -128,7 +128,7 @@ class SignService extends Service
         if (empty($lists['data'])) {
             // 大于最小月份时，继续查询
             if ( date(UserSign::MONTH_FORMAT, strtotime($search_month)) > UserSign::MIN_TABLE ) {
-                $search_month = date($search_month, strtotime('-1 month', strtotime($search_month)));
+                $search_month = date('Y-m', strtotime('-1 month', strtotime($search_month)));
                 return $this->getSignsByMonth($login_user_id, $search_month);
             }
             $lists['month_table'] = $search_month;

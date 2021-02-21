@@ -79,7 +79,7 @@ export default {
 						this.$store.commit('interact/setUserSaveAllListData', this.userSaveAllListData.concat(lists.data));
 					}
 
-					mescroll.endSuccess(lists.data.length, mescroll.num < res.data.count_page);
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 				})
 				.catch(() => {
 					mescroll.endErr();

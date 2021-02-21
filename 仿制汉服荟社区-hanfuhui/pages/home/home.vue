@@ -384,7 +384,7 @@ export default {
 		// 展卡更多-拉黑
 		fnCardBlack(e) {
 			// 用户是否被列入黑名单
-			e.User.Black ? delUserBlack(e.user_id) : addUserBlack(e.user_id);
+			e.user_info.is_blck ? delUserBlack(e.user_info.user_id) : addUserBlack(e.user_info.user_id);
 		},
 		// 展卡更多-跳转举报页
 		fnCardReport(e) {

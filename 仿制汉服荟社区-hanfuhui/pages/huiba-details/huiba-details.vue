@@ -211,7 +211,7 @@ export default {
 					}
 					// this.maxID[this.current] = lists.data[0].dynamic_id
 
-					mescroll.endSuccess(lists.data.length, mescroll.num < res.data.count_page);
+					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 				})
 				.catch(() => {
 					mescroll.endErr();
