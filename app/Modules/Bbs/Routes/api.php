@@ -99,6 +99,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/fans', 'FriendController@fans');
             // 我的收藏
             Route::get('/collections', 'DynamicController@collections');
+            // 今日签到信息
+            Route::get('/getSignByToday', 'SignController@getSignByToday');
             // 每日签到
             Route::post('/signIn', 'SignController@signIn');
             // 指定月份的签到状态

@@ -1,5 +1,22 @@
 <?php
 
+if (!function_exists('get_days_in_year')){
+    /**
+     * 获取指定年份有多少天
+     *
+     * @param  int  $year
+     *
+     * @return int
+     */
+    function get_days_in_year(int $year){
+        $days = 0;
+        for($month=1;$month<=12;$month++){
+            $days = $days + cal_days_in_month(CAL_GREGORIAN,$month,$year);
+        }
+        return $days;
+    }
+}
+
 if ( !function_exists('get_wxuser_by_code') ) {
     /**
      * 通过Code获取微信用户信息

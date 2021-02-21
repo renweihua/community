@@ -79,6 +79,19 @@ class UserInfo extends Model
     }
 
     /**
+     * 通过上一次的签到时间，检测是否签到
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function getIsSignAttribute($key)
+    {
+        if (!empty($this->attributes['last_sign_time']) && date('Y-m-d') == date('Y-m-d', $this->attributes['last_sign_time'])) return true;
+        else return false;
+    }
+
+    /**
      * 指定会员的获赞数变动操作
      *
      * @param  int  $user_id
@@ -147,6 +160,10 @@ class UserInfo extends Model
             ++$user_info->sign_days;
         }
         $user_info->last_sign_time = $time;
+        // 今年累计签到次数
+        ++$user_info->year_sign_days;
+        // 总共累计签到次数
+        ++$user_info->total_sign_days;
         return $user_info->save();
     }
 }

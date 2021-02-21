@@ -16,6 +16,17 @@ class SignController extends BbsController
     }
 
     /**
+     * 今日签到信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSignByToday()
+    {
+        $result = $this->service->getSignByToday($this->login_user);
+        return $this->successJson($result);
+    }
+
+    /**
      * 每日签到
      *
      * @return \Illuminate\Http\JsonResponse
