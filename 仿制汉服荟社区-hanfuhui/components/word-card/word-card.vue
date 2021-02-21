@@ -52,7 +52,6 @@ export default {
 			}
 		}
 	},
-
 	computed: {
 		/// 内容截取字符长度80
 		calStringCut() {

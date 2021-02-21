@@ -42,60 +42,12 @@
    */
   export default {
     name: 'video-card',
-
     props: {
       // 项信息数据
       infoData: {
         type: Object,
         default: () => {
           return {
-            "Title": "【一款巨温婉的发型教程】温柔可人。百搭",
-            "Describe": " -- ",
-            "FaceSrc": "http://pic.hanfugou.com/ios/2019/7/31/20/40/156457682127548.jpg",
-            "Source": null,
-            "VideoUrl": "http://av.hanfugou.com/video/ios/2019/7/31/20/39/156457677864322.mp4",
-            "WhenLong": 59,
-            "Width": 1080,
-            "Height": 608,
-            "TrendShops": null,
-            "Good": true,
-            "GoodDatetime": "2019-08-07T18:53:24",
-            "TaskId": "success",
-            "Datetime": "2019-07-31T20:40:22",
-            "ID": 33001,
-            "User": {
-              "ID": 317820,
-              "NickName": "亦白姐姐",
-              "HeadUrl": "http://pic.hanfugou.com/ios/2019/8/1/1/4/156459269928311.jpg",
-              "MainBgPic": null,
-              "AuthenticateCode": null,
-              "AuthenticateName": null,
-              "AuthenticateID": 0,
-              "Gender": "女",
-              "CityNames": "福建,龙岩",
-              "Describe": "--",
-              "UserName": null,
-              "AtteCount": 0,
-              "ViolationCount": 0,
-              "FansCount": 0,
-              "UserAtte": false,
-              "GoodAlbumCount": 0,
-              "Popularity": 0,
-              "UseHanbi": 0,
-              "Close": false,
-              "Black": false
-            },
-            "TopCount": 23,
-            "CommCount": 3,
-            "SaveCount": 13,
-            "UserTop": false,
-            "UserSave": false,
-            "Huiba": {
-              "ID": 6921,
-              "Name": "发型妆容",
-              "PublicShow": false
-            },
-            "Huibas": null
           }
         }
       }

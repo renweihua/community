@@ -23,7 +23,6 @@
    */
   export default {
     name: 'topic-card',
-
     props: {
       /**
        * 信息数据 
@@ -32,54 +31,10 @@
         type: Object,
         default: () => {
           return {
-            "ID": 140912,
-            "User": {
-              "ID": 1096742,
-              "NickName": "炽殇月落",
-              "HeadUrl": "http://pic.hanfugou.com/android/2019/4/12/ca5d4903bda04b01968e4056b9667ecb.jpg",
-              "MainBgPic": null,
-              "AuthenticateCode": null,
-              "AuthenticateName": null,
-              "AuthenticateID": 0,
-              "Gender": "女",
-              "CityNames": null,
-              "Describe": "--",
-              "UserName": null,
-              "AtteCount": 0,
-              "ViolationCount": 0,
-              "FansCount": 0,
-              "UserAtte": false,
-              "GoodAlbumCount": 0,
-              "Popularity": 0,
-              "UseHanbi": 0,
-              "Close": false,
-              "Black": false
-            },
-            "Name": "我真的不想活了",
-            "Describe": "--",
-            "ImageSrcs": [
-              "https://pic.hanfugou.com/android/2019/6/21/18ff2d0a992a4c629cd983a663b06d18.jpg"
-            ],
-            "UserCount": 4,
-            "TopicFollow": false,
-            "TrendCount": 20,
-            "Reply": "--",
-            "TrendShops": null,
-            "LastDatetime": "2019-08-07T22:49:22",
-            "Hot": true,
-            "HotDatetime": "2019-07-22T17:12:50",
-            "AdminDown": false,
-            "Huiba": {
-              "ID": 7262,
-              "Name": "吃瓜",
-              "PublicShow": false
-            },
-            "Datetime": "2019-07-21T08:48:37"
           }
         }
       }
     },
-
     computed: {
       /**
        * 内容截取字符长度65

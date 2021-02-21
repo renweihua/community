@@ -28,7 +28,6 @@
 	export default {
 		props: {
 			imageList: Array
-
 		},
 		methods: {
 			deleted(index1) {

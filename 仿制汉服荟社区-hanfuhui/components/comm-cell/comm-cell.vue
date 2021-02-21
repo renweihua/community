@@ -57,60 +57,6 @@
 				type: Object,
 				default: () => {
 					return {
-						"ID": 9085409,
-						"User": {
-							"ID": 912473,
-							"NickName": "华衣锦鲤季官方号",
-							"HeadUrl": "https://pic.hanfugou.com/android/2019/7/9/51fc474f197f4ee48f99a4e3e14375d5.png",
-						},
-						"TrendID": 2595909,
-						"ObjectID": 2595909,
-						"ObjectType": "trend",
-						"Content": "好吃的",
-						"ChildCount": 2,
-						"UserTop": false,
-						"CommentChilds": [{
-							"ID": 9092290,
-							"User": {
-								"ID": 1159238,
-								"NickName": "念竹里",
-								"HeadUrl": "https://pic.hanfugou.com/android/2019/4/26/843dcd6a1b2048fdb4ce4b62050bdf75.jpg",
-							},
-							"TrendID": 2595909,
-							"ObjectID": 2595909,
-							"ObjectType": "trend",
-							"Content": "捉",
-							"ReplyUser": {
-								"ID": 912473,
-								"NickName": "华衣锦鲤季官方号",
-								"HeadUrl": "https://pic.hanfugou.com/android/2019/7/9/51fc474f197f4ee48f99a4e3e14375d5.png",
-							},
-							"TopCount": 0,
-							"ChildCount": 0,
-							"UserTop": false,
-							"Datetime": "2019-08-17T22:16:30"
-						}, {
-							"ID": 9092315,
-							"User": {
-								"ID": 912473,
-								"NickName": "华衣锦鲤季官方号",
-								"HeadUrl": "https://pic.hanfugou.com/android/2019/7/9/51fc474f197f4ee48f99a4e3e14375d5.png",
-							},
-							"TrendID": 2595909,
-							"ObjectID": 2595909,
-							"ObjectType": "trend",
-							"Content": "嘻嘻，终于有人在评论区捉我了",
-							"ReplyUser": {
-								"ID": 1159238,
-								"NickName": "念竹里",
-								"HeadUrl": "https://pic.hanfugou.com/android/2019/4/26/843dcd6a1b2048fdb4ce4b62050bdf75.jpg",
-							},
-							"TopCount": 0,
-							"ChildCount": 0,
-							"UserTop": false,
-							"Datetime": "2019-08-17T22:18:12"
-						}],
-						"Datetime": "2019-08-17T15:28:54"
 					}
 				}
 			}

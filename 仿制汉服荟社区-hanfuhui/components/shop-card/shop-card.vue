@@ -24,7 +24,6 @@
    */
   export default {
     name: 'shop-card',
-
     props: {
       /**
        * 信息数据 
@@ -33,37 +32,10 @@
         type: Object,
         default: () => {
           return {
-            "TypeNames": "汉元素,上衣下裙",
-            "Popularity": 4154,
-            "HaveSku": true,
-            "ID": 38814,
-            "Name": "噗叽:樱华 池夏原创改良汉服汉元素齐腰齐胸双穿襦裙 樱花",
-            "FaceSrc": "https://pic.hanfugou.com/web/2019/6/11/16/b445736a40ff4e5a9840cc98f5437d22.jpg",
-            "BasePrice": 198.00,
-            "Price": 198.00,
-            "SaveCount": 4891,
-            "Shop": {
-              "ID": 994,
-              "Name": "池夏",
-              "User": {
-                "ID": 596271,
-                "NickName": null,
-                "HeadUrl": null,
-                "MainBgPic": null,
-              },
-              "LogoSrc": "https://pic.hanfugou.com/web/2019/2/26/22/833248872fcf419c9e7f4a8b1160cc51.jpeg",
-              "CityNames": "安徽,合肥",
-              "AtteCount": 51490,
-            },
-            "Stock": 2392,
-            "SalesVolume": 338,
-            "TaobaoID": 589433180483,
-            "Datetime": "2019-03-26T00:10:45"
           }
         }
       }
     },
-
     computed: {
       /**
        * 省市地址拆分

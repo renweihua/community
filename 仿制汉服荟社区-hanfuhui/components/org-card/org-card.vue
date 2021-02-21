@@ -32,7 +32,6 @@
    */
   export default {
     name: 'org-card',
-
     props: {
       /**
        * 信息数据 
@@ -41,17 +40,10 @@
         type: Object,
         default: () => {
           return {
-            "ID": 130,
-            "Name": "汉韵端午  相约万达",
-            "FaceSrc": "http://pic.hanfugou.com/web/2019/5/30/21/370ab5b6f99a41c0adb2a31d48e756c1.jpeg",
-            "AddressNames": "安徽,淮南",
-            "BeginDatetime": "2019-06-07T14:00:00",
-            "State": 3,
           }
         }
       }
     },
-
     computed: {
       /// 时间格式 2019-12-03 20:12 
       calDatetime() {

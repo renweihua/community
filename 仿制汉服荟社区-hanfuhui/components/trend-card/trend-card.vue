@@ -107,57 +107,12 @@
 	 */
 	export default {
 		name: 'trend-card',
-
 		props: {
 			// 项信息数据
 			infoData: {
 				type: Object,
 				default: () => {
 					return {
-						"Content": "--",
-						"ObjectID": 609233,
-						"ObjectType": "topicreply",
-						"ImageSrcs": null,
-						"ImageCount": 0,
-						"ObjectData": "{\"topicid\":140509,\"name\":\"袍子们有没有感觉网红穿汉服很多都是跟风的？\"}",
-						"Datetime": "2019-08-02T22:46:38",
-						"HotSort": 1564850724,
-						"Object": null,
-						"TrendShops": null,
-						"ID": 2513136,
-						"User": {
-							"ID": 820857,
-							"NickName": "离人怎挽？",
-							"HeadUrl": "http://pic.hanfugou.com/android/2019/5/26/36108ca37fec4990a566ca7e43dd2c47.jpg",
-							"MainBgPic": null,
-							"AuthenticateCode": null,
-							"AuthenticateName": null,
-							"AuthenticateID": 0,
-							"Gender": "女",
-							"CityNames": null,
-							"Describe": "该同袍还不知道怎么描述寄己 (╯▽╰)╭",
-							"UserName": "980072323",
-							"AtteCount": 8,
-							"ViolationCount": 0,
-							"FansCount": 4,
-							"UserAtte": false,
-							"GoodAlbumCount": 0,
-							"Popularity": 0,
-							"UseHanbi": 0,
-							"Close": false,
-							"Black": false
-						},
-						"TopCount": 19,
-						"CommCount": 7,
-						"SaveCount": 1,
-						"UserTop": false,
-						"UserSave": false,
-						"Huiba": {
-							"ID": 0,
-							"Name": null,
-							"PublicShow": false
-						},
-						"Huibas": null
 					}
 				}
 			},

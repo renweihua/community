@@ -145,14 +145,14 @@ export default {
 				});
 				if (!res.status) return;
 				// 用户是否点过赞
-				if(filItem.dynamic.is_praise){
+				if (filItem.dynamic.is_praise) {
 					filItem.dynamic.praise_count--;
 					filItem.dynamic.is_praise = false;
-				}else{
+				} else {
 					filItem.dynamic.praise_count++;
 					filItem.dynamic.is_praise = true;
 				}
-			})
+			});
 		},
 		// 展卡收藏
 		fnCardSave(e) {
@@ -163,7 +163,7 @@ export default {
 					icon: res.status == 1 ? 'success' : 'none'
 				});
 				if (!res.status) return;
-			
+
 				// 用户是否已收藏
 				if (filItem.dynamic.is_collection) {
 					filItem.dynamic.collection_count--;
