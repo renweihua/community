@@ -68,9 +68,10 @@
         modifyHideTop(e.detail.value).then(modifyRes => {
           if (modifyRes.data.Data == false) return
           // 登录用户赞过状态改变
-          let tempUser = this.$store.getters['user/getUserInfoData']
-          tempUser.HideTop = e.detail.value
-          this.$store.commit('user/setUserInfoData', tempUser)
+          let login_user = this.$store.getters['user/getLoginUserInfoData']
+		  if(!login_user.user_info) return;
+          login_user.HideTop = e.detail.value
+          this.$store.commit('user/setLoginUserInfoData', login_user)
         })
       }
     }

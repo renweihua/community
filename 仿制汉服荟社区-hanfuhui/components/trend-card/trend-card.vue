@@ -94,7 +94,7 @@
 	/**
 	 * 动态信息项卡片组件
 	 * @property {Boolean} head 显示顶部头像区
-	 * @property {Object} info-data 项信息数据
+	 * @property {Object} item 动态信息
 	 * @event {Function} user 用户头像 点击事件
 	 * @event {Function} top 点赞 点击事件
 	 * @event {Function} comm 评论 点击事件
@@ -108,14 +108,7 @@
 	export default {
 		name: 'trend-card',
 		props: {
-			// 项信息数据
-			infoData: {
-				type: Object,
-				default: () => {
-					return {
-					}
-				}
-			},
+			// 动态信息
 			item: {
 				type: Object,
 				default: () => {
@@ -128,7 +121,6 @@
 				default: true
 			}
 		},
-
 		computed: {
 			/// 计算显示用户头像
 			calUserAvater() {

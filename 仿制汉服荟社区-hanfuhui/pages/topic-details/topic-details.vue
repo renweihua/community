@@ -337,6 +337,7 @@
       },
       /// 展卡更多-关注
       fnCardFollow(e) {
+		  let login_user = this.$store.getters['user/getLoginUserInfoData'];
         // 用户被关注
         if (e.User.UserAtte) {
           uni.showModal({
@@ -350,9 +351,9 @@
                   this.topicLatestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
                     false)
                   // 登录用户关注数减
-                  let tempUser = this.$store.getters['user/getLoginUserInfoData']
-                  tempUser.user_info.follows_count--
-                  this.$store.commit('user/setLoginUserInfoData', tempUser)
+						if(!login_user.user_info) return;
+                  login_user.user_info.follows_count--
+                  this.$store.commit('user/setLoginUserInfoData', login_user);
                 })
               }
             }
@@ -366,9 +367,9 @@
             this.topicLatestListData.filter(item => item.User.ID == e.User.ID).map(item => item.User.UserAtte =
               true)
             // 登录用户关注数加
-            let tempUser = this.$store.getters['user/getLoginUserInfoData']
-            tempUser.user_info.follows_count++
-            this.$store.commit('user/setLoginUserInfoData', tempUser)
+			if(!login_user.user_info) return;
+            login_user.user_info.follows_count++;
+            this.$store.commit('user/setLoginUserInfoData', login_user);
           })
         }
       },

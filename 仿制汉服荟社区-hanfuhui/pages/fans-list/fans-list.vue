@@ -94,6 +94,7 @@
 			},
 			/// 用户关注
 			fnUserFollow(e) {
+				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				// 用户被关注
 				if (e.cross_correlation) {
 					uni.showModal({
@@ -104,9 +105,9 @@
 									if (!res.status) return
 									this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = false)
 									// 登录用户关注数减
-									let tempUser = this.$store.getters['user/getLoginUserInfoData']
-									tempUser.user_info.follows_count--
-									this.$store.commit('user/setLoginUserInfoData', tempUser)
+									if(!login_user.user_info) return;
+									login_user.user_info.follows_count--
+									this.$store.commit('user/setLoginUserInfoData', login_user)
 								})
 							}
 						}
@@ -117,9 +118,9 @@
 						if (!res.status) return
 						this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = true)
 						// 登录用户关注数加
-						let tempUser = this.$store.getters['user/getLoginUserInfoData']
-						tempUser.user_info.follows_count++
-						this.$store.commit('user/setLoginUserInfoData', tempUser)
+						if(!login_user.user_info) return;
+						login_user.user_info.follows_count++;
+						this.$store.commit('user/setLoginUserInfoData', login_user);
 					})
 				}
 			},
@@ -134,9 +135,10 @@
 								this.$store.commit('user/setUserFansListData', this.userFansListData.filter(item => item.ID !=
 									e.ID))
 								// 登录用户关注数减
-								let tempUser = this.$store.getters['user/getLoginUserInfoData']
-								tempUser.user_info.follows_count--
-								this.$store.commit('user/setLoginUserInfoData', tempUser)
+								let login_user = this.$store.getters['user/getLoginUserInfoData'];
+								if(!login_user.user_info) return;
+								login_user.user_info.follows_count--;
+								this.$store.commit('user/setLoginUserInfoData', login_user);
 							})
 						}
 					}

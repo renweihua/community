@@ -91,7 +91,6 @@
         return this.info.headurl + '_200x200.jpg'
       }, 
     },
-
     onLoad(option) {
       if (option && option.id) {
         // 获取登录账户用户信息

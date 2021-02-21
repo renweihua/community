@@ -342,6 +342,7 @@ export default {
 		},
 		/// 关注详情发布用户
 		fnAtte(e) {
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户是否已经关注
 			if (e.UserAtte) {
 				followUser(e.ID).then(delRes => {
@@ -363,9 +364,9 @@ export default {
 						this.$store.getters['album/getAlbumListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
 					}
 					// 登录用户关注数减
-					let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-					tempUser.user_info.follows_count--;
-					this.$store.commit('user/setLoginUserInfoData', tempUser);
+					if(!login_user.user_info) return;
+					login_user.user_info.follows_count--;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			} else {
 				followUser(e.ID).then(addRes => {
@@ -387,9 +388,9 @@ export default {
 						this.$store.getters['album/getAlbumListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
 					}
 					// 登录用户关注数加
-					let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-					tempUser.user_info.follows_count++;
-					this.$store.commit('user/setLoginUserInfoData', tempUser);
+					if(!login_user.user_info) return;
+					login_user.user_info.follows_count++;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			}
 		},

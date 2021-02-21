@@ -403,6 +403,7 @@ export default {
 		},
 		/// 用户关注
 		fnUserFollow(e) {
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户是否已经关注
 			if (e.UserAtte) {
 				uni.showModal({
@@ -413,9 +414,9 @@ export default {
 								if (delRes.data.Data == false) return;
 								this.videoListData.filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
 								// 登录用户关注数减
-								let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-								tempUser.user_info.follows_count--;
-								this.$store.commit('user/setLoginUserInfoData', tempUser);
+								if(!login_user.user_info) return;
+								login_user.user_info.follows_count--;
+								this.$store.commit('user/setLoginUserInfoData', login_user);
 							});
 						}
 					}
@@ -426,9 +427,9 @@ export default {
 					if (addRes.data.Data == false) return;
 					this.videoListData.filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
 					// 登录用户关注数加
-					let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-					tempUser.user_info.follows_count++;
-					this.$store.commit('user/setLoginUserInfoData', tempUser);
+					if(!login_user.user_info) return;
+					login_user.user_info.follows_count++;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			}
 		},

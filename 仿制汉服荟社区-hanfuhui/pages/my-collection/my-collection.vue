@@ -176,24 +176,25 @@ export default {
 		},
 		/// 展卡更多-关注
 		fnCardFollow(e) {
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户被关注
 			if (e.user_info.is_follow) {
 				followUser(e.user_info.user_id).then(res => {
 					if (!res.status) return;
 					this.userSaveAllListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = false));
 					// 登录用户关注数减
-					let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-					tempUser.user_info.follows_count--;
-					this.$store.commit('user/setLoginUserInfoData', tempUser);
+					if(!login_user.user_info) return;
+					login_user.user_info.follows_count--;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			} else {
 				followUser(e.user_info.user_id).then(res => {
 					if (!res.status) return;
 					this.userSaveAllListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = true));
 					// 登录用户关注数加
-					let tempUser = this.$store.getters['user/getLoginUserInfoData'];
-					tempUser.user_info.follows_count++;
-					this.$store.commit('user/setLoginUserInfoData', tempUser);
+					if(!login_user.user_info) return;
+					login_user.user_info.follows_count++;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			}
 		},

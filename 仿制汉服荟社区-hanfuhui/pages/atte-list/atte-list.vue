@@ -79,6 +79,7 @@
 			},
 			/// 用户关注
 			fnUserFollow(e) {
+				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				// 用户被关注
 				if (e.cross_correlation) {
 					uni.showModal({
@@ -94,9 +95,9 @@
 									this.userAtteUserListData.filter(item => item.friend_id == e.friend_id).map(item => item.cross_correlation =
 										false)
 									// 登录用户关注数减
-									let tempUser = this.$store.getters['user/getLoginUserInfoData']
-									tempUser.user_info.follows_count--
-									this.$store.commit('user/setLoginUserInfoData', tempUser)
+									if(!login_user.user_info) return;
+									login_user.user_info.follows_count--;
+									this.$store.commit('user/setLoginUserInfoData', login_user);
 								})
 							}
 						}
@@ -112,10 +113,9 @@
 						this.userAtteUserListData.filter(item => item.friend_id == e.friend_id).map(item => item.cross_correlation =
 							true)
 						// 登录用户关注数加
-						let tempUser = this.$store.getters['user/getLoginUserInfoData']
-						console.log(tempUser);
-						tempUser.user_info.follows_count++;
-						this.$store.commit('user/setLoginUserInfoData', tempUser);
+						if(!login_user.user_info) return;
+						login_user.user_info.follows_count++;
+						this.$store.commit('user/setLoginUserInfoData', login_user);
 					})
 				}
 			},

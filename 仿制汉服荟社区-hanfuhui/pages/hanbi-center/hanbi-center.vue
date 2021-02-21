@@ -135,9 +135,10 @@
                 })
                 this.orderState = false;
                 // 登录用户汉币数减少
-                let tempUser = this.$store.getters['user/getUserInfoData']
-                tempUser.Hanbi = Number(tempUser.Hanbi) - Number(price)
-                this.$store.commit('user/setUserInfoData', tempUser)
+                let login_user = this.$store.getters['user/getLoginUserInfoData']
+						if(!login_user.user_info) return;
+                login_user.Hanbi = Number(login_user.Hanbi) - Number(price)
+                this.$store.commit('user/setLoginUserInfoData', login_user)
                 // 重新初始签到日历
                 this.$refs.signinCalendar.init()
               }).catch(() => {
