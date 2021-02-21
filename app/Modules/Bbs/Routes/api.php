@@ -33,7 +33,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::post('logout', 'AuthController@logout');
     });
 
-    // 首页相关
+    /**
+     * 首页相关
+     */
     Route::prefix('/')->group(function () {
         // 发现
         Route::get('discover', 'IndexController@discover');
@@ -43,7 +45,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('recommend', 'IndexController@recommend');
     });
 
-    // 会员相关
+    /**
+     * 会员相关
+     */
     Route::prefix('user')->group(function () {
         // 指定会员详情
         Route::get('/detail', 'UserController@detail');

@@ -3,6 +3,7 @@
 namespace App\Models\Dynamic;
 
 use App\Models\Model;
+use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
 use Illuminate\Support\Facades\Storage;
@@ -87,7 +88,7 @@ class Dynamic extends Model
 
     /**
      * 获取视频信息
-     * 
+     *
      * @param $value
      *
      * @return mixed|object
@@ -126,5 +127,15 @@ class Dynamic extends Model
     public function praises()
     {
         return $this->hasMany(DynamicPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    /**
+     * 发布人是谁的关注人
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function fanUser()
+    {
+        return $this->hasOne(UserFollowFan::class, 'friend_id', 'user_id');
     }
 }
