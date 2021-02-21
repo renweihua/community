@@ -44,20 +44,21 @@ class TopicService extends Service
      * 获取荟吧详情
      *
      * @param  int  $topic_id
+     * @param  int  $login_user_id
      *
      * @return bool
      */
-    public function detail(int $topic_id, int $login_user = 0)
+    public function detail(int $topic_id, int $login_user_id = 0)
     {
         if ( !$detail = $this->getDetail($topic_id, false, [
-            'isFollow' => function($query) use ($login_user) {
-                $query->where('user_id', $login_user);
+            'isFollow' => function($query) use ($login_user_id) {
+                $query->where('user_id', $login_user_id);
             },
         ])) {
             return false;
         }
         // 是否已关注
-        $detail->is_follow = $login_user == 0 ? false : ($detail->isFollow ? true : false);
+        $detail->is_follow = $login_user_id == 0 ? false : ($detail->isFollow ? true : false);
         unset($detail->isFollow);
         $this->setError('荟吧详情获取成功！');
         return $detail;

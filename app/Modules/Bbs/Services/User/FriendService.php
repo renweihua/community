@@ -12,13 +12,13 @@ class FriendService extends Service
     /**
      * 我的关注
      *
-     * @param  int  $login_user
+     * @param  int  $login_user_id
      *
      * @return array
      */
-    public function getFollows(int $login_user)
+    public function getFollows(int $login_user_id)
     {
-        $lists = UserFollowFan::where('user_id', $login_user)
+        $lists = UserFollowFan::where('user_id', $login_user_id)
                               ->with([
                                   'friendInfo' => function($query) {
                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
@@ -33,13 +33,13 @@ class FriendService extends Service
     /**
      * 我的粉丝
      *
-     * @param  int  $login_user
+     * @param  int  $login_user_id
      *
      * @return array
      */
-    public function getFans(int $login_user)
+    public function getFans(int $login_user_id)
     {
-        $lists = UserFollowFan::where('friend_id', $login_user)
+        $lists = UserFollowFan::where('friend_id', $login_user_id)
                               ->with([
                                   'userInfo' => function($query) {
                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
@@ -54,24 +54,24 @@ class FriendService extends Service
     /**
      * 关注指定会员流程
      *
-     * @param  int  $login_user
+     * @param  int  $login_user_id
      * @param  int  $friend_id
      *
      * @return bool|bool[]
      */
-    public function setFollow(int $login_user, int $friend_id)
+    public function setFollow(int $login_user_id, int $friend_id)
     {
         $userFollowFan = UserFollowFan::getInstance();
         // 对方是否关注了登录会员
-        $friend_follow = $userFollowFan->checkFollow($friend_id, $login_user);
+        $friend_follow = $userFollowFan->checkFollow($friend_id, $login_user_id);
         // 我是否关注对方
-        $my_follow = $userFollowFan->checkFollow($login_user, $friend_id);
+        $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
 
         $msg = $my_follow ? '取关' : '关注';
         DB::beginTransaction();
         try {
             $data = [
-                'user_id' => $login_user,
+                'user_id' => $login_user_id,
                 'friend_id' => $friend_id,
             ];
             if ($my_follow) {

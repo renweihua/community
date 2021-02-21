@@ -18,13 +18,13 @@ class DynamicService extends Service
      *
      * @param       $request
      * @param  int  $user_id
-     * @param  int  $login_user
+     * @param  int  $login_user_id
      *
      * @return array
      */
-    public function getDynamicsByUser($request, int $user_id, int $login_user = 0)
+    public function getDynamicsByUser($request, int $user_id, int $login_user_id = 0)
     {
-        return $this->getDynamics($request, $login_user, ['user_id' => $user_id]);
+        return $this->getDynamics($request, $login_user_id, ['user_id' => $user_id]);
     }
 
     /**
@@ -116,36 +116,37 @@ class DynamicService extends Service
      * 获取动态详情
      *
      * @param  int  $dynamic_id
+     * @param  int  $login_user
      *
      * @return bool
      */
-    public function detail(int $dynamic_id, int $login_user = 0)
+    public function detail(int $dynamic_id, int $login_user_id = 0)
     {
         if ( !$dynamic = $this->getDynamicDetail($dynamic_id, false, [
-            'userInfo' => function($query) use($login_user){
+            'userInfo' => function($query) use($login_user_id){
                 $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_introduction'])->with([
-                    'isFollow' => function($query) use ($login_user) {
-                        $query->where('user_id', $login_user);
+                    'isFollow' => function($query) use ($login_user_id) {
+                        $query->where('user_id', $login_user_id);
                     }
                 ]);
             },
-            'isPraise' => function($query) use ($login_user) {
-                $query->where('user_id', $login_user);
+            'isPraise' => function($query) use ($login_user_id) {
+                $query->where('user_id', $login_user_id);
             },
-            'isCollection' => function($query) use ($login_user) {
-                $query->where('user_id', $login_user);
+            'isCollection' => function($query) use ($login_user_id) {
+                $query->where('user_id', $login_user_id);
             },
         ])) {
             return false;
         }
         // 是否已赞
-        $dynamic->is_praise = $login_user == 0 ? false : ($dynamic->isPraise ? true : false);
+        $dynamic->is_praise = $login_user_id == 0 ? false : ($dynamic->isPraise ? true : false);
         // 是否已收藏
-        $dynamic->is_collection = $login_user == 0 ? false : ($dynamic->isCollection ? true : false);
+        $dynamic->is_collection = $login_user_id == 0 ? false : ($dynamic->isCollection ? true : false);
         // 是否关注
-        $dynamic->userInfo->is_follow = $login_user == 0 ? false : ($dynamic->userInfo->isFollow ? true : false);
+        $dynamic->userInfo->is_follow = $login_user_id == 0 ? false : ($dynamic->userInfo->isFollow ? true : false);
         // 是否为登录会员
-        $dynamic->userInfo->is_self = $login_user == 0 ? false : ($dynamic->user_id == $login_user ? true : false);
+        $dynamic->userInfo->is_self = $login_user_id == 0 ? false : ($dynamic->user_id == $login_user_id ? true : false);
         unset($dynamic->isPraise, $dynamic->isCollection, $dynamic->userInfo->isFollow);
         $this->setError('动态详情获取成功！');
         return $dynamic;
