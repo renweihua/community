@@ -6,7 +6,7 @@
 			<view class="status-bar"></view>
 			<!-- #endif -->
 			<view class="flex plr18r">
-				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{'barsh-home': current == 0}" @tap="fnBarClick(0)">发现</view>
+				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{'barsh-home': current == 0}" @tap="fnBarClick(0)">推荐</view>
 				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{'barsh-home':current == 1}" @tap="fnBarClick(1)">关注</view>
 				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{'barsh-home':current == 2}" @tap="fnBarClick(2)">广场</view>
 			</view>
