@@ -16,7 +16,7 @@ class IndexController extends BbsController
     }
 
     /**
-     * 首页：推荐
+     * 首页：发现
      *
      * @param  \Illuminate\Http\Request  $request
      *

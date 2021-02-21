@@ -9,7 +9,7 @@ use App\Services\Service;
 class DynamicService extends Service
 {
     /**
-     * 首页：推荐
+     * 首页：发现
      *
      * @param  int  $login_user_id
      * @param       $request

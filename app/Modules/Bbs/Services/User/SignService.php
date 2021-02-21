@@ -93,7 +93,7 @@ class SignService extends Service
             $lists[$day] = ['day' => $day, 'is_sign' => false];
             if (!empty($data)){
                 foreach ($data as $created_time){
-                    if (date('Y-m-d', $created_time) == $day){
+                    if ($lists[$day]['is_sign'] == false && date('Y-m-d', $created_time) == $day){
                         $lists[$day] = ['day' => $day, 'is_sign' => true];
                         break;
                     }
