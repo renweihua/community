@@ -346,6 +346,10 @@
 				// 用户是否已经关注
 				if (e.is_follow) {
                     followUser(e.user_id).then(res => {
+						uni.showToast({
+							title: res.msg,
+							icon: res.status == 1 ? 'success' : 'none'
+						});
 						if (!res.status) return
 						this.dynamic.User.is_follow = false
 						// 来自主要跳转
@@ -372,6 +376,10 @@
 					})
 				} else {
 					followUser(e.user_id).then(res => {
+						uni.showToast({
+							title: res.msg,
+							icon: res.status == 1 ? 'success' : 'none'
+						});
 						if (!res.status) return
 						this.dynamic.User.is_follow = true
 						// 来自主要跳转
@@ -522,7 +530,7 @@
 			fnComm(e) {
 				let itemList = ['回复', '复制', '举报'];
 				console.log(e);
-				if (e.user_info.user_id == this.$store.getters['user/getUserInfoData'].user_id) itemList.push('删除')
+				if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) itemList.push('删除')
 				uni.showActionSheet({
 					itemList,
 					success: res => {

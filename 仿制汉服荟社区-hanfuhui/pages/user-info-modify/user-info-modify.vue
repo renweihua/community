@@ -211,7 +211,7 @@
           // 保存账户信息
           this.$store.commit('user/setAccountInfoData', accout)
           // 保存用户信息
-          this.$store.commit('user/setUserInfoData', userInfo)
+          this.$store.commit('user/setLoginUserInfoData', userInfo)
           this.$store.commit('user/setTempUserInfoData', userInfo)
           this.isModify = false;
           uni.showToast({

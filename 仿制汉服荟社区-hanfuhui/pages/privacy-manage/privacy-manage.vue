@@ -51,7 +51,7 @@
     computed: {
       // 计算隐藏主页赞过
       calHideTop() {
-        return this.$store.getters['user/getUserInfoData'].HideTop
+        return this.$store.getters['user/getLoginUserInfoData'].HideTop
       }
     },
 

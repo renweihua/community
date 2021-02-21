@@ -5,12 +5,12 @@
       <block v-for="(comment,index) in commentList" :key="index">
         <view class="plr18r ptb18r bgwhite mb18r">
           <view class="flex">
-            <user-avatar @click="fnUserInfo(comment.User.ID)" :src="comment.User.HeadUrl + '_200x200.jpg'" :tag="comment.User.AuthenticateCode"
+            <user-avatar @click="fnUserInfo(comment.user_info.user_id)" :src="comment.user_info.user_avatar" tag=""
               size="md"></user-avatar>
             <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
               <view>
-                <text class="f28r fbold mr18r">{{comment.User.NickName}}</text>
-                <i-icon :type="comment.User.Gender == '男' ?'nan':'nv' " size="28" :color="comment.User.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
+                <text class="f28r fbold mr18r">{{comment.user_info.NickName}}</text>
+                <i-icon :type="comment.user_info.Gender == '男' ?'nan':'nv' " size="28" :color="comment.user_info.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
               </view>
               <view class="f24r cgray ellipsis">{{calDateTime(comment.Datetime)}}</view>
             </view>

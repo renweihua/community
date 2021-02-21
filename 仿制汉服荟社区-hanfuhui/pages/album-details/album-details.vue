@@ -169,25 +169,25 @@ export default {
 		calUser() {
 			return this.albumInfoData.user_info || false;
 		},
-		/// 计算显示用户头像
+		// 计算显示用户头像
 		calUserAvater() {
 			return !!this.calUser.user_avatar ? this.calUser.user_avatar : '/static/default_avatar.png';
 		},
-		/// 计算摄影背景封面
+		// 计算摄影背景封面
 		calAlbumFacePic() {
 			let dynamic_images = this.albumInfoData.dynamic_images ?? [];
 			return !!dynamic_images ? dynamic_images[0] : '/static/default_image.png';
 		},
-		/// 计算格式友好时间 几天前
+		// 计算格式友好时间 几天前
 		calDatetime() {
 			return fnFormatDate(this.albumInfoData.created_time);
 		},
-		/// 计算显示图片集
+		// 计算显示图片集
 		calImageSrcs() {
 			let imgArray = this.albumInfoData.dynamic_images || [];
 			return imgArray;
 		},
-		/// 计算摄影信息
+		// 计算摄影信息
 		calAlbumStaff() {
 			let albumStaff = [];
 			let data = this.albumInfoData.StaffData;
@@ -200,11 +200,11 @@ export default {
 		}
 	},
 	methods: {
-		/// mescroll组件初始化完成的回调
+		// mescroll组件初始化完成的回调
 		mescrollInit(mescroll) {
 			this.mescroll = mescroll;
 		},
-		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
+		// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
 		upCallback(mescroll) {
 			let params = {
 				dynamic_id: this.dynamic_id,
@@ -252,41 +252,38 @@ export default {
 					});
 			}
 		},
-		/// 跳转用户信息页
+		// 跳转用户信息页
 		fnUserInfo(e) {
 			uni.navigateTo({
 				url: `/pages/user-info/user-info?user_id=${e.user_id}`
 			});
 		},
-		/// 跳转荟吧
+		// 跳转荟吧
 		fnHuiba(id) {
 			uni.navigateTo({
 				url: `/pages/huiba-details/huiba-details?topic_id=${topic_id}`
 			});
 		},
-		/// 跳转点赞列表
+		// 跳转点赞列表
 		fnTopList() {
 			uni.navigateTo({
 				url: `/pages/top-list/top-list?id=${this.dynamic_id}&type=album`
 			});
 		},
-		/// 跳转评论列表
+		// 跳转评论列表
 		fnMoreComm(id) {
 			uni.navigateTo({
 				url: `/pages/comm-list/comm-list?id=${id}`
 			});
 		},
-		/// 分享图标
+		// 分享图标
 		fnShare() {
 			this.albumInfoData.dynamic_id = this.dynamic_id;
 			this.$refs.share.open(this.albumInfoData);
 		},
-		/// 详情点赞
+		// 详情点赞
 		fnTop() {
 			let filItem = {};
-			let params = {
-				objectid: this.dynamic_id
-			};
 			// 来自主要跳转
 			if (this.fromPage == 'home') {
 				// 推荐
@@ -307,23 +304,36 @@ export default {
 			if (this.fromPage == 'find') {
 				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
 			}
-			// 用户是否已经点过赞
-			if (filItem.UserTop) {
-			} else {
-				dynamicPraise(params).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.TopCount++;
-					filItem.UserTop = true;
-					this.albumInfoData.TopCount++;
-					this.albumInfoData.UserTop = true;
-					// 点赞列表加头像
-					this.topListData.unshift({
-						User: this.$store.getters['user/getUserInfoData']
-					});
+			dynamicPraise(filItem.dynamic_id).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: res.status == 1 ? 'success' : 'none'
 				});
-			}
+				if (!res.status) return;
+				let login_user = this.$store.getters['user/getLoginUserInfoData'];
+				// 用户是否点过赞
+				if (filItem.is_praise) {
+					filItem.praise_count--;
+					this.albumInfoData.is_praise = filItem.is_praise = false;
+					this.albumInfoData.praise_count--;
+					// 点赞列表减头像
+					let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
+					this.$store.commit('interact/setTopListData', filTopList);
+				} else {
+					filItem.praise_count++;
+					this.albumInfoData.is_praise = filItem.is_praise = true;
+					this.albumInfoData.praise_count++;
+					if (!login_user.user_id) {
+						// 点赞列表加会员信息
+						this.topListData.unshift({
+							user_id: login_user.user_id,
+							user_info: login_user.user_info
+						});
+					}
+				}
+			});
 		},
-		/// 评论点赞
+		// 评论点赞
 		fnTopComm(e) {
 			let filItem = this.commentListData.filter(item => item.ID == e.ID)[0];
 			if (filItem.UserTop) {
@@ -340,66 +350,71 @@ export default {
 				});
 			}
 		},
-		/// 关注详情发布用户
+		// 关注详情发布用户
 		fnAtte(e) {
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户是否已经关注
-			if (e.UserAtte) {
-				followUser(e.ID).then(delRes => {
-					if (delRes.data.Data == false) return;
-					this.albumInfoData.User.UserAtte = false;
+			if (e.is_follow) {
+				followUser(e.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+					this.albumInfoData.user_info.is_follow = false;
 					// 来自主要跳转
 					if (this.fromPage == 'home') {
-						this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
-						this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
-						this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
+						this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 					}
 					// 来自用户详情
 					if (this.fromPage == 'userinfo') {
-						this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
-						this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
+						this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 					}
 					// 来自发现-摄影跳转
 					if (this.fromPage == 'find') {
-						this.$store.getters['album/getAlbumListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
+						this.$store.getters['album/getAlbumListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 					}
 					// 登录用户关注数减
-					if(!login_user.user_info) return;
+					if (!login_user.user_info) return;
 					login_user.user_info.follows_count--;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			} else {
-				followUser(e.ID).then(addRes => {
-					if (addRes.data.Data == false) return;
-					this.albumInfoData.User.UserAtte = true;
+				followUser(e.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+					this.albumInfoData.user_info.is_follow = true;
 					// 来自主要跳转
 					if (this.fromPage == 'home') {
-						this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
-						this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
-						this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
+						this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					}
 					// 来自用户详情
 					if (this.fromPage == 'userinfo') {
-						this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
-						this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
+						this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					}
 					// 来自发现-摄影跳转
 					if (this.fromPage == 'find') {
-						this.$store.getters['album/getAlbumListData'].filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
+						this.$store.getters['album/getAlbumListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					}
 					// 登录用户关注数加
-					if(!login_user.user_info) return;
+					if (!login_user.user_info) return;
 					login_user.user_info.follows_count++;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
 			}
 		},
-		/// 详情收藏
+		// 详情收藏
 		fnSave() {
 			let filItem = {};
-			let params = {
-				objectid: this.dynamic_id
-			};
 			// 来自主要跳转
 			if (this.fromPage == 'home') {
 				// 推荐
@@ -420,19 +435,27 @@ export default {
 			if (this.fromPage == 'find') {
 				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
 			}
-			// 用户是否已经收藏
-			if (filItem.UserSave) {
-			} else {
-				dynamicCollection(params).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.SaveCount++;
-					filItem.UserSave = true;
-					this.albumInfoData.SaveCount++;
-					this.albumInfoData.UserSave = true;
+			
+			dynamicCollection(filItem.dynamic_id).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: res.status == 1 ? 'success' : 'none'
 				});
-			}
+				if (!res.status) return;
+			
+				// 用户是否已收藏
+				if (filItem.is_collection) {
+					filItem.collection_count--;
+					this.albumInfoData.is_collection = filItem.is_collection = false;
+					this.albumInfoData.collection_count--;
+				} else {
+					filItem.collection_count++;
+					this.albumInfoData.is_collection = filItem.is_collection = true;
+					this.albumInfoData.collection_count++
+				}
+			});
 		},
-		/// 显示评论输入框
+		// 显示评论输入框
 		fnCommOpen() {
 			this.$refs.comm.open({
 				type: 'comment',
@@ -440,7 +463,7 @@ export default {
 				objectid: this.dynamic_id
 			});
 		},
-		/// 评论发送
+		// 评论发送
 		fnCommSend(e) {
 			// 不为发送时保存输入值
 			if (e.type == 'comment') this.$store.commit('setCommContentData', e.content);
@@ -517,10 +540,10 @@ export default {
 				filItem.CommCount++;
 			});
 		},
-		/// 评论项操作
+		// 评论项操作
 		fnComm(e) {
 			let itemList = ['回复', '复制', '举报'];
-			if (e.User.ID == this.$store.getters['user/getUserInfoData'].ID) itemList.push('删除');
+			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].ID) itemList.push('删除');
 			uni.showActionSheet({
 				itemList,
 				success: res => {
@@ -593,7 +616,7 @@ export default {
 				}
 			});
 		},
-		/// 预览图片组
+		// 预览图片组
 		fnPreviewImage(current) {
 			let urls = this.albumInfoData.Images.map(item => item.ImgSrc + '_0.jpg/format/webp');
 			previewImage(current, urls);

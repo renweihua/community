@@ -67,7 +67,7 @@
       },
       // 我的汉币数
       hanbiCount() {
-        return this.$store.getters['user/getUserInfoData'].Hanbi
+        return this.$store.getters['user/getLoginUserInfoData'].Hanbi
       },
       // 汉币规则
       hanbiRule() {

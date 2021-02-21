@@ -126,8 +126,8 @@
 				// 初始获取用户信息
 				getUserInfo(this.user_id).then(userRes => {
 					this.$store.commit('user/setTempUserInfoData', userRes.data)
-					if (this.user_id == this.$store.getters['user/getUserInfoData'].user_id) {
-						this.$store.commit('user/setUserInfoData', userRes.data)
+					if (this.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) {
+						this.$store.commit('user/setLoginUserInfoData', userRes.data)
 					}
 					// 导航标题
 					uni.setNavigationBarTitle({
@@ -162,7 +162,7 @@
 			},
 			/// 计算是否当前登录用户
 			calIsLoginUser() {
-				return this.tempUserInfoData.user_id == this.$store.getters['user/getUserInfoData'].user_id
+				return this.tempUserInfoData.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id
 			},
 		},
 
@@ -274,7 +274,7 @@
 			/// 修改用户背景封面图
 			fnMainBgPic() {
 				// 是否为当前登录用户修改
-				if (this.tempUserInfoData.user_id != this.$store.getters['user/getUserInfoData'].user_id) return
+				if (this.tempUserInfoData.user_id != this.$store.getters['user/getLoginUserInfoData'].user_id) return
 				fnUploadUpyunPic(1).then(res => {
 					if (res) return res
 				}).then(uploadRes => {
@@ -283,7 +283,7 @@
 					let userInfo = Object.assign({}, this.$store.getters['user/getUserInfoData']);
 					userInfo.MainBgPic = 'https://pic.hanfugou.com' + uploadRes.url;
 					this.$store.commit('user/setAccountInfoMainBgPicData', userInfo.MainBgPic)
-					this.$store.commit('user/setUserInfoData', userInfo)
+					this.$store.commit('user/setLoginUserInfoData', userInfo)
 					this.$store.commit('user/setTempUserInfoData', userInfo)
 				}).catch(() => {
 					uni.showToast({
@@ -296,11 +296,11 @@
 			fnUserFollow() {
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				// 用户被关注
-				if (this.tempUserInfoData.UserAtte) {
+				if (this.tempUserInfoData.is_follow) {
                     getLoginUserInfoData(this.tempUserInfoData.user_id).then(delRes => {
 						if (delRes.data.Data == false) return
-						this.userPublishListData.map(item => item.User.UserAtte = false)
-						this.tempUserInfoData.UserAtte = false;
+						this.userPublishListData.map(item => item.user_info.is_follow = false)
+						this.tempUserInfoData.is_follow = false;
 						// 登录用户关注数减
 						if(!login_user.user_info) return;
 						login_user.user_info.follows_count--;
@@ -309,8 +309,8 @@
 				} else {
 					followUser(this.tempUserInfoData.user_id).then(addRes => {
 						if (addRes.data.Data == false) return
-						this.userPublishListData.map(item => item.User.UserAtte = true)
-						this.tempUserInfoData.UserAtte = true;
+						this.userPublishListData.map(item => item.user_info.is_follow = true)
+						this.tempUserInfoData.is_follow = true;
 						// 登录用户关注数减
 						if(!login_user.user_info) return;
 						login_user.user_info.follows_count++;
@@ -318,7 +318,6 @@
 					})
 				}
 			},
-
 			/// 展卡跳转详情页
 			fnCardInfo(e) {
 				console.log(e.ObjectType);
@@ -359,7 +358,7 @@
 					return
 				}
 			},
-			/// 展卡评论跳转详情页
+			// 展卡评论跳转详情页
 			fnCardComm(e) {
 				console.log(e.ObjectType);
 				if (e.ObjectType == 'trend') {

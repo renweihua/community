@@ -405,14 +405,18 @@ export default {
 		fnUserFollow(e) {
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户是否已经关注
-			if (e.UserAtte) {
+			if (e.is_follow) {
 				uni.showModal({
 					content: '确定要取消关注TA吗？',
 					success: res => {
 						if (res.confirm) {
-							followUser(e.ID).then(delRes => {
-								if (delRes.data.Data == false) return;
-								this.videoListData.filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = false));
+							followUser(e.user_id).then(follow => {
+								uni.showToast({
+									title: follow.msg,
+									icon: follow.status == 1 ? 'success' : 'none'
+								});
+								if (!res.status) return;
+								this.videoListData.filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 								// 登录用户关注数减
 								if(!login_user.user_info) return;
 								login_user.user_info.follows_count--;
@@ -423,9 +427,13 @@ export default {
 				});
 				return;
 			} else {
-				followUser(e.ID).then(addRes => {
-					if (addRes.data.Data == false) return;
-					this.videoListData.filter(item => item.User.ID == e.ID).map(item => (item.User.UserAtte = true));
+				followUser(e.user_id).then(follow => {
+					uni.showToast({
+						title: follow.msg,
+						icon: follow.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
+					this.videoListData.filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					// 登录用户关注数加
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count++;

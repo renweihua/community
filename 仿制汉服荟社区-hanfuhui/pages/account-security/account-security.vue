@@ -32,7 +32,7 @@
       /// 跳转用户信息修改
       fnInfoModify() {
         uni.navigateTo({
-          url: '/pages/user-info-modify/user-info-modify?id=' + this.$store.getters['user/getUserInfoData'].ID
+          url: '/pages/user-info-modify/user-info-modify'
         })
       },
       /// 跳转绑定手机

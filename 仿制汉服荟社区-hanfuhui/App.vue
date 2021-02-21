@@ -60,7 +60,7 @@
 				}).then(userinfoRes => {
 					console.log(userinfoRes);
 					// 保存登录用户信息
-					this.$store.commit('user/setUserInfoData', userinfoRes.data);
+					this.$store.commit('user/setLoginUserInfoData', userinfoRes.data);
 					
 					// 获取未读消息数
 					return getMessageNoReadCount()

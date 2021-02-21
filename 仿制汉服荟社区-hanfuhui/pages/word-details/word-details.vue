@@ -263,10 +263,6 @@ export default {
 		/// 详情点赞
 		fnTop() {
 			let filItem = {};
-			let params = {
-				objectid: this.dynamic_id,
-				objecttype: 'word'
-			};
 			// 来自主要跳转
 			if (this.fromPage == 'home') {
 				// 推荐
@@ -307,7 +303,7 @@ export default {
 					filItem.praise_count++;
 					this.wordInfoData.is_praise = filItem.is_praise = true;
 					this.wordInfoData.praise_count++;
-					if (login_user.user_id) {
+					if (!login_user.user_id) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
 							user_id: login_user.user_id,
@@ -337,52 +333,68 @@ export default {
 		/// 关注详情发布用户
 		fnAtte(e) {
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
-			followUser(e.user_id).then(res => {
-				uni.showToast({
-					title: res.msg,
-					icon: res.status == 1 ? 'success' : 'none'
-				});
-				if (!res.status) return;
-				
-				// 来自主要跳转
-				if (this.fromPage == 'home') {
-					this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-					this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-					this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-				}
-				// 来自用户详情
-				if (this.fromPage == 'userinfo') {
-					this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-					this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-				}
-				// 来自发现-视频跳转
-				if (this.fromPage == 'find') {
-					this.$store.getters['word/getWordListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-				}
-				
-				// 用户是否已经关注
-				if (e.is_follow) {
+			// 用户是否已经关注
+			if (e.is_follow) {
+				followUser(e.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
 					this.wordInfoData.user_info.is_follow = false;
+					// 来自主要跳转
+					if (this.fromPage == 'home') {
+						this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+					}
+					// 来自用户详情
+					if (this.fromPage == 'userinfo') {
+						this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+						this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+					}
+					// 来自发现-视频跳转
+					if (this.fromPage == 'find') {
+						this.$store.getters['word/getWordListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
+					}
 					// 登录用户关注数减
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count--;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
-				}else{
+				});
+			} else {
+				followUser(e.user_id).then(res => {
+					uni.showToast({
+						title: res.msg,
+						icon: res.status == 1 ? 'success' : 'none'
+					});
+					if (!res.status) return;
 					this.wordInfoData.user_info.is_follow = true;
+					// 来自主要跳转
+					if (this.fromPage == 'home') {
+						this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+					}
+					// 来自用户详情
+					if (this.fromPage == 'userinfo') {
+						this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+						this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+					}
+					// 来自发现-视频跳转
+					if (this.fromPage == 'find') {
+						this.$store.getters['word/getWordListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
+					}
 					// 登录用户关注数加
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count++;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
-				}
-			});
+				});
+			}
 		},
 		/// 详情收藏
 		fnSave() {
 			let filItem = {};
-			let params = {
-				objectid: this.dynamic_id,
-				objecttype: 'word'
-			};
 			// 来自主要跳转
 			if (this.fromPage == 'home') {
 				// 推荐
@@ -511,7 +523,7 @@ export default {
 		/// 评论项操作
 		fnComm(e) {
 			let itemList = ['回复', '复制', '举报'];
-			if (e.User.ID == this.$store.getters['user/getUserInfoData'].ID) itemList.push('删除');
+			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) itemList.push('删除');
 			uni.showActionSheet({
 				itemList,
 				success: res => {

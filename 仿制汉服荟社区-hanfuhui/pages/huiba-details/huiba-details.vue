@@ -349,7 +349,7 @@ export default {
 		/// 展卡跳转用户中心页
 		fnCardUser(e) {
 			uni.navigateTo({
-				url: `/pages/user-info/user-info?id=${e.User.ID}`
+				url: `/pages/user-info/user-info?user_id=${e.user_info.user_id}`
 			});
 		},
 		/// 展卡跳转荟吧页
@@ -409,15 +409,19 @@ export default {
 		fnCardFollow(e) {
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
 			// 用户被关注
-			if (e.User.UserAtte) {
+			if (e.user_info.is_follow) {
 				uni.showModal({
 					content: '确定要取消关注TA吗？',
 					success: res => {
 						if (res.confirm) {
-							followUser(e.User.ID).then(delRes => {
-								if (delRes.data.Data == false) return;
-								this.huibaHottestListData.filter(item => item.User.ID == e.User.ID).map(item => (item.User.UserAtte = false));
-								this.huibaLatestListData.filter(item => item.User.ID == e.User.ID).map(item => (item.User.UserAtte = false));
+							followUser(e.user_info.user_id).then(delRes => {
+								uni.showToast({
+									title: follow.msg,
+									icon: follow.status == 1 ? 'success' : 'none'
+								});
+								if (!follow.status) return;
+								this.huibaHottestListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = false));
+								this.huibaLatestListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = false));
 								// 登录用户关注数减
 								if(!login_user.user_info) return;
 								login_user.user_info.follows_count--;
@@ -428,10 +432,14 @@ export default {
 				});
 				return;
 			} else {
-				followUser(e.User.ID).then(addRes => {
-					if (addRes.data.Data == false) return;
-					this.huibaHottestListData.filter(item => item.User.ID == e.User.ID).map(item => (item.User.UserAtte = true));
-					this.huibaLatestListData.filter(item => item.User.ID == e.User.ID).map(item => (item.User.UserAtte = true));
+				followUser(e.user_info.user_id).then(follow => {
+					uni.showToast({
+						title: follow.msg,
+						icon: follow.status == 1 ? 'success' : 'none'
+					});
+					if (!follow.status) return;
+					this.huibaHottestListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = true));
+					this.huibaLatestListData.filter(item => item.user_info.user_id == e.user_info.user_id).map(item => (item.user_info.is_follow = true));
 					// 登录用户关注数加
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count++;
@@ -442,7 +450,7 @@ export default {
 		/// 展卡更多-拉黑
 		fnCardBlack(e) {
 			// 用户是否被列入黑名单
-			e.User.Black ? delUserBlack(e.User.ID) : addUserBlack(e.User.ID);
+			e.User.Black ? delUserBlack(e.user_info.user_id) : addUserBlack(e.user_info.user_id);
 		},
 		/// 展卡更多-跳转举报页
 		fnCardReport(e) {

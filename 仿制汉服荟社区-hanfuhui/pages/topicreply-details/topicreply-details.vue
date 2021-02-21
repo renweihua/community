@@ -22,7 +22,7 @@
               <view class="f24r cgray">{{calDatetime}}</view>
             </view>
           </view>
-          <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.UserAtte?'已关注':'关注'}}</view>
+          <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{calUser.is_follow?'已关注':'关注'}}</view>
         </view>
         <!-- 中心内容 -->
         <view class="plr18r pb18r">
@@ -239,7 +239,7 @@
       /// 跳转用户信息页
       fnUserInfo(e) {
         uni.navigateTo({
-          url: `/pages/user-info/user-info?id=${e.ID}`
+          url: `/pages/user-info/user-info?user_id=${e.user_id}`
         })
       },
       /// 跳转点赞列表
@@ -336,35 +336,39 @@
       fnAtte(e) {
 		  let login_user = this.$store.getters['user/getLoginUserInfoData'];
         // 用户是否已经关注
-        if (e.UserAtte) {
-            followUser(e.ID).then(delRes => {
-            if (delRes.data.Data == false) return
-            this.topicReplyInfoData.User.UserAtte = false
+        if (e.is_follow) {
+            followUser(e.user_id).then(follow => {
+          uni.showToast({
+            title: follow.msg,
+            icon: follow.status == 1 ? 'success' : 'none'
+          });
+          if (!res.status) return;
+            this.topicReplyInfoData.user_info.is_follow = false
             // 来自主要跳转
             if (this.fromPage == 'home') {
-              this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+              this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
                 false)
-              this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+              this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
                 false)
-              this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => item.User
-                .UserAtte = false)
+              this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.User
+                .is_follow = false)
             }
             // 来自用户详情
             if (this.fromPage == 'userinfo') {
-              this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item =>
-                item.User.UserAtte =
+              this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+                item.user_info.is_follow =
                 false)
-              this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => item.User
-                .UserAtte = false)
+              this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.User
+                .is_follow = false)
             }
             // 来自发现-话题跳转
             if (this.fromPage == 'topic') {
-              this.$store.getters['topic/getTopicHottestListData'].filter(item => item.User.ID == e.ID).map(item =>
-                item.User.UserAtte =
+              this.$store.getters['topic/getTopicHottestListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+                item.user_info.is_follow =
                 false)
-              this.$store.getters['topic/getTopicLatestListData'].filter(item => item.User.ID == e.ID).map(item =>
+              this.$store.getters['topic/getTopicLatestListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
                 item.User
-                .UserAtte = false)
+                .is_follow = false)
             }
             // 登录用户关注数减
 			if(!login_user.user_info) return;
@@ -372,34 +376,38 @@
             this.$store.commit('user/setLoginUserInfoData', login_user);
           })
         } else {
-          followUser(e.ID).then(addRes => {
-            if (addRes.data.Data == false) return
-            this.topicReplyInfoData.User.UserAtte = true
+          followUser(e.user_id).then(follow => {
+          uni.showToast({
+            title: follow.msg,
+            icon: follow.status == 1 ? 'success' : 'none'
+          });
+          if (!res.status) return;
+            this.topicReplyInfoData.user_info.is_follow = true
             // 来自主要跳转
             if (this.fromPage == 'home') {
-              this.$store.getters['trend/getMainData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+              this.$store.getters['trend/getMainData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
                 true)
-              this.$store.getters['trend/getAtteData'].filter(item => item.User.ID == e.ID).map(item => item.User.UserAtte =
+              this.$store.getters['trend/getAtteData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.user_info.is_follow =
                 true)
-              this.$store.getters['trend/getSquareData'].filter(item => item.User.ID == e.ID).map(item => item.User
-                .UserAtte = true)
+              this.$store.getters['trend/getSquareData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.User
+                .is_follow = true)
             }
             // 来自用户详情
             if (this.fromPage == 'userinfo') {
-              this.$store.getters['user/getUserPublishListData'].filter(item => item.User.ID == e.ID).map(item =>
-                item.User.UserAtte =
+              this.$store.getters['user/getUserPublishListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+                item.user_info.is_follow =
                 true)
-              this.$store.getters['user/getUserTopListData'].filter(item => item.User.ID == e.ID).map(item => item.User
-                .UserAtte = true)
+              this.$store.getters['user/getUserTopListData'].filter(item => item.user_info.user_id == e.user_id).map(item => item.User
+                .is_follow = true)
             }
             // 来自发现-话题跳转
             if (this.fromPage == 'topic') {
-              this.$store.getters['topic/getTopicHottestListData'].filter(item => item.User.ID == e.ID).map(item =>
-                item.User.UserAtte =
+              this.$store.getters['topic/getTopicHottestListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
+                item.user_info.is_follow =
                 true)
-              this.$store.getters['topic/getTopicLatestListData'].filter(item => item.User.ID == e.ID).map(item =>
+              this.$store.getters['topic/getTopicLatestListData'].filter(item => item.user_info.user_id == e.user_id).map(item =>
                 item.User
-                .UserAtte = true)
+                .is_follow = true)
             }
             // 登录用户关注数加
 			if(!login_user.user_info) return;
@@ -561,7 +569,7 @@
       /// 评论项操作
       fnComm(e) {
         let itemList = ['回复', '复制', '举报'];
-        if (e.User.ID == this.$store.getters['user/getUserInfoData'].ID) itemList.push('删除')
+        if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].ID) itemList.push('删除')
         uni.showActionSheet({
           itemList,
           success: res => {

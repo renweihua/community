@@ -15,8 +15,6 @@ const user = {
     userFansList: [],
     // 用户拉黑名单列表数据
     userBlackList: [],
-    // 用户信息数据
-    userInfo: {},
     // 缓存用户信息数据
     tempUserInfo: {},
     // 账户信息数据
@@ -64,10 +62,6 @@ const user = {
     // 修改用户拉黑名单列表数据 this.$store.commit('user/setUserBlackListData', [...])
     setUserBlackListData(state, data) {
       state.userBlackList = data
-    },
-    // 修改用户信息数据对象  this.$store.commit('user/setUserInfoData', {...})
-    setUserInfoData(state, data) {
-      state.userInfo = data
     },
     // 修改临时用户信息数据对象 this.$store.commit('user/setTempUserInfoData', {...})
     setTempUserInfoData(state, data) {

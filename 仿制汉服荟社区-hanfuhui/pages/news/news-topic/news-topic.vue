@@ -30,7 +30,7 @@
       }
     },
     onLoad() {
-      this.id = this.$store.getters['user/getUserInfoData'].ID
+      this.id = this.$store.getters['user/getLoginUserInfoData'].ID
     },
     computed: {
       // 话题
