@@ -30,18 +30,6 @@ export async function getDiscoverList(params = {
 }
 
 /**
- * 获取关注动态列表
- * @param {Object} params 参数 {page:1,maxid:-1,limit:20}
- */
-export async function getAtteList(params = {
-	page: 1,
-	maxid: -1,
-	limit: 20
-}) {
-	return await request('/trend/GetTrendListForAtte', 'get', params)
-}
-
-/**
  * 获取动态列表
  */
 export async function getDynamics(params) {
