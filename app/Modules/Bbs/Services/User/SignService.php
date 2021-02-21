@@ -78,16 +78,16 @@ class SignService extends Service
      * 指定月份的签到状态
      *
      * @param  int     $login_user_id
-     * @param  string  $month
+     * @param  string  $search_month
      *
      * @return array
      */
-    public function getSignsByMonth(int $login_user_id, string $month): array
+    public function getSignsStatusByMonth(int $login_user_id, string $search_month): array
     {
         // 获取指定月份的签到记录
-        $data = UserSign::getInstance()->setMonthTable($month)->where('user_id', $login_user_id)->pluck('created_time');
+        $data = UserSign::getInstance()->setMonthTable($search_month)->where('user_id', $login_user_id)->pluck('created_time');
         // 获取当月的所有日期天
-        $days = get_month_days(strtotime($month));
+        $days = get_month_days(strtotime($search_month));
         $lists = [];
         foreach ($days as $day){
             $lists[$day] = ['day' => $day, 'is_sign' => false];
@@ -101,5 +101,41 @@ class SignService extends Service
             }
         }
         return array_values($lists);
+    }
+
+    /**
+     * 指定月份的签到记录
+     *
+     * @param  int     $login_user_id
+     * @param  string  $search_month
+     *
+     * @return array
+     */
+    public function getSignsByMonth(int $login_user_id, string $search_month): array
+    {
+        $limit = $this->getLimit(request()->input('limit', 10));
+        $paginates = UserSign::getInstance()->setMonthTable($search_month)
+            ->where('user_id', $login_user_id)
+            ->orderBy('sign_id', 'DESC')
+            ->paginate($limit);
+
+        $lists = $this->getPaginateFormat($paginates);
+
+        /**
+         * 是否还存在更多数据：
+         *  获取最后一条数据的时间戳为查询月份
+         */
+        if (empty($lists['data'])) {
+            // 大于最小月份时，继续查询
+            if ( date(UserSign::MONTH_FORMAT, strtotime($search_month)) > UserSign::MIN_TABLE ) {
+                $search_month = date($search_month, strtotime('-1 month', strtotime($search_month)));
+                return $this->getSignsByMonth($login_user_id, $search_month);
+            }
+            $lists['month_table'] = $search_month;
+        } else {
+            $lists['month_table'] = date('Y-m', current($lists['data'])['created_time']);
+        }
+
+        return $lists;
     }
 }

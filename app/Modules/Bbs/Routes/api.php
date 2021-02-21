@@ -106,6 +106,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 每日签到
             Route::post('/signIn', 'SignController@signIn');
             // 指定月份的签到状态
+            Route::get('/getSignsStatusByMonth', 'SignController@getSignsStatusByMonth');
+            // 我的签到记录：按月筛选
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
             Route::put('/update', 'IndexController@update');

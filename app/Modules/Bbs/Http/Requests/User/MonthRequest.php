@@ -14,15 +14,15 @@ class MonthRequest extends BaseRequest
     public function rules()
     {
         return [
-            'month' => 'required|date:Y-m',
+            'search_month' => 'required|date:Y-m',
         ];
     }
 
     public function messages()
     {
         return [
-            'month.required' => '请设置月份！',
-            'month.date' => '请设置有效月份！',
+            'search_month.required' => '请设置月份！',
+            'search_month.date' => '请设置有效月份！',
         ];
     }
 }
