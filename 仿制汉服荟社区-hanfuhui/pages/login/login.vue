@@ -41,9 +41,6 @@
 		getNeteaseIMToken
 	} from "@/api/UserServer.js"
 	import {
-		getSigninInfo,
-	} from "@/api/HanbiServer.js"
-	import {
 		getMessageNoReadCount,
 	} from "@/api/MessageServer.js"
 
@@ -99,10 +96,7 @@
 					
 					// 获取未读消息数
 					let mesRes = await getMessageNoReadCount()
-					this.$store.commit('setNewsCountData', mesRes.data)
-					// // 获取签到信息
-					// let signinRes = await getSigninInfo()
-					// this.$store.commit('setSigninInfoData', signinRes.data.Data)
+					this.$store.commit('setNewsCountData', mesRes.data);
 
 					// 开始调整主页
 					this.isLogin = false;

@@ -8,9 +8,6 @@
 		getLoginUserInfo,
 	} from "@/api/UserServer.js"
 	import {
-		getSigninInfo,
-	} from "@/api/HanbiServer.js"
-	import {
 		getMessageNoReadCount,
 	} from "@/api/MessageServer.js"
 
@@ -72,15 +69,6 @@
 					this.$store.commit('setNewsCountData', mesRes.data)
 					
 					return true;
-					// 获取签到信息
-					return getSigninInfo()
-				}).then(signinRes => {
-					return true;
-					
-					
-					// 保存签到信息
-					this.$store.commit('setSigninInfoData', signinRes.data.Data)
-					return true
 				}).then(res => {
 					console.log('app.vue', res);
 

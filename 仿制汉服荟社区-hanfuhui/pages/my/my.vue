@@ -103,7 +103,6 @@
 <script>
 import { fnUploadUpyunPic } from '@/utils/UniUtil.js';
 import { modifyUserMainBgPic, getLoginUserInfo } from '@/api/UserServer.js';
-import { getSigninInfo } from '@/api/HanbiServer.js';
 import { getMessageNoReadCount } from '@/api/MessageServer.js';
 
 export default {
@@ -198,16 +197,6 @@ export default {
 				.then(mesRes => {
 					// 保存未读消息数
 					this.$store.commit('setNewsCountData', mesRes.data);
-					return true;
-
-					// 获取签到信息
-					return getSigninInfo();
-				})
-				.then(signinRes => {
-					return true;
-
-					// 保存签到信息
-					this.$store.commit('setSigninInfoData', signinRes.data.Data);
 				});
 		}
 	}
