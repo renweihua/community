@@ -8,7 +8,6 @@
 			<view class="flex plr18r">
 				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{ 'barsh-home': current == 0 }" @tap="fnBarClick(0)">推荐</view>
 				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{ 'barsh-home': current == 1 }" @tap="fnBarClick(1)">关注</view>
-				<view class="w128r hl90r f32r fcenter cwhite-a6" :class="{ 'barsh-home': current == 2 }" @tap="fnBarClick(2)">广场</view>
 			</view>
 		</view>
 
@@ -53,35 +52,14 @@
 					</block>
 				</mescroll-uni>
 			</swiper-item>
-
-			<!-- 广场 -->
-			<swiper-item>
-				<mescroll-uni v-if="status.square" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
-					<block v-for="(infoData, index) in squareData" :key="index">
-						<trend-card
-							:item="infoData"
-							@click="fnCardInfo"
-							@user="fnCardUser"
-							@huiba="fnCardHuiba"
-							@top="fnCardTop"
-							@comm="fnCardComm"
-							@save="fnCardSave"
-							@follow="fnCardFollow"
-							@black="fnCardBlack"
-							@report="fnCardReport"
-						></trend-card>
-					</block>
-				</mescroll-uni>
-			</swiper-item>
 		</swiper>
 	</view>
 </template>
 
 <script>
-import { getSquareList, getDiscoverList } from '@/api/TrendServer.js';
 import { dynamicPraise, dynamicCollection } from '@/api/InteractServer.js';
 import { followUser, addUserBlack, delUserBlack } from '@/api/UserServer.js';
-import { getFollowDynamics } from '@/api/home.js';
+import { getDiscoverList, getFollowDynamics } from '@/api/home.js';
 
 import { dynamicDetailPage } from '@/utils/common.js';
 
@@ -106,8 +84,7 @@ export default {
 			// 激活顶部导航关联页状态
 			status: {
 				recommend: true,
-				follow: false,
-				square: false
+				follow: false
 			},
 			// 双击刷新
 			clickRefresh: false,
@@ -117,7 +94,6 @@ export default {
 			maxID: [-1, -1, -1],
 			// 刷新组件实例
 			mescroll: []
-			//
 		};
 	},
 	watch: {
@@ -135,10 +111,6 @@ export default {
 		atteData() {
 			return this.$store.getters['trend/getAtteData'];
 		},
-		// 广场列表数据
-		squareData() {
-			return this.$store.getters['trend/getSquareData'];
-		}
 	},
 	methods: {
 		/// mescroll组件初始化的回调,可获取到mescroll对象
@@ -153,18 +125,14 @@ export default {
 		},
 		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
 		upCallback(mescroll) {
-			console.log('---mescroll---');
-			console.log(mescroll);
 			// 联网获取数据
-			[getDiscoverList, getFollowDynamics, getSquareList]
+			[getDiscoverList, getFollowDynamics]
 				[this.current]({
 					page: mescroll.num,
 					last_id: this.maxID[this.current],
 					limit: mescroll.size
 				})
 				.then(res => {
-					console.log('---res---');
-					console.log(res);
 					let lists = res.data;
 
 					// 固定项数据往后加载
@@ -179,10 +147,7 @@ export default {
 						let arrayData = mescroll.num == 1 ? lists.data : this.atteData.concat(lists.data);
 						this.$store.commit('trend/setAtteData', arrayData);
 					}
-					if (this.current == 2) {
-						let arrayData = mescroll.num == 1 ? lists.data : this.squareData.concat(lists.data);
-						this.$store.commit('trend/setSquareData', arrayData);
-					}
+					
 					// 数据获取成功关闭loading区
 					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 				})
@@ -200,7 +165,7 @@ export default {
 			}, 1000);
 		},
 		// 顶部导航选项点击
-		fnBarClick(e) {
+		fnBarClick(e) {			
 			let current = typeof e == 'object' ? e.detail.current : e;
 			// 是否当前项点击
 			if (this.current == current) {
@@ -226,8 +191,8 @@ export default {
 				// 改变顶部导航选中
 				this.current = current;
 				// 首次选中激活顶部导航关联页状态
+				if (!this.status.recommend && current == 0) this.status.recommend = true;
 				if (!this.status.follow && current == 1) this.status.follow = true;
-				if (!this.status.square && current == 2) this.status.square = true;
 				// 清除定时器
 				clearTimeout(this.timeOutHome);
 				// 连续触发记录重置
@@ -333,8 +298,6 @@ export default {
 			if (this.current == 0) filItem = this.mainData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			// 关注
 			if (this.current == 1) filItem = this.atteData.filter(item => item.dynamic_id == e.dynamic_id)[0];
-			// 广场
-			if (this.current == 2) filItem = this.squareData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			// 点赞动态
 			dynamicPraise(filItem.dynamic_id).then(res => {
 				uni.showToast({
@@ -360,8 +323,6 @@ export default {
 			if (this.current == 0) filItem = this.mainData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			// 关注
 			if (this.current == 1) filItem = this.atteData.filter(item => item.dynamic_id == e.dynamic_id)[0];
-			// 广场
-			if (this.current == 2) filItem = this.squareData.filter(item => item.dynamic_id == e.dynamic_id)[0];
 			dynamicCollection(filItem.dynamic_id).then(res => {
 				uni.showToast({
 					title: res.msg,
@@ -396,7 +357,6 @@ export default {
 								if (!follow.status) return;
 								this.atteData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 								this.mainData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
-								this.squareData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 								// 登录用户关注数减
 								if(!login_user.user_info) return;
 								login_user.user_info.follows_count--;
@@ -414,7 +374,6 @@ export default {
 					if (!follow.status) return;
 					this.atteData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					this.mainData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
-					this.squareData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					// 登录用户关注数加
 					if(!login_user.user_info) return;
 					login_user.user_info.follows_count++;

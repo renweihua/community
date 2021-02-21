@@ -74,7 +74,7 @@
               "selectedIcon": "/static/icon-bottom-nav/home_select.png"
             },
             {
-              "text": "发现",
+              "text": "广场",
               "icon": "/static/icon-bottom-nav/find_normal.png",
               "selectedIcon": "/static/icon-bottom-nav/find_select.png"
             },

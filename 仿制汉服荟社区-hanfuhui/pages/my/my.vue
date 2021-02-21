@@ -10,12 +10,12 @@
 				<image
 					class="my-cover"
 					@tap="fnMainBgPic"
-					:src="userInfoData.user_info.user_avatar ? userInfoData.user_info.user_avatar : '/static/default_image.png'"
+					:src="userInfoData.user_info ? userInfoData.user_info.user_avatar : '/static/default_image.png'"
 					mode="aspectFill"
 				></image>
 				<view class="posir flex hl90r mlr28r" @tap="fnUserInfo">
 					<view class="my-avatar">
-						<user-avatar :src="userInfoData.user_info.user_avatar ? userInfoData.user_info.user_avatar : '/static/default_avatar.png'" tag="" size="lg"></user-avatar>
+						<user-avatar :src="userInfoData.user_info ? userInfoData.user_info.user_avatar : '/static/default_avatar.png'" tag="" size="lg"></user-avatar>
 					</view>
 					<text class="my-nickname">{{ userInfoData.user_info.nick_name }}</text>
 				</view>
