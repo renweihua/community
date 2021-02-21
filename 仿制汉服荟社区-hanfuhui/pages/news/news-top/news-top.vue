@@ -30,6 +30,7 @@
 <script>
 import { fnFormatLocalDate, getYearMonth } from '@/utils/CommonUtil.js';
 import { getPraiseByNotify } from '@/api/MessageServer.js';
+import {dynamicDetailPage} from '@/utils/common.js'
 
 export default {
 	data() {
@@ -75,7 +76,6 @@ export default {
 					if(search_month != this.search_month){
 						mescroll.setPageNum(1);
 					}
-					console.log(mescroll)
 
 					if (lists.data.length <= 0 && search_month == this.search_month) {
 						// 数据加载完毕
@@ -95,42 +95,12 @@ export default {
 		/// 跳转用户信息页
 		fnUserInfo(e) {
 			uni.navigateTo({
-				url: `/pages/user-info/user-info?user_id=${e.ID}`
+				url: `/pages/user-info/user-info?user_id=${e.user_id}`
 			});
 		},
 		/// 跳转详情页
 		fnOpenInfo(e) {
-			console.log(e.ObjectType);
-			if (e.ObjectType == 'trend') {
-				uni.navigateTo({
-					url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=comment`
-				});
-				return;
-			}
-			if (e.ObjectType == 'album') {
-				uni.navigateTo({
-					url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=comment`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topic') {
-				uni.navigateTo({
-					url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=comment`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topicreply') {
-				uni.navigateTo({
-					url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=comment`
-				});
-				return;
-			}
-			if (e.ObjectType == 'video') {
-				uni.navigateTo({
-					url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=comment`
-				});
-				return;
-			}
+			dynamicDetailPage(e.relation, this, 'comment');
 		}
 	}
 };

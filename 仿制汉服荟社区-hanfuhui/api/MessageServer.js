@@ -50,6 +50,16 @@ export async function getPraiseByNotify(params = {
   return await request('/user/getPraiseByNotify', 'get', params)
 }
 
+/**
+ * 我的{评论}消息通知
+ */
+export async function getCommentByNotify(params = {
+	search_month:'',
+  page: 1,
+  limit: 20,
+}) {
+  return await request('/user/getCommentByNotify', 'get', params)
+}
 
 /**
  * 我的{提醒|系统}消息通知

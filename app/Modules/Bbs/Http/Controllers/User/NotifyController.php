@@ -38,6 +38,18 @@ class NotifyController extends BbsController
     }
 
     /**
+     * 我的{评论}消息通知
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCommentByNotify()
+    {
+        $lists = $this->service->getCommentByNotify($this->login_user);
+        return $this->successJson($lists, '获取成功！');
+    }
+
+
+    /**
      * 我的{提醒|系统}消息通知
      *
      * @return \Illuminate\Http\JsonResponse

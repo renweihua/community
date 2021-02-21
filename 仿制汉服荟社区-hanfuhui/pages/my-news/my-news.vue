@@ -71,6 +71,13 @@ export default {
 	methods: {
 		/// 跳转打开新窗口
 		fnOpenWin(type) {
+			if(type == 'news-comment' || type == 'news-notice'){
+				uni.showToast({
+					title: '尚未对接！',
+					icon: 'none'
+				});
+				return;
+			}
 			uni.navigateTo({
 				url: `/pages/news/${type}/${type}`
 			});

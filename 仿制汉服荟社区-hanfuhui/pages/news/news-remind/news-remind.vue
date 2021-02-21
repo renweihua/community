@@ -83,7 +83,6 @@
 					if (search_month != this.search_month) {
 						mescroll.setPageNum(1);
 					}
-					console.log(mescroll)
 
 					if (lists.data.length <= 0 && search_month == this.search_month) {
 						// 数据加载完毕

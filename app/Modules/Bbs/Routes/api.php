@@ -143,6 +143,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/user/getSystemByNotify', 'NotifyController@getSystemByNotify');
             // 我的{点赞}消息通知
             Route::get('/user/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
+            // 我的{评论}消息通知
+            Route::get('/user/getCommentByNotify', 'NotifyController@getCommentByNotify');
         });
     });
 

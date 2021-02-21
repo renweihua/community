@@ -2,42 +2,43 @@
   <view>
     <!-- 滚动内容区 -->
     <mescroll-uni @down="downCallback" @up="upCallback">
-      <block v-for="(comment,index) in commentList" :key="index">
+      <block v-for="(item,index) in commentList" :key="index">
         <view class="plr18r ptb18r bgwhite mb18r">
           <view class="flex">
-            <user-avatar @click="fnUserInfo(comment.user_info.user_id)" :src="comment.user_info.user_avatar" tag=""
+            <user-avatar @click="fnUserInfo(item.sender.user_id)" :src="item.sender.user_avatar" tag=""
               size="md"></user-avatar>
             <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
               <view>
-                <text class="f28r fbold mr18r">{{comment.user_info.NickName}}</text>
-                <i-icon :type="comment.user_info.Gender == '男' ?'nan':'nv' " size="28" :color="comment.user_info.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
+                <text class="f28r fbold mr18r">{{item.sender.nick_name}}</text>
+				<i-icon v-if="[0, 1].indexOf(item.sender.user_sex) > -1" :type="item.sender.user_sex_text == '男' ? 'nan':'nv' " size="28"
+				 :color="item.sender.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
               </view>
-              <view class="f24r cgray ellipsis">{{calDateTime(comment.Datetime)}}</view>
+              <view class="f24r cgray ellipsis">{{calDateTime(item.created_time)}}</view>
             </view>
-            <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnReplyOpen(comment)">回复</view>
+            <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnReplyOpen(item)">回复</view>
           </view>
-          <view class="f28r c555 ptb18r fword">
-            <template v-if="comment.CommentData.ParentUserID">
+          <!-- <view class="f28r c555 ptb18r fword">
+            <template v-if="item.CommentData.ParentUserID">
               回复
-              <text class="ctheme" @tap="fnUserInfo(comment.CommentData.ParentUserID)">
-                {{comment.CommentData.ParentNickName}}
+              <text class="ctheme" @tap="fnUserInfo(item.CommentData.ParentUserID)">
+                {{item.CommentData.ParentNickName}}
               </text>
-              ：{{comment.Content}}
+              ：{{item.Content}}
             </template>
             <template v-else>
-              {{comment.Content}}
+              {{item.Content}}
             </template>
           </view>
-          <view class="ptb18r f28r bts2r" v-if="comment.CommentData.ParentUserID">
-            <text class="ctheme" @tap="fnUserInfo(comment.CommentData.ParentUserID)">{{comment.CommentData.ParentNickName}}</text>
-            <text class="c555 mlr8r" v-if="comment.CommentData.ParentReplyUserID">回复</text>
-            <text class="ctheme" v-if="comment.CommentData.ParentReplyUserID" @tap="fnUserInfo(comment.CommentData.ParentReplyUserID)">{{comment.CommentData.ParentReplyNickName}}</text>
-            <text class="c555">：{{comment.CommentData.ParentContent}}</text>
-          </view>
-          <view class="flex flex-ais br4r" @tap="fnOpenInfo(comment)">
-            <image class="hw128r br4r" v-if="comment.ObjectImgSrc" :src="comment.ObjectImgSrc+'_200x200.jpg/format/webp'"
+          <view class="ptb18r f28r bts2r" v-if="item.CommentData.ParentUserID">
+            <text class="ctheme" @tap="fnUserInfo(item.CommentData.ParentUserID)">{{item.CommentData.ParentNickName}}</text>
+            <text class="c555 mlr8r" v-if="item.CommentData.ParentReplyUserID">回复</text>
+            <text class="ctheme" v-if="item.CommentData.ParentReplyUserID" @tap="fnUserInfo(item.CommentData.ParentReplyUserID)">{{item.CommentData.ParentReplyNickName}}</text>
+            <text class="c555">：{{item.CommentData.ParentContent}}</text>
+          </view> -->
+          <view class="flex flex-ais br4r" @tap="fnOpenInfo(item)">
+            <image class="hw128r br4r" v-if="item.relation.dynamic_images" :src="item.relation.dynamic_images[0]"
               mode="aspectFill"></image>
-            <view class="flex-fitem f28r ptb8r plr18r bgf8 c555 flex flex-aic">{{comment.ObjectText}}</view>
+            <view class="flex-fitem f28r ptb8r plr18r bgf8 c555 flex flex-aic">{{item.relation.dynamic_title}}</view>
           </view>
         </view>
       </block>
@@ -49,14 +50,16 @@
 
 <script>
   import {
-    fnFormatLocalDate
+		fnFormatLocalDate,
+		getYearMonth
   } from "@/utils/CommonUtil.js"
   import {
-    getMessageListByType,
+    getCommentByNotify,
   } from "@/api/MessageServer.js"
   import {
     addComment,
   } from "@/api/InteractServer.js"
+  import {dynamicDetailPage} from '@/utils/common.js'
 
   // 评论输入弹出层组件
   import CommInput from '@/components/comm-input/comm-input'
@@ -65,14 +68,16 @@
     components: {
       CommInput
     },
-
     data() {
       return {
         // 评论数据列表
         commentList: [],
+				search_month: ''
       }
     },
-
+		onLoad() {
+			this.search_month = getYearMonth();
+		},
     methods: {
       /// 下拉刷新的回调
       downCallback(mescroll) {
@@ -81,64 +86,55 @@
       },
       /// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
       upCallback(mescroll) {
-        getMessageListByType({
+				let search_month = this.search_month;
+        getCommentByNotify({
+					search_month: search_month,
           page: mescroll.num,
           limit: mescroll.size,
-          type: 'comment'
         }).then(res => {
-          if (mescroll.num == 1) {
-            this.commentList = res.data.Data
-          } else {
-            this.commentList = this.commentList.concat(res.data.Data)
-          }
-          mescroll.endSuccess(res.data.Data.length, res.data.Data.length >= mescroll.size);
+			let lists = res.data;
+			
+			// 更新未读消息数量
+			if (lists.set_read_nums) {
+				let newsCount = this.$store.getters['getNewsCountData'];
+				newsCount.comment_unreads = newsCount.comment_unreads - lists.set_read_nums;
+				this.$store.commit('setNewsCountData', newsCount);
+			}
+			
+			this.commentList = this.commentList.concat(lists.data);
+			
+			/**
+			 * 如果当前月份记录查询完成，那么继续查询上一个月份的
+			 */
+			this.search_month = lists.month_table;
+			// 如果月份不一致，那么page需要重置
+			if (search_month != this.search_month) {
+				mescroll.setPageNum(1);
+			}
+			
+			if (lists.data.length <= 0 && search_month == this.search_month) {
+				// 数据加载完毕
+				mescroll.endSuccess(0, false);
+			} else {
+				mescroll.endSuccess(lists.per_page, true);
+			}
         }).catch(() => {
           mescroll.endErr();
         })
       },
       /// 计算时间格式 下午 08:12 | 昨日 09:12 | 2019-12-03 20:12
       calDateTime(str) {
-        return fnFormatLocalDate(new Date(str).getTime())
+        return fnFormatLocalDate(str * 1000)
       },
       /// 跳转用户信息页
       fnUserInfo(id) {
         uni.navigateTo({
-          url: `/pages/user-info/user-info?id=${id}`
+          url: `/pages/user-info/user-info?user_id=${user_id}`
         })
       },
       /// 跳转详情页
       fnOpenInfo(e) {
-        console.log(e.ObjectType);
-        if (e.ObjectType == 'trend') {
-          uni.navigateTo({
-            url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=comment`
-          })
-          return
-        }
-        if (e.ObjectType == 'album') {
-          uni.navigateTo({
-            url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=comment`
-          })
-          return
-        }
-        if (e.ObjectType == 'topic') {
-          uni.navigateTo({
-            url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=comment`
-          })
-          return
-        }
-        if (e.ObjectType == 'topicreply') {
-          uni.navigateTo({
-            url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=comment`
-          })
-          return
-        }
-        if (e.ObjectType == 'video') {
-          uni.navigateTo({
-            url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=comment`
-          })
-          return
-        }
+        dynamicDetailPage(e.relation, this, 'comment');
       },
       /// 显示评论输入框
       fnReplyOpen(e) {

@@ -59,6 +59,13 @@ class NotifyService extends Service
         return $this->getNotify($login_user_id, ['notify_type'  => Notify::NOTIFY_TYPE['SYSTEM_MSG']]);
     }
 
+    /**
+     * 我的{评论}消息通知
+     *
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
     public function getCommentByNotify(int $login_user_id)
     {
         return $this->getNotify($login_user_id, function($query){

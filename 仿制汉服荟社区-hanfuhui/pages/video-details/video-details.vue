@@ -436,10 +436,9 @@ export default {
 		/// 显示评论输入框
 		fnCommOpen() {
 			this.$refs.comm.open({
+				dynamic_id: this.dynamic_id,
 				type: 'comment',
 				content: this.$store.getters['getCommContentData'],
-				objectid: this.dynamic_id,
-				objecttype: 'video'
 			});
 		},
 		/// 评论发送

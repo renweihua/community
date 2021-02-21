@@ -5,7 +5,7 @@
       <block v-for="(notice,index) in noticeList" :key="index">
         <view class="mlr18r mtb18r">
           <view class="mautoblock fcenter ptb8r plr18r f24r cgray br8r mb18r">
-            {{calDateTime(notice.Datetime)}}
+            {{calDateTime(notice.created_time)}}
           </view>
           <view class="plr18r ptb18r fword f28r c111 bgwhite br8r">
             {{notice.Content}}
@@ -31,7 +31,6 @@
         noticeList: []
       }
     },
-
     methods: {
       /// 下拉刷新的回调
       downCallback(mescroll) {
@@ -56,7 +55,7 @@
       },
       /// 计算时间格式 下午 08:12 | 昨日 09:12 | 2019-12-03 20:12
       calDateTime(str) {
-        return fnFormatTimeHeader(new Date(str).getTime())
+        return fnFormatTimeHeader(str * 1000)
       }
     }
   }
