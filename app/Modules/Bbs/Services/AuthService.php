@@ -171,6 +171,11 @@ class AuthService extends Service
             'fans',
             'follows'
         ]);
+        // 是否已签到
+        $user->userInfo->is_sign = false;
+        if ($user->userInfo->last_sign_time > 0 && date('Y-m-d') == date('Y-m-d', $user->userInfo->last_sign_time)){
+            $user->userInfo->is_sign = true;
+        }
         return $user;
     }
 
