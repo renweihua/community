@@ -138,4 +138,10 @@ class Dynamic extends Model
     {
         return $this->hasOne(UserFollowFan::class, 'friend_id', 'user_id');
     }
+
+    public static function getListByIds(array $ids)
+    {
+        $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images')->get()->toArray();
+        return array_column($list, null, 'dynamic_id');
+    }
 }

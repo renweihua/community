@@ -166,4 +166,10 @@ class UserInfo extends Model
         ++$user_info->total_sign_days;
         return $user_info->save();
     }
+
+    public static function getListByIds(array $ids)
+    {
+        $list = self::whereIn('user_id', $ids)->select('user_id', 'nick_name', 'user_avatar', 'user_sex')->get()->toArray();
+        return array_column($list, null, 'user_id');
+    }
 }

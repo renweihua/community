@@ -3,6 +3,7 @@
 namespace App\Models\System;
 
 use App\Models\MonthModel;
+use App\Models\User\UserInfo;
 use Illuminate\Support\Facades\DB;
 
 class Notify extends MonthModel
@@ -36,6 +37,11 @@ class Notify extends MonthModel
     public function setNotifyContentAttribute($key)
     {
         $this->attributes['notify_content'] = empty($key) ? '' : $key;
+    }
+
+    public function sender()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'sender_id')->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
     }
 
     public static function insert($data)
@@ -73,6 +79,51 @@ class Notify extends MonthModel
             return $this->getUnreadNums($user_id, $where, date($date_format, strtotime('-1 month', strtotime($month_table))), $count);
         }else{
             return $count;
+        }
+    }
+
+    public function setExplain(&$v)
+    {
+        $v->explain = '';
+        switch ($v->target_type){
+            case self::TARGET_TYPE['DYNAMIC']: // 动态
+                switch ($v->notify_type){
+                    case 0:
+                        $v->explain = $v->notify_content;
+                        break;
+                    default:
+                        switch ($v->dynamic_type){
+                            case self::DYNAMIC_TARGET_TYPE['PRAISE']: // 点赞
+                                $v->explain = '点赞了您的‘' . $v->relation->dynamic_title . '’';
+                                break;
+                            case self::DYNAMIC_TARGET_TYPE['COLLECTION']: // 收藏
+                                $v->explain = '喜欢了您的‘' . $v->relation->dynamic_title . '’';
+                                break;
+                            case self::DYNAMIC_TARGET_TYPE['COMMENT']: // 评论
+                                $v->explain = '评论了您的‘' . $v->relation->dynamic_title . '’';
+                                break;
+                            case self::SHARE_DYNAMIC_TYPE: // 分享动态
+                                $v->explain = '分享了您的‘' . $v->relation->dynamic_title . '’';
+                                break;
+                            case self::COMMENT_PRAISE_DYNAMIC_TYPE: // 点赞评论
+                                $v->explain = '喜欢了您的评论';
+                                break;
+                            case self::DYNAMIC_TARGET_TYPE['REPLY_COMMENT']:
+                                $v->explain = '回复了您的评论';
+                                break;
+                            case self::DELETE_DYNAMIC_TYPE:
+                                $v->explain = '您有一个动态被管理员删除';
+                                break;
+                        }
+                        break;
+                }
+                break;
+            case self::TARGET_TYPE['FOLLOW']: // 关注
+                $v->explain = '关注了您';
+                break;
+            default: //
+                $v->explain = $v->notify_content;
+                break;
         }
     }
 }

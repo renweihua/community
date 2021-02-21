@@ -113,7 +113,6 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::put('/update', 'IndexController@update');
 
 
-
             // 指定会员是否在黑名单：前期先测试数据返回
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
         });
@@ -137,9 +136,11 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         /**
          * 消息相关
          */
-        Route::prefix('notify')->group(function () {
+        Route::prefix('')->group(function () {
             // 我的未读消息
-            Route::get('/unread', 'NotifyController@unread');
+            Route::get('/notify/unread', 'NotifyController@unread');
+            // 我的{点赞}消息通知
+            Route::get('/user/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
         });
     });
 
