@@ -56,11 +56,10 @@ limit:20,
 }
  */
 export async function getHuibaUserFollow(params = {
-  userid: 985319,
   page: 1,
   limit: 20,
 }) {
-  return await request('/huiba/GetHuibaFollowHuiba', 'get', params)
+  return await request('/user/follow_topics', 'get', params)
 }
 
 /**

@@ -58,16 +58,16 @@
 			<!-- 关注荟吧 -->
 			<swiper-item>
 				<mescroll-uni v-if="status.huiba" :top="80" @down="downCallback" @up="upCallback" @init="mescrollInit">
-					<block v-for="(huiba,index) in huibaUserFollowData" :key="index">
-						<view class="flexr-jsb flex-aic plr18r ptb18r bgwhite bbs2r" @tap="fnHuibaInfo(huiba.ID)">
+					<block v-for="(item,index) in huibaUserFollowData" :key="index">
+						<view class="flexr-jsb flex-aic plr18r ptb18r bgwhite bbs2r" @tap="fnHuibaInfo(item.topic.topic_id)">
 							<view class="flex">
-								<user-avatar :src="huiba.FaceUrl ? huiba.FaceUrl + '_200x200.jpg':'/static/default_avatar.png'" size="md"
+								<user-avatar :src="item.topic.topic_cover ? item.topic.topic_cover :'/static/default_avatar.png'" size="md"
 								 :square="true"></user-avatar>
 								<view class="flexc-jsa ml28r">
-									<view class="f28r fbold mr18r c111">{{huiba.Name}}</view>
+									<view class="f28r fbold mr18r c111">{{item.topic.topic_name}}</view>
 									<view class="f24r cgray">
-										<text class="mr8r">关注</text>{{huiba.FollowCount || 0}}
-										<text class="ml28r mr8r">动态</text>{{huiba.TrendCount || 0}}
+										<text class="mr8r">关注</text>{{item.topic.follow_count || 0}}
+										<text class="ml28r mr8r">动态</text>{{item.topic.dynamic_count || 0}}
 									</view>
 								</view>
 							</view>
@@ -176,6 +176,8 @@
 					page: mescroll.num,
 					limit: mescroll.size,
 				}).then(res => {
+					console.log('---res---')
+					console.log(res);
 					let lists = res.data;
 
 					// 用户

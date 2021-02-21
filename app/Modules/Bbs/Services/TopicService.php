@@ -173,7 +173,7 @@ class TopicService extends Service
      */
     public function getFollows(int $login_user_id)
     {
-        $lists = TopicFollow::where('user_id', $login_user_id)->with('topic')->paginate($this->getLimit(request()->input('limit', 10)));
+        $lists = TopicFollow::where('user_id', $login_user_id)->with('topic')->orderBy('relation_id', 'DESC')->paginate($this->getLimit(request()->input('limit', 10)));
         return $this->getPaginateFormat($lists);
     }
 }
