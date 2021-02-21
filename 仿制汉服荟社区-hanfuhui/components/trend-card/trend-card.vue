@@ -254,7 +254,6 @@
 			/// 更多菜单操作
 			async fnActionSheet() {
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
-				
 				let atteTitle = this.item.user_info.is_follow ? '取消关注' : '关注TA';
 				// this.item.user_info.is_black 一直为false 这里用网络来判断存在咯
 				let blackRes = await getUserExistsBlack(this.item.user_info.user_id);
@@ -263,7 +262,7 @@
 				let blackTitle = this.item.user_info.is_black ? '移出黑名单' : '将TA拉黑';
 				let blackContent = this.item.user_info.is_black ? '是否将该用户移出黑名单' : '拉黑后再广场将看不到TA的动态，TA将无法对你发消息、评论。';
 				uni.showActionSheet({
-					itemList: [atteTitle, blackTitle, '举报'],
+					itemList: this.item.user_info.is_self ? [blackTitle, '举报'] : [atteTitle, blackTitle, '举报'],
 					success: res => {
 						if (res.tapIndex == 0) return this.$emit('follow', this.item)
 						if (res.tapIndex == 2) return this.$emit('report', this.item)

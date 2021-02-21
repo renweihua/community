@@ -69,7 +69,7 @@
 			<swiper-item>
 				<mescroll-uni v-if="status.album" :top="90" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 					<!-- 周、月榜单 -->
-					<view class="flex plr18r ptb18r bgwhite mb18r">
+					<view v-if="false" class="flex plr18r ptb18r bgwhite mb18r">
 						<view class="flex-fitem posir br8r rank-ho200r mr18r" @tap="fnAlbumRank(1)">
 							<image
 								style="width: 100%;height: 100%;"

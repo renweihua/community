@@ -212,13 +212,38 @@ class DynamicService extends Service
         $lists = DynamicCollection::where('user_id', $login_user_id)
                                   ->select('relation_id', 'user_id', 'dynamic_id', 'created_time')
                                   ->with([
-                                      'dynamic' => function($query) {
-                                          $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'praise_count', 'collection_count', 'comment_count');
+                                      'dynamic' => function($query) use($login_user_id){
+                                          $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'praise_count', 'collection_count', 'comment_count', 'dynamic_type', 'topic_id')
+                                              ->with([
+                                                  'userInfo' => function($query) use($login_user_id){
+                                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex')->with([
+                                                          'isFollow' => function($query) use ($login_user_id) {
+                                                              $query->where('user_id', $login_user_id);
+                                                          }
+                                                      ]);
+                                                  },
+                                                  'isPraise' => function($query) use ($login_user_id) {
+                                                      $query->where('user_id', $login_user_id);
+                                                  },
+                                                  'isCollection' => function($query) use ($login_user_id) {
+                                                      $query->where('user_id', $login_user_id);
+                                                  },
+                                              ]);
                                       },
                                   ])
                                   ->orderBy('relation_id', 'DESC')
                                   ->paginate(10);
-
+        foreach ($lists as $item) {
+            // 是否已赞
+            $item->dynamic->is_praise = $login_user_id == 0 ? false : ($item->dynamic->isPraise ? true : false);
+            // 是否已收藏
+            $item->dynamic->is_collection = $login_user_id == 0 ? false : ($item->dynamic->isCollection ? true : false);
+            // 是否关注
+            $item->dynamic->userInfo->is_follow = $login_user_id == 0 ? false : ($item->dynamic->userInfo->isFollow ? true : false);
+            // 是否为登录会员
+            $item->dynamic->userInfo->is_self = $login_user_id == 0 ? false : ($item->dynamic->user_id == $login_user_id ? true : false);
+            unset($item->dynamic->isPraise, $item->dynamic->isCollection, $item->dynamic->userInfo->isFollow);
+        }
         return $this->getPaginateFormat($lists);
     }
 
