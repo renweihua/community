@@ -36,7 +36,7 @@ class NotifyService extends Service
     }
 
     /**
-     * 我的点赞消息通知
+     * 我的{点赞}消息通知
      *
      * @param  int  $login_user_id
      *
@@ -45,6 +45,18 @@ class NotifyService extends Service
     public function getPraiseByNotify(int $login_user_id)
     {
         return $this->getNotify($login_user_id, ['target_type'  => Notify::TARGET_TYPE['DYNAMIC'], 'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['PRAISE']]);
+    }
+
+    /**
+     * 我的{提醒|系统}消息通知
+     *
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
+    public function getSystemByNotify(int $login_user_id)
+    {
+        return $this->getNotify($login_user_id, ['notify_type'  => Notify::NOTIFY_TYPE['SYSTEM_MSG']]);
     }
 
     public function getCommentByNotify(int $login_user_id)
@@ -78,6 +90,8 @@ class NotifyService extends Service
          */
         $user_ids = $dynamic_ids = [];
         $user_infos = $dynamics = [];
+        // 设置已读数量
+        $set_read_nums = 0;
         foreach ($paginates as $item){
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
@@ -86,6 +100,14 @@ class NotifyService extends Service
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $user_ids[] = $item->sender_id;
                     break;
+            }
+
+            // 标记未读的记录：设置为已读状态
+            if ($item->is_read == 0){
+                $item->is_read = 1;
+                $item->save();
+
+                ++$set_read_nums;
             }
         }
         if (!empty($dynamic_ids)){
@@ -125,6 +147,7 @@ class NotifyService extends Service
             $lists['month_table'] = date('Y-m', current($lists['data'])['created_time']);
         }
 
+        $lists['set_read_nums'] = $set_read_nums;
         return $lists;
     }
 }

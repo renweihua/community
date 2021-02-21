@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Models\System\Notify;
 use App\Models\User\UserFollowFan;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
@@ -86,11 +87,23 @@ class FriendService extends Service
 
                     $data['cross_correlation'] = 1;
                 }
-                $userFollowFan->create(array_merge($data, [
+                $detail = $userFollowFan->create(array_merge($data, [
                     'created_time' => time(),
                 ]));
-                // 互动消息：谁关注了您
 
+                // 系统消息：谁关注了您
+                if ($friend_id != $login_user_id){
+                    if (!Notify::insert([
+                        'notify_type'  => Notify::NOTIFY_TYPE['SYSTEM_MSG'],
+                        'user_id'      => $friend_id,
+                        'target_id'    => $detail->relation_id,
+                        'target_type'  => Notify::TARGET_TYPE['FOLLOW'],
+                        'sender_id'    => $login_user_id,
+                        'sender_type'  => Notify::SYSTEM_SENDER,
+                    ]) ) {
+                        throw new FailException('互动消息录入失败！');
+                    }
+                }
             }
 
             DB::commit();

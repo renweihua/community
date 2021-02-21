@@ -139,6 +139,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::prefix('')->group(function () {
             // 我的未读消息
             Route::get('/notify/unread', 'NotifyController@unread');
+            // 我的{提醒|系统}消息通知
+            Route::get('/user/getSystemByNotify', 'NotifyController@getSystemByNotify');
             // 我的{点赞}消息通知
             Route::get('/user/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
         });

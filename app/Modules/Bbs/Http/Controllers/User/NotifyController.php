@@ -27,13 +27,24 @@ class NotifyController extends BbsController
     }
 
     /**
-     * 我的点赞消息通知
+     * 我的{点赞}消息通知
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getPraiseByNotify()
     {
         $lists = $this->service->getPraiseByNotify($this->login_user);
+        return $this->successJson($lists, '获取成功！');
+    }
+
+    /**
+     * 我的{提醒|系统}消息通知
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSystemByNotify()
+    {
+        $lists = $this->service->getSystemByNotify($this->login_user);
         return $this->successJson($lists, '获取成功！');
     }
 }
