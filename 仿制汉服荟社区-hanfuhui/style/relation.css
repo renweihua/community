@@ -34,6 +34,14 @@
   width: 44%;
 }
 
+.w45v {
+  width: 45%!important;
+}
+
+.w50v {
+  width: 50%!important;
+}
+
 .flex-24v-mblr05v {
   flex: 0 0 24%;
   margin: 0 0.5% 0.5%;
