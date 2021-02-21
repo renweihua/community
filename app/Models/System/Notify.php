@@ -54,7 +54,7 @@ class Notify extends MonthModel
      *
      * @return int
      */
-    public function getUnreadNums(int $user_id, array $where = [], string $month_table = '', int $count = 0)
+    public function getUnreadNums(int $user_id, $where = [], string $month_table = '', int $count = 0)
     {
         $date_format = 'Y-m';
         if (!empty($month_table)){
