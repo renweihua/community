@@ -4,10 +4,10 @@
 		<mescroll-uni :down="{use:false}" :up="{use:false}">
 			<!-- 签到信息 -->
 			<view class="bgwhite mb18r fcenter ptb28r">
-				<view class="f32r c555 mb18r">今日第 <text class="f36r ctheme mlr18r">{{signinInfoData.order}}</text> 个签到</view>
+				<view v-if="signinInfoData.is_sign" class="f32r c555 mb18r">今日第 <text class="f36r ctheme mlr18r">{{signinInfoData.sign_ranking}}</text> 个签到</view>
 				<view class="f28r cgray">距明日抢签到还有 <text class="ml8r">{{remaiTime}}</text></view>
-				<button class="btn-sub w44v mtb28r" hover-class="btn-hover" :disabled="signinInfoData.issignin" @tap="fnSignin">{{signinInfoData.issignin?'已签到':'签 到'}}</button>
-				<view class="f28r cgray">已连续签到{{signinInfoData.connect}}天，共漏签{{signinInfoData.miss}}天</view>
+				<button class="btn-sub w44v mtb28r" hover-class="btn-hover" :disabled="signinInfoData.is_sign" @tap="fnSignin">{{signinInfoData.is_sign?'已签到':'签 到'}}</button>
+				<view class="f28r cgray">已连续签到{{signinInfoData.sign_days}}天，共漏签{{signinInfoData.miss_sign}}天</view>
 			</view>
 			<!-- 签到日历 -->
 			<signin-calendar ref="signinCalendar"></signin-calendar>
@@ -75,31 +75,27 @@
 			},
 		},
 		onLoad(options) {
-			if (options && options.id) {
-				// // 获取签到信息
-				// getSigninInfo().then(signinRes => {
-				// 	// 保存签到信息
-				// 	this.$store.commit('setSigninInfoData', signinRes.data.Data)
-				// 	// 获取汉币兑换签到商品
-				// 	return getHanbiShopList({
-				// 		tag: 'signin',
-				// 		haveorders: true,
-				// 		role: 5,
-				// 		page: 1,
-				// 		limit: 10
-				// 	})
-				// }).then(shopRes => {
-				// 	// 保存签到商品列表
-				// 	this.$store.commit('setSigninShopListData', shopRes.data.Data)
-				// 	// 触发倒计时
-				// 	this.calRemaiTime()
+			// 获取签到信息
+			getSigninInfo().then(signinRes => {
+				console.log('---signinRes---')
+				console.log(signinRes.data);
+				// 保存签到信息
+				this.$store.commit('setSigninInfoData', signinRes.data)
+				// // 获取汉币兑换签到商品
+				// return getHanbiShopList({
+				// 	tag: 'signin',
+				// 	haveorders: true,
+				// 	role: 5,
+				// 	page: 1,
+				// 	limit: 10
 				// })
-
+			}).then(shopRes => {
+				// // 保存签到商品列表
+				// this.$store.commit('setSigninShopListData', shopRes.data.Data)
 				// 触发倒计时
 				this.calRemaiTime()
-			}
+			})
 		},
-
 		methods: {
 			/// 计算格式友好时间 几天前
 			calDatetime(str) {
@@ -109,13 +105,13 @@
 			// 倒计时明日签到时间
 			calRemaiTime() {
 				this.timeInter = setInterval(() => {
-					this.remaiTime = fnSecondToTime(this.signinInfoData.timecount);
-					this.signinInfoData.timecount--
+					this.remaiTime = fnSecondToTime(this.signinInfoData.seconds_to_tomorrow);
+					this.signinInfoData.seconds_to_tomorrow--
 				}, 1000)
 			},
 			/// 签到
 			fnSignin() {
-				if (this.signinInfoData.issignin || this.signinState) return
+				if (this.signinInfoData.is_sign || this.signinState) return
 				this.signinState = true
 				uni.showLoading({
 					title: '签到中',

@@ -7,10 +7,10 @@ import request from '@/api/request.js';
 
 
 /**
- * 获取汉币签到信息
+ * 获取今日签到信息
  */
 export async function getSigninInfo() {
-  return await request('/Hanbi/GetSigninInfo')
+  return await request('/user/getSignByToday')
 }
 
 /**
