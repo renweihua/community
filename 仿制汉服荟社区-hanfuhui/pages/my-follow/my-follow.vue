@@ -297,9 +297,9 @@
 				}
 			},
 			/// 跳转荟吧详情页
-			fnHuibaInfo(id) {
+			fnHuibaInfo(topic_id) {
 				uni.navigateTo({
-					url: `/pages/huiba-details/huiba-details?id=${id}`
+					url: `/pages/huiba-details/huiba-details?topic_id=${topic_id}`
 				})
 			},
 			/// 跳转话题详情页

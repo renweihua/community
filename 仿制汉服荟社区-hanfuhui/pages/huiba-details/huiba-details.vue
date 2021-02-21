@@ -119,7 +119,6 @@ export default {
 			//
 		};
 	},
-
 	onLoad(option) {
 		if (option && option.topic_id) {
 			uni.showLoading({
@@ -147,7 +146,6 @@ export default {
 			}, 1500);
 		}
 	},
-
 	computed: {
 		// 荟吧信息
 		huibaInfoData() {
@@ -178,7 +176,6 @@ export default {
 			return !!topic_cover ? topic_cover : '/static/default_image.png';
 		}
 	},
-
 	methods: {
 		/// mescroll组件初始化的回调,可获取到mescroll对象
 		mescrollInit(mescroll) {
@@ -240,7 +237,6 @@ export default {
 				this.tabbarTop = data.top;
 			}).exec();
 		},
-
 		/// 顶部导航选项点击
 		fnBarClick(current) {
 			// 是否当前项点击
