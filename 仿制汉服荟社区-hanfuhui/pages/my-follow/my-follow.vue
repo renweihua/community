@@ -147,9 +147,6 @@ export default {
 				topic: null,
 				huiba: null
 			},
-			// 用户ID
-			id: -1
-			//
 		};
 	},
 	computed: {
@@ -168,9 +165,7 @@ export default {
 		//
 	},
 	onLoad(options) {
-		if (options && options.id) {
-			this.id = parseInt(options.id);
-		}
+		
 	},
 	methods: {
 		/// mescroll组件初始化的回调,可获取到mescroll对象

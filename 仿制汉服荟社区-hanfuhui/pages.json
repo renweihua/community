@@ -118,13 +118,13 @@
 		}, {
 			"path": "pages/fans-list/fans-list",
 			"style": {
-				"navigationBarTitleText": "粉丝",
+				"navigationBarTitleText": "我的粉丝",
 				"disableScroll": true // 页面整体不能上下滚动
 			}
 		}, {
 			"path": "pages/atte-list/atte-list",
 			"style": {
-				"navigationBarTitleText": "关注",
+				"navigationBarTitleText": "我的关注",
 				"disableScroll": true // 页面整体不能上下滚动
 			}
 		}, {

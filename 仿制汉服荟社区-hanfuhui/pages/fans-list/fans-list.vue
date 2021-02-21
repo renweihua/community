@@ -40,7 +40,6 @@
 			uniSwipeAction,
 			uniSwipeActionItem
 		},
-
 		data() {
 			return {
 				options: [{
@@ -51,7 +50,6 @@
 				}]
 			}
 		},
-
 		computed: {
 			// 用户
 			userFansListData() {
@@ -102,9 +100,9 @@
 						content: '确定要取消关注TA吗？',
 						success: res => {
 							if (res.confirm) {
-                                followUser(e.ID).then(delRes => {
-									if (delRes.data.Data == false) return
-									this.userFansListData.filter(item => item.ID == e.ID).map(item => item.cross_correlation = false)
+                                followUser(e.user_id).then(res => {
+									if (!res.status) return
+									this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = false)
 									// 登录用户关注数减
 									let tempUser = this.$store.getters['user/getLoginUserInfoData']
 									tempUser.user_info.follows_count--
@@ -115,9 +113,9 @@
 					})
 					return
 				} else {
-					followUser(e.ID).then(addRes => {
-						if (addRes.data.Data == false) return
-						this.userFansListData.filter(item => item.ID == e.ID).map(item => item.cross_correlation = true)
+					followUser(e.user_id).then(res => {
+						if (!res.status) return
+						this.userFansListData.filter(item => item.user_id == e.user_id).map(item => item.cross_correlation = true)
 						// 登录用户关注数加
 						let tempUser = this.$store.getters['user/getLoginUserInfoData']
 						tempUser.user_info.follows_count++
@@ -144,7 +142,6 @@
 					}
 				})
 			}
-			//
 		}
 	}
 </script>
