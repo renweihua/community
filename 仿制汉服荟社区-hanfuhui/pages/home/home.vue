@@ -389,6 +389,10 @@ export default {
 					success: res => {
 						if (res.confirm) {
 							followUser(e.user_id).then(follow => {
+								uni.showToast({
+									title: follow.msg,
+									icon: follow.status == 1 ? 'success' : 'none'
+								});
 								if (!follow.status) return;
 								this.atteData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 								this.mainData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
@@ -403,6 +407,10 @@ export default {
 				});
 			} else {
 				followUser(e.user_id).then(follow => {
+					uni.showToast({
+						title: follow.msg,
+						icon: follow.status == 1 ? 'success' : 'none'
+					});
 					if (!follow.status) return;
 					this.atteData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					this.mainData.filter(item => item.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
