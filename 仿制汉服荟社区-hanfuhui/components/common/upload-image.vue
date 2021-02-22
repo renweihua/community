@@ -4,7 +4,7 @@
 			<view class="uni-uploader">
 				<view class="uni-uploader-head">
 					<view class="uni-uploader-title">点击可预览选好的图片</view>
-					<view class="uni-uploader-info">{{imageList.length}}/9</view>
+					<view class="uni-uploader-info">{{imageList.length}}/{{max_nums}}</view>
 				</view>
 				<view class="uni-uploader-body">
 					<view class="uni-uploader__files">
@@ -27,7 +27,11 @@
 <script>
 	export default {
 		props: {
-			imageList: Array
+			imageList: Array,
+			max_nums:{
+				type:Number,
+				default: 9
+			}
 		},
 		methods: {
 			deleted(index1) {

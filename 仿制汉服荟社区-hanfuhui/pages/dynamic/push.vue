@@ -6,9 +6,13 @@
 			<slot name="right" />
 		</view>
 		<!--输入的内容-->
+		<view class="uni-input" v-if="dynamic_type != 0">
+			<input v-model="dynamic_title" type="text" value="" placeholder="请输入标题" />
+		</view>
+		<!--输入的内容-->
 		<view class="uni-textarea">
 			<textarea v-model="dynamic_content" placeholder="说点什么吧..." />
-			</view>
+		</view>
 		<!--选择图片-->
 		<uploadImage
 		:imageList="imageList"
@@ -167,7 +171,6 @@
 			            this.count[this.countIndex],
 			        success: (res) => {
 						console.log(res);
-
 			            this.imageList = this.imageList.concat(res.tempFilePaths);
 						this.image_files = this.image_files.concat(res.tempFiles);
 			        },
@@ -195,7 +198,7 @@
 				})
 			},
 			submit(){
-
+				
 			},
 			changeyinsi(){
 				uni.showActionSheet({
@@ -206,7 +209,6 @@
 				    }
 				});
 			}
-
 		}
 	}
 </script>
@@ -251,6 +253,12 @@
 	}
 	.zhuyi{
 		text-align: left;
+		}
+		uni-input{
+			width: 96%;
+			padding: 9px 2%;
+			font-size: 16px;
+			border-bottom: 3px solid #FFFFFF;
 		}
 		uni-textarea{
 
