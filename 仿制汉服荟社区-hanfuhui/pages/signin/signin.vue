@@ -80,7 +80,16 @@
 				console.log('---signinRes---')
 				console.log(signinRes.data);
 				// 保存签到信息
-				this.$store.commit('setSigninInfoData', signinRes.data)
+				this.$store.commit('setSigninInfoData', signinRes.data);
+				
+				/**
+				 * 标记登录会员：今日已签到状态
+				 */
+				let login_user = this.$store.getters['user/getLoginUserInfoData'];
+				if(login_user && signinRes.data.is_sign){
+					login_user.user_info.is_sign = true;
+					this.$store.commit('user/setLoginUserInfoData', login_user);
+				}
 				// // 获取汉币兑换签到商品
 				// return getHanbiShopList({
 				// 	tag: 'signin',
