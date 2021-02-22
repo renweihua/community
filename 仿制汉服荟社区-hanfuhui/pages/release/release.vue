@@ -59,9 +59,15 @@
 			/// 跳转规则页
 			push(dynamic_type) {
 				this.status.release = false;
-				uni.navigateTo({
-					url: '/pages/dynamic/push?dynamic_type='+dynamic_type
-				})
+				if(dynamic_type == 2){ // 视频
+					uni.navigateTo({
+						url: '/pages/dynamic/push-video?dynamic_type='+dynamic_type
+					});
+				}else{
+					uni.navigateTo({
+						url: '/pages/dynamic/push?dynamic_type='+dynamic_type
+					});
+				}
 			}
 		}
 	}

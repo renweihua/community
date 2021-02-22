@@ -18,6 +18,11 @@
 				"navigationBarTitleText": "发布动态"
 			}
 		}, {
+			"path": "pages/dynamic/push-video",
+			"style": {
+				"navigationBarTitleText": "发布视频"
+			}
+		},{
 			"path": "pages/report/report",
 			"style": {
 				"navigationBarTitleText": "举报"

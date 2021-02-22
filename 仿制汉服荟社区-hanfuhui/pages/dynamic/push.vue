@@ -19,6 +19,7 @@
 		@deleted="deleted($event)"
 		@previewImage="previewImage"
 		@chooseImage="chooseImage"
+		:max_nums="max_nums"
 		>
 		</uploadImage>
 		<!--弹出公告-->
@@ -77,6 +78,8 @@
 				countIndex: 8,
 				count: [1, 2, 3, 4, 5, 6, 7, 8, 9],
 				
+				// 图片上传数量
+				max_nums: 9,
 				// 发布信息
 				dynamic_title: '',
 				dynamic_content:'',
@@ -85,6 +88,8 @@
 		},
 		onLoad(options) {
 			this.dynamic_type = options.dynamic_type || 0;
+			// dynamic_type == 3：摄影相册，图片数量上限扩大
+			this.max_nums = this.dynamic_type == 3 ? 15 : 9;
 		},
 		methods: {
 			onClickRight() {
@@ -157,7 +162,7 @@
 			    }
 			    // #endif
 
-			    if (this.imageList.length === 9) {
+			    if (this.imageList.length === this.max_nums) {
 			        let isContinue = await this.isFullImg();
 			        console.log("是否继续?", isContinue);
 			        if (!isContinue) {
@@ -167,7 +172,7 @@
 			    uni.chooseImage({
 			        sourceType: sourceType[this.sourceTypeIndex],
 			        sizeType: sizeType[this.sizeTypeIndex],
-			        count: this.imageList.length + this.count[this.countIndex] > 9 ? 9 - this.imageList.length :
+			        count: this.imageList.length + this.count[this.countIndex] > this.max_nums ? this.max_nums - this.imageList.length :
 			            this.count[this.countIndex],
 			        success: (res) => {
 						console.log(res);
