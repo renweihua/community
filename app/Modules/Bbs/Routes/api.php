@@ -146,6 +146,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 我的{评论}消息通知
             Route::get('/user/getCommentByNotify', 'NotifyController@getCommentByNotify');
         });
+
+        // 登录日志记录
+        Route::get('/user/login_logs', 'LoginLogController@getListsByMonth');
     });
 
     // 其它系统配置
