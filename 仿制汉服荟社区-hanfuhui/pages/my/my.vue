@@ -37,6 +37,13 @@
 			</view>
 			<!-- 项列表组 -->
 			<view class="mb18r bgwhite">
+				<view class="flex flex-aic" @tap="fnOpenWin('my', 'login-record')">
+					<image class="hw64r plr28r" src="/static/icon-nav-my/icon_chat.png" mode="aspectFit"></image>
+					<view class="flex-fitem flex flex-aic hl90r bbs2r pr28r">
+						<text class="f36r c111 flex-gitem">登录日志</text>
+						<i-icon type="you" size="42" color="#8F8F94"></i-icon>
+					</view>
+				</view>
 				<view class="flex flex-aic" @tap="fnOpenWin('signin')">
 					<image class="hw64r plr28r" src="/static/icon-nav-my/icon_sign.png" mode="aspectFit"></image>
 					<view class="flex-fitem flex flex-aic hl90r bbs2r pr28r">
@@ -133,7 +140,6 @@ export default {
 		// 用户信息
 		userInfoData() {
 			let user_info = this.$store.getters['user/getLoginUserInfoData'];
-			console.log(user_info);
 			if (!user_info || !user_info.user_id) {
 				this.fnRefreshUserInfo();
 				user_info = this.$store.getters['user/getLoginUserInfoData'];
@@ -143,9 +149,10 @@ export default {
 	},
 	methods: {
 		/// 跳转打开新窗口
-		fnOpenWin(type) {
+		fnOpenWin(dir, file) {
+			file = file == undefined ? dir : file;
 			uni.navigateTo({
-				url: `/pages/${type}/${type}`
+				url: `/pages/${dir}/${file}`
 			});
 		},
 		/// 修改用户背景封面图

@@ -225,6 +225,12 @@
 			"style": {
 				"navigationBarTitleText": "我的消息"
 			}
+		}, {
+			"path": "pages/my/login-record",
+			"style": {
+				"navigationBarTitleText": "登录记录",
+				"disableScroll": true // 页面整体不能上下滚动
+			}
 		}
 	],
 	//此配置为小程序的分包加载机制。在5+App里始终为整包。
