@@ -59,4 +59,21 @@ class UserService extends Service
         $this->setError('背景封面图设置成功！');
         return true;
     }
+
+    /**
+     * 更改登录密码
+     *
+     * @param          $login_user
+     * @param  string  $password
+     *
+     * @return bool
+     */
+    public function updatePassword($login_user, string $password)
+    {
+        $login_user->password = $password;
+        $login_user->save();
+
+        $this->setError('登录密码更改成功！');
+        return true;
+    }
 }

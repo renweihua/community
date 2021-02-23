@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
+use App\Modules\Bbs\Http\Requests\User\UpdatePasswordRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
 
@@ -45,6 +46,24 @@ class IndexController extends BbsController
         $request->validated();
 
         if ($this->service->updateBackgroundCover($this->user, $request->input('background_cover'))) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 更改登录密码
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\UpdatePasswordRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $request->validated();
+
+        if ($this->service->updatePassword($this->user, $request->input('password'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
