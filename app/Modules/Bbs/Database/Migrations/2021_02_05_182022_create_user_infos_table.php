@@ -21,6 +21,7 @@ class CreateUserInfosTable extends Migration
             $table->string('pay_pass', 60)->default('')->comment('支付密码');
             $table->string('nick_name', 200)->default('')->comment('昵称');
             $table->string('user_avatar', 200)->default('')->comment('头像');
+            $table->string('background_cover', 200)->default('')->comment('背景封面图');
             $table->boolean('user_sex')->unsigned()->default(0)->comment('性别：0：男；1：女；2.保密');
             $table->integer('user_birth')->unsigned()->default(0)->comment('出生年月日');
             $table->string('city_info', 200)->default('')->comment('城市信息：省份,城市');

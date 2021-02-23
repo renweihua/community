@@ -111,7 +111,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
             Route::put('/update', 'IndexController@update');
-
+            // 更换背景封面图
+            Route::put('/updateBackgroundCover', 'IndexController@updateBackgroundCover');
 
             // 指定会员是否在黑名单：前期先测试数据返回
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');

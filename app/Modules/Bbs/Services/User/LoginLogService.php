@@ -19,6 +19,7 @@ class LoginLogService extends Service
     {
         $limit = $this->getLimit(request()->input('limit', 10));
         $paginates = UserLoginLog::getInstance()->setMonthTable($search_month)
+            ->select('log_id', 'created_ip', 'description', 'log_status', 'created_time')
             ->where('user_id', $login_user_id)
             ->orderBy('log_id', 'DESC')
             ->paginate($limit);

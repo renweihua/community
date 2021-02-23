@@ -42,4 +42,21 @@ class UserService extends Service
             return false;
         }
     }
+
+    /**
+     * 更换背景封面图
+     *
+     * @param          $login_user
+     * @param  string  $background_cover
+     *
+     * @return bool
+     */
+    public function updateBackgroundCover($login_user, string $background_cover)
+    {
+        $login_user->userInfo->background_cover = $background_cover;
+        $login_user->userInfo->save();
+
+        $this->setError('背景封面图设置成功！');
+        return true;
+    }
 }

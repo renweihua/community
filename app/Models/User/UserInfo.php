@@ -55,6 +55,29 @@ class UserInfo extends Model
     }
 
     /**
+     * 获取背景封面图
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function getBackgroundCoverAttribute($value)
+    {
+        if (empty($value)) return '';
+        return Storage::url($value);
+    }
+
+    /**
+     * 设置背景封面图
+     *
+     * @param $value
+     */
+    public function setBackgroundCoverAttribute($value)
+    {
+        $this->attributes['background_cover'] = str_replace(Storage::url('/'), '', $value);
+    }
+
+    /**
      * 返回性别文本
      *
      * @param $key

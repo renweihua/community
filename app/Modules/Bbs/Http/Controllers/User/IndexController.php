@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
+use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
 
@@ -26,6 +27,24 @@ class IndexController extends BbsController
         $request->validated();
 
         if ($this->service->updateUser($this->login_user, $request->all())) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 更换背景封面图
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateBackgroundCover(BackgroundCoverRequest $request)
+    {
+        $request->validated();
+
+        if ($this->service->updateBackgroundCover($this->user, $request->input('background_cover'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
