@@ -4,7 +4,8 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
-use App\Modules\Bbs\Http\Requests\User\UpdatePasswordRequest;
+use App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest;
+use App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
 
@@ -55,15 +56,15 @@ class IndexController extends BbsController
     /**
      * 更改登录密码
      *
-     * @param  \App\Modules\Bbs\Http\Requests\User\UpdatePasswordRequest  $request
+     * @param  \App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updatePassword(UpdatePasswordRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
         $request->validated();
 
-        if ($this->service->updatePassword($this->user, $request->input('password'))) {
+        if ($this->service->changePassword($this->user, $request->input('password'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -79,5 +80,23 @@ class IndexController extends BbsController
     {
         $this->service->sendMailByChangePassword($this->user);
         return $this->successJson([], '邮件已发送，请及时查看！');
+    }
+
+    /**
+     * 通过邮箱更改登录密码
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePassByEmail(ChangePasswordByEmailRequest $request)
+    {
+        $request->validated();
+
+        if ($this->service->checkEmailCodeAndUpdatePassword($this->user, $request->input('code'), $request->input('password'))) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
     }
 }

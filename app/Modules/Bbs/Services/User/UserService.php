@@ -19,7 +19,7 @@ class UserService extends Service
      *
      * @return bool
      */
-    public function updateUser(int $login_user_id, array $params)
+    public function updateUser(int $login_user_id, array $params): bool
     {
         $userInfoInstance = UserInfo::getInstance();
         $user_info = $userInfoInstance->find($login_user_id);
@@ -54,7 +54,7 @@ class UserService extends Service
      *
      * @return bool
      */
-    public function updateBackgroundCover($login_user, string $background_cover)
+    public function updateBackgroundCover($login_user, string $background_cover): bool
     {
         $login_user->userInfo->background_cover = $background_cover;
         $login_user->userInfo->save();
@@ -71,13 +71,18 @@ class UserService extends Service
      *
      * @return bool
      */
-    public function updatePassword($login_user, string $password)
+    public function changePassword($login_user, string $password): bool
     {
         $login_user->password = $password;
         $login_user->save();
 
         $this->setError('登录密码更改成功！');
         return true;
+    }
+
+    protected function getMailCode($login_user)
+    {
+        return Cache::get(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);
     }
 
     /**
@@ -87,12 +92,15 @@ class UserService extends Service
      *
      * @return bool
      */
-    public function sendMailByChangePassword($login_user)
+    public function sendMailByChangePassword($login_user): bool
     {
+        if ($this->getMailCode($login_user)){
+            return true;
+        }
         $code = random_verification_code(6);
 
-        // 验证码存入缓存
-        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, 30 * 60);
+        // 验证码存入缓存：默认1小时
+        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, 3600);
 
         // 发送邮件
         Mail::to($login_user->user_email)->send(
@@ -102,4 +110,34 @@ class UserService extends Service
         return true;
     }
 
+    /**
+     * 通过邮箱更改登录密码
+     *
+     * @param          $login_user
+     * @param  string  $code
+     * @param  string  $password
+     *
+     * @return bool
+     */
+    public function checkEmailCodeAndUpdatePassword($login_user, string $code, string $password): bool
+    {
+        $cache = $this->getMailCode($login_user);
+        if (!$cache){
+            $this->setError('验证码已过期，请重新发送！');
+            return false;
+        }
+        if ($cache != $code){
+            $this->setError('验证码不匹配！');
+            return false;
+        }
+        // 忘记密码
+        Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);
+
+        // 更改登录密码
+        $login_user->password = $password;
+        $login_user->save();
+
+        $this->setError('登录密码更改成功！');
+        return true;
+    }
 }

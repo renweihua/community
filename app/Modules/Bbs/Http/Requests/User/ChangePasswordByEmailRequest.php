@@ -4,7 +4,7 @@ namespace App\Modules\Bbs\Http\Requests\User;
 
 use App\Modules\Bbs\Http\Requests\BaseRequest;
 
-class UpdatePasswordRequest extends BaseRequest
+class ChangePasswordByEmailRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,6 +14,7 @@ class UpdatePasswordRequest extends BaseRequest
     public function rules()
     {
         return [
+            'code' => 'required',
             'password' => 'required|min:6|max:20|confirmed',
             'password_confirmation'   => 'required|same:password',
         ];
@@ -22,6 +23,7 @@ class UpdatePasswordRequest extends BaseRequest
     public function messages()
     {
         return [
+            'code.required'   => '请输入验证码！',
             'password.required'   => '请设置登录密码！',
             'password.min'   => '登录密码长度最小6个字符！',
             'password.max'   => '登录密码长度最大20个字符！',
