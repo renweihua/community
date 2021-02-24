@@ -64,8 +64,8 @@ class DynamicService extends Service
                 // 获取封面图
                 $video->frame(TimeCode::fromSeconds(1))->save(storage_path('app/public/' . $params['dynamic_images']));
                 $video_info = $video->getFormat();
-                // 存储视频的时长与大小
-                $params['video_info'] = ['duration' => $video_info->get('duration'), 'size' => $video_info->get('size')];
+                // 存储视频的时长与大小：时长直接向上取整
+                $params['video_info'] = ['duration' => round($video_info->get('duration')), 'size' => $video_info->get('size')];
 
                 break;
             case 3: // 相册
