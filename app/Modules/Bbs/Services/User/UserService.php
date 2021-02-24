@@ -2,9 +2,12 @@
 
 namespace App\Modules\Bbs\Services\User;
 
+use App\Constants\UserCacheKeys;
 use App\Models\User\UserInfo;
+use App\Modules\Bbs\Emails\ChangePasswordEmail;
 use App\Services\Service;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class UserService extends Service
 {
@@ -76,4 +79,27 @@ class UserService extends Service
         $this->setError('登录密码更改成功！');
         return true;
     }
+
+    /**
+     * 更改登录密码时，通过邮箱：发送验证码
+     *
+     * @param $login_user
+     *
+     * @return bool
+     */
+    public function sendMailByChangePassword($login_user)
+    {
+        $code = random_verification_code(6);
+
+        // 验证码存入缓存
+        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, 30 * 60);
+
+        // 发送邮件
+        Mail::to($login_user->user_email)->send(
+            new ChangePasswordEmail($code)
+        );
+
+        return true;
+    }
+
 }

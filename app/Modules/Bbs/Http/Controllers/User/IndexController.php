@@ -69,4 +69,15 @@ class IndexController extends BbsController
             return $this->errorJson($this->service->getError());
         }
     }
+
+    /**
+     * 更改登录密码时，通过邮箱：发送验证码
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendMailByChangePassword()
+    {
+        $this->service->sendMailByChangePassword($this->user);
+        return $this->successJson([], '邮件已发送，请及时查看！');
+    }
 }

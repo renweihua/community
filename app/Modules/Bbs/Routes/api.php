@@ -115,6 +115,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::put('/updateBackgroundCover', 'IndexController@updateBackgroundCover');
             // 更改登录密码
             Route::put('/updatePassword', 'IndexController@updatePassword');
+            // 更改登录密码时，通过邮箱：发送验证码
+            Route::get('/sendMailByChangePassword', 'IndexController@sendMailByChangePassword')->withoutMiddleware(CheckAuth::class);
 
 
             // 指定会员是否在黑名单：前期先测试数据返回
