@@ -9,9 +9,11 @@ use App\Models\Log\UserLoginLog;
 use App\Models\System\Notify;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
+use App\Modules\Bbs\Notifications\EmailRegister;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class AuthService extends Service
@@ -27,37 +29,60 @@ class AuthService extends Service
     public function register(array $params)
     {
         $userInstance = User::getInstance();
-        if (
-            $userInstance->getUserByName($params['user_name'])
-            ||
-            $userInstance->getUserByEmail($params['user_name'])
-            ||
-            $userInstance->getUserByMobile($params['user_name'])
-        ){
-            $this->setError('该账户已被注册！');
-            return false;
+        $user_info['register_type'] = (int)$params['register_type'];
+        switch ((int)$user_info['register_type']){
+            case 0: // 用户名注册
+                if ($userInstance->getUserByName($params['user_name'])){
+                    $this->setError('该账户已被注册！');
+                    return false;
+                }
+                $user_data['user_name'] = $params['user_name'];
+                break;
+            case 1: // 邮箱注册
+                if (!is_email($params['user_name'])){
+                    $this->setError('请输入有效的邮箱地址！');
+                    return false;
+                }
+                if ($userInstance->getUserByEmail($params['user_name'])){
+                    $this->setError('该邮箱已被注册！');
+                    return false;
+                }
+                $user_data['user_email'] = $params['user_name'];
+                break;
+            case 2: // 手机号注册
+                if (!is_mobile($params['user_name'])){
+                    $this->setError('请输入有效的手机号！');
+                    return false;
+                }
+                if ($userInstance->getUserByMobile($params['user_name'])){
+                    $this->setError('该手机号已被注册！');
+                    return false;
+                }
+                $user_data['user_mobile'] = $params['user_name'];
+                break;
+            default:
+                $this->setError('无效注册！');
+                return false;
+                break;
         }
         DB::beginTransaction();
         try {
+            $user_data['password'] = $params['password'];
             // 会员账户
-            $user = $userInstance->create([
-                'user_name' => $params['user_name'],
-                'password' => $params['password'],
-            ]);
+            $user = $userInstance->create($user_data);
 
             // 会员基本信息
             $ip_agent = get_client_info();
-            $user_info = [
+            $user_info = array_merge($user_info, [
                 'user_id' => $user->user_id,
                 'user_uuid' => UserInfo::getUniqueUuid(),
-                'nick_name' => $params['nick_name'] ?? '',
                 'user_avatar' => Storage::url(cnpscy_config('site_web_logo')),
-                'user_sex' => $params['user_sex'] ?? 0,
+                'user_sex' => 0,
                 'user_grade' => 1, // 会员等级
                 'last_actived_time' => time(), // 上一次在线时间
                 'created_ip'   => $ip_agent['ip'] ?? get_ip(),
                 'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
-            ];
+            ]);
             $user->userInfo()->create($user_info);
 
             // 第三方登录相关
@@ -79,10 +104,14 @@ class AuthService extends Service
                 'notify_content' => '注册成功，请完善个人资料！',
             ]);
 
+            if ($user_info['register_type'] == 1){
+                // 注册成功：发送邮件通知
+                Notification::route('mail', $user_data['user_email'])->notify(new EmailRegister());
+            }
+
             $this->setError('注册成功，请完善个人资料！');
             $result = $this->respondWithToken($auth->login($user));
             return array_merge($result, [
-                'nick_name' => $user_info['nick_name'],
                 'user_avatar' => $user_info['user_avatar'],
                 'user_sex' => $user_info['user_sex'],
             ]);

@@ -33,6 +33,7 @@ class CreateUserInfosTable extends Migration
             $table->boolean('auth_status')->unsigned()->default(0)->comment('实名认证状态：0：否，1：是');
             $table->boolean('auth_mobile')->unsigned()->default(0)->comment('手机号验证状态：0：否，1：是');
             $table->boolean('auth_email')->unsigned()->default(0)->comment('邮箱验证状态：0：否，1：是');
+            $table->boolean('register_type')->unsigned()->default(0)->comment('注册方式：0：账户；1.邮箱；2.手机号');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->integer('total_sign_days')->unsigned()->default(0)->comment('总共签到天数');
