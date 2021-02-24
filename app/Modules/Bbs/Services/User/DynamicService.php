@@ -10,7 +10,10 @@ use App\Models\Dynamic\DynamicPraise;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DynamicService extends Service
 {
@@ -50,6 +53,20 @@ class DynamicService extends Service
                     $this->setError('请上传视频！');
                     return false;
                 }
+
+                // 通过 ffmpeg 获取视频的第一帧作为封面图
+                $params['dynamic_images'] = date('Ym') . '/' . Str::random(40) . '.jpg';
+                $ffmpeg = FFMpeg::create([
+                    'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
+                    'ffprobe.binaries' =>  '/www/server/ffmpeg-4.3.1/ffprobe'
+                ]);
+                $video = $ffmpeg->open($params['video_path']);
+                // 获取封面图
+                $video->frame(TimeCode::fromSeconds(1))->save(storage_path('app/public/' . $params['dynamic_images']));
+                $video_info = $video->getFormat();
+                // 存储视频的时长与大小
+                $params['video_info'] = ['duration' => $video_info->get('duration'), 'size' => $video_info->get('size')];
+
                 break;
             case 3: // 相册
                 if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
@@ -71,6 +88,7 @@ class DynamicService extends Service
                 'dynamic_type' => $params['dynamic_type'],
                 'dynamic_images' => $params['dynamic_images'] ?? '',
                 'video_path' => $params['video_path'] ?? '',
+                'video_info' => $params['video_info'] ?? '',
                 'dynamic_content' => $params['dynamic_content'],
                 'is_check' => 1, // 暂时默认无需审核
                 'is_public' => $params['is_public'] ?? 1,

@@ -99,6 +99,16 @@ class Dynamic extends Model
         return my_json_decode($value);
     }
 
+    /**
+     * 设置视频信息
+     *
+     * @param $value
+     */
+    public function setVideoInfoAttribute($value)
+    {
+        $this->attributes['video_info'] = my_json_encode($value);
+    }
+
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');

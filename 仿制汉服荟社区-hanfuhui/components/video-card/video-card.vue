@@ -72,9 +72,9 @@
        * 视频时长
        */
       calTimeLong() {
-		  if(!this.infoData.video_info.times){
+		  if(!this.infoData.video_info.duration){
 			  return '00:00';
-		  }else return `${Math.floor(this.infoData.video_info.times / 60)}:${this.infoData.video_info.times % 60}`;
+		  }else return `${Math.floor(this.infoData.video_info.duration / 60)}:${this.infoData.video_info.duration % 60}`;
       },
     },
   }
