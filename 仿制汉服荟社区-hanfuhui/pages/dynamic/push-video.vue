@@ -101,7 +101,6 @@
 					title: '发布中',
 					mask: true
 				})
-				uni.hideLoading();
 				// 启动封面
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
@@ -111,6 +110,7 @@
 						'video_path' : files[0],
 					});
 				}).then(res => {
+					uni.hideLoading();
 					if(!res.status){
 						uni.showToast({
 							title: res.msg,

@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('get_days_in_year')){
+if ( !function_exists('get_days_in_year') ) {
     /**
      * 获取指定年份有多少天
      *
@@ -8,10 +8,11 @@ if (!function_exists('get_days_in_year')){
      *
      * @return int
      */
-    function get_days_in_year(int $year){
+    function get_days_in_year(int $year)
+    {
         $days = 0;
-        for($month=1;$month<=12;$month++){
-            $days = $days + cal_days_in_month(CAL_GREGORIAN,$month,$year);
+        for ($month = 1; $month <= 12; $month++) {
+            $days = $days + cal_days_in_month(CAL_GREGORIAN, $month, $year);
         }
         return $days;
     }
@@ -58,60 +59,20 @@ if ( !function_exists('get_qquserinfo_by_openid') ) {
     }
 }
 
-if ( !function_exists('get_redirect_url') ) {
-    /**
-     * 通过 301/302 重定向的URL，获取原始的URL
-     * @param  string  $url
-     *
-     * @return bool|string
-     */
-    function get_redirect_url(string $url)
-    {
-        $redirect_url = null;
-
-        $url_parts = parse_url($url);
-        var_dump($url_parts);
-        if ( !$url_parts ) return false;
-        if ( !isset($url_parts['host']) ) return false; //can't process relative URLs
-        if ( !isset($url_parts['path']) ) $url_parts['path'] = '/';
-
-        $sock = fsockopen($url_parts['host'], (isset($url_parts['port']) ? (int)$url_parts['port'] : 80), $errno, $errstr, 30);
-        if ( !$sock ) return false;
-
-        $request = "HEAD " . $url_parts['path'] . (isset($url_parts['query']) ? '?' . $url_parts['query'] : '') . " HTTP/1.1\r\n";
-        $request .= 'Host: ' . $url_parts['host'] . "\r\n";
-        $request .= "Connection: Close\r\n\r\n";
-
-        fwrite($sock, $request);
-        $response = '';
-        while ( !feof($sock) ) $response .= fread($sock, 8192);
-        fclose($sock);
-
-        var_dump($response);
-
-        if ( preg_match('/^location: (.+?)$/m', $response, $matches) ) {
-            if ( substr($matches[1], 0, 1) == "/" ) return $url_parts['scheme'] . "://" . $url_parts['host'] . trim($matches[1]); else
-                return trim($matches[1]);
-        } else {
-            return false;
-        }
-    }
-}
-
 if ( !function_exists('get_cover_by_video') ) {
     /**
      * 通过 ffmpeg 获取视频的第一帧，存储为图片
      *
-     * @param  string  $video_path 视频地址
-     * @param  string  $cover_file_path 图片存储地址
-     * @param          $output 检测失败与成功：0：成功；其它都为失败
+     * @param  string  $video_path       视频地址
+     * @param  string  $cover_file_path  图片存储地址
+     * @param          $output           检测失败与成功：0：成功；其它都为失败
      */
     /**
-     * @param  string  $video_path 视频地址
-     * @param  string  $cover_file_path 图片存储地址
-     * @param  null    $return_val 0.表示成功
+     * @param  string  $video_path       视频地址
+     * @param  string  $cover_file_path  图片存储地址
+     * @param  null    $return_val       0.表示成功
      * @param  null    $output
-     * @param  string  $ffmpeg_path ffmpeg的环境变量
+     * @param  string  $ffmpeg_path      ffmpeg的环境变量
      */
     function get_cover_by_video(string $video_path, string $cover_file_path, &$return_val = null, &$output = null, string $ffmpeg_path = '/usr/local/ffmpeg/bin/ffmpeg')
     {
@@ -167,6 +128,7 @@ if ( !function_exists('get_last_month') ) {
 if ( !function_exists('get_last_month') ) {
     /**
      * 上个月份的年月
+     *
      * @param  string  $date
      *
      * @return false|string
@@ -174,7 +136,7 @@ if ( !function_exists('get_last_month') ) {
     function get_last_month(string $date)
     {
         $timestamp = strtotime($date);
-        return date('Y-m',strtotime(date('Y',$timestamp).'-'.(date('m',$timestamp)-1)));
+        return date('Y-m', strtotime(date('Y', $timestamp) . '-' . (date('m', $timestamp) - 1)));
     }
 }
 
@@ -289,12 +251,12 @@ if ( !function_exists('get_difference_hours') ) {
     /**
      * 计算两个时间戳之间相差的小时
      *
-     * @param  int  $start_time 开始时间戳
-     * @param  int  $end_time 结束时间戳
+     * @param  int  $start_time  开始时间戳
+     * @param  int  $end_time    结束时间戳
      *
      * @return int
      */
-    function get_difference_hours(int $start_time, int $end_time):float
+    function get_difference_hours(int $start_time, int $end_time) : float
     {
         if ( $start_time < $end_time ) {
             $starttime = $start_time;
@@ -399,8 +361,7 @@ if ( function_exists('get_request_method') ) {
     }
 }
 
-
-if (!function_exists('my_json_encode') ) {
+if ( !function_exists('my_json_encode') ) {
     /**
      * 统一的json_encode
      *
@@ -415,7 +376,6 @@ if (!function_exists('my_json_encode') ) {
         return json_encode($data, empty($options) ? (JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $options);
     }
 }
-
 
 if ( !function_exists('my_json_decode') ) {
     /**
@@ -1007,8 +967,7 @@ if ( !function_exists('abort') ) {
         } catch (\Cnpscy\Exceptions\HttpExceptionInterface $e) {
             http_response_code($e->getStatusCode());
 
-            \Cnpscy\Embedded\Response::new()
-                ->failMsg(\app\lib\code::EMAIL_NO_EXIST, $e->getMessage() ?? $msg);
+            \Cnpscy\Embedded\Response::new()->failMsg(\app\lib\code::EMAIL_NO_EXIST, $e->getMessage() ?? $msg);
         }
     }
 }
@@ -2608,8 +2567,8 @@ function curl_request($url, $post = '', $json = false, $header = [])
 {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)');
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 0);
     curl_setopt($curl, CURLOPT_AUTOREFERER, 0);
@@ -2638,27 +2597,32 @@ function curl_request($url, $post = '', $json = false, $header = [])
 
 function curlRequest($url, $params = [], $method = 'POST', $header = [], $type = 'json', $options = [])
 {
-    if (empty($options)) {
-        $options = [CURLOPT_CONNECTTIMEOUT => 30, CURLOPT_TIMEOUT => 30, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_HTTPHEADER => ['X-REQUESTED-WITH: XMLHttpRequest']];
+    if ( empty($options) ) {
+        $options = [
+            CURLOPT_CONNECTTIMEOUT => 30,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTPHEADER     => ['X-REQUESTED-WITH: XMLHttpRequest'],
+        ];
     }
 
-    $method   = strtoupper($method);
+    $method = strtoupper($method);
     $protocol = substr($url, 0, 5);
 
-    if ($type == 'json' && is_array($params)) {
+    if ( $type == 'json' && is_array($params) ) {
         $query_string = json_encode($params, JSON_UNESCAPED_UNICODE);
-    }else{
+    } else {
         $query_string = is_array($params) ? http_build_query($params) : $params;
     }
 
-    $ch       = curl_init();
+    $ch = curl_init();
     $defaults = [];
-    if ('GET' == $method) {
-        $geturl                = $query_string ? $url . (stripos($url, '?') !== false ? '&' : '?') . $query_string : $url;
+    if ( 'GET' == $method ) {
+        $geturl = $query_string ? $url . (stripos($url, '?') !== false ? '&' : '?') . $query_string : $url;
         $defaults[CURLOPT_URL] = $geturl;
     } else {
         $defaults[CURLOPT_URL] = $url;
-        if ($method == 'POST') {
+        if ( $method == 'POST' ) {
             $defaults[CURLOPT_POST] = 1;
         } else {
             $defaults[CURLOPT_CUSTOMREQUEST] = $method;
@@ -2666,17 +2630,17 @@ function curlRequest($url, $params = [], $method = 'POST', $header = [], $type =
         $defaults[CURLOPT_POSTFIELDS] = $query_string;
     }
 
-    $defaults[CURLOPT_HEADER]         = false;
-    $defaults[CURLOPT_USERAGENT]      = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.98 Safari/537.36';
+    $defaults[CURLOPT_HEADER] = false;
+    $defaults[CURLOPT_USERAGENT] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.98 Safari/537.36';
     $defaults[CURLOPT_FOLLOWLOCATION] = true;
     $defaults[CURLOPT_RETURNTRANSFER] = true;
     $defaults[CURLOPT_CONNECTTIMEOUT] = 3;
-    $defaults[CURLOPT_TIMEOUT]        = 3;
+    $defaults[CURLOPT_TIMEOUT] = 3;
 
     // disable 100-continue
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Expect:']);
 
-    if ('https' == $protocol) {
+    if ( 'https' == $protocol ) {
         $defaults[CURLOPT_SSL_VERIFYPEER] = false;
         $defaults[CURLOPT_SSL_VERIFYHOST] = false;
     }
@@ -2684,13 +2648,13 @@ function curlRequest($url, $params = [], $method = 'POST', $header = [], $type =
     curl_setopt_array($ch, (array)$options + $defaults);
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
-            'Content-Type: application/json; charset=utf-8',
-            //伪造IP
-            'CLIENT-IP:85.25.105.77',
-            'X-FORWARDED-FOR:85.25.105.77',//此处可以改为任意假IP
-            'Content-Length: ' . strlen($query_string),
-        ], $header)
-    );
+        'Content-Type: application/json; charset=utf-8',
+        //伪造IP
+        'CLIENT-IP:85.25.105.77',
+        'X-FORWARDED-FOR:85.25.105.77',
+        //此处可以改为任意假IP
+        'Content-Length: ' . strlen($query_string),
+    ], $header));
 
     $ret = curl_exec($ch);
     $err = curl_error($ch);

@@ -260,15 +260,9 @@ export default {
 		upCallback(mescroll) {
 			// 联网获取数据
 			console.log(this.scrollInto, this.current);
-			// // 摄影榜获取数据
-			// if (this.current == 1 && !this.rankFaceData.hasOwnProperty('week')) {
-			// 	getRankFace().then(rankRes => {
-			// 		this.$store.commit('album/setRankFaceData', rankRes.data.data);
-			// 	});
-			// }
 			// 默认传递参数
 			let params = {
-				dynamic_tyle: this.current, // 动态类型
+				dynamic_type: this.current, // 动态类型
 				page: mescroll.num,
 				limit: mescroll.size
 			};

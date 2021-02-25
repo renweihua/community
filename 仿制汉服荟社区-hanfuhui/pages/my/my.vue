@@ -128,10 +128,7 @@ export default {
 	computed: {
 		// 未读消息数量
 		newsTotalData() {
-			let nums = this.$store.getters['getNewsTotalData'];
-			console.log('---nums---');
-			console.log(nums);
-			return nums;
+			return this.$store.getters['getNewsTotalData'];
 		},
 		// 签到状态
 		signinStatusData() {

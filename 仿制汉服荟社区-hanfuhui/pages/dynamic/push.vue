@@ -100,7 +100,6 @@
 					title: '发布中',
 					mask: true
 				})
-				uni.hideLoading();
 				// 启动封面
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
@@ -110,6 +109,7 @@
 						'dynamic_content' : this.dynamic_content,
 					});
 				}).then(res => {
+					uni.hideLoading();
 					if(!res.status){
 						uni.showToast({
 							title: res.msg,

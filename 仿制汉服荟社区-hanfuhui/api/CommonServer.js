@@ -26,8 +26,12 @@ export async function batchUploads(upload_files) {
 		return [];
 	}
 	return new Promise((resolve, reject) => {
+		// local
+		// let server = 'http://community.cnpscy.com';
+		// test
+		let server = 'http://118.25.134.227';
 		uni.uploadFile({
-			url: 'http://community.cnpscy.com/api/upload_files', //仅为示例，非真实的接口地址
+			url: server + '/api/upload_files', //仅为示例，非真实的接口地址
 			header: {
 				'Authorization': !login_token ? '' : ('bearer ' + login_token),
 			},

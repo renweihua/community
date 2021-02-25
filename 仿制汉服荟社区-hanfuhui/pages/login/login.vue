@@ -91,7 +91,6 @@
 					uni.setStorageSync('TOKEN', data.access_token);
 					// 保存登录用户信息
 					let user_info = await getLoginUserInfo();
-					console.log(user_info);
 					this.$store.commit('user/setLoginUserInfoData', user_info.data);
 					
 					// 获取未读消息数
@@ -100,15 +99,17 @@
 
 					// 开始调整主页
 					this.isLogin = false;
-					let page = getCurrentPages();
+
 					// 登录之后，要么返回上一页，要么返回主页
-					if(uni.navigateBack()){
-						
-					}else{
-						uni.reLaunch({
-							url: '/pages/index/index?current=0'
-						})
-					}
+					setTimeout(() => {
+						if(uni.navigateBack()){
+							
+						}else{
+							uni.reLaunch({
+								url: '/pages/index/index?current=0'
+							})
+						}
+					}, 1500);
 				} catch (e) {
 					this.isLogin = false;
 				}
@@ -134,20 +135,20 @@
 			//调起QQ登录
 			fnQQ() {
 				if (this.isLogin) return;
-				// uni.login({
-				// 	provider: 'qq',	//微信:wx   QQ:qq
-				// 	success: function (loginRes) {
-				// 		console.log(loginRes.authResult);
-				// 		// 获取用户信息
-				// 		uni.getUserInfo({
-				// 			provider: 'qq',	//微信:wx   QQ:qq
-				// 			success: function (infoRes) {
-				// 				console.log('用户昵称为：' + infoRes.userInfo.nickName);
-				// 			}
-				// 		});
-				// 	}
-				// });
 				
+				uni.login({
+					provider: 'qq',	//微信:wx   QQ:qq
+					success: function (loginRes) {
+						console.log(loginRes.authResult);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'qq',	//微信:wx   QQ:qq
+							success: function (infoRes) {
+								console.log('用户昵称为：' + infoRes.userInfo.nickName);
+							}
+						});
+					}
+				});
 				
 				console.log('QQ登录');
 				uni.showLoading({

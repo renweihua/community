@@ -6,10 +6,12 @@
 export default function request(route, method = 'get', data = {}) {
 	return new Promise((resolve, reject) => {
 		let login_token = uni.getStorageSync('TOKEN') || '';
+		// local
+		// let server = 'http://community.cnpscy.com';
+		// test
+		let server = 'http://118.25.134.227';
 		uni.request({
-			// url: 'http://api5.laosha.net' + route,
-			// url: 'http://easy-mock.liuup.com/mock/5df764250a2f9f42cfec1a50/api5.hanfugou.com' + route,
-			url: 'http://community.cnpscy.com/api' + route,
+			url: server + '/api' + route,
 			method,
 			data,
 			header: {

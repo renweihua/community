@@ -89,13 +89,14 @@
 					// #endif
 
 				}).catch(err => {
+					console.log('APP - catch');
 					console.log(err, false);
 					// 登录问题
-					if (err.data !== 401) {
-						uni.redirectTo({
-							url: '/pages/login/login'
-						})
-					}
+					// if (err.data !== 401) {
+					// 	uni.redirectTo({
+					// 		url: '/pages/login/login'
+					// 	})
+					// }
 				})
 			}
 		},

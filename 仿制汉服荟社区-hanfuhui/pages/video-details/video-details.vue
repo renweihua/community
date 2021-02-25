@@ -301,7 +301,7 @@ export default {
 					filItem.praise_count++;
 					this.videoInfoData.is_praise = filItem.is_praise = true;
 					this.videoInfoData.praise_count++;
-					if (login_user.user_id) {
+					if (login_user) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
 							user_id: login_user.user_id,
