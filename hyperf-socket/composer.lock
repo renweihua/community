@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e8a15e1940df7d6b921de98c3bb7259",
+    "content-hash": "e66fc5fc8bcf30aff167717c5b11d2d9",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2364,6 +2364,79 @@
             "time": "2020-12-27T06:12:45+00:00"
         },
         {
+            "name": "hyperf/socketio-server",
+            "version": "v2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hyperf/socketio-server.git",
+                "reference": "9ff8c0b8de24654e0b848014cb238f21ef6437f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hyperf/socketio-server/zipball/9ff8c0b8de24654e0b848014cb238f21ef6437f7",
+                "reference": "9ff8c0b8de24654e0b848014cb238f21ef6437f7",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-redis": "*",
+                "ext-swoole": ">=4.4",
+                "hyperf/di": "~2.1.0",
+                "hyperf/redis": "~2.1.0",
+                "hyperf/websocket-server": "~2.1.0",
+                "mix/redis-subscribe": "^2.1",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "hyperf/command": "~2.1.0",
+                "hyperf/config": "~2.1.0",
+                "hyperf/session": "~2.1.0",
+                "hyperf/testing": "~2.1.0",
+                "mockery/mockery": "^1.3",
+                "phpstan/phpstan": "^0.10.5"
+            },
+            "suggest": {
+                "hyperf/command": "Required to use RemoveRedisGarbage command",
+                "hyperf/nsq": "Required to use RedisNsqAdapter",
+                "hyperf/session": "Required to use session"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                },
+                "hyperf": {
+                    "config": "Hyperf\\SocketIOServer\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\SocketIOServer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Socket.io implementation for hyperf",
+            "keywords": [
+                "hyperf",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/hyperf/socketio-server/issues",
+                "source": "https://github.com/hyperf/socketio-server/tree/v2.1.1"
+            },
+            "time": "2021-01-04T02:32:49+00:00"
+        },
+        {
             "name": "hyperf/utils",
             "version": "v2.1.7",
             "source": {
@@ -2441,6 +2514,76 @@
                 "source": "https://github.com/hyperf/hyperf"
             },
             "time": "2021-02-16T03:27:03+00:00"
+        },
+        {
+            "name": "hyperf/websocket-server",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hyperf/websocket-server.git",
+                "reference": "d3f01992524a1bc4248c002fa96e7954b532e9c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hyperf/websocket-server/zipball/d3f01992524a1bc4248c002fa96e7954b532e9c8",
+                "reference": "d3f01992524a1bc4248c002fa96e7954b532e9c8",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "hyperf/contract": "~2.1.0",
+                "hyperf/exception-handler": "~2.1.0",
+                "hyperf/http-server": "~2.1.0",
+                "hyperf/utils": "~2.1.0",
+                "php": ">=7.2",
+                "psr/container": "^1.0",
+                "psr/event-dispatcher": "^1.0",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.9",
+                "malukenho/docheader": "^0.1.6",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^9.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                },
+                "hyperf": {
+                    "config": "Hyperf\\WebSocketServer\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\WebSocketServer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A websocket server library for Hyperf.",
+            "homepage": "https://hyperf.io",
+            "keywords": [
+                "hyperf",
+                "php",
+                "swoole",
+                "websocket"
+            ],
+            "support": {
+                "docs": "https://hyperf.wiki",
+                "issues": "https://github.com/hyperf/hyperf/issues",
+                "pull-request": "https://github.com/hyperf/hyperf/pulls",
+                "source": "https://github.com/hyperf/hyperf"
+            },
+            "time": "2020-12-27T06:12:45+00:00"
         },
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -2692,6 +2835,138 @@
                 }
             ],
             "time": "2020-09-14T14:23:00+00:00"
+        },
+        {
+            "name": "lcobucci/jwt",
+            "version": "3.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lcobucci/jwt.git",
+                "reference": "c1123697f6a2ec29162b82f170dd4a491f524773"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/c1123697f6a2ec29162b82f170dd4a491f524773",
+                "reference": "c1123697f6a2ec29162b82f170dd4a491f524773",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "~1.5",
+                "phpmd/phpmd": "~2.2",
+                "phpunit/php-invoker": "~1.1",
+                "phpunit/phpunit": "^5.7 || ^7.3",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lcobucci\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Luís Otávio Cobucci Oblonczyk",
+                    "email": "lcobucci@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to work with JSON Web Token and JSON Web Signature",
+            "keywords": [
+                "JWS",
+                "jwt"
+            ],
+            "support": {
+                "issues": "https://github.com/lcobucci/jwt/issues",
+                "source": "https://github.com/lcobucci/jwt/tree/3.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/lcobucci",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/lcobucci",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-08-20T13:22:28+00:00"
+        },
+        {
+            "name": "mix/redis-subscribe",
+            "version": "v2.2.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mix-php/redis-subscribe.git",
+                "reference": "85ac4516791e584f3cebee6e4ae2383067bd1517"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mix-php/redis-subscribe/zipball/85ac4516791e584f3cebee6e4ae2383067bd1517",
+                "reference": "85ac4516791e584f3cebee6e4ae2383067bd1517",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-swoole": ">=4.4.4",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mix\\Redis\\Subscribe\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu,jian",
+                    "email": "coder.keda@gmail.com"
+                }
+            ],
+            "description": "Redis subscribe library based on Swoole coroutine",
+            "homepage": "https://openmix.org/",
+            "keywords": [
+                "mix",
+                "redis",
+                "subscribe",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/mix-php/redis-subscribe/issues",
+                "source": "https://github.com/mix-php/redis-subscribe/tree/v2.2.16"
+            },
+            "time": "2020-10-26T09:06:52+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3187,6 +3462,72 @@
                 "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.4.0"
             },
             "time": "2020-09-17T18:55:26+00:00"
+        },
+        {
+            "name": "phper666/jwt-auth",
+            "version": "v3.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phper666/jwt-auth.git",
+                "reference": "2bcfc61379bd3aff9e3790e5011b149c481597ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phper666/jwt-auth/zipball/2bcfc61379bd3aff9e3790e5011b149c481597ba",
+                "reference": "2bcfc61379bd3aff9e3790e5011b149c481597ba",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-swoole": ">=4.4",
+                "lcobucci/jwt": "~3.3.0",
+                "nesbot/carbon": "^1.0 || ^2.0",
+                "php": ">=7.2"
+            },
+            "suggest": {
+                "hyperf/cache": "required hyperf/cache ~2.0.0 OR required hyperf/cache ~1.1.0",
+                "hyperf/command": "required hyperf/command ~2.0.0 OR required hyperf/command ~1.1.0",
+                "hyperf/config": "required hyperf/config ~2.0.0 OR required hyperf/config ~1.1.0",
+                "hyperf/di": "required hyperf/di ~2.0.0 OR required hyperf/di ~1.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "Phper666\\JWTAuth\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phper666\\JWTAuth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Li Yuzhao",
+                    "email": "562405704@qq.com",
+                    "homepage": "https://github.com/phper666/jwt-auth",
+                    "role": "Developer"
+                }
+            ],
+            "description": "jwt-auth Component",
+            "keywords": [
+                "hyperf",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/phper666/jwt-auth/issues",
+                "source": "https://github.com/phper666/jwt-auth/tree/v3.0.6"
+            },
+            "time": "2020-11-30T03:42:55+00:00"
         },
         {
             "name": "phpoption/phpoption",
