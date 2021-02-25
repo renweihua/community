@@ -120,7 +120,7 @@ class AuthService extends Service
             $result = $this->respondWithToken($user->user_id);
 
             // Token记录在Redis，随时可控性
-            $this->redis->set(
+            $this->redis->client()->set(
                 UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
                 my_json_encode([
                     'user_id' => $user->user_id,
@@ -207,7 +207,7 @@ class AuthService extends Service
         }]);
 
         // Token记录在Redis，随时可控性
-        $this->redis->set(
+        $this->redis->client()->set(
             UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
             my_json_encode([
                 'user_id' => $user->user_id,
@@ -254,7 +254,7 @@ class AuthService extends Service
      */
     public function logout($token)
     {
-        $this->redis->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
+        $this->redis->client()->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
         return true;
     }
 
