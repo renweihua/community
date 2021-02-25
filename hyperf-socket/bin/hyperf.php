@@ -5,6 +5,9 @@ ini_set('display_errors', 'on');
 ini_set('display_startup_errors', 'on');
 ini_set('memory_limit', '1G');
 
+// 设置时区：北京时间
+date_default_timezone_set("PRC");
+
 error_reporting(E_ALL);
 date_default_timezone_set('y');
 

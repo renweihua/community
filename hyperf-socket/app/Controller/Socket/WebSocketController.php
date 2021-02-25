@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace App\Controller\Socket;
 
 use App\Constants\Socket\SocketConst;
-use App\Exceptions\Exception;
+use App\Exception\Exception;
+use App\Library\Encrypt\Rsa;
 use App\Service\Socket\ChatService;
 use App\Service\Socket\UploadFileService;
 use App\Service\Socket\UserService;
 use Hyperf\Contract\OnCloseInterface;
 use Hyperf\WebSocketServer\Context;
-use Phper666\JWTAuth\JWT;
-use Phper666\JWTAuth\Util\JWTUtil;
 use Hyperf\SocketIOServer\Socket;
 use Hyperf\Utils\Codec\Json;
 use Hyperf\SocketIOServer\BaseNamespace;
@@ -27,12 +26,6 @@ use Hyperf\Di\Annotation\Inject;
  */
 class WebSocketController extends BaseNamespace
 {
-    /**
-     * @Inject()
-     * @var JWT
-     */
-    private $jwt;
-
     /**
      * @Event("connect")
      */
@@ -115,13 +108,21 @@ class WebSocketController extends BaseNamespace
             $socket->disconnect();
         }
         try {
-            // 丢弃Token的前缀，因为扩展包类验证时，必须移除前缀
-            $data['token'] = JWTUtil::handleToken($data['token'], $this->jwt->tokenPrefix);
-            if (!$this->jwt->checkToken($data['token'])) {
+            $user = Rsa::privDecrypt($data['token']);
+            if (!$user){
                 throw new Exception('Token已失效');
             }
-            $user = $this->jwt->getParserData($data['token']);
-            // var_dump($user);
+            // Token 是否过期
+            if (!isset($token_user->expire_time) || $token_user->expire_time <= time()){
+                throw new Exception('Token过期，请重新登录！');
+            }
+            $key = 'users_token:' . $data['token'];
+            var_dump(redis()->select(2)->get($key));
+
+            // Redis 是否存在key
+            if (empty(Redis::connection('token')->get('users_token:' . $data['token']))){
+                throw new Exception('Token过期，请重新登录（Auth）！');
+            }
             // 欢迎加入房间 - SocketConst::getMessage(SocketConst::JOIN_ROOM)
             $socket->emit('user-login', $user, SocketConst::STATUS_SUCCESS, '欢迎{' . $user['user_id'] . '：' . $user['nick_name'] . '}进入socket');
             // 记录加入房间的用户标识：用户Id与socket_id进行绑定
@@ -143,6 +144,9 @@ class WebSocketController extends BaseNamespace
      */
     public function onMessage(Socket $socket, $data)
     {
+        var_dump('onMessage - getSid' . $socket->getSid());
+        $data = $this->getArrayByData($data);
+        var_dump($data);
         $sid = $socket->getSid();
 //        var_dump('onSay - sid：' . $sid . '：' . $data);
         $socket->to($data['room_id'])
@@ -155,7 +159,10 @@ class WebSocketController extends BaseNamespace
      */
     public function onJoinRoom(Socket $socket, $data)
     {
-//        var_dump('onJoinRoom - getSid' . $socket->getSid());
+        var_dump('onJoinRoom - getSid' . $socket->getSid());
+        var_dump($this->getArrayByData($data));
+        $data = $this->getStringByData($data);
+        var_dump($data);
         // 将当前用户加入房间
         $socket->join($data);
         // 向房间内其他用户推送（不含当前用户）
@@ -280,14 +287,17 @@ class WebSocketController extends BaseNamespace
      *
      * @Event("friends")
      */
+
+
     protected function getArrayByData($data)
     {
         if (is_array($data)) return $data;
-        return $this->json_encode($data);
+        return my_json_decode($data);
     }
 
-    protected function json_encode($data)
+    protected function getStringByData($data)
     {
+        if (is_string($data)) return $data;
         return my_json_encode($data);
     }
 }

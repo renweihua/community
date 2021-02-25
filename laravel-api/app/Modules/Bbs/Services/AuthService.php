@@ -120,7 +120,16 @@ class AuthService extends Service
             $result = $this->respondWithToken($user->user_id);
 
             // Token记录在Redis，随时可控性
-            $this->redis->set(UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'], my_json_encode(['user_id' => $user->user_id, 'expires_time' => $result['expires_time']]), UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+            $this->redis->set(
+                UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
+                my_json_encode([
+                    'user_id' => $user->user_id,
+                    'nick_name' => $user_info['user_uuid'],
+                    'user_avatar' => $user_info['user_avatar'],
+                    'expires_time' => $result['expires_time']
+                ]),
+                UserCacheKeys::KEY_DEFAULT_TIMEOUT
+            );
 
             return array_merge($result, [
                 'user_avatar' => $user_info['user_avatar'],
@@ -192,8 +201,22 @@ class AuthService extends Service
 
         $result = $this->respondWithToken($user->user_id);
 
+        // 加载个人资料模型
+        $user->load(['userInfo' => function($query){
+            $query->select('user_id', 'nick_name', 'user_avatar');
+        }]);
+
         // Token记录在Redis，随时可控性
-        $this->redis->set(UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'], my_json_encode(['user_id' => $user->user_id, 'expires_time' => $result['expires_time']]), UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+        $this->redis->set(
+            UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
+            my_json_encode([
+                'user_id' => $user->user_id,
+                'nick_name' => $user->userInfo->nick_name,
+                'user_avatar' => $user->userInfo->user_avatar,
+                'expires_time' => $result['expires_time']
+            ]),
+            UserCacheKeys::KEY_DEFAULT_TIMEOUT
+        );
 
         return $result;
     }
