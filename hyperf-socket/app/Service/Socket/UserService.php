@@ -14,29 +14,29 @@ class UserService extends Service
 
     public static function getUsers()
     {
-        return redis()->hGetAll(self::USERS_LIST);
+        return redis('token')->hGetAll(self::USERS_LIST);
     }
 
     public static function getUser($socket)
     {
-        return redis()->hGet(self::USERS_LIST, (string)$socket->getSid());
+        return redis('token')->hGet(self::USERS_LIST, (string)$socket->getSid());
     }
 
     public static function getUserIdBySid(string $sid): int
     {
-        return intval(my_json_decode(redis()->hGet(self::USERS_LIST, $sid))['user_id']);
+        return intval(my_json_decode(redis('token')->hGet(self::USERS_LIST, $sid))['user_id']);
     }
 
     public static function getSidByUserId($user_id): string
     {
-        return redis()->hGet(self::USER_SID, (string)$user_id);
+        return redis('token')->hGet(self::USER_SID, (string)$user_id);
     }
 
     public static function setUser($socket, array $user): bool
     {
         $sid = (string)$socket->getSid();
         $user_id = $user['user_id'];
-        $redis = redis();
+        $redis = redis('token');
         $redis->hDel(self::USERS_LIST, $sid);
         $redis->hDel(self::USER_SID, $user_id);
 
@@ -52,8 +52,9 @@ class UserService extends Service
 
     public static function deleteUser($socket)
     {
-        redis()->hDel(self::USERS_LIST, (string)$socket->getSid());
-        redis()->hDel(self::USER_SID, self::getUserIdBySid((string)$socket->getSid()));
+        $redis = redis('token');
+        $redis->hDel(self::USERS_LIST, (string)$socket->getSid());
+        $redis->hDel(self::USER_SID, self::getUserIdBySid((string)$socket->getSid()));
         return true;
     }
 }

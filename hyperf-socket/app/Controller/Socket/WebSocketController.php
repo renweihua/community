@@ -117,13 +117,6 @@ class WebSocketController extends BaseNamespace
             if (!isset($token_user->expire_time) || $token_user->expire_time <= time()){
                 throw new Exception('Token过期，请重新登录！');
             }
-            $key = 'users_token:' . $data['token'];
-            var_dump(redis()->select(2)->get($key));
-
-            // Redis 是否存在key
-            if (empty(Redis::connection('token')->get('users_token:' . $data['token']))){
-                throw new Exception('Token过期，请重新登录（Auth）！');
-            }
             // 欢迎加入房间 - SocketConst::getMessage(SocketConst::JOIN_ROOM)
             $socket->emit('user-login', $user, SocketConst::STATUS_SUCCESS, '欢迎{' . $user['user_id'] . '：' . $user['nick_name'] . '}进入socket');
             // 记录加入房间的用户标识：用户Id与socket_id进行绑定
