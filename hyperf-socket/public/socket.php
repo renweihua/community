@@ -29,11 +29,13 @@
         // token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkZWZhdWx0XzVmNDhiMmNmYWZjZDU3LjMwNzAwNTEyIiwiaWF0IjoxNTk4NTk5ODg3LCJuYmYiOjE1OTg1OTk4ODcsImV4cCI6MTU5ODYwNzA4NywidXNlcl9pZCI6MiwiZ3VhcmQiOiJ1c2VyIiwiand0X3NjZW5lIjoiZGVmYXVsdCJ9.YImehUpzq9sdtPO61YYD7A8oVrMy26X-_AWCrv7Gbjw';
 
         // socket.emit('event', 'hello, hyperf', console.log);
+        socket.emit('user-login', {"room_id": room_id , "type":"login", "token": token}, console.log);
+        
         socket.emit('join-room', {"room_id": room_id , "type":"login", "token": token}, console.log);
 
-        setInterval(function () {
-            socket.emit('message', {"room_id":  room_id, "type":"ping", "content":"ping......"}, console.log);
-        }, 10000);
+        // setInterval(function () {
+        //     socket.emit('message', {"room_id":  room_id, "type":"ping", "content":"ping......"}, console.log);
+        // }, 10000);
     });
 
     /**

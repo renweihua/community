@@ -9,8 +9,14 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use Hyperf\Watcher\Driver\ScanFileDriver;
+
 return [
-    'http' => [
-        App\Middleware\CorsMiddleware::class,
+    'driver' => ScanFileDriver::class,
+    'bin' => 'php',
+    'watch' => [
+        'dir' => ['app', 'config', 'route', 'public'],
+        'file' => ['.env'],
+        'scan_interval' => 2000,
     ],
 ];

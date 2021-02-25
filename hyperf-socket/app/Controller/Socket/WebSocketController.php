@@ -88,7 +88,8 @@ class WebSocketController extends BaseNamespace
      */
     public function onUserLogin(Socket $socket, $data)
     {
-//        var_dump('onUserLogin - getSid' . $socket->getSid());
+        var_dump('onUserLogin - getSid' . $socket->getSid());
+        var_dump($data);
 
         // 登录Token验证
         $this->verifyUserLogin($socket, $data);
