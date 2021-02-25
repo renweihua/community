@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helper\ExtendClass;
+namespace App\Library;
 
 use App\Traits\Instance;
 
