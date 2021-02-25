@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services;
 
 use App\Constants\CacheKeys;
+use App\Constants\UserCacheKeys;
 use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\AuthTokenException;
 use App\Exceptions\Bbs\FailException;
@@ -13,13 +14,18 @@ use App\Models\User\User;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Jobs\SendRegisterEmail;
 use App\Services\Service;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
 class AuthService extends Service
 {
-    protected $guard = 'user';
+    protected $redis;
+
+    public function __construct()
+    {
+        $this->redis = Redis::connection('token');
+    }
 
     /**
      * 注册流程
@@ -112,6 +118,10 @@ class AuthService extends Service
 
             $this->setError('注册成功，请完善个人资料！');
             $result = $this->respondWithToken($user->user_id);
+
+            // Token记录在Redis，随时可控性
+            $this->redis->set(UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'], my_json_encode(['user_id' => $user->user_id, 'expires_time' => $result['expires_time']]), UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+
             return array_merge($result, [
                 'user_avatar' => $user_info['user_avatar'],
                 'user_sex' => $user_info['user_sex'],
@@ -180,18 +190,25 @@ class AuthService extends Service
         // 登录日志
         UserLoginLog::getInstance()->add($user->user_id, 1, '登录成功');
 
-        return $this->respondWithToken($user->user_id);
+        $result = $this->respondWithToken($user->user_id);
+
+        // Token记录在Redis，随时可控性
+        $this->redis->set(UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'], my_json_encode(['user_id' => $user->user_id, 'expires_time' => $result['expires_time']]), UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+
+        return $result;
     }
 
     /**
      * 登录管理员信息获取
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @param $request
+     *
+     * @return mixed
      * @throws \App\Exceptions\Bbs\AuthTokenException
      */
-    public function me()
+    public function me($request)
     {
-        if (!$user = Auth::guard($this->guard)->user()){
+        if (!$user = $request->attributes->get('login_user')){
             throw new AuthTokenException('认证失败！');
         }
         // 加载粉丝与关注人数统计
@@ -212,9 +229,9 @@ class AuthService extends Service
      *
      * @return bool
      */
-    public function logout()
+    public function logout($token)
     {
-        Auth::guard($this->guard)->logout();
+        $this->redis->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
         return true;
     }
 

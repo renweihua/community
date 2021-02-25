@@ -5,13 +5,13 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Modules\Bbs\Http\Requests\LoginRequest;
 use App\Modules\Bbs\Http\Requests\RegisterRequest;
 use App\Modules\Bbs\Services\AuthService;
-use App\Traits\Json;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AuthController extends BbsController
 {
     public function __construct(AuthService $authService)
     {
-        parent::__construct();
         $this->service = $authService;
     }
 
@@ -21,7 +21,7 @@ class AuthController extends BbsController
      * @param RegisterRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->all();
 
@@ -40,7 +40,7 @@ class AuthController extends BbsController
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Bbs\AuthException
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -53,12 +53,14 @@ class AuthController extends BbsController
     /**
      * 获取登录会员信息
      *
+     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Bbs\AuthTokenException
      */
-    public function me()
+    public function me(Request $request): JsonResponse
     {
-        return $this->successJson($this->service->me(), '会员信息获取成功！');
+        return $this->successJson($this->service->me($request), '会员信息获取成功！');
     }
 
     /**
@@ -66,9 +68,9 @@ class AuthController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request): JsonResponse
     {
-        $this->service->logout();
+        $this->service->logout($request->header('Authorization'));
         return $this->successJson([], '退出成功！');
     }
 }

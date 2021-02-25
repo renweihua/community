@@ -5,13 +5,11 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Services\User\NotifyService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class NotifyController extends BbsController
 {
     public function __construct(NotifyService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -22,7 +20,7 @@ class NotifyController extends BbsController
      */
     public function unread(): JsonResponse
     {
-        $list = $this->service->unread($this->login_user);
+        $list = $this->service->unread($this->getLoginUserId());
         return $this->successJson($list);
     }
 
@@ -31,9 +29,9 @@ class NotifyController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPraiseByNotify()
+    public function getPraiseByNotify(): JsonResponse
     {
-        $lists = $this->service->getPraiseByNotify($this->login_user);
+        $lists = $this->service->getPraiseByNotify($this->getLoginUserId());
         return $this->successJson($lists, '获取成功！');
     }
 
@@ -42,9 +40,9 @@ class NotifyController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCommentByNotify()
+    public function getCommentByNotify(): JsonResponse
     {
-        $lists = $this->service->getCommentByNotify($this->login_user);
+        $lists = $this->service->getCommentByNotify($this->getLoginUserId());
         return $this->successJson($lists, '获取成功！');
     }
 
@@ -54,9 +52,9 @@ class NotifyController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSystemByNotify()
+    public function getSystemByNotify(): JsonResponse
     {
-        $lists = $this->service->getSystemByNotify($this->login_user);
+        $lists = $this->service->getSystemByNotify($this->getLoginUserId());
         return $this->successJson($lists, '获取成功！');
     }
 }

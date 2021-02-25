@@ -11,7 +11,6 @@ class FriendController extends BbsController
 {
     public function __construct(FriendService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -22,7 +21,7 @@ class FriendController extends BbsController
      */
     public function follows() : JsonResponse
     {
-        $lists = $this->service->getFollows($this->login_user);
+        $lists = $this->service->getFollows($this->getLoginUserId());
         return $this->successJson($lists);
     }
 
@@ -33,7 +32,7 @@ class FriendController extends BbsController
      */
     public function fans() : JsonResponse
     {
-        $lists = $this->service->getFans($this->login_user);
+        $lists = $this->service->getFans($this->getLoginUserId());
         return $this->successJson($lists);
     }
 
@@ -48,11 +47,11 @@ class FriendController extends BbsController
     {
         $data = $request->validated();
 
-        if ($this->login_user == $data['user_id']) {
+        if ($this->getLoginUserId() == $data['user_id']) {
             return $this->errorJson('无需关注自己！');
         }
 
-        if ($res = $this->service->setFollow($this->login_user, intval($data['user_id']))) {
+        if ($res = $this->service->setFollow($this->getLoginUserId(), intval($data['user_id']))) {
             return $this->successJson([], $this->service->getError(), $res);
         } else {
             return $this->errorJson($this->service->getError());

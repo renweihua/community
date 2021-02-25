@@ -10,7 +10,6 @@ class TopicController extends BbsController
 {
     public function __construct(TopicService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -36,7 +35,7 @@ class TopicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['topic_id'], $this->login_user)) {
+        if ($detail = $this->service->detail((int)$data['topic_id'], $this->getLoginUserId())) {
             return $this->successJson($detail, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -54,7 +53,7 @@ class TopicController extends BbsController
     {
         $request->validated();
 
-        $lists = $this->service->dynamics($request, $this->login_user);
+        $lists = $this->service->dynamics($request, $this->getLoginUserId());
         return $this->successJson($lists);
     }
 
@@ -69,7 +68,7 @@ class TopicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($res = $this->service->setFollow($this->login_user, (int)$data['topic_id'])) {
+        if ($res = $this->service->setFollow($this->getLoginUserId(), (int)$data['topic_id'])) {
             return $this->successJson([], $this->service->getError(), $res);
         } else {
             return $this->errorJson($this->service->getError());

@@ -13,7 +13,6 @@ class DynamicController extends BbsController
 {
     public function __construct(DynamicService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -28,7 +27,7 @@ class DynamicController extends BbsController
     {
         $request->validated();
 
-        if ($result = $this->service->push($this->login_user, $request->all())) {
+        if ($result = $this->service->push($this->getLoginUserId(), $request->all())) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -61,7 +60,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($result = $this->service->praise($this->login_user, (int)$data['dynamic_id'])) {
+        if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -75,7 +74,7 @@ class DynamicController extends BbsController
      */
     public function collections(): JsonResponse
     {
-        $lists = $this->service->getCollections($this->login_user);
+        $lists = $this->service->getCollections($this->getLoginUserId());
         return $this->successJson($lists);
     }
 
@@ -90,7 +89,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($result = $this->service->collection($this->login_user, (int)$data['dynamic_id'])) {
+        if ($result = $this->service->collection($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -108,7 +107,7 @@ class DynamicController extends BbsController
     {
         $request->validated();
 
-        if ($data = $this->service->comment($this->login_user, $request->all())) {
+        if ($data = $this->service->comment($this->getLoginUserId(), $request->all())) {
             return $this->successJson($data, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

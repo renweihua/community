@@ -19,7 +19,7 @@ class LoginLogController extends BbsController
      */
     public function getListsByMonth(Request $request, LoginLogService $service): JsonResponse
     {
-        $lists = $service->getListsByMonth($this->login_user, $request->input('search_month', ''));
+        $lists = $service->getListsByMonth($this->getLoginUserId(), $request->input('search_month', ''));
         return $this->successJson($lists, '登录日志获取成功！');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,7 @@ class UploadController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function file(Request $request, $file = 'file')
+    public function file(Request $request, $file = 'file'): JsonResponse
     {
         if (empty($request->file($file))){
             return $this->errorJson('请上传文件！');
@@ -37,7 +38,7 @@ class UploadController extends BbsController
      * @param string $file
      * @return \Illuminate\Http\JsonResponse
      */
-    public function files(Request $request, $file = 'files')
+    public function files(Request $request, $file = 'files'): JsonResponse
     {
         if (empty($request->file($file))){
             return $this->errorJson('请上传文件！');

@@ -12,7 +12,6 @@ class DynamicController extends BbsController
 {
     public function __construct(DynamicService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -23,9 +22,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function lists(Request $request)
+    public function lists(Request $request): JsonResponse
     {
-        $lists = $this->service->lists($request, $this->login_user);
+        $lists = $this->service->lists($request, $this->getLoginUserId());
         return $this->successJson($lists);
     }
 
@@ -40,7 +39,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['dynamic_id'], $this->login_user)) {
+        if ($detail = $this->service->detail((int)$data['dynamic_id'], $this->getLoginUserId())) {
             return $this->successJson($detail, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

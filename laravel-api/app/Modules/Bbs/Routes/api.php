@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Route;
 use App\Modules\Bbs\Http\Middleware\CheckAuth;
+use App\Modules\Bbs\Http\Middleware\GetUserByToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,55 +34,57 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::post('logout', 'AuthController@logout');
     });
 
-    /**
-     * 首页相关
-     */
-    Route::prefix('/')->group(function () {
-        // 发现
-        Route::get('discover', 'IndexController@discover');
-        // 关注
-        Route::get('follow', 'IndexController@follows')->middleware(CheckAuth::class);
-    });
+    Route::prefix('')->middleware(GetUserByToken::class)->group(function(){
+        /**
+         * 首页相关
+         */
+        Route::prefix('/')->group(function () {
+            // 发现
+            Route::get('discover', 'IndexController@discover');
+            // 关注
+            Route::get('follow', 'IndexController@follows')->middleware(CheckAuth::class);
+        });
 
-    /**
-     * 会员相关
-     */
-    Route::prefix('user')->group(function () {
-        // 指定会员详情
-        Route::get('/detail', 'UserController@detail');
-        // 指定会员的动态
-        Route::get('/dynamics', 'UserController@dynamics');
-    });
+        /**
+         * 会员相关
+         */
+        Route::prefix('user')->group(function () {
+            // 指定会员详情
+            Route::get('/detail', 'UserController@detail');
+            // 指定会员的动态
+            Route::get('/dynamics', 'UserController@dynamics');
+        });
 
-    /**
-     * 动态相关
-     */
-    Route::get('dynamics', 'DynamicController@lists');
-    Route::prefix('dynamic')->group(function () {
-        // 动态详情
-        Route::get('/detail', 'DynamicController@detail');
-        // 获取动态评论列表
-        Route::get('/comments', 'DynamicController@comments');
-        // 加载指定评论，更多的回复列表
-        Route::get('/loadMoreComments', 'DynamicController@loadMoreComments');
-    });
+        /**
+         * 动态相关
+         */
+        Route::get('dynamics', 'DynamicController@lists');
+        Route::prefix('dynamic')->group(function () {
+            // 动态详情
+            Route::get('/detail', 'DynamicController@detail');
+            // 获取动态评论列表
+            Route::get('/comments', 'DynamicController@comments');
+            // 加载指定评论，更多的回复列表
+            Route::get('/loadMoreComments', 'DynamicController@loadMoreComments');
+        });
 
-    /**
-     * 荟吧相关
-     */
-    // 荟吧列表
-    Route::get('topics', 'TopicController@lists');
-    Route::prefix('topic')->group(function () {
-        // 荟吧详情
-        Route::get('/detail', 'TopicController@detail');
-        // 荟吧的动态列表
-        Route::get('/dynamics', 'TopicController@dynamics');
-        // 关注指定荟吧
-        Route::post('/follow', 'TopicController@follow')->middleware(CheckAuth::class);
+        /**
+         * 荟吧相关
+         */
+        // 荟吧列表
+        Route::get('topics', 'TopicController@lists');
+        Route::prefix('topic')->group(function () {
+            // 荟吧详情
+            Route::get('/detail', 'TopicController@detail');
+            // 荟吧的动态列表
+            Route::get('/dynamics', 'TopicController@dynamics');
+            // 关注指定荟吧
+            Route::post('/follow', 'TopicController@follow')->middleware(CheckAuth::class);
+        });
     });
 
     // 登录会员
-    Route::prefix('')->middleware([CheckAuth::class])->namespace('User')->group(function () {
+    Route::prefix('')->middleware(CheckAuth::class)->namespace('User')->group(function () {
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
         // 批量文件上传

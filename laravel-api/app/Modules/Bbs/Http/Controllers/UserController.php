@@ -6,13 +6,11 @@ use App\Modules\Bbs\Http\Requests\UserIdRequest;
 use App\Modules\Bbs\Services\DynamicService;
 use App\Modules\Bbs\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UserController extends BbsController
 {
     public function __construct(UserService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -27,7 +25,7 @@ class UserController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['user_id'], $this->login_user)) {
+        if ($detail = $this->service->detail((int)$data['user_id'], $this->getLoginUserId())) {
             return $this->successJson($detail, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -46,7 +44,7 @@ class UserController extends BbsController
     {
         $data = $request->validated();
 
-        $list = $dynamicService->getDynamicsByUser($request, (int)$data['user_id'], (int)$this->login_user);
+        $list = $dynamicService->getDynamicsByUser($request, (int)$data['user_id'], (int)$this->getLoginUserId());
         return $this->successJson($list);
     }
 }

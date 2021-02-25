@@ -106,6 +106,7 @@ class Rsa {
             "config" => "D:/phpEnv/php/php-7.3/extras/ssl/openssl.cnf" //如果没有配置这项，openssl_pkey_new会返回false
         ];
 
+
         //创建公钥和私钥
         $res = openssl_pkey_new($config);
 

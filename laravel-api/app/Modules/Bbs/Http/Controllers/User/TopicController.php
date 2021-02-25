@@ -10,7 +10,6 @@ class TopicController extends BbsController
 {
     public function __construct(TopicService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -21,7 +20,7 @@ class TopicController extends BbsController
      */
     public function follows(): JsonResponse
     {
-        $lists = $this->service->getFollows($this->login_user);
+        $lists = $this->service->getFollows($this->getLoginUserId());
         return $this->successJson($lists);
     }
 }

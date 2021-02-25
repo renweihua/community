@@ -2,44 +2,12 @@
 
 namespace App\Models\User;
 
+use App\Models\Model;
 use App\Modules\Bbs\Database\factories\UserFactory;
-use App\Traits\Instance;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Model
 {
-    use HasFactory;
-    use Instance;
-
     protected $primaryKey = 'user_id';
-    public $timestamps = false;
-
-    /**
-     * 获取会储存到 jwt 声明中的标识
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * 返回包含要添加到 jwt 声明中的自定义键值对数组
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return ['role' => 'user'];
-    }
-
-    /**
-     * 不可批量赋值的属性
-     *
-     * @var array
-     */
-    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.

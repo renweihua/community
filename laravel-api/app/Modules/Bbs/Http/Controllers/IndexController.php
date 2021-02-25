@@ -3,7 +3,6 @@
 namespace App\Modules\Bbs\Http\Controllers;
 
 use App\Modules\Bbs\Services\DynamicService;
-use App\Modules\Bbs\Services\IndexService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,7 +10,6 @@ class IndexController extends BbsController
 {
     public function __construct(DynamicService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -24,7 +22,7 @@ class IndexController extends BbsController
      */
     public function discover(Request $request) : JsonResponse
     {
-        $lists = $this->service->discover($this->login_user, $request);
+        $lists = $this->service->discover($this->getLoginUserId(), $request);
         return $this->successJson($lists);
     }
 
@@ -37,7 +35,7 @@ class IndexController extends BbsController
      */
     public function follows(Request $request) : JsonResponse
     {
-        $lists = $this->service->follows($this->login_user);
+        $lists = $this->service->follows($this->getLoginUserId());
         return $this->successJson($lists);
     }
 }

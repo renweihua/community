@@ -8,12 +8,12 @@ use App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
+use Illuminate\Http\JsonResponse;
 
 class IndexController extends BbsController
 {
     public function __construct(UserService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -24,11 +24,11 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request): JsonResponse
     {
         $request->validated();
 
-        if ($this->service->updateUser($this->login_user, $request->all())) {
+        if ($this->service->updateUser($this->getLoginUserId(), $request->all())) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -42,11 +42,11 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateBackgroundCover(BackgroundCoverRequest $request)
+    public function updateBackgroundCover(BackgroundCoverRequest $request): JsonResponse
     {
         $request->validated();
 
-        if ($this->service->updateBackgroundCover($this->user, $request->input('background_cover'))) {
+        if ($this->service->updateBackgroundCover($this->getLoginUser(), $request->input('background_cover'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -60,11 +60,11 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function changePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         $request->validated();
 
-        if ($this->service->changePassword($this->user, $request->input('password'))) {
+        if ($this->service->changePassword($this->getLoginUser(), $request->input('password'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -76,9 +76,9 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendMailByChangePassword()
+    public function sendMailByChangePassword(): JsonResponse
     {
-        $this->service->sendMailByChangePassword($this->user);
+        $this->service->sendMailByChangePassword($this->getLoginUser());
         return $this->successJson([], '邮件已发送，请及时查看！');
     }
 
@@ -89,11 +89,11 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function changePassByEmail(ChangePasswordByEmailRequest $request)
+    public function changePassByEmail(ChangePasswordByEmailRequest $request): JsonResponse
     {
         $request->validated();
 
-        if ($this->service->checkEmailCodeAndUpdatePassword($this->user, $request->input('code'), $request->input('password'))) {
+        if ($this->service->checkEmailCodeAndUpdatePassword($this->getLoginUser(), $request->input('code'), $request->input('password'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

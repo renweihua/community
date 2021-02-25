@@ -12,7 +12,6 @@ class SignController extends BbsController
 {
     public function __construct(SignService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
@@ -21,9 +20,9 @@ class SignController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSignByToday()
+    public function getSignByToday() : JsonResponse
     {
-        $result = $this->service->getSignByToday($this->login_user);
+        $result = $this->service->getSignByToday($this->getLoginUserId());
         return $this->successJson($result);
     }
 
@@ -32,11 +31,11 @@ class SignController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function signIn(): JsonResponse
+    public function signIn() : JsonResponse
     {
-        if ($result = $this->service->signIn($this->login_user)){
+        if ( $result = $this->service->signIn($this->getLoginUserId()) ) {
             return $this->successJson([], $this->service->getError());
-        }else{
+        } else {
             return $this->errorJson($this->service->getError());
         }
     }
@@ -48,11 +47,11 @@ class SignController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSignsStatusByMonth(MonthRequest $request): JsonResponse
+    public function getSignsStatusByMonth(MonthRequest $request) : JsonResponse
     {
         $data = $request->validated();
 
-        $lists = $this->service->getSignsStatusByMonth($this->login_user, $data['search_month']);
+        $lists = $this->service->getSignsStatusByMonth($this->getLoginUserId(), $data['search_month']);
         return $this->successJson($lists, '签到状态获取成功！');
     }
 
@@ -63,9 +62,9 @@ class SignController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSignsByMonth(Request $request): JsonResponse
+    public function getSignsByMonth(Request $request) : JsonResponse
     {
-        $lists = $this->service->getSignsByMonth($this->login_user, $request->input('search_month', ''));
+        $lists = $this->service->getSignsByMonth($this->getLoginUserId(), $request->input('search_month', ''));
         return $this->successJson($lists, '签到记录获取成功！');
     }
 }
