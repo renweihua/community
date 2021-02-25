@@ -39,7 +39,7 @@ class CheckAuth
         }
         try {
             // Token 是否过期
-            if (!isset($token_user->expire_time) || $token_user->expire_time <= time()){
+            if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 return $this->errorJson('Token过期，请重新登录！', -1);
             }
 

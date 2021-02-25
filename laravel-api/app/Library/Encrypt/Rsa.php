@@ -67,7 +67,7 @@ class Rsa {
         if (!is_string($data)) {
             return null;
         }
-        return openssl_public_encrypt($data,$encrypted,self::getPublicKey()) ? base64_encode($encrypted) : null;
+        return openssl_public_encrypt($data,$encrypted, self::getPublicKey()) ? base64_encode($encrypted) : null;
     }
 
     /**

@@ -15,7 +15,8 @@
         return null;
     }
 
-    token = getQueryString('token') || 'ShWNa+vJhKLNmyGIbXgwxdeX29p8mLD27bwiHxVeh3Dvz0JOImXAJQSCFMAQ12QaMAtY4Wp0KzlAsWXqfPujYQ==';
+    token = getQueryString('token') ||
+        'AaTvl4td7IIQ3fPaRh5nQ0haDAtTvmlju282WWcCd0D0jqLnH5KfHRmlY8QH2oBg/H24xITmW1T678pbAI1PAa6xkLe2HtSnGJmT+6IUkQjfCEZWWyiY4C8L3vByX3bfKyX2BgQrhDMCrz6JbwHFCcgw0FMqpewKxG6NoM6FGV0=';
     var socket = io('ws://127.0.0.1:9502', {
         query: {
             token : token
@@ -31,7 +32,7 @@
         // socket.emit('event', 'hello, hyperf', console.log);
         socket.emit('user-login', {"room_id": room_id , "type":"login", "token": token}, console.log);
         
-        socket.emit('join-room', {"room_id": room_id , "type":"login", "token": token}, console.log);
+        // socket.emit('join-room', {"room_id": room_id , "type":"login"}, console.log);
 
         // setInterval(function () {
         //     socket.emit('message', {"room_id":  room_id, "type":"ping", "content":"ping......"}, console.log);

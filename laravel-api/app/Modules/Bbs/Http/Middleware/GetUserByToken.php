@@ -38,7 +38,7 @@ class GetUserByToken
                 // Redis 是否存在key
                 if (empty(Redis::connection('token')->get(UserCacheKeys::USER_LOGIN_TOKEN . $token))){
                     // Token 是否过期
-                    if (isset($token_user->expire_time) && $token_user->expire_time > time()){
+                    if (isset($token_user->expires_time) && $token_user->expires_time > time()){
                         $user = User::find($token_user->user_id);
                         if ($user->is_check == 1){
                             // 把登录会员信息追加到 request类

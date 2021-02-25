@@ -109,20 +109,33 @@ class WebSocketController extends BaseNamespace
             $socket->disconnect();
         }
         try {
-            $user = Rsa::privDecrypt($data['token']);
-            if (!$user){
+            $token_user = Rsa::privDecrypt($data['token']);
+            if (!$token_user){
                 throw new Exception('Token已失效');
             }
             // Token 是否过期
-            if (!isset($token_user->expire_time) || $token_user->expire_time <= time()){
+            if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 throw new Exception('Token过期，请重新登录！');
             }
+            $redis = redis('token');
+            $value = $redis->get('laravel_database_users_token:' . $data['token']);
+            if (empty($value)){
+                throw new Exception('Token过期，请重新登录！');
+            }
+            $user = my_json_decode($value);
+            $user = (object)[
+                'user_id' => rand(0, 999),
+                'nick_name' => '随机名称',
+                'nick_avatar' => ''
+            ];
             // 欢迎加入房间 - SocketConst::getMessage(SocketConst::JOIN_ROOM)
-            $socket->emit('user-login', $user, SocketConst::STATUS_SUCCESS, '欢迎{' . $user['user_id'] . '：' . $user['nick_name'] . '}进入socket');
+            $socket->emit('user-login', (array)$user, SocketConst::STATUS_SUCCESS, '欢迎{' . $user->user_id . '：' . $user->nick_name . '}进入socket');
             // 记录加入房间的用户标识：用户Id与socket_id进行绑定
             UserService::setUser($socket, $user);
         } catch (Exception $e) {
-            // var_dump($e->getMessage());
+            var_dump($e->getLine());
+            var_dump($e->getMessage());
+
             $socket->emit('user-login', '', SocketConst::STATUS_ERROR, SocketConst::getMessage(SocketConst::TOKEN_INVALID));
             // 断开此连接
             $socket->disconnect();

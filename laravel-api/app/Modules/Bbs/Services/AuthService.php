@@ -24,6 +24,14 @@ class AuthService extends Service
 
     public function __construct()
     {
+//        $redis = new \Redis;
+//        $redis->connect('127.0.0.1', 6379);
+//        $redis->select(2);
+//
+//        $key = 'laravel_database_users_token:VMnGZFiTzStNhgO/1pqQwV5zWFdUS8+izNyQB/zwjo40TYTsVAjjZGpymHFab7fFoV8OY8Pra6uiChkF5Ry3r9RnVSTOqVHBhm4EYw6Ebtf3lMHcw4vL48B36RDGg5ucaqLsaN29gIRm461tBK7LEiMGs9ypJ5Gfoluqu54wEYU=';
+//
+//        var_dump($redis->get($key));
+//        exit;
         $this->redis = Redis::connection('token');
     }
 
@@ -117,17 +125,19 @@ class AuthService extends Service
             }
 
             $this->setError('注册成功，请完善个人资料！');
+
             $result = $this->respondWithToken($user->user_id);
+            $redis_user_info = [
+                'user_id' => $user->user_id,
+                'nick_name' => $user_info['user_uuid'],
+                'user_avatar' => $user_info['user_avatar'],
+                'expires_time' => $result['expires_time']
+            ];
 
             // Token记录在Redis，随时可控性
             $this->redis->client()->set(
                 UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
-                my_json_encode([
-                    'user_id' => $user->user_id,
-                    'nick_name' => $user_info['user_uuid'],
-                    'user_avatar' => $user_info['user_avatar'],
-                    'expires_time' => $result['expires_time']
-                ]),
+                my_json_encode($redis_user_info),
                 UserCacheKeys::KEY_DEFAULT_TIMEOUT
             );
 
@@ -199,22 +209,24 @@ class AuthService extends Service
         // 登录日志
         UserLoginLog::getInstance()->add($user->user_id, 1, '登录成功');
 
-        $result = $this->respondWithToken($user->user_id);
-
         // 加载个人资料模型
         $user->load(['userInfo' => function($query){
             $query->select('user_id', 'nick_name', 'user_avatar');
         }]);
 
+
+        $result = $this->respondWithToken($user->user_id);
+        $redis_user_info = [
+            'user_id' => $user->user_id,
+            'nick_name' => $user->userInfo->nick_name,
+            'user_avatar' => $user->userInfo->user_avatar,
+            'expires_time' => $result['expires_time']
+        ];
+
         // Token记录在Redis，随时可控性
         $this->redis->client()->set(
             UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
-            my_json_encode([
-                'user_id' => $user->user_id,
-                'nick_name' => $user->userInfo->nick_name,
-                'user_avatar' => $user->userInfo->user_avatar,
-                'expires_time' => $result['expires_time']
-            ]),
+            my_json_encode($redis_user_info),
             UserCacheKeys::KEY_DEFAULT_TIMEOUT
         );
 
@@ -266,11 +278,12 @@ class AuthService extends Service
      */
     protected function respondWithToken($user_id): array
     {
-        $expire_time = time() + CacheKeys::KEY_DEFAULT_TIMEOUT;
-        $token = $this->getUserToken($user_id, $expire_time);
+        $cache['user_id'] = $user_id;
+        $cache['expires_time'] = time() + CacheKeys::KEY_DEFAULT_TIMEOUT;
+        $token = $this->getUserToken($cache);
         return [
             'access_token' => $token,
-            'expires_time'   => $expire_time,
+            'expires_time'   => $cache['expires_time'],
         ];
     }
 
@@ -281,8 +294,8 @@ class AuthService extends Service
      *
      * @return string|null
      */
-    protected function getUserToken(int $user_id, int $expire_time)
+    protected function getUserToken(array $cache)
     {
-        return Rsa::publicEncrypt(['user_id' => $user_id, 'expire_time' => $expire_time]);
+        return Rsa::publicEncrypt($cache);
     }
 }

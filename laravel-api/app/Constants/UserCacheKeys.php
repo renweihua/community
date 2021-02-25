@@ -5,7 +5,7 @@ namespace App\Constants;
 class UserCacheKeys
 {
     // 默认的缓存时长：默认为1小时
-    const KEY_DEFAULT_TIMEOUT = 3600;
+    const KEY_DEFAULT_TIMEOUT = 36000;
 
     // 更改登录密码时，通过邮箱：发送验证码的key
     const CHANGE_PASSWORD_EMAIL_CODE = 'change_password_email_code:';
