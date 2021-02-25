@@ -16,7 +16,7 @@ class Rsa {
      */
     private static function getPrivateKey()
     {
-        $abs_path = dirname(__FILE__) . '/rsa_private_key.pem';
+        $abs_path = dirname(__FILE__) . '/../../../../rsa-config/rsa_private_key.pem';
         $content = file_get_contents($abs_path);
         return openssl_pkey_get_private($content);
     }
@@ -27,7 +27,7 @@ class Rsa {
      */
     private static function getPublicKey()
     {
-        $abs_path = dirname(__FILE__) . '/rsa_public_key.pem';
+        $abs_path = dirname(__FILE__) . '/../../../../rsa-config/rsa_public_key.pem';
         $content = file_get_contents($abs_path);
         return openssl_pkey_get_public($content);
     }

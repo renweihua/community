@@ -11,12 +11,22 @@ namespace App\Library\Encrypt;
  */
 class Rsa {
     /**
+     * 配置文件夹路径
+     *
+     * @return string
+     */
+    public static function getConfigPath()
+    {
+        return dirname(__FILE__) . '/../../../../rsa-config';
+    }
+
+    /**
      * 获取私钥
      * @return bool|resource
      */
     private static function getPrivateKey()
     {
-        $abs_path = dirname(__FILE__) . '/rsa_private_key.pem';
+        $abs_path = self::getConfigPath() . '/rsa_private_key.pem';
         $content = file_get_contents($abs_path);
         return openssl_pkey_get_private($content);
     }
@@ -27,7 +37,7 @@ class Rsa {
      */
     private static function getPublicKey()
     {
-        $abs_path = dirname(__FILE__) . '/rsa_public_key.pem';
+        $abs_path = self::getConfigPath() . '/rsa_public_key.pem';
         $content = file_get_contents($abs_path);
         return openssl_pkey_get_public($content);
     }
@@ -116,7 +126,10 @@ class Rsa {
         //生成公钥
         $rsa['public_key'] = openssl_pkey_get_details($res)["key"];
 
-        // print_r($rsa);die;
+        // 写入配置
+        file_put_contents(self::getConfigPath() . '/rsa_private_key.pem', $rsa['private_key']);
+        file_put_contents(self::getConfigPath() . '/rsa_public_key.pem', $rsa['public_key']);
+
         return $rsa;
     }
 }
