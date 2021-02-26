@@ -3,15 +3,14 @@
  * 统一请求发送
  * ===========
  */
+import config from '../config.js';
+console.log(config);
+
 export default function request(route, method = 'get', data = {}) {
 	return new Promise((resolve, reject) => {
 		let login_token = uni.getStorageSync('TOKEN') || '';
-		// local
-		// let server = 'http://community.cnpscy.com';
-		// test
-		let server = 'http://118.25.134.227';
 		uni.request({
-			url: server + '/api' + route,
+			url: config.server + '/api' + route,
 			method,
 			data,
 			header: {
