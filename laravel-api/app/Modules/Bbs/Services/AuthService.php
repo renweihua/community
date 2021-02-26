@@ -12,16 +12,17 @@ use App\Models\Log\UserLoginLog;
 use App\Models\System\Notify;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
+use App\Modules\Bbs\Emails\RegisterCodeForEmail;
 use App\Modules\Bbs\Jobs\SendRegisterEmail;
 use App\Services\Service;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
 class AuthService extends Service
 {
-    protected $redis;
-
     public function __construct()
     {
 //        $redis = new \Redis;
@@ -32,7 +33,36 @@ class AuthService extends Service
 //
 //        var_dump($redis->get($key));
 //        exit;
-        $this->redis = Redis::connection('token');
+    }
+
+    protected function getMailCode(string $user_email)
+    {
+        return Cache::get(UserCacheKeys::REGISTER_EMAIL_CODE . $user_email);
+    }
+
+    /**
+     * 邮箱注册，发送验证码
+     *
+     * @param  string  $user_email
+     *
+     * @return bool
+     */
+    public function sendCodeByEmail(string $user_email)
+    {
+        if ($this->getMailCode($user_email)){
+            return true;
+        }
+        $code = random_verification_code(6);
+
+        // 验证码存入缓存：默认1小时
+        Cache::put(UserCacheKeys::REGISTER_EMAIL_CODE . $user_email, $code, UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+
+        // 发送邮件
+        Mail::to($user_email)->send(
+            new RegisterCodeForEmail($code)
+        );
+
+        return true;
     }
 
     /**
@@ -62,6 +92,21 @@ class AuthService extends Service
                     $this->setError('该邮箱已被注册！');
                     return false;
                 }
+                /**
+                 * 邮箱验证码：匹配验证
+                 */
+                $cache = $this->getMailCode($params['user_name']);
+                if (!$cache){
+                    $this->setError('验证码已过期，请重新发送！');
+                    return false;
+                }
+                if ($cache != $params['email_code']){
+                    $this->setError('验证码不匹配！');
+                    return false;
+                }
+                // 删除缓存
+                Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $params['user_name']);
+
                 $user_data['user_email'] = $params['user_name'];
                 break;
             case 2: // 手机号注册
@@ -135,7 +180,7 @@ class AuthService extends Service
             ];
 
             // Token记录在Redis，随时可控性
-            $this->redis->client()->set(
+            Redis::connection('token')->client()->set(
                 UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
                 my_json_encode($redis_user_info),
                 UserCacheKeys::KEY_DEFAULT_TIMEOUT
@@ -224,7 +269,7 @@ class AuthService extends Service
         ];
 
         // Token记录在Redis，随时可控性
-        $this->redis->client()->set(
+        Redis::connection('token')->client()->set(
             UserCacheKeys::USER_LOGIN_TOKEN . $result['access_token'],
             my_json_encode($redis_user_info),
             UserCacheKeys::KEY_DEFAULT_TIMEOUT
@@ -266,7 +311,7 @@ class AuthService extends Service
      */
     public function logout($token)
     {
-        $this->redis->client()->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
+        Redis::connection('token')->client()->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
         return true;
     }
 

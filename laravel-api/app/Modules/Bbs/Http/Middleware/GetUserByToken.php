@@ -30,8 +30,6 @@ class GetUserByToken
      */
     public function handle(Request $request, Closure $next)
     {
-        var_dump(__CLASS__);
-
         $token = $request->header('Authorization');
         if (!empty($token)){
             if ($token_user = Rsa::privDecrypt($token)){

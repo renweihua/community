@@ -100,7 +100,7 @@ class UserService extends Service
         $code = random_verification_code(6);
 
         // 验证码存入缓存：默认1小时
-        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, 3600);
+        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, UserCacheKeys::KEY_DEFAULT_TIMEOUT);
 
         // 发送邮件
         Mail::to($login_user->user_email)->send(
@@ -130,7 +130,7 @@ class UserService extends Service
             $this->setError('验证码不匹配！');
             return false;
         }
-        // 忘记密码
+        // 删除缓存
         Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);
 
         // 更改登录密码

@@ -7,6 +7,12 @@ class UserCacheKeys
     // 默认的缓存时长：默认为1小时
     const KEY_DEFAULT_TIMEOUT = 36000;
 
+    // 邮箱注册账户：发送验证码的key
+    const REGISTER_EMAIL_CODE = 'register_email_code:';
+
+    // 登录会员，重新绑定邮箱：发送验证码的key
+    const BIND_EMAIL_CODE = 'bind_email_code:';
+
     // 更改登录密码时，通过邮箱：发送验证码的key
     const CHANGE_PASSWORD_EMAIL_CODE = 'change_password_email_code:';
 

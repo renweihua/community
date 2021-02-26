@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Modules\Bbs\Http\Requests\EmailRequest;
 use App\Modules\Bbs\Http\Requests\LoginRequest;
 use App\Modules\Bbs\Http\Requests\RegisterRequest;
 use App\Modules\Bbs\Services\AuthService;
@@ -13,6 +14,21 @@ class AuthController extends BbsController
     public function __construct(AuthService $authService)
     {
         $this->service = $authService;
+    }
+
+    /**
+     * 邮箱注册，发送验证码
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\EmailRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCodeByEmail(EmailRequest $request)
+    {
+        $data = $request->all();
+
+        $result = $this->service->sendCodeByEmail($data['user_email']);
+        return $this->successJson([], '邮件已发送，请及时查看！');
     }
 
     /**
