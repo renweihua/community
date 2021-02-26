@@ -24,7 +24,7 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
-        // 邮箱注册，验证码
+        // 邮箱注册，发送验证码
         Route::get('getCodeByEmail', 'AuthController@getCodeByEmail');
         // 注册
         Route::post('register', 'AuthController@register');

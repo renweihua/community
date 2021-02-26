@@ -144,7 +144,6 @@ class AuthService extends Service
                 'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ]);
             $user->userInfo()->create($user_info);
-
             // 第三方登录相关
             $user->userOtherlogin()->create([
                 'user_id' => $user->user_id,

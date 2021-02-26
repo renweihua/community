@@ -140,7 +140,6 @@ export default {
 					// 不同标签存入不同数据变量
 					if (this.current == 0) {
 						let arrayData = mescroll.num == 1 ? lists.data : this.mainData.concat(lists.data);
-						console.log(arrayData);
 						this.$store.commit('trend/setMainData', arrayData);
 					}
 					if (this.current == 1) {
@@ -205,9 +204,7 @@ export default {
 		fnCardInfo(e) {
 			dynamicDetailPage(e, this);
 			return;
-
 			e.ObjectType = 'trend';
-			console.log(e);
 			if (e.dynamic_type == 'trend') {
 				uni.navigateTo({
 					url: `/pages/trend-details/trend-details?dynamic_id=${e.dynamic_id}&fromPage=home&current=${this.current}`
