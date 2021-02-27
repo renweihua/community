@@ -171,6 +171,8 @@ export default {
 		},
 		// 计算显示用户头像
 		calUserAvater() {
+			console.log('--- calUserAvater ---')
+			console.log(this.calUser);
 			return !!this.calUser.user_avatar ? this.calUser.user_avatar : '/static/default_avatar.png';
 		},
 		// 计算摄影背景封面
@@ -460,14 +462,13 @@ export default {
 			this.$refs.comm.open({
 				type: 'comment',
 				content: this.$store.getters['getCommContentData'],
-				objectid: this.dynamic_id
+				dynamic_id: this.dynamic_id,
 			});
 		},
 		// 评论发送
 		fnCommSend(e) {
 			// 不为发送时保存输入值
 			if (e.type == 'comment') this.$store.commit('setCommContentData', e.content);
-			if (e.state == false) return;
 			// 无内容信息反馈
 			if (e.content == '') {
 				uni.showToast({
@@ -480,11 +481,17 @@ export default {
 			uni.showLoading({
 				title: '提交中'
 			});
-			delete e.state;
 			delete e.type;
 			e.fromclient = 'android';
-			addComment(e).then(addRes => {
-				if (addRes.status != 200) return;
+			addComment(e).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: !res.status ? 'none' : 'success',
+				});
+				if (!res.status) {
+					return;
+				}
+
 				if (this.replyParentID == 0) {
 					// 无回复项
 					let filCommentList = this.commentListData.filter(item => item.ID == e.parentid)[0];
@@ -501,11 +508,9 @@ export default {
 					let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0];
 					filCommentList.ChildCount++;
 					filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
-				} else {
-					// 评论发布
-					this.commentListData.unshift(addRes.data.Data);
-					this.$store.commit('setCommContentData', '');
 				}
+				
+				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
 				if (this.albumInfoData.CommCount == 0) this.mescroll.removeEmpty();
 				this.albumInfoData.CommCount++;

@@ -127,15 +127,16 @@
 				fromPage: '',
 				// 来源页标签数据下标
 				current: -1,
-				// 回复添加父ID
+				// 回复指定评论的Id
 				reply_id: 0,
+				// 回复的主评论Id
+				top_level: 0,
 				// mescroll组件实例
 				mescroll: null
 			}
 		},
 		onLoad(options) {
 			if (options && options.dynamic_id) {
-				console.log(options);
 				this.dynamic_id = parseInt(options.dynamic_id);
 				if (typeof options.fromPage == 'string') this.fromPage = options.fromPage
 				if (typeof options.current == 'string') this.current = parseInt(options.current)
@@ -157,9 +158,7 @@
 			},
 			// 动态评论列表数据
 			commentListData() {
-				console.log('---commentListData---');
 				let comments = this.$store.getters['interact/getCommentListData'];
-				console.log(comments);
 				return comments;
 			},
 			// 计算是否得到用户信息
@@ -207,24 +206,20 @@
 							});
 							return;
 						}
-						console.log(res);
 						this.$store.commit('trend/setTrendData', res.data);
 
 						// 获取点赞列表
 						return getDynamicPraises(params)
 					}).then(praises => {
-						console.log('获取动态的点赞记录');
+						// console.log('获取动态的点赞记录');
 						// 点赞会员记录
 						this.$store.commit('interact/setTopListData', praises.data.data)
-
-						params.limit = mescroll.size
 						// 获取评论列表
 						return getCommentList(params)
 					}).then(comments => {
-						console.log('获取动态的评论记录');
-							let lists = comments.data;
-							console.log(lists.data);
-
+						// console.log('获取动态的评论记录');
+						let lists = comments.data;
+						// console.log(lists.data);
 						this.$store.commit('interact/setCommentListData', lists.data)
 					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					}).catch(() => {
@@ -234,8 +229,8 @@
 				} else {
 					// 继续上拉获取评论
 					getCommentList(params).then(comments => {
-							let lists = comments.data;
-						this.$store.commit('interact/setCommentListData', this.commentListData.concat(lists.data) )
+						let lists = comments.data;
+						this.$store.commit('interact/setCommentListData', this.commentListData.concat(lists.data));
 					mescroll.endSuccess(lists.data.length, mescroll.num < lists.count_page);
 					}).catch(() => {
 						mescroll.endErr();
@@ -245,13 +240,13 @@
 			/// 跳转用户信息页
 			fnUserInfo(e) {
 				uni.navigateTo({
-					url: `/pages/user-info/user-info?id=${e.ID}`
+					url: `/pages/user-info/user-info?user_id=${e.user_id}`
 				})
 			},
 			/// 跳转荟吧
 			fnHuiba(id) {
 				uni.navigateTo({
-					url: `/pages/huiba-details/huiba-details?id=${id}`
+					url: `/pages/huiba-details/huiba-details?topic_id=${topic_id}`
 				})
 			},
 			/// 跳转点赞列表
@@ -456,32 +451,27 @@
 				this.$refs.comm.open({
 					type: 'comment',
 					content: this.$store.getters['getCommContentData'],
-					dynamic_id: this.dynamic.dynamic_id
+					dynamic_id: this.dynamic_id
 				});
 			},
 			/// 评论发送
 			fnCommSend(e) {
-				console.log(e);
 				// 不为发送时保存输入值
 				if (e.type == 'comment') this.$store.commit('setCommContentData', e.content)
-				if (e.state == false) return
 				// 无内容信息反馈
 				if (e.content == '') {
 					uni.showToast({
 						title: "评论内容不能为空",
 						icon: 'none'
-					})
-					return
+					});
+					return;
 				}
 				// 提交评论
 				uni.showLoading({
 					title: '提交中'
-				})
-				delete e.state
+				});
 				delete e.type
 				addComment(e).then(res => {
-					console.log(e);
-					console.log(res);
 					uni.showToast({
 						title: res.msg,
 						icon: !res.status ? 'none' : 'success',
@@ -490,39 +480,20 @@
 						return;
 					}
 					
-					// 动态的评论数
-					this.dynamic.comment_count++;
 					if (this.reply_id == 0) { // 直接评论
-					
+						this.$store.commit('interact/setCommentListData', this.commentListData.concat([res.data]));
 					} else if (this.reply_id > 0) { // 回复
 						// 有回复项追加
-						let filCommentList = this.commentListData.filter(item => item.comment_id == this.reply_id)[0]
+						let filCommentList = this.commentListData.filter(item => item.comment_id == this.top_level)[0]
 						filCommentList.replies_count++
-						filCommentList.replies = filCommentList.replies.concat([res.data])
-						
-						
-						
-						
-						// let filCommentList = this.commentListData.filter(item => item.dynamic_id == e.dynamic_id)[0];
-						// console.log(filCommentList);
-						// if (filCommentList.replies_count == 0) {
-						// 	filCommentList.replies_count = 1
-						// 	filCommentList.replies = []
-						// 	filCommentList.replies.unshift(res.data)
-						// } else {
-						// 	filCommentList.replies_count++
-						// 	filCommentList.replies = filCommentList.replies.concat([res.data])
-						// }
-					} else {
-						// 评论发布
-						this.commentListData.unshift(res.data)
-						this.$store.commit('setCommContentData', '')
+						filCommentList.replies = filCommentList.replies.concat([res.data]);
 					}
-					// 评论数量添加
+					this.$store.commit('setCommContentData', '')
+					// 动态的评论数
 					if (this.dynamic.comment_count == 0) this.mescroll.removeEmpty();
 					this.dynamic.comment_count++
 					this.$refs.comm.visible = false;
-					this.reply_id == 0;
+					this.top_level = this.reply_id = 0;
 					uni.hideLoading();
 				})
 			},
@@ -540,8 +511,10 @@
 									type: 'reply',
 									user: e.user_info.nick_name,
 									dynamic_id: e.dynamic_id,
-									reply_id: e.comment_id
+									reply_id: e.comment_id,
+									top_level: e.top_level
 								});
+								this.top_level = e.top_level;
 								this.reply_id = e.comment_id
 								break;
 							case 1:
@@ -551,7 +524,7 @@
 								break;
 							case 2:
 								uni.navigateTo({
-									url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
+									url: `/pages/report/report?dynamic_id=${e.dynamic_id}`
 								})
 								break;
 							case 3:
