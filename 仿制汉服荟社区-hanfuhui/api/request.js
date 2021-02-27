@@ -4,7 +4,6 @@
  * ===========
  */
 import config from '../config.js';
-console.log(config);
 
 export default function request(route, method = 'get', data = {}) {
 	return new Promise((resolve, reject) => {
@@ -15,7 +14,7 @@ export default function request(route, method = 'get', data = {}) {
 			data,
 			header: {
 				'_version': 3,
-				'Authorization': !login_token ? '' : ('bearer ' + login_token),
+				'Authorization': !login_token ? '' : (login_token),
 				'_fromclient': 'android',
 				'content-type': 'application/x-www-form-urlencoded',
 			},

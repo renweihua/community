@@ -15,8 +15,8 @@ export async function batchUploads(upload_files) {
 	if(!upload_files.length){
 		return [];
 	}
-	let files = [];
 	let login_token = uni.getStorageSync('TOKEN') || '';
+	let files = [];
 	upload_files.forEach((value, key) => {
 		files.push({
 			'name': 'files[]',
@@ -30,7 +30,7 @@ export async function batchUploads(upload_files) {
 		uni.uploadFile({
 			url: config.server + '/api/upload_files', //仅为示例，非真实的接口地址
 			header: {
-				'Authorization': !login_token ? '' : ('bearer ' + login_token),
+				'Authorization': !login_token ? '' : login_token,
 			},
 			files: files,
 			success: (res) => {
