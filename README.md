@@ -5,8 +5,8 @@
 
 #### 软件架构
 软件架构说明
-1. APi
-2. socket服务端
+1. laravel APi
+2. hyperf socket服务端
 3. uni-app 汉服荟社区
 
 #### 安装教程

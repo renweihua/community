@@ -149,6 +149,11 @@ class Dynamic extends Model
         return $this->hasOne(UserFollowFan::class, 'friend_id', 'user_id');
     }
 
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class, 'topic_id', 'topic_id')->select('topic_id', 'topic_name', 'topic_description', 'topic_cover');
+    }
+
     public static function getListByIds(array $ids)
     {
         $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type')->get()->toArray();

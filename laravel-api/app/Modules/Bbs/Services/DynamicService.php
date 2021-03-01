@@ -131,6 +131,7 @@ class DynamicService extends Service
                                 'isCollection' => function($query) use ($login_user_id) {
                                     $query->where('user_id', $login_user_id);
                                 },
+                                'topic'
                             ]
                         )
                         ->orderBy('dynamic_id', 'DESC')
@@ -193,6 +194,7 @@ class DynamicService extends Service
             'isCollection' => function($query) use ($login_user_id) {
                 $query->where('user_id', $login_user_id);
             },
+            'topic'
         ])) {
             return false;
         }
