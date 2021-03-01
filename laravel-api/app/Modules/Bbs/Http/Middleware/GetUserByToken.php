@@ -34,7 +34,7 @@ class GetUserByToken
         if (!empty($token)){
             if ($token_user = Rsa::privDecrypt($token)){
                 // Redis 是否存在key
-                if (empty(Redis::connection('token')->get(UserCacheKeys::USER_LOGIN_TOKEN . $token))){
+                if (!empty(Redis::connection('token')->get(UserCacheKeys::USER_LOGIN_TOKEN . $token))){
                     // Token 是否过期
                     if (isset($token_user->expires_time) && $token_user->expires_time > time()){
                         $user = User::find($token_user->user_id);

@@ -396,9 +396,9 @@ class DynamicService extends Service
      * @param  int  $login_user_id
      * @param  int  $comment_id
      *
-     * @return bool
+     * @return array|bool
      */
-    public function deleteComment(int $login_user_id, int $comment_id): bool
+    public function deleteComment(int $login_user_id, int $comment_id)
     {
         $dynamicCommentInstance = DynamicComment::getInstance();
         $comment = $dynamicCommentInstance->with('dynamic')->lock(true)->find($comment_id);
@@ -442,7 +442,7 @@ class DynamicService extends Service
 
             DB::commit();
             $this->setError('评论删除成功！');
-            return true;
+            return array_merge($reply_ids, [$comment_id]);
         } catch (FailException $e) {
             DB::rollBack();
             $this->setError('评论删除失败！');

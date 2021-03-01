@@ -112,7 +112,7 @@ class DynamicController extends BbsController
         $request->validated();
 
         if ($result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'))) {
-            return $this->successJson([], $this->service->getError());
+            return $this->successJson($result, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
         }
