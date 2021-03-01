@@ -73,7 +73,7 @@ const user = {
     },
     // 修改账户信息数据对象 this.$store.commit('user/setAccountInfoMainBgPicData', 'url')
     setAccountInfoMainBgPicData(state, url) {
-      state.accountInfo.User.MainBgPic = url
+      state.accountInfo.user_info.background_cover = url
     },
     // 修改用户点赞过动态列表  this.$store.commit('user/setUserTopListData', [...])
     setUserTopListData(state, data) {

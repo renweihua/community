@@ -10,7 +10,7 @@
 				<image
 					class="my-cover"
 					@tap="fnMainBgPic"
-					:src="userInfoData && userInfoData.user_info ? userInfoData.user_info.user_avatar : '/static/default_image.png'"
+					:src="userInfoData && userInfoData.user_info ? userInfoData.user_info.background_cover : '/static/default_image.png'"
 					mode="aspectFill"
 				></image>
 				<view class="posir flex hl90r mlr28r" @tap="fnUserInfo">
@@ -108,9 +108,10 @@
 </template>
 
 <script>
-import { fnUploadUpyunPic } from '@/utils/UniUtil.js';
 import { modifyUserMainBgPic, getLoginUserInfo } from '@/api/UserServer.js';
 import { getMessageNoReadCount } from '@/api/MessageServer.js';
+import { upload } from '@/api/CommonServer.js'
+import { selectImage } from '@/utils/UniUtil.js';
 
 export default {
 	props: {
@@ -141,6 +142,8 @@ export default {
 				this.fnRefreshUserInfo();
 				user_info = this.$store.getters['user/getLoginUserInfoData'];
 			}
+			console.log('--- userInfoData ---')
+			console.log(user_info);
 			return user_info;
 		}
 	},
@@ -152,24 +155,52 @@ export default {
 				url: `/pages/${dir}/${file}`
 			});
 		},
+		chooseImage: async function() {
+			uni.chooseImage({
+			    sourceType: '拍照或相册',
+			    sizeType: '压缩或原图',
+			    count: 1,
+			    success: (res) => {
+					console.log(res);
+					this.back_cover_file = res.tempFiles;
+			    },
+			    fail: (err) => {
+			        // #ifdef APP-PLUS
+			        if (err['code'] && err.code !== 0 && this.sourceTypeIndex === 2) {
+			            this.checkPermission(err.code);
+			        }
+			        // #endif
+			    }
+			});
+		},
 		/// 修改用户背景封面图
 		fnMainBgPic() {
 			uni.showActionSheet({
 				itemList: ['更换背景'],
 				success: res => {
 					if (res.tapIndex == 0) {
-						fnUploadUpyunPic(1)
-							.then(res => {
-								if (res) return res;
-							})
-							.then(uploadRes => {
-								if (typeof uploadRes == 'undefined') return;
-								modifyUserMainBgPic(uploadRes.url);
-								let userInfo = Object.assign({}, this.$store.getters['user/getUserInfoData']);
-								userInfo.MainBgPic = 'https://pic.hanfugou.com' + uploadRes.url;
-								this.$store.commit('user/setAccountInfoMainBgPicData', userInfo.MainBgPic);
-								this.$store.commit('user/setLoginUserInfoData', userInfo);
-								this.$store.commit('user/setTempUserInfoData', userInfo);
+						selectImage()
+							.then(file => {
+								if (res){
+									upload(file).then(background_cover => {
+										// 更换背景图
+										modifyUserMainBgPic(background_cover).then(res => {
+											uni.showToast({
+												title: res.msg,
+												icon: status == 1 ? 'success' : 'none'
+											});
+											if(!res.status){
+												return;
+											}
+											this.$store.getters['user/getLoginUserInfoData'];
+											let userInfo = Object.assign({}, this.$store.getters['user/getLoginUserInfoData']);
+											userInfo.user_info.background_cover = background_cover;
+											this.$store.commit('user/setLoginUserInfoData', userInfo);
+										});
+									})
+								}else{
+									return false;
+								}
 							})
 							.catch(() => {
 								uni.showToast({

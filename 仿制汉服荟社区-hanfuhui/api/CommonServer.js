@@ -28,7 +28,7 @@ export async function batchUploads(upload_files) {
 	}
 	return new Promise((resolve, reject) => {
 		uni.uploadFile({
-			url: config.server + '/api/upload_files', //仅为示例，非真实的接口地址
+			url: config.server + '/api/upload_files',
 			header: {
 				'Authorization': !login_token ? '' : login_token,
 			},
@@ -45,6 +45,40 @@ export async function batchUploads(upload_files) {
 				resolve(res.data);
 			},
 			fail() {
+				uni.showToast({
+					title: res.msg,
+					icon: 'none',
+				});
+				reject(err)
+			}
+		});
+	});
+}
+
+
+export async function upload(upload_file) {
+	let login_token = uni.getStorageSync('TOKEN') || '';
+	return new Promise((resolve, reject) => {
+		uni.uploadFile({
+			url: config.server + '/api/upload_file',
+			header: {
+				'Authorization': !login_token ? '' : login_token,
+			},
+			filePath: upload_file,
+			success: (res) => {
+				console.log(res);
+				res = JSON.parse(res.data);
+				if (!res.status) {
+					uni.showToast({
+						title: res.msg,
+						icon: 'none',
+					});
+					return;
+				}
+				resolve(res.path_url);
+			},
+			fail(e) {
+				console.log(e);
 				uni.showToast({
 					title: res.msg,
 					icon: 'none',

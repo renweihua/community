@@ -42,9 +42,6 @@
 
 <script>
 	import {
-		fnUploadUpyunPic
-	} from "@/utils/UniUtil.js"
-	import {
 		getUserAppToken,
 		register,
 		modifyUserInfo,
@@ -201,9 +198,8 @@
 			 */
 			fnAvatar() {
 				if (this.isBind) return
-				fnUploadUpyunPic(1).then(res => {
-					if (res) this.bindUser.user_avatar = res.url
-				})
+				// 上传头像流程……
+				if (res) this.bindUser.user_avatar = res.url
 			},
 			// 性别选择
 			fnGender(user_sex) {

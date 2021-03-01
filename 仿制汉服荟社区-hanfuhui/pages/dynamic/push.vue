@@ -113,7 +113,7 @@
 					if(!res.status){
 						uni.showToast({
 							title: res.msg,
-							icon: 'error'
+							icon: 'none'
 						})
 						return;
 					}else{
@@ -178,6 +178,7 @@
 						console.log(res);
 			            this.imageList = this.imageList.concat(res.tempFilePaths);
 						this.image_files = this.image_files.concat(res.tempFiles);
+						console.log(this.image_files);
 			        },
 			        fail: (err) => {
 			            // #ifdef APP-PLUS

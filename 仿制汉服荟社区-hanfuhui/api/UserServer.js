@@ -118,11 +118,12 @@ export async function modifyUserInfo(params) {
 
 /**
  * 更新用户中心背景图
- * @param {String} mainbg 参数 上传图片后的到的url
+ * 
+ * @param {String}  = '/android/2019/6/31/34050.jpg' 参数 上传图片后的到的url
  */
-export async function modifyUserMainBgPic(mainbg = '/android/2019/6/31/34050.jpg') {
-	return await request('/user/UpdateUserMainBg', 'post', {
-		mainbg
+export async function modifyUserMainBgPic(background_cover) {
+	return await request('/user/updateBackgroundCover', 'put', {
+		background_cover
 	})
 }
 

@@ -46,9 +46,6 @@
 
 <script>
   import {
-    fnUploadUpyunPic
-  } from "@/utils/UniUtil.js"
-  import {
     modifyUserInfo
   } from "@/api/UserServer.js"
   import {
@@ -227,7 +224,7 @@
       ///上传头像
       fnAvatar() {
         if (this.isModify) return
-        fnUploadUpyunPic(1).then(uploadRes => {
+        upload(1).then(uploadRes => {
           if (uploadRes) this.info.headurl = 'https://pic.hanfugou.com' + uploadRes.url;
         })
       },

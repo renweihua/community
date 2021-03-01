@@ -3,7 +3,7 @@
 		<!-- 滚动列表内容 -->
 		<mescroll-uni :down="{use:false}" :up="{onScroll:true}" @up="upCallback" @scroll="scroll" @init="mescrollInit">
 			<!-- 用户背景封面 -->
-			<image class="info-cover" @tap="fnMainBgPic" :src="tempUserInfoData.MainBgPic ? tempUserInfoData.MainBgPic + '_850x300.jpg/format/webp' : '/static/default_image.png'"
+			<image class="info-cover" @tap="fnMainBgPic" :src="tempUserInfoData.background_cover ? tempUserInfoData.background_cover : '/static/default_image.png'"
 			 mode="aspectFill"></image>
 			<view class="plr28r pb18r bgwhite">
 				<!-- 用户头像关注 -->
@@ -280,11 +280,9 @@
 				}).then(uploadRes => {
 					if (typeof uploadRes == 'undefined') return
 					modifyUserMainBgPic(uploadRes.url)
-					let userInfo = Object.assign({}, this.$store.getters['user/getUserInfoData']);
-					userInfo.MainBgPic = 'https://pic.hanfugou.com' + uploadRes.url;
-					this.$store.commit('user/setAccountInfoMainBgPicData', userInfo.MainBgPic)
+					let userInfo = Object.assign({}, this.$store.getters['user/getLoginUserInfoData']);
+					userInfo.user_info.background_cover = background_cover;
 					this.$store.commit('user/setLoginUserInfoData', userInfo)
-					this.$store.commit('user/setTempUserInfoData', userInfo)
 				}).catch(() => {
 					uni.showToast({
 						title: '上传背景失败',
