@@ -118,14 +118,19 @@ export default {
 			// 来源页标签数据下标
 			current: -1,
 			// 回复添加父ID
-			replyParentID: -1,
+			reply_id: -1,
+			// 回复的主评论Id
+			top_level: 0,
 			// mescroll组件实例
 			mescroll: null
 		};
 	},
 	onLoad(options) {
 		if (options && options.dynamic_id) {
-			console.log(options);
+			uni.showLoading({
+				title: '加载中',
+				mask: true
+			});
 			this.dynamic_id = parseInt(options.dynamic_id);
 			if (typeof options.fromPage == 'string') this.fromPage = options.fromPage;
 			if (typeof options.current == 'string') this.current = parseInt(options.current);
@@ -134,6 +139,7 @@ export default {
 					this.fnCommOpen();
 				}, 1000);
 			}
+			uni.hideLoading();
 		}
 	},
 	computed: {
@@ -311,20 +317,20 @@ export default {
 				}
 			});
 		},
-		/// 评论点赞
+		// 评论点赞
 		fnTopComm(e) {
-			let filItem = this.commentListData.filter(item => item.ID == e.ID)[0];
-			if (filItem.UserTop) {
-				delCommentTop(filItem.ID).then(delRes => {
-					if (delRes.data.Data == false) return;
-					filItem.TopCount--;
-					filItem.UserTop = false;
+			let filItem = this.commentListData.filter(item => item.comment_id == e.comment_id)[0];
+			if (filItem.is_praise) {
+				delCommentTop(filItem.comment_id).then(res => {
+					if (!res.status) return;
+					filItem.praise_count--;
+					filItem.is_praise = false;
 				});
 			} else {
-				addCommentTop(filItem.ID).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.TopCount++;
-					filItem.UserTop = true;
+				addCommentTop(filItem.comment_id).then(res => {
+					if (!res.status) return;
+					filItem.praise_count++;
+					filItem.is_praise = true;
 				});
 			}
 		},
@@ -438,7 +444,7 @@ export default {
 			this.$refs.comm.open({
 				dynamic_id: this.dynamic_id,
 				type: 'comment',
-				content: this.$store.getters['getCommContentData'],
+				content: this.$store.getters['getCommContentData']
 			});
 		},
 		/// 评论发送
@@ -462,40 +468,27 @@ export default {
 			addComment(e).then(res => {
 				uni.showToast({
 					title: res.msg,
-					icon: !res.status ? 'none' : 'success',
+					icon: !res.status ? 'none' : 'success'
 				});
 				if (!res.status) {
 					return;
 				}
-
-				if (this.replyParentID == 0) {
-					// 无回复项
-					let filCommentList = this.commentListData.filter(item => item.ID == e.parentid)[0];
-					if (filCommentList.ChildCount == 0) {
-						filCommentList.ChildCount = 1;
-						filCommentList.CommentChilds = [];
-						filCommentList.CommentChilds.unshift(addRes.data.Data);
-					} else {
-						filCommentList.ChildCount++;
-						filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
-					}
-				} else if (this.replyParentID > 0) {
+				if (this.reply_id == 0) {
+					// 直接评论
+					this.$store.commit('interact/setCommentListData', this.commentListData.concat([res.data]));
+				} else if (this.reply_id > 0) {
 					// 有回复项追加
-					let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0];
-					filCommentList.ChildCount++;
-					filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
+					let filCommentList = this.commentListData.filter(item => item.comment_id == this.top_level)[0];
+					filCommentList.replies_count++;
+					filCommentList.replies = filCommentList.replies.concat([res.data]);
 				}
-				
 				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
-				if (this.videoInfoData.CommCount == 0) this.mescroll.removeEmpty();
-				this.videoInfoData.CommCount++;
+				if (this.videoInfoData.comment_count == 0) this.mescroll.removeEmpty();
+				this.videoInfoData.comment_count++;
 				this.$refs.comm.visible = false;
-				this.replyParentID == -1;
+				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
-				uni.showToast({
-					title: '评论成功'
-				});
 				// 改变上一窗口的数据
 				let filItem = {};
 				// 来自主要跳转
@@ -516,15 +509,15 @@ export default {
 				}
 				// 来自发现-视频跳转
 				if (this.fromPage == 'find') {
-					filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[0];
+					filItem = this.$store.getters['video/getVideoListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 				}
-				filItem.CommCount++;
+				filItem.comment_count++;
 			});
 		},
 		/// 评论项操作
 		fnComm(e) {
 			let itemList = ['回复', '复制', '举报'];
-			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].ID) itemList.push('删除');
+			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) itemList.push('删除');
 			uni.showActionSheet({
 				itemList,
 				success: res => {
@@ -532,12 +525,13 @@ export default {
 						case 0:
 							this.$refs.comm.open({
 								type: 'reply',
-								user: e.User.NickName,
-								objecttype: e.ObjectType,
-								objectid: this.dynamic_id,
-								objecttype: 'video'
+								user: e.user_info.nick_name,
+								dynamic_id: e.dynamic_id,
+								reply_id: e.comment_id,
+								top_level: e.top_level
 							});
-							this.replyParentID = e.TopParentID;
+							this.top_level = e.top_level;
+							this.reply_id = e.comment_id;
 							break;
 						case 1:
 							uni.setClipboardData({
@@ -546,26 +540,35 @@ export default {
 							break;
 						case 2:
 							uni.navigateTo({
-								url: `/pages/report/report?id=${this.dynamic_id}&type=video`
+								url: `/pages/report/report?dynamic_id=${this.dynamic_id}`
 							});
 							break;
 						case 3:
-							delComment(e.ID).then(delRes => {
-								if (delRes.data.Data == false) return;
-								if (e.TopParentID > 0) {
+							delComment(e.comment_id).then(res => {
+								uni.showToast({
+									title: res.msg,
+									icon: !res.status ? 'none' : 'success'
+								});
+								if (!res.status) {
+									return;
+								}
+								if (e.reply_id > 0) {
 									// 有回复项删减
-									let filCommentList = this.commentListData.filter(item => item.ID == e.TopParentID)[0];
-									let filCommentChilds = filCommentList.CommentChilds.filter(item => item.ID != e.ID);
-									filCommentList.ChildCount--;
-									filCommentList.CommentChilds = filCommentChilds;
+									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
+									let filreplies = filCommentList.replies;
+									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
+									filCommentList.comment_count = filCommentList.comment_count - res.data.length;
+									filCommentList.replies = filreplies;
+									// 评论数量减少
+									this.dynamic.comment_count = this.dynamic.comment_count - res.data.length;
 								} else {
 									// 评论发布项删除
-									let filCommentList = this.commentListData.filter(item => item.ID != e.ID);
+									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
+									// 评论数量减少
+									this.dynamic.comment_count--;
 								}
-								// 评论数量减少
-								this.videoInfoData.CommCount--;
-								if (this.videoInfoData.CommCount == 0) this.mescroll.showEmpty();
+								if (this.videoInfoData.comment_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = {};
 								// 来自主要跳转
@@ -586,9 +589,9 @@ export default {
 								}
 								// 来自发现-视频跳转
 								if (this.fromPage == 'find') {
-									filItem = this.$store.getters['video/getVideoListData'].filter(item => item.ID == this.dynamic_id)[0];
+									filItem = this.$store.getters['video/getVideoListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 								}
-								filItem.CommCount--;
+								filItem.comment_count = filItem.comment_count - res.data.length;
 							});
 							break;
 						default:

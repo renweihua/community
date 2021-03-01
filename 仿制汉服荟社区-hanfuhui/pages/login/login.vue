@@ -124,7 +124,7 @@
 			// 调起微信登录
 			fnWechat() {
 				if (this.isLogin) return
-					console.log('微信登录');
+				console.log('微信登录');
 				uni.showLoading({
 					title: '微信登录'
 				})

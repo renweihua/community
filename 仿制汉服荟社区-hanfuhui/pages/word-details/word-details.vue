@@ -31,7 +31,9 @@
 						</view>
 					</view>
 					<!-- 如果登录会员就是发布者，那么不展示 -->
-					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">{{ calUser.is_follow ? '已关注' : '关注' }}</view>
+					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">
+						{{ calUser.is_follow ? '已关注' : '关注' }}
+					</view>
 				</view>
 				<!-- 点赞列表 -->
 				<view class="flexr-jfe flex-aic ptb18r plr18r bts2r br8r" v-if="topListData">
@@ -114,7 +116,9 @@ export default {
 			// 来源页标签数据下标
 			current: -1,
 			// 回复添加父ID
-			replyParentID: -1,
+			reply_id: -1,
+			// 回复的主评论Id
+			top_level: 0,
 			// mescroll组件实例
 			mescroll: null
 		};
@@ -139,7 +143,6 @@ export default {
 			}, 2000);
 		}
 	},
-
 	computed: {
 		// 文章基本信息
 		wordInfoData() {
@@ -147,10 +150,7 @@ export default {
 		},
 		// 动态点赞列表数据
 		topListData() {
-			console.log('---topListData---');
-			let praises = this.$store.getters['interact/getDynamicPraisesData'];
-			console.log(praises);
-			return praises;
+			return this.$store.getters['interact/getDynamicPraisesData'];
 		},
 		// 动态评论列表数据
 		commentListData() {
@@ -245,7 +245,7 @@ export default {
 		/// 跳转点赞列表
 		fnTopList() {
 			uni.navigateTo({
-				url: `/pages/top-list/top-list?id=${this.dynamic_id}&type=word`
+				url: `/pages/top-list/top-list?dynamic_id=${this.dynamic_id}`
 			});
 		},
 		/// 跳转评论列表
@@ -257,7 +257,6 @@ export default {
 		/// 分享图标
 		fnShare() {
 			this.wordInfoData.dynamic_id = this.dynamic_id;
-			this.wordInfoData.ObjectType = 'word';
 			this.$refs.share.open(this.wordInfoData);
 		},
 		/// 详情点赞
@@ -358,7 +357,7 @@ export default {
 						this.$store.getters['word/getWordListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = false));
 					}
 					// 登录用户关注数减
-					if(!login_user.user_info) return;
+					if (!login_user.user_info) return;
 					login_user.user_info.follows_count--;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
@@ -386,7 +385,7 @@ export default {
 						this.$store.getters['word/getWordListData'].filter(item => item.user_info.user_id == e.user_id).map(item => (item.user_info.is_follow = true));
 					}
 					// 登录用户关注数加
-					if(!login_user.user_info) return;
+					if (!login_user.user_info) return;
 					login_user.user_info.follows_count++;
 					this.$store.commit('user/setLoginUserInfoData', login_user);
 				});
@@ -421,7 +420,7 @@ export default {
 					icon: res.status == 1 ? 'success' : 'none'
 				});
 				if (!res.status) return;
-			
+
 				// 用户是否已收藏
 				if (filItem.is_collection) {
 					filItem.collection_count--;
@@ -430,7 +429,7 @@ export default {
 				} else {
 					filItem.collection_count++;
 					this.wordInfoData.is_collection = filItem.is_collection = true;
-					this.wordInfoData.collection_count++
+					this.wordInfoData.collection_count++;
 				}
 			});
 		},
@@ -439,7 +438,7 @@ export default {
 			this.$refs.comm.open({
 				type: 'comment',
 				content: this.$store.getters['getCommContentData'],
-				dynamic_id: this.dynamic_id,
+				dynamic_id: this.dynamic_id
 			});
 		},
 		/// 评论发送
@@ -459,44 +458,30 @@ export default {
 				title: '提交中'
 			});
 			delete e.type;
-			e.fromclient = 'android';
 			addComment(e).then(res => {
 				uni.showToast({
 					title: res.msg,
-					icon: !res.status ? 'none' : 'success',
+					icon: !res.status ? 'none' : 'success'
 				});
 				if (!res.status) {
 					return;
 				}
-					
-				if (this.replyParentID == 0) {
-					// 无回复项
-					let filCommentList = this.commentListData.filter(item => item.ID == e.parentid)[0];
-					if (filCommentList.ChildCount == 0) {
-						filCommentList.ChildCount = 1;
-						filCommentList.CommentChilds = [];
-						filCommentList.CommentChilds.unshift(addRes.data.Data);
-					} else {
-						filCommentList.ChildCount++;
-						filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
-					}
-				} else if (this.replyParentID > 0) {
+				if (this.reply_id == 0) {
+					// 直接评论
+					this.$store.commit('interact/setCommentListData', this.commentListData.concat([res.data]));
+				} else if (this.reply_id > 0) {
 					// 有回复项追加
-					let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0];
-					filCommentList.ChildCount++;
-					filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
+					let filCommentList = this.commentListData.filter(item => item.comment_id == this.top_level)[0];
+					filCommentList.replies_count++;
+					filCommentList.replies = filCommentList.replies.concat([res.data]);
 				}
-				
 				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
-				if (this.wordInfoData.CommCount == 0) this.mescroll.removeEmpty();
-				this.wordInfoData.CommCount++;
+				if (this.wordInfoData.comment_count == 0) this.mescroll.removeEmpty();
+				this.wordInfoData.comment_count++;
 				this.$refs.comm.visible = false;
-				this.replyParentID == -1;
+				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
-				uni.showToast({
-					title: '评论成功'
-				});
 				// 改变上一窗口的数据
 				let filItem = {};
 				// 来自主要跳转
@@ -517,9 +502,9 @@ export default {
 				}
 				// 来自发现-文章跳转
 				if (this.fromPage == 'find') {
-					filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
+					filItem = this.$store.getters['word/getWordListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 				}
-				filItem.CommCount++;
+				filItem.comment_count++;
 			});
 		},
 		/// 评论项操作
@@ -533,12 +518,13 @@ export default {
 						case 0:
 							this.$refs.comm.open({
 								type: 'reply',
-								user: e.User.NickName,
-								objecttype: e.ObjectType,
-								objectid: this.dynamic_id,
-								objecttype: 'word'
+								user: e.user_info.nick_name,
+								dynamic_id: e.dynamic_id,
+								reply_id: e.comment_id,
+								top_level: e.top_level
 							});
-							this.replyParentID = e.TopParentID;
+							this.top_level = e.top_level;
+							this.reply_id = e.comment_id;
 							break;
 						case 1:
 							uni.setClipboardData({
@@ -547,26 +533,36 @@ export default {
 							break;
 						case 2:
 							uni.navigateTo({
-								url: `/pages/report/report?id=${this.dynamic_id}&type=word`
+								url: `/pages/report/report?dynamic_id=${e.dynamic_id}`
 							});
 							break;
 						case 3:
-							delComment(e.ID).then(delRes => {
-								if (delRes.data.Data == false) return;
-								if (e.TopParentID > 0) {
+							// 删除评论与回复
+							delComment(e.comment_id).then(res => {
+								uni.showToast({
+									title: res.msg,
+									icon: !res.status ? 'none' : 'success'
+								});
+								if (!res.status) {
+									return;
+								}
+								if (e.reply_id > 0) {
 									// 有回复项删减
-									let filCommentList = this.commentListData.filter(item => item.ID == e.TopParentID)[0];
-									let filCommentChilds = filCommentList.CommentChilds.filter(item => item.ID != e.ID);
-									filCommentList.ChildCount--;
-									filCommentList.CommentChilds = filCommentChilds;
+									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
+									let filreplies = filCommentList.replies;
+									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
+									filCommentList.comment_count = filCommentList.comment_count - res.data.length;
+									filCommentList.replies = filreplies;
+									// 评论数量减少
+									this.dynamic.comment_count = this.dynamic.comment_count - res.data.length;
 								} else {
 									// 评论发布项删除
-									let filCommentList = this.commentListData.filter(item => item.ID != e.ID);
+									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
+									// 评论数量减少
+									this.dynamic.comment_count--;
 								}
-								// 评论数量减少
-								this.wordInfoData.CommCount--;
-								if (this.wordInfoData.CommCount == 0) this.mescroll.showEmpty();
+								if (this.wordInfoData.comment_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = {};
 								// 来自主要跳转
@@ -587,9 +583,9 @@ export default {
 								}
 								// 来自发现-文章跳转
 								if (this.fromPage == 'find') {
-									filItem = this.$store.getters['word/getWordListData'].filter(item => item.ID == this.dynamic_id)[0];
+									filItem = this.$store.getters['word/getWordListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 								}
-								filItem.CommCount--;
+								filItem.comment_count = filItem.comment_count - res.data.length;
 							});
 							break;
 						default:

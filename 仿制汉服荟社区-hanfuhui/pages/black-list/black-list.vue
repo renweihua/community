@@ -8,7 +8,6 @@
         <view class="f32r fbold fcenter w128r tabbar" :class="{'tabbarsh':current == 1}" @tap="fnBarClick(1)">话题</view>
       </view>
     </view>
-
     <!-- 滑动切换视图 -->
     <swiper class="posia posi-all0" :current="current" @change="fnBarClick">
       <!-- 用户 -->
@@ -20,7 +19,7 @@
                 size="md"></user-avatar>
               <view class="flexc-jsa ml18r mr28r flex-gitem w128r">
                 <view>
-                  <text class="f28r fbold mr18r">{{user.NickName}}</text>
+                  <text class="f28r fbold mr18r">{{user.nick_name}}</text>
                   <i-icon :type="user.Gender == '男' ?'nan':'nv' " size="28" :color="user.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
                 </view>
                 <view class="f24r cgray ellipsis">{{calAddress(user.CityNames)}}</view>

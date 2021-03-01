@@ -54,10 +54,10 @@
 						<view class="mr8r">
 							<user-avatar
 								v-if="topListData[index]"
-								:src="topListData[index].User.HeadUrl + '_100x100.jpg'"
-								:tag="topListData[index].User.AuthenticateCode"
+								:src="topListData[index - 1].user_info.user_avatar"
+								tag=""
 								size="sm"
-								@click="fnUserInfo(topListData[index].User)"
+								@click="fnUserInfo(topListData[index].user_info)"
 							></user-avatar>
 						</view>
 					</block>
@@ -68,7 +68,7 @@
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.CommCount || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.comment_count || 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -81,12 +81,12 @@
 				<text class="f28r cgray ml8r">想说点什么？</text>
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
-				<i-icon type="dianzan" size="48" :color="albumInfoData.UserTop ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ albumInfoData.TopCount || 0 }}</text>
+				<i-icon type="dianzan" size="48" :color="albumInfoData.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
+				<text class="f28r cgray ml8r">{{ albumInfoData.praise_count || 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
-				<i-icon type="shoucang" size="48" :color="albumInfoData.UserSave ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ albumInfoData.SaveCount || 0 }}</text>
+				<i-icon type="shoucang" size="48" :color="albumInfoData.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
+				<text class="f28r cgray ml8r">{{ albumInfoData.collection_count || 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>
@@ -127,14 +127,15 @@ export default {
 			// 来源页标签数据下标
 			current: -1,
 			// 回复添加父ID
-			replyParentID: -1,
+			reply_id: -1,
+			// 回复的主评论Id
+			top_level: 0,
 			// mescroll组件实例
 			mescroll: null
 		};
 	},
 	onLoad(options) {
 		if (options && options.dynamic_id) {
-			console.log(options);
 			uni.showLoading({
 				title: '加载中',
 				mask: true
@@ -171,7 +172,7 @@ export default {
 		},
 		// 计算显示用户头像
 		calUserAvater() {
-			console.log('--- calUserAvater ---')
+			console.log('--- calUserAvater ---');
 			console.log(this.calUser);
 			return !!this.calUser.user_avatar ? this.calUser.user_avatar : '/static/default_avatar.png';
 		},
@@ -261,7 +262,7 @@ export default {
 			});
 		},
 		// 跳转荟吧
-		fnHuiba(id) {
+		fnHuiba(topic_id) {
 			uni.navigateTo({
 				url: `/pages/huiba-details/huiba-details?topic_id=${topic_id}`
 			});
@@ -304,7 +305,7 @@ export default {
 			}
 			// 来自发现-摄影跳转
 			if (this.fromPage == 'find') {
-				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
+				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 			}
 			dynamicPraise(filItem.dynamic_id).then(res => {
 				uni.showToast({
@@ -337,18 +338,18 @@ export default {
 		},
 		// 评论点赞
 		fnTopComm(e) {
-			let filItem = this.commentListData.filter(item => item.ID == e.ID)[0];
-			if (filItem.UserTop) {
-				delCommentTop(filItem.ID).then(delRes => {
-					if (delRes.data.Data == false) return;
-					filItem.TopCount--;
-					filItem.UserTop = false;
+			let filItem = this.commentListData.filter(item => item.comment_id == e.comment_id)[0];
+			if (filItem.is_praise) {
+				delCommentTop(filItem.comment_id).then(res => {
+					if (!res.status) return;
+					filItem.praise_count--;
+					filItem.is_praise = false;
 				});
 			} else {
-				addCommentTop(filItem.ID).then(addRes => {
-					if (addRes.data.Data == false) return;
-					filItem.TopCount++;
-					filItem.UserTop = true;
+				addCommentTop(filItem.comment_id).then(res => {
+					if (!res.status) return;
+					filItem.praise_count++;
+					filItem.is_praise = true;
 				});
 			}
 		},
@@ -435,16 +436,15 @@ export default {
 			}
 			// 来自发现-摄影跳转
 			if (this.fromPage == 'find') {
-				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
+				filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 			}
-			
 			dynamicCollection(filItem.dynamic_id).then(res => {
 				uni.showToast({
 					title: res.msg,
 					icon: res.status == 1 ? 'success' : 'none'
 				});
 				if (!res.status) return;
-			
+
 				// 用户是否已收藏
 				if (filItem.is_collection) {
 					filItem.collection_count--;
@@ -453,7 +453,7 @@ export default {
 				} else {
 					filItem.collection_count++;
 					this.albumInfoData.is_collection = filItem.is_collection = true;
-					this.albumInfoData.collection_count++
+					this.albumInfoData.collection_count++;
 				}
 			});
 		},
@@ -462,7 +462,7 @@ export default {
 			this.$refs.comm.open({
 				type: 'comment',
 				content: this.$store.getters['getCommContentData'],
-				dynamic_id: this.dynamic_id,
+				dynamic_id: this.dynamic_id
 			});
 		},
 		// 评论发送
@@ -482,40 +482,29 @@ export default {
 				title: '提交中'
 			});
 			delete e.type;
-			e.fromclient = 'android';
 			addComment(e).then(res => {
 				uni.showToast({
 					title: res.msg,
-					icon: !res.status ? 'none' : 'success',
+					icon: !res.status ? 'none' : 'success'
 				});
 				if (!res.status) {
 					return;
 				}
-
-				if (this.replyParentID == 0) {
-					// 无回复项
-					let filCommentList = this.commentListData.filter(item => item.ID == e.parentid)[0];
-					if (filCommentList.ChildCount == 0) {
-						filCommentList.ChildCount = 1;
-						filCommentList.CommentChilds = [];
-						filCommentList.CommentChilds.unshift(addRes.data.Data);
-					} else {
-						filCommentList.ChildCount++;
-						filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
-					}
-				} else if (this.replyParentID > 0) {
+				if (this.reply_id == 0) {
+					// 直接评论
+					this.$store.commit('interact/setCommentListData', this.commentListData.concat([res.data]));
+				} else if (this.reply_id > 0) {
 					// 有回复项追加
-					let filCommentList = this.commentListData.filter(item => item.ID == this.replyParentID)[0];
-					filCommentList.ChildCount++;
-					filCommentList.CommentChilds = filCommentList.CommentChilds.concat([addRes.data.Data]);
+					let filCommentList = this.commentListData.filter(item => item.comment_id == this.top_level)[0];
+					filCommentList.replies_count++;
+					filCommentList.replies = filCommentList.replies.concat([res.data]);
 				}
-				
 				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
-				if (this.albumInfoData.CommCount == 0) this.mescroll.removeEmpty();
-				this.albumInfoData.CommCount++;
+				if (this.albumInfoData.comment_count == 0) this.mescroll.removeEmpty();
+				this.albumInfoData.comment_count++;
 				this.$refs.comm.visible = false;
-				this.replyParentID == -1;
+				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
 				uni.showToast({
 					title: '评论成功'
@@ -540,15 +529,15 @@ export default {
 				}
 				// 来自发现-摄影跳转
 				if (this.fromPage == 'find') {
-					filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
+					filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 				}
-				filItem.CommCount++;
+				filItem.comment_count++;
 			});
 		},
 		// 评论项操作
 		fnComm(e) {
 			let itemList = ['回复', '复制', '举报'];
-			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].ID) itemList.push('删除');
+			if (e.user_info.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) itemList.push('删除');
 			uni.showActionSheet({
 				itemList,
 				success: res => {
@@ -556,12 +545,13 @@ export default {
 						case 0:
 							this.$refs.comm.open({
 								type: 'reply',
-								user: e.User.NickName,
-								objecttype: e.ObjectType,
-								objectid: e.dynamic_id,
-								parentid: e.ID
+								user: e.user_info.nick_name,
+								dynamic_id: e.dynamic_id,
+								reply_id: e.comment_id,
+								top_level: e.top_level
 							});
-							this.replyParentID = e.TopParentID;
+							this.top_level = e.top_level;
+							this.reply_id = e.comment_id;
 							break;
 						case 1:
 							uni.setClipboardData({
@@ -570,26 +560,35 @@ export default {
 							break;
 						case 2:
 							uni.navigateTo({
-								url: `/pages/report/report?id=${e.dynamic_id}&type=${e.ObjectType}`
+								url: `/pages/report/report?dynamic_id=${e.dynamic_id}`
 							});
 							break;
 						case 3:
-							delComment(e.ID).then(delRes => {
-								if (delRes.data.Data == false) return;
-								if (e.TopParentID > 0) {
+							delComment(e.comment_id).then(res => {
+								uni.showToast({
+									title: res.msg,
+									icon: !res.status ? 'none' : 'success'
+								});
+								if (!res.status) {
+									return;
+								}
+								if (e.reply_id > 0) {
 									// 有回复项删减
-									let filCommentList = this.commentListData.filter(item => item.ID == e.TopParentID)[0];
-									let filCommentChilds = filCommentList.CommentChilds.filter(item => item.ID != e.ID);
-									filCommentList.ChildCount--;
-									filCommentList.CommentChilds = filCommentChilds;
+									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
+									let filreplies = filCommentList.replies;
+									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
+									filCommentList.comment_count = filCommentList.comment_count - res.data.length;
+									filCommentList.replies = filreplies;
+									// 评论数量减少
+									this.dynamic.comment_count = this.dynamic.comment_count - res.data.length;
 								} else {
 									// 评论发布项删除
-									let filCommentList = this.commentListData.filter(item => item.ID != e.ID);
+									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
+									// 评论数量减少
+									this.dynamic.comment_count--;
 								}
-								// 评论数量减少
-								this.albumInfoData.CommCount--;
-								if (this.albumInfoData.CommCount == 0) this.mescroll.showEmpty();
+								if (this.albumInfoData.comment_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = [];
 								// 来自主要跳转
@@ -610,9 +609,9 @@ export default {
 								}
 								// 来自发现-摄影跳转
 								if (this.fromPage == 'find') {
-									filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.ID == this.dynamic_id)[0];
+									filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 								}
-								filItem.CommCount--;
+								filItem.comment_count = filItem.comment_count - res.data.length;
 							});
 							break;
 						default:

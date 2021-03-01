@@ -59,13 +59,13 @@ export async function addComment(params = {
 }
 
 /**
- * 动态评论发表/回复信息删除
- * @param {Number} ids 参数 objectid 8784023
- * objectid： 动态列表中ID或者ObjectID
+ * 删除动态的指定评论
+ * 
+ * comment_id： 动态评论的ID
  */
-export async function delComment(ids = 8784023) {
-	return await request('/Interact/DeleteComment', 'post', {
-		ids
+export async function delComment(comment_id) {
+	return await request('/dynamic/delete/comment', 'delete', {
+		comment_id
 	})
 }
 
