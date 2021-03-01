@@ -244,37 +244,7 @@ export default {
 		},
 		/// 展卡评论跳转详情页
 		fnCardComm(e) {
-			console.log(e.ObjectType);
-			if (e.ObjectType == 'trend') {
-				uni.navigateTo({
-					url: `/pages/trend-details/trend-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
-				});
-				return;
-			}
-			if (e.ObjectType == 'album') {
-				uni.navigateTo({
-					url: `/pages/album-details/album-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topic') {
-				uni.navigateTo({
-					url: `/pages/topic-details/topic-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
-				});
-				return;
-			}
-			if (e.ObjectType == 'topicreply') {
-				uni.navigateTo({
-					url: `/pages/topicreply-details/topicreply-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
-				});
-				return;
-			}
-			if (e.ObjectType == 'video') {
-				uni.navigateTo({
-					url: `/pages/video-details/video-details?id=${e.dynamic_id}&fromPage=home&current=${this.current}&comm=true`
-				});
-				return;
-			}
+			dynamicDetailPage(e, this, 'home', '&comm=true');
 		},
 		// 展卡跳转用户中心页
 		fnCardUser(e) {
