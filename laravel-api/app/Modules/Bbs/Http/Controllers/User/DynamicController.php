@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\DynamicIdRequest;
+use App\Modules\Bbs\Http\Requests\User\DynamicCommentIdRequest;
 use App\Modules\Bbs\Http\Requests\User\DynamicCommentRequest;
 use App\Modules\Bbs\Http\Requests\User\DynamicRequest;
 use App\Modules\Bbs\Services\User\DynamicService;
@@ -94,6 +95,24 @@ class DynamicController extends BbsController
 
         if ($data = $this->service->comment($this->getLoginUserId(), $request->all())) {
             return $this->successJson($data, $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\DynamicCommentIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteComment(DynamicCommentIdRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        if ($result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'))) {
+            return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
         }

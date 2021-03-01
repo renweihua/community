@@ -10,6 +10,11 @@ class DynamicComment extends Model
     protected $primaryKey = 'comment_id';
     protected $is_delete = 0;
 
+    public function dynamic()
+    {
+        return $this->belongsTo(Dynamic::class, 'dynamic_id', 'dynamic_id')->where('is_delete', 0);
+    }
+
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');

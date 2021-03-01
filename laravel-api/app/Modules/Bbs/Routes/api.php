@@ -144,6 +144,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::post('/collection', 'DynamicController@collection');
             // 评论 - 动态
             Route::post('/comment', 'DynamicController@comment');
+            // 删除评论 - 动态
+            Route::delete('/delete/comment', 'DynamicController@deleteComment');
         });
 
         /**

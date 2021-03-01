@@ -389,4 +389,64 @@ class DynamicService extends Service
             return false;
         }
     }
+
+    /**
+     * 删除评论流程
+     *
+     * @param  int  $login_user_id
+     * @param  int  $comment_id
+     *
+     * @return bool
+     */
+    public function deleteComment(int $login_user_id, int $comment_id): bool
+    {
+        $dynamicCommentInstance = DynamicComment::getInstance();
+        $comment = $dynamicCommentInstance->with('dynamic')->lock(true)->find($comment_id);
+        if ( !$comment) {
+            $this->setError('该评论不存在，请刷新重试！');
+            return false;
+        }
+        if (!$comment->dynamic || $comment->dynamic->is_delete == 1 || $comment->dynamic->is_check != 1){
+            $this->setError('动态已失效！');
+            return false;
+        }
+        if ($comment->author_id != $login_user_id){
+            $this->setError('您无权删除！');
+            return false;
+        }
+        DB::beginTransaction();
+        try {
+            $delete_filed = $dynamicCommentInstance->getDeleteField();
+            // 删除评论
+            $comment->{$delete_filed} = 1;
+            $comment->save();
+            // 获取该评论下的所有回复记录
+            $reply_lists = DB::select('SELECT * FROM
+              (
+                SELECT * FROM ' . env('DB_PREFIX') . $dynamicCommentInstance->getTable() . ' where reply_id > 0 ORDER BY reply_id, comment_id DESC
+              ) realname_sorted,
+              (SELECT @pv := ?) initialisation
+              WHERE (FIND_IN_SET(reply_id,@pv)>0 And @pv := concat(@pv, \',\', comment_id)) AND is_delete = 0', [$comment->comment_id]);
+            $reply_ids = [];
+            if ( !empty($reply_lists) ) {
+                foreach ($reply_lists as $reply) {
+                    $reply_ids[] = $reply->comment_id;
+                }
+                // 评论的所有回复记录：批量假删除
+                $dynamicCommentInstance->whereIn('comment_id', $reply_ids)->update([$delete_filed => 1]);
+            }
+
+            // 动态的评论量实时变动（沉余字段）
+            // 评论数量累减：count($reply_ids) + 1 是表示：评论与回复做占用的总条数
+            $comment->dynamic->decrement('comment_count', count($reply_ids) + 1);
+
+            DB::commit();
+            $this->setError('评论删除成功！');
+            return true;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError('评论删除失败！');
+            return false;
+        }
+    }
 }
