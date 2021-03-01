@@ -21,7 +21,6 @@
 		<view class="flex flex-aic plr18r ptb18r" v-else>
 			<view class="f28r cgray hl80r">{{calDatetime}}</view>
 		</view>
-
 		<!-- 中心内容 -->
 		<view class="plr18r pb18r">
 			<!-- 标题 -->
@@ -50,12 +49,11 @@
 			</view>
 			<!-- 荟吧标签 -->
 			<view class="flex flex-fww">
-				<block v-if="item.Huibas" v-for="huiba in item.Huibas" :key="huiba.ID">
-					<text class="huiba-tag mr18r mt18r" @tap="$emit('huiba', huiba)">{{huiba.Name}}</text>
+				<block v-if="item.topic">
+					<text class="huiba-tag mr18r mt18r" @tap="$emit('huiba', item.topic)">{{item.topic.topic_name}}</text>
 				</block>
 			</view>
 		</view>
-
 		<!-- 尾部 -->
 		<view class="flexr-jsa bts2r">
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('top')">

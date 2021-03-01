@@ -48,8 +48,8 @@
 					</view>
 					<!-- 荟吧标签 -->
 					<view class="flex flex-fww">
-						<block v-if="dynamic.Huibas" v-for="huiba in dynamic.Huibas" :key="huiba.topic_id">
-							<text class="huiba-tag mr18r mt18r" @tap="fnHuiba(huiba.topic_id)">{{ huiba.topic_name }}</text>
+						<block v-if="dynamic.topic">
+							<text class="huiba-tag mr18r mt18r" @tap="fnHuiba(dynamic.topic.topic_id)">{{ dynamic.topic.topic_name }}</text>
 						</block>
 					</view>
 				</view>

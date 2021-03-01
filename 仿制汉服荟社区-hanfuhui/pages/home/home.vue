@@ -285,7 +285,7 @@ export default {
 		// 展卡跳转荟吧页
 		fnCardHuiba(e) {
 			uni.navigateTo({
-				url: `/pages/huiba-details/huiba-details?id=${e.ID}`
+				url: `/pages/huiba-details/huiba-details?topic_id=${e.topic_id}`
 			});
 		},
 		// 展卡点赞
