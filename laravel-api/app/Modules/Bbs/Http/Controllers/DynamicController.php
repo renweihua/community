@@ -47,6 +47,21 @@ class DynamicController extends BbsController
     }
 
     /**
+     * 获取指定动态的点赞人员记录
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPraises(DynamicIdRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $lists = $this->service->getPraises((int)$data['dynamic_id']);
+        return $this->successJson($lists, $this->service->getError());
+    }
+
+    /**
      * 获取动态的评论列表
      *
      * @param  \App\Modules\Bbs\Http\Requests\DynamicIdRequest  $request

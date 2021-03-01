@@ -125,26 +125,6 @@ class DynamicService extends Service
     }
 
     /**
-     * 获取指定动态的点赞人员记录
-     *
-     * @param  int  $dynamic_id
-     *
-     * @return array
-     */
-    public function getPraises(int $dynamic_id)
-    {
-        $lists = DynamicPraise::where('dynamic_id', $dynamic_id)
-                              ->select('relation_id', 'user_id', 'created_time')
-                              ->with([
-                                  'userInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
-                                  },
-                              ])->orderBy('created_time', 'ASC')->paginate(10);
-
-        return $this->getPaginateFormat($lists);
-    }
-
-    /**
      * 动态：点赞流程
      *
      * @param  int  $login_user_id

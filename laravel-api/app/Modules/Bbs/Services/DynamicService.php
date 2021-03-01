@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Services;
 
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicComment;
+use App\Models\Dynamic\DynamicPraise;
 use App\Services\Service;
 
 class DynamicService extends Service
@@ -206,6 +207,26 @@ class DynamicService extends Service
         unset($dynamic->isPraise, $dynamic->isCollection, $dynamic->userInfo->isFollow);
         $this->setError('动态详情获取成功！');
         return $dynamic;
+    }
+
+    /**
+     * 获取指定动态的点赞人员记录
+     *
+     * @param  int  $dynamic_id
+     *
+     * @return array
+     */
+    public function getPraises(int $dynamic_id)
+    {
+        $lists = DynamicPraise::where('dynamic_id', $dynamic_id)
+            ->select('relation_id', 'user_id', 'created_time')
+            ->with([
+                'userInfo' => function($query) {
+                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
+                },
+            ])->orderBy('created_time', 'ASC')->paginate(10);
+
+        return $this->getPaginateFormat($lists);
     }
 
     /**

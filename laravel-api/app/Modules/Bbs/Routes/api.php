@@ -68,6 +68,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/comments', 'DynamicController@comments');
             // 加载指定评论，更多的回复列表
             Route::get('/loadMoreComments', 'DynamicController@loadMoreComments');
+            // 指定动态：点赞人员记录
+            Route::get('/getPraises', 'DynamicController@getPraises');
         });
 
         /**
@@ -136,8 +138,6 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::prefix('dynamic')->group(function () {
             // 发布 - 动态
             Route::post('/push', 'DynamicController@push');
-            // 指定动态：点赞人员记录
-            Route::get('/getPraises', 'DynamicController@getPraises');
             // 点赞 - 动态
             Route::post('/praise', 'DynamicController@praise');
             // 收藏 - 动态
