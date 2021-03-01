@@ -2,7 +2,7 @@
 
 namespace App\Service\Socket;
 
-use App\Model\Bbs\BbsChatRecord;
+use App\Model\Bbs\ChatRecord;
 use App\Model\Bbs\BbsGroupChat;
 use App\Service\Service;
 
@@ -34,7 +34,7 @@ class ChatService extends Service
         $month_table = empty($params['month_table']) ? date('Y_m') : $params['month_table'];
         // 获取历史消息记录，使用缓存数据
         // 获取消息记录
-        $list = BbsChatRecord::getInstance()->getHistory($user_id, $friend_id, $month_table);
+        $list = ChatRecord::getInstance()->getHistory($user_id, $friend_id, $month_table);
         if ($list === false) {
             return ['current_page' => 1, 'last_page' => 1, 'month_table' => $month_table, 'per_page' => 15, 'total' => 0, 'data' => [],];
         } else {
@@ -42,7 +42,7 @@ class ChatService extends Service
             // 获取最后一条数据的当前月份
             if (empty($data)) {
                 // 大于最小月份时，继续查询
-                if ($month_table > BbsChatRecord::MIN_TABLE) {
+                if ($month_table > ChatRecord::MIN_TABLE) {
                     $params['month_table'] = strtotime('-1 month', strtotime($month_table));
                     return self::getPrivateChatRecords($sid, $params);
                 }
@@ -62,7 +62,7 @@ class ChatService extends Service
         $data['friend_id'] = $params['friend_id'];
         $data['chat_type'] = $params['chat_type'] ?? 0; // 内容格式
         $data['chat_content'] = $params['content'];
-        $result = BbsChatRecord::getInstance()->add($data);
+        $result = ChatRecord::getInstance()->add($data);
         // 加载关联模型：发送者与接收者的基本信息
         $result->load('friend.avatar', 'user.avatar');
         return $result;
