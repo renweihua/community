@@ -215,8 +215,11 @@ export default {
 		/// 跳转用户信息页
 		fnUserInfo() {
 			uni.navigateTo({
-				url: `/pages/user-info/user-info`
+				url: `/pages/user-info-modify/user-info-modify`
 			});
+			// uni.navigateTo({
+			// 	url: `/pages/user-info/user-info`
+			// });
 		},
 		/// 刷新用户信息消息
 		fnRefreshUserInfo() {

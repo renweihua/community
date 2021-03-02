@@ -89,10 +89,10 @@ class UserInfo extends Model
         if (isset($this->attributes['user_sex'])){
             $text = '保密';
             switch ($this->attributes['user_sex']){
-                case 0:
+                case 1:
                     $text = '男';
                     break;
-                case 1:
+                case 2:
                     $text = '女';
                     break;
             }

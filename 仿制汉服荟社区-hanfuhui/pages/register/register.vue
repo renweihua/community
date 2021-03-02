@@ -26,13 +26,13 @@
 			<input class="mt64r mb18r hl80r bbs2r fcenter" type="text" v-model="bindUser.nick_name" placeholder="请输入昵称"
 			 :maxlength="10" />
 			<view class="flex hl80r">
-				<view class="flex-fitem fcenter" @tap="fnGender(0)">
-					<i-icon :type="bindUser.user_sex == 0 ? 'quan-dui':'quan'" size="48" :color="bindUser.user_sex == 0 ? '#FF6699':'#8f8f94'"></i-icon>
-					<text class="f32r ml8r" :class="[bindUser.user_sex == 0 ? 'ctheme':'cgray']">帅汉子</text>
-				</view>
 				<view class="flex-fitem fcenter" @tap="fnGender(1)">
 					<i-icon :type="bindUser.user_sex == 1 ? 'quan-dui':'quan'" size="48" :color="bindUser.user_sex == 1 ? '#FF6699':'#8f8f94'"></i-icon>
-					<text class="f32r ml8r" :class="[bindUser.user_sex == 1 ? 'ctheme':'cgray']">萌妹子</text>
+					<text class="f32r ml8r" :class="[bindUser.user_sex == 1 ? 'ctheme':'cgray']">帅汉子</text>
+				</view>
+				<view class="flex-fitem fcenter" @tap="fnGender(2)">
+					<i-icon :type="bindUser.user_sex == 2 ? 'quan-dui':'quan'" size="48" :color="bindUser.user_sex == 2 ? '#FF6699':'#8f8f94'"></i-icon>
+					<text class="f32r ml8r" :class="[bindUser.user_sex == 2 ? 'ctheme':'cgray']">萌妹子</text>
 				</view>
 			</view>
 			<button class="btn-sub mt64r" hover-class="btn-hover" @tap="fnBindUser" :disabled="isBind" :loading="isBind">完成注册</button>

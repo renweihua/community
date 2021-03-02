@@ -116,7 +116,6 @@
 				//
 			};
 		},
-
 		onLoad(option) {
 			if (option && option.user_id) {
 				uni.showLoading({
