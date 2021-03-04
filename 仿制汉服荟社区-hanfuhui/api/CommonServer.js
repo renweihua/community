@@ -80,7 +80,7 @@ export async function upload(upload_file) {
 			fail(e) {
 				console.log(e);
 				uni.showToast({
-					title: res.msg,
+					title: e.errMsg,
 					icon: 'none',
 				});
 				reject(err)

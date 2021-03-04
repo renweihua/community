@@ -22,7 +22,7 @@
 					<text class="f36r c111 fbold mr18r">{{tempUserInfoData.NickName}}</text>
 					<i-icon v-if="[0, 1].indexOf(tempUserInfoData.user_info.user_sex) > -1" :type="tempUserInfoData.user_info.user_sex_text == '男' ? 'nan':'nv' "
 					 size="28" :color="tempUserInfoData.user_info.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
-					<text v-if="tempUserInfoData.user_name" class="f24r cgray ml28r">小荟号：{{tempUserInfoData.user_name}}</text>
+					<text v-if="tempUserInfoData.user_name" class="f24r cgray ml28r">账户：{{tempUserInfoData.user_name}}</text>
 					<text v-else-if="tempUserInfoData.user_email" class="f24r cgray ml28r">邮箱：{{tempUserInfoData.user_email}}</text>
 					<text v-else-if="tempUserInfoData.user_mobile" class="f24r cgray ml28r">手机号：{{tempUserInfoData.user_mobile}}</text>
 				</view>
