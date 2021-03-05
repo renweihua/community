@@ -118,11 +118,11 @@ class WebSocketController extends BaseNamespace
             if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 throw new Exception('Token过期，请重新登录！');
             }
-            $redis = redis('token');
-            $value = $redis->get('laravel_database_users_token:' . $data['token']);
-            if (empty($value)){
-                throw new Exception('Token过期，请重新登录！');
-            }
+            // $redis = redis('token');
+            // $value = $redis->get('laravel_database_users_token:' . $data['token']);
+            // if (empty($value)){
+            //     throw new Exception('Token过期，请重新登录！');
+            // }
             $user = UserInfo::find($token_user->user_id);
             // 欢迎加入房间 - SocketConst::getMessage(SocketConst::JOIN_ROOM)
             $socket->emit('user-login', (array)$user, SocketConst::STATUS_SUCCESS, '欢迎{' . $user->user_id . '：' . $user->nick_name . '}进入socket');
