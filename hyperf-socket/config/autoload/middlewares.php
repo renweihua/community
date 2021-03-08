@@ -12,5 +12,7 @@ declare(strict_types=1);
 return [
     'http' => [
         App\Middleware\CorsMiddleware::class,
+        // 开启Session中间件
+        \Hyperf\Session\Middleware\SessionMiddleware::class,
     ],
 ];

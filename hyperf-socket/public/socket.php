@@ -16,8 +16,8 @@
     }
 
     token = getQueryString('token') ||
-        'mpt5CXfsKEMIULHpkpjFoyuc8Lp22xRALzq4Grd9Fs9p77oQPwTByV0jMTx2xnzpP8p1NWBiUL20Bn7bote2WWunsI07et8lHUxU1HG1j/1SbMs4xbAe6s8znku0N0nRPd6P+lKowrIczt+guzY2QQhaNEdSXjhjcMzBaf24so8=';
-    var socket = io('ws://127.0.0.1:9502', {
+        'cFCB3CahPsPMK6BdFPKAH3quONQG2QoO5xmX2Diecr4H3ilHwGi320ChBrF3aacvFv+y2q922yihNmpCisY/ZDtjc1ASFTfurb+YWFvAO50mNNJUWZ67MYZMV3LEZ/wPLJsTzrVcdMQwG1c1RpavubHBL629FWf+ZQrYwklV2ds=';
+    var socket = io('ws://118.25.134.227:9502', {
         query: {
             token : token
         },transports: ["websocket"]});
