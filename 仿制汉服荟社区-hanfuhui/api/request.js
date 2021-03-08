@@ -60,7 +60,7 @@ export default function request(route, method = 'get', data = {}) {
 					})
 					return;
 				}
-				
+
 				// 正常
 				resolve(res.data);
 			},

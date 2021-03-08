@@ -61,7 +61,7 @@ export default {
 			// });
 
 			// 发送登录
-			socket.emit('user-login', {"type":"login", "token":token}, console.log);
+			socket.emit('user-login', {"type":"login", "token": login_token}, console.log);
 
 			// 监听服务端：登录事件
 			socket.on('user-login', (data, status) => {

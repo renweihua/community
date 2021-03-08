@@ -3,7 +3,11 @@ import App from './App'
 
 // 挂载全局状态管理
 import store from './store'
-Vue.prototype.$store = store
+Vue.prototype.$store = store;
+
+import socket from '@/api/socket.js';
+// socket
+Vue.prototype.$socket = socket.init();
 
 // iconfont 官方自定义收藏图标库组件
 import IIcon from '@/components/i-icon/i-icon'

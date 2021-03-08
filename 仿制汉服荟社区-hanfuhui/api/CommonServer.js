@@ -6,6 +6,10 @@ import config from '../config.js';
  * ===========
  */
 
+export async function get(url, params) {
+	return await request(url, 'GET', params);
+}
+
 /**
  * 批量上传文件
  * 

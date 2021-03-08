@@ -6,7 +6,12 @@
       <view class="status-bar"></view>
       <!-- #endif -->
       <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;">静态页面！！！</view>
+	  
+	  <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;" @click="chat(1)"> 进入聊天页-1 </view>
+	  
+	  <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;" @click="chat(2)"> 进入聊天页-2 </view>
     </view>
+	
 		<mescroll-uni top="100" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 			<view class="list">
 				<view
@@ -90,6 +95,12 @@ export default {
 		},
 	},
 	methods: {
+		chat(page){
+			console.log(11111111)
+			uni.navigateTo({
+				url: `/pages/chat/chat` + page
+			});
+		},
 		demoLoad() {
 			console.log('---onload---');
 			this.getListData();
