@@ -144,7 +144,7 @@
 					console.log(signinRes);
 
 					// 保存签到信息
-					this.$store.commit('setSigninInfoData', signinRes.data.data)
+					this.$store.commit('setSigninInfoData', signinRes.data)
 					// 重新初始签到日历
 					this.$refs.signinCalendar.init()
 				}).catch((e) => {

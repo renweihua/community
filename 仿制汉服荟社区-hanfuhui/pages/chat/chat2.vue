@@ -5,7 +5,7 @@
 			<view class="talk-list">
 				<view v-for="(item, index) in talkList" :key="index" :id="`msg-${item.record_id}`">
 					<view class="item flex_col" :class="item.is_read == 1 ? 'push' : 'pull'">
-						<image :src="item.user.user_avatar" mode="aspectFill" class="pic"></image>
+						<image :src="item.user ? item.user.user_avatar : ''" mode="aspectFill" class="pic"></image>
 						<view class="content">{{ item.chat_content }}</view>
 					</view>
 				</view>
@@ -299,6 +299,9 @@ export default {
 						chat_content: `这是历史记录的第${i + 1}条消息`, // 消息内容
 						is_read: Math.random() > 0.5 ? 1 : 0, // 此为消息类别，设 1 为发出去的消息，0 为收到对方的消息,
 						user: {
+							'user_avatar' : '/static/logo.png' // 头像
+						},
+						friend: {
 							'user_avatar' : '/static/logo.png' // 头像
 						}
 					});
