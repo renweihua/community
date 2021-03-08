@@ -62,9 +62,10 @@ class ChatService extends Service
         $data['friend_id'] = $params['friend_id'];
         $data['chat_type'] = $params['chat_type'] ?? 0; // 内容格式
         $data['chat_content'] = $params['content'];
+        $data['is_read'] = 0;
         $result = ChatRecord::getInstance()->add($data);
         // 加载关联模型：发送者与接收者的基本信息
-        $result->load('friend.avatar', 'user.avatar');
+        $result->load('friendInfo', 'userInfo');
         return $result;
     }
 
@@ -75,7 +76,7 @@ class ChatService extends Service
         $data['chat_type'] = $params['chat_type'] ?? 0; // 内容格式
         $data['chat_content'] = $params['content'];
         $result = BbsGroupChat::getInstance()->add($data);
-        $result->load('user.avatar');
+        $result->load('userInfo');
         return $result;
     }
 }

@@ -21,12 +21,12 @@ class ChatRecord extends MonthModel
         $this->attributes['chat_content'] = htmlspecialchars($value);
     }
 
-    public function user()
+    public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
 
-    public function friend()
+    public function friendInfo()
     {
         return $this->belongsTo(UserInfo::class, 'friend_id', 'user_id');
     }
