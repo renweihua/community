@@ -4,8 +4,12 @@
 		<view class="box-1" id="list-box">
 			<view class="talk-list">
 				<view v-for="(item, index) in talkList" :key="index" :id="`msg-${item.record_id}`">
-					<view class="item flex_col" :class="item.is_read == 1 ? 'push' : 'pull'">
-						<image :src="item.user ? item.user.user_avatar : ''" mode="aspectFill" class="pic"></image>
+					<view v-if="item.friend_info.user_id == login_user.user_id" class="item flex_col" :class="'pull'">
+						<image :src="item.friend_info ? item.friend_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
+						<view class="content">{{ item.chat_content }}</view>
+					</view>
+					<view v-else class="item flex_col" :class="'push'">
+						<image :src="item.user_info ? item.user_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
 						<view class="content">{{ item.chat_content }}</view>
 					</view>
 				</view>
@@ -35,7 +39,8 @@ export default {
 			},
 			
 			
-			
+			// 登录会员
+			login_user: {},
 			// 消息记录
 			talkList: [],
 			// 发送的文本
@@ -62,7 +67,7 @@ export default {
 	},
 	onLoad(options) {
 		// 验证是否已登录
-		options.friend_id = 1;
+		options.friend_id = 5;
 		
 		// 登录会员的Token
 		this.login_token = uni.getStorageSync('TOKEN') || '';
@@ -71,11 +76,14 @@ export default {
 		console.log(options);
 		// 登录会员的基本信息
 		this.login_user = this.$store.getters['user/getLoginUserInfoData'];
+		console.log('---this.login_user---')
+		console.log(this.login_user)
+		console.log(this.login_user.user_id)
 		// 聊天好友的Id
 		this.friend_id = options.friend_id;
 		this.friend_userinfo = {
-			user_id: 1,
-			nick_name: '昵称1',
+			user_id: 5,
+			nick_name: '我是用户5',
 			user_avatar: ''
 		};
 		/**
@@ -149,31 +157,6 @@ export default {
 			// 私聊：发送文本消息
 			this.socket.emit('private-chat', params, console.log);
 			
-			
-			// demo  test
-			setTimeout(() => {
-				uni.hideLoading();
-			
-				// 将当前发送信息 添加到消息列表。
-				let data = {
-					id: new Date().getTime(),
-					content: this.content,
-					type: 1,
-					pic: '/static/logo.png'
-				};
-				this.talkList.push(data);
-			
-				this.$nextTick(() => {
-					// 清空内容框中的内容
-					this.content = '';
-					uni.pageScrollTo({
-						scrollTop: 999999, // 设置一个超大值，以保证滚动条滚动到底部
-						duration: 0
-					});
-				});
-			}, 1500);
-			
-			
 			this.$nextTick(() => {
 				this.content = '';
 				// #ifdef MP-WEIXIN
@@ -224,13 +207,28 @@ export default {
 				console.log(status);
 				console.log(msg);
 				
-				// 数据追加到当前消息列表
-				data.anmitionPlay = false; //标识音频是否在播放
-				if(status == 1){
-					this.talkList.push(data);
-				}else{
-					// 提醒发送者，消息发送失败
-				}
+				// demo  test
+				setTimeout(() => {
+					uni.hideLoading();
+				
+					// 数据追加到当前消息列表
+					if(status == 1){
+					data.anmitionPlay = false; //标识音频是否在播放
+						this.talkList.push(data);
+					}else{
+						// 提醒发送者，消息发送失败
+					}
+				
+					this.$nextTick(() => {
+						// 清空内容框中的内容
+						this.content = '';
+						uni.pageScrollTo({
+							scrollTop: 999999, // 设置一个超大值，以保证滚动条滚动到底部
+							duration: 0
+						});
+					});
+				}, 1500);
+				
 				console.log(this.talkList);
 			});
 		},
@@ -254,10 +252,10 @@ export default {
 
 				if (this.ajax.page > 1) {
 					// 非第一页，则取历史消息数据的第一条信息元素
-					selector = `#msg-${this.talkList[0].id}`;
+					selector = `#msg-${this.talkList[0].record_id}`;
 				} else {
 					// 第一页，则取当前消息数据的最后一条信息元素
-					selector = `#msg-${data[data.length - 1].id}`;
+					selector = `#msg-${data[data.length - 1].record_id}`;
 				}
 
 				// 将获取到的消息数据合并到消息数组中
@@ -294,14 +292,17 @@ export default {
 				let startIndex = (this.ajax.page - 1) * this.ajax.rows;
 				let endIndex = startIndex + this.ajax.rows;
 				for (let i = startIndex; i < endIndex; i++) {
+					let user_id = Math.random() > 0.5 ? 1 : 5;
 					arr.push({
 						record_id: i, // 消息的ID
 						chat_content: `这是历史记录的第${i + 1}条消息`, // 消息内容
 						is_read: Math.random() > 0.5 ? 1 : 0, // 此为消息类别，设 1 为发出去的消息，0 为收到对方的消息,
-						user: {
+						user_info: {
+							'user_id': user_id,
 							'user_avatar' : '/static/logo.png' // 头像
 						},
-						friend: {
+						friend_info: {
+							'user_id': user_id,
 							'user_avatar' : '/static/logo.png' // 头像
 						}
 					});
@@ -328,11 +329,13 @@ export default {
 		},
 		// 设置页面滚动位置
 		setPageScrollTo(selector) {
+			console.log('---setPageScrollTo---')
 			let view = uni
 				.createSelectorQuery()
 				.in(this)
 				.select(selector);
 			view.boundingClientRect(res => {
+				console.log(res);
 				uni.pageScrollTo({
 					scrollTop: res.top - 30, // -30 为多显示出大半个消息的高度，示意上面还有信息。
 					duration: 0
