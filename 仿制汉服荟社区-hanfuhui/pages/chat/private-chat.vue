@@ -3,13 +3,13 @@
 		<view class="tips color_fff size_12 align_c" :class="{ show: ajax.loading }" @tap="getHistoryMsg">{{ ajax.loadText }}</view>
 		<view class="box-1" id="list-box">
 			<view class="talk-list">
-				<view v-for="(item, index) in talkList" :key="index" :id="`msg-${item.record_id}`">
-					<view v-if="item.friend_info.user_id == login_user.user_id" class="item flex_col" :class="'pull'">
-						<image :src="item.friend_info ? item.friend_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
+				<view v-for="(item, index) in messages_list" :key="index" :id="`msg-${item.record_id}`">
+					<view v-if="item.user_info.user_id == login_user.user_id" class="item flex_col" :class="'pull'">
+						<image :src="item.user_info ? item.user_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
 						<view class="content">{{ item.chat_content }}</view>
 					</view>
 					<view v-else class="item flex_col" :class="'push'">
-						<image :src="item.user_info ? item.user_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
+						<image :src="item.friend_info ? item.friend_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
 						<view class="content">{{ item.chat_content }}</view>
 					</view>
 				</view>
@@ -27,32 +27,36 @@
 </template>
 
 <script>
+	import {
+		getUserInfo,
+	} from "@/api/UserServer.js"
 export default {
 	data() {
 		return {
+			// 加载历史消息
 			ajax: {
-				rows: 20, //每页数量
 				page: 1, //页码
+				search_month: '', // 历史记录的月份
+				limit: 20, //每页数量
 				flag: true, // 请求开关
 				loading: true, // 加载中
 				loadText: '正在获取消息'
 			},
-			
-			
+
 			// 登录会员
 			login_user: {},
 			// 消息记录
-			talkList: [],
+			messages_list: [],
 			// 发送的文本
 			content: '',
 			// socket
-			socket : {},
+			socket: {},
 			// 登录会员的Token
 			login_token: '',
 			// 录音组件
 			Recorder: uni.getRecorderManager(),
 			// 音频播放
-			Audio: uni.createInnerAudioContext(),
+			Audio: uni.createInnerAudioContext()
 		};
 	},
 	mounted() {
@@ -66,41 +70,48 @@ export default {
 		}
 	},
 	onLoad(options) {
+		console.log('---onLoad---');
+		console.log(options);
 		// 验证是否已登录
-		options.friend_id = 5;
 		
+		// 是否设置了聊天会员Id
+		if(!options.friend_id){
+			uni.showToast({
+				title: '请指定聊天会员',
+				icon: 'none'
+			});
+			setTimeout(() => {
+				uni.navigateBack();
+			}, 2000);
+			return;
+		}
+
 		// 登录会员的Token
 		this.login_token = uni.getStorageSync('TOKEN') || '';
-		
 
-		console.log(options);
 		// 登录会员的基本信息
 		this.login_user = this.$store.getters['user/getLoginUserInfoData'];
-		console.log('---this.login_user---')
-		console.log(this.login_user)
-		console.log(this.login_user.user_id)
+		console.log('---this.login_user---');
+		console.log(this.login_user);
 		// 聊天好友的Id
 		this.friend_id = options.friend_id;
-		this.friend_userinfo = {
-			user_id: 5,
-			nick_name: '我是用户5',
-			user_avatar: ''
-		};
-		/**
-		if (options.friend_uuid) this.friend_uuid = options.friend_uuid;
-		// 获取好友列表
-		this.firends = this.$cache.getUserFriends();
-		// 获取好友的基本信息
-		const friend_userinfo = this.firends.filter(item => item.friend_id == this.friend_id)[0];
-		this.friend_userinfo = {
-			user_id: friend_userinfo.friend.user_id,
-			nick_name: friend_userinfo.initials_name,
-			user_avatar: friend_userinfo.friend.avatar.file_path
-		};
-		**/
+		
+		// 获取指定会员的基本信息
+		this.getUserInfoByAsync(this.friend_id);
+	},
+	onReady() {
+		console.log('---onReady---');
+		//自定义返回按钮 因为原生的返回按钮不可阻止默认事件
+		// #ifdef H5
+		const icon = document.getElementsByClassName('uni-page-head-btn')[0];
+		icon.style.display = 'none';
+		// #endif
+		
+		
+		
 		//  开始监听 Socket
 		this.monitorSocket();
-
+		
 		//录音开始事件
 		this.Recorder.onStart(e => {
 			this.beginVoice();
@@ -110,18 +121,46 @@ export default {
 			clearInterval(this.voiceInterval);
 			this.handleRecorder(res);
 		});
-
+		
 		//音频停止事件
 		this.Audio.onStop(e => {
 			this.closeAnmition();
 		});
-
+		
 		//音频播放结束事件
 		this.Audio.onEnded(e => {
 			this.closeAnmition();
 		});
 	},
 	methods: {
+		// 获取好友信息
+		async getUserInfoByAsync(user_id) {
+			let friend = new Promise((resolve, reject) => {
+				getUserInfo(user_id).then(friend => {
+					this.friend_info = friend.data.user_info;
+		
+					// 导航栏设置为好友的昵称
+					uni.setNavigationBarTitle({
+						title: this.friend_info.nick_name
+					});
+
+					resolve(friend);
+				}).catch(err => {
+					console.log(err);
+				});
+			});
+		},
+		//拼接消息 处理滚动
+		async joinData() {
+			if (!this.ajax.loading) {
+				//如果没有获取数据 即loading为false时，return 避免用户重复上拉触发加载
+				return;
+			}
+			this.ajax.loading = false;
+			const data = await this.getPrivateChatRecords();
+			console.log(data);
+			this.ajax.loading = true;
+		},
 		// 发送信息
 		sendMsg(data) {
 			console.log(data);
@@ -153,10 +192,10 @@ export default {
 			uni.showLoading({
 				title: '正在发送'
 			});
-			
+
 			// 私聊：发送文本消息
 			this.socket.emit('private-chat', params, console.log);
-			
+
 			this.$nextTick(() => {
 				this.content = '';
 				// #ifdef MP-WEIXIN
@@ -174,18 +213,18 @@ export default {
 					}, 150);
 				}
 				// #endif
-			
+
 				// #ifndef MP-WEIXIN
 				uni.pageScrollTo({
 					scrollTop: 99999,
 					duration: 100
 				});
 				// #endif
-			
+
 				if (this.showFunBtn) {
 					this.showFunBtn = false;
 				}
-			
+
 				// #ifdef MP-WEIXIN
 				if (params.chat_type == 1) {
 					this.mpInputMargin = true;
@@ -200,25 +239,25 @@ export default {
 		// 自动加载：监听socket
 		monitorSocket() {
 			this.socket = this.$socket;
-			
-			// 监听私聊事件，服务端返回数据
+
+			// 监听：私聊发送事件，服务端返回数据
 			this.socket.on('private-chat', (data, status, msg) => {
 				console.log(data);
 				console.log(status);
 				console.log(msg);
-				
+
 				// demo  test
 				setTimeout(() => {
 					uni.hideLoading();
-				
+
 					// 数据追加到当前消息列表
-					if(status == 1){
-					data.anmitionPlay = false; //标识音频是否在播放
-						this.talkList.push(data);
-					}else{
+					if (status == 1) {
+						data.anmitionPlay = false; //标识音频是否在播放
+						this.messages_list.push(data);
+					} else {
 						// 提醒发送者，消息发送失败
 					}
-				
+
 					this.$nextTick(() => {
 						// 清空内容框中的内容
 						this.content = '';
@@ -228,108 +267,89 @@ export default {
 						});
 					});
 				}, 1500);
-				
-				console.log(this.talkList);
-			});
-		},
-		// 获取历史消息
-		getHistoryMsg() {
-			if (!this.ajax.flag) {
-				return; //
-			}
 
-			// 此处用到 ES7 的 async/await 知识，为使代码更加优美。不懂的请自行学习。
-			let get = async () => {
+				console.log(this.messages_list);
+			});
+
+			// 监听：获取私聊历史聊天记录
+			this.socket.on('private-chat-records', (lists, status, msg) => {
+				console.log('---获取私聊历史聊天记录---')
+				console.log(lists);
+				console.log(status);
+				console.log(msg);
+
 				this.hideLoadTips();
 				this.ajax.flag = false;
-				let data = await this.joinHistoryMsg();
-
-				console.log('----- 模拟数据格式，供参考 -----');
-				console.log(data); // 查看请求返回的数据结构
-
 				// 获取待滚动元素选择器，解决插入数据后，滚动条定位时使用
 				let selector = '';
 
 				if (this.ajax.page > 1) {
 					// 非第一页，则取历史消息数据的第一条信息元素
-					selector = `#msg-${this.talkList[0].record_id}`;
+					if(lists.data.length > 0) selector = `#msg-${this.messages_list[0].record_id}`;
 				} else {
 					// 第一页，则取当前消息数据的最后一条信息元素
-					selector = `#msg-${data[data.length - 1].record_id}`;
+					console.log(lists.data.length);
+					if(lists.data.length > 0) selector = `#msg-${lists.data[lists.data.length - 1].record_id}`;
 				}
-
 				// 将获取到的消息数据合并到消息数组中
-				this.talkList = [...data, ...this.talkList];
-
+				this.messages_list = [...lists.data, ...this.messages_list];
 				// 数据挂载后执行，不懂的请自行阅读 Vue.js 文档对 Vue.nextTick 函数说明。
 				this.$nextTick(() => {
 					// 设置当前滚动的位置
-					this.setPageScrollTo(selector);
+					if(selector) this.setPageScrollTo(selector);
 
 					this.hideLoadTips(true);
+					
+					// 设置下一次请求页码
+					this.ajax.page = parseInt(lists.current_page) + parseInt(1);
+					// 设置月份
+					this.ajax.month_table = lists.month_table;
 
-					if (data.length < this.ajax.rows) {
+					if (lists.data.length < this.ajax.limit) {
 						// 当前消息数据条数小于请求要求条数时，则无更多消息，不再允许请求。
 						// 可在此处编写无更多消息数据时的逻辑
 					} else {
-						this.ajax.page++;
-
 						// 延迟 200ms ，以保证设置窗口滚动已完成
 						setTimeout(() => {
 							this.ajax.flag = true;
 						}, 200);
 					}
 				});
-			};
-			get();
-		},
-		// 拼接历史记录消息，正式项目可替换为请求历史记录接口
-		joinHistoryMsg() {
-			let join = () => {
-				let arr = [];
 
-				//通过当前页码及页数，模拟数据内容
-				let startIndex = (this.ajax.page - 1) * this.ajax.rows;
-				let endIndex = startIndex + this.ajax.rows;
-				for (let i = startIndex; i < endIndex; i++) {
-					let user_id = Math.random() > 0.5 ? 1 : 5;
-					arr.push({
-						record_id: i, // 消息的ID
-						chat_content: `这是历史记录的第${i + 1}条消息`, // 消息内容
-						is_read: Math.random() > 0.5 ? 1 : 0, // 此为消息类别，设 1 为发出去的消息，0 为收到对方的消息,
-						user_info: {
-							'user_id': user_id,
-							'user_avatar' : '/static/logo.png' // 头像
-						},
-						friend_info: {
-							'user_id': user_id,
-							'user_avatar' : '/static/logo.png' // 头像
-						}
-					});
-				}
-
-				/*
-						颠倒数组中元素的顺序。将最新的数据排在本次接口返回数据的最后面。
-						后端接口按 消息的时间降序查找出当前页的数据后，再将本页数据按消息时间降序排序返回。
-						这是数据的重点，因为页面滚动条和上拉加载历史的问题。
-					 */
-				arr.reverse();
-
-				return arr;
-			};
-
-			// 此处用到 ES6 的 Promise 知识，不懂的请自行学习。
-			return new Promise((done, fail) => {
-				// 无数据请求接口，由 setTimeout 模拟，正式项目替换为 ajax 即可。
-				setTimeout(() => {
-					let data = join();
-					done(data);
-				}, 1500);
+				console.log(this.messages_list);
 			});
+		},
+		// 获取历史聊天记录
+		getPrivateChatRecords() {
+			console.log(this.ajax.flag);
+			if (!this.ajax.flag) {
+				return; //
+			}
+			this.hideLoadTips();
+			this.ajax.flag = false;
+			// 私聊：发送文本消息
+			this.socket.emit(
+				'get-private-chat-records',
+				{
+					page: this.ajax.page,
+					friend_id: this.friend_id,
+					month_table: this.ajax.month_table
+				},
+				console.log
+			);
+			// 延迟 200ms ，以保证设置窗口滚动已完成
+			setTimeout(() => {
+				this.ajax.flag = true;
+			}, 200);
+		},
+		// 获取历史消息
+		getHistoryMsg() {
+			console.log('---开始获取历史聊天记录---');
+			this.getPrivateChatRecords();
 		},
 		// 设置页面滚动位置
 		setPageScrollTo(selector) {
-			console.log('---setPageScrollTo---')
+			console.log('---setPageScrollTo---');
 			let view = uni
 				.createSelectorQuery()
 				.in(this)
@@ -353,7 +373,7 @@ export default {
 				this.ajax.loading = true;
 				this.ajax.loadText = '正在获取消息';
 			}
-		},
+		}
 	}
 };
 </script>

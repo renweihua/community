@@ -96,9 +96,8 @@ export default {
 	},
 	methods: {
 		chat(page){
-			console.log(11111111)
 			uni.navigateTo({
-				url: `/pages/chat/chat` + page
+				url: `/pages/chat/private-chat`
 			});
 		},
 		demoLoad() {

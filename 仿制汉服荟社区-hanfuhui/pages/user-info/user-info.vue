@@ -12,7 +12,7 @@
 						<user-avatar :src="tempUserInfoData.user_info.user_avatar ? tempUserInfoData.user_info.user_avatar : '/static/default_avatar.png'"
 						 tag="" size="lg"></user-avatar>
 					</view>
-					<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r mr28r" v-if="!calIsLoginUser && tempUserInfoData.ShowIM"
+					<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r mr28r" v-if="!calIsLoginUser"
 					 @tap="fnUserChat">勾搭TA</view>
 					<view class="bgtheme f28r cwhite fcenter w128r br8r ptb8r" v-if="!calIsLoginUser" @tap="fnUserFollow">{{tempUserInfoData.user_info.is_follow?'已关注':'关注'}}</view>
 					<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" v-if="calIsLoginUser" @tap="fnUserEdit">编辑信息</view>
@@ -269,7 +269,9 @@
 			/// 用户跳转聊天页
 			fnUserChat() {
 				console.log('跳转用户聊天页', this.tempUserInfoData);
-				// 由于IM接入删减
+				uni.navigateTo({
+					url: `/pages/chat/private-chat?friend_id=${this.tempUserInfoData.user_id}`
+				});
 			},
 			/// 修改用户背景封面图
 			fnMainBgPic() {

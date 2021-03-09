@@ -23,9 +23,9 @@
 				"navigationBarTitleText": "聊天"
 			}
 		}, {
-			"path": "pages/chat/chat2",
+			"path": "pages/chat/private-chat",
 			"style": {
-				"navigationBarTitleText": "聊天"
+				"navigationBarTitleText": "私聊"
 			}
 		}, {
 			"path": "pages/dynamic/push-video",
