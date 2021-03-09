@@ -33,4 +33,9 @@ class UserInfo extends Model
     {
         return $this->find($user_id);
     }
+
+    public function getUserAvatarAttribute($value)
+    {
+        return get_image_url($value);
+    }
 }

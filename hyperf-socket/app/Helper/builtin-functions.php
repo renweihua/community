@@ -61,3 +61,10 @@ if ( !function_exists('redis') ) {
         return di()->get(RedisFactory::class)->get($name);
     }
 }
+
+/**
+ * 获取图片的真实地址
+ */
+function get_image_url($image){
+    return env('API_URL') . '/storage/' . $image;
+}

@@ -57,7 +57,14 @@ class ChatRecord extends MonthModel
             })->orWhere(function ($query) use ($user_id, $friend_id) {
                 $query->where(['user_id' => $friend_id, 'friend_id' => $user_id,]);
             });
-        })->with(['userInfo', 'friendInfo'])->orderBy('created_time', 'DESC')->orderBy('created_time', 'DESC')->paginate($limit);
+        })->with([
+            'userInfo' => function($query){
+                $query->select('user_id', 'nick_name', 'user_sex', 'user_avatar');
+            },
+            'friendInfo' => function($query){
+                $query->select('user_id', 'nick_name', 'user_sex', 'user_avatar');
+            },
+        ])->orderBy('created_time', 'DESC')->orderBy('created_time', 'DESC')->paginate($limit);
         return $this->setPaginate($list);
     }
 }
