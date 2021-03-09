@@ -31,7 +31,7 @@ class ChatService extends Service
         $user_id = UserService::getUserIdBySid($sid);
         $friend_id = intval($params['friend_id'] ?? 0);
         $page = intval($params['page'] ?? 1);
-        $month_table = empty($params['month_table']) ? date('Y_m') : $params['month_table'];
+        $month_table = empty($params['month_table']) ? date('Y-m') : $params['month_table'];
         // 获取历史消息记录，使用缓存数据
         // 获取消息记录
         $list = ChatRecord::getInstance()->getHistory($user_id, $friend_id, $month_table);
@@ -47,7 +47,7 @@ class ChatService extends Service
                     return self::getPrivateChatRecords($sid, $params);
                 }
             } else {
-                $list['month_table'] = date('Y_m', strtotime(current($data)['created_time']));
+                $list['month_table'] = date('Y-m', strtotime(current($data)['created_time']));
             }
         }
         // 按照创建时间来进行排序

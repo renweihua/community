@@ -243,6 +243,24 @@ class WebSocketController extends BaseNamespace
             $socket->emit('private-chat', '', SocketConst::STATUS_ERROR, SocketConst::getMessage(SocketConst::MESSAGE_SEND_ERROR));
         }
     }
+    
+    /**
+     * 获取私聊历史聊天记录
+     *
+     * @Event("get-private-chat-records")
+     */
+    public function onGetPrivateChatRecords(Socket $socket, $data)
+    {
+        $sid = $socket->getSid();
+        $data = $this->getArrayByData($data);
+        // 获取登录会员与指定会员的历史聊天记录
+        if ($lists = ChatService::getPrivateChatRecords($sid, $data)) {
+            $socket->emit('private-chat-records', $lists, SocketConst::STATUS_SUCCESS, SocketConst::getMessage(SocketConst::STATUS_SUCCESS));
+        } else {
+            // 获取失败
+            $socket->emit('private-chat-records', '', SocketConst::STATUS_ERROR, SocketConst::getMessage(SocketConst::STATUS_ERROR));
+        }
+    }
 
     /**
      * 房间内广播

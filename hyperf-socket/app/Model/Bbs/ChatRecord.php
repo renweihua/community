@@ -41,7 +41,7 @@ class ChatRecord extends MonthModel
      *
      * @return array|bool
      */
-    public function getHistory(int $user_id, int $friend_id, string $month_table = '', int $limit = 10)
+    public function getHistory(int $user_id, int $friend_id, string $month_table = '', int $limit = 20)
     {
         // 设置搜索的月份表
         $this->setMonthTable($month_table);
@@ -57,7 +57,7 @@ class ChatRecord extends MonthModel
             })->orWhere(function ($query) use ($user_id, $friend_id) {
                 $query->where(['user_id' => $friend_id, 'friend_id' => $user_id,]);
             });
-        })->with(['user.avatar', 'friend.avatar'])->orderBy('created_time', 'DESC')->orderBy('record_id', 'DESC')->paginate($limit);
+        })->with(['userInfo', 'friendInfo'])->orderBy('created_time', 'DESC')->orderBy('created_time', 'DESC')->paginate($limit);
         return $this->setPaginate($list);
     }
 }
