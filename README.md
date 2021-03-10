@@ -3,6 +3,10 @@
 #### 介绍
 汉服荟社区
 
+![首页](./demo/home.png)
+![聊天](./demo/chat.png)
+![签到](./demo/sign.png)
+
 #### 软件架构
 软件架构说明
 1. laravel APi

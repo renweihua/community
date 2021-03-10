@@ -135,7 +135,8 @@ export default {
 		// 如果存在token，那么就获取登录会员信息
 		let token = uni.getStorageSync('TOKEN');
 		if(token){
-			if(!this.$store.getters['user/getLoginUserInfoData']){
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			if(!login_user.user_info){
 				getLoginUserInfo().then(res => {
 					// 保存登录用户信息
 					this.$store.commit('user/setLoginUserInfoData', res.data);

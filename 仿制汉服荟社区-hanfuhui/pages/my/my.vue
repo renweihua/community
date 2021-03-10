@@ -137,14 +137,12 @@ export default {
 		},
 		// 用户信息
 		userInfoData() {
-			let user_info = this.$store.getters['user/getLoginUserInfoData'];
-			if (!user_info || !user_info.user_id) {
+			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			if(!login_user.user_info){
 				this.fnRefreshUserInfo();
-				user_info = this.$store.getters['user/getLoginUserInfoData'];
+				login_user = this.$store.getters['user/getLoginUserInfoData'];
 			}
-			console.log('--- userInfoData ---')
-			console.log(user_info);
-			return user_info;
+			return login_user;
 		}
 	},
 	methods: {
