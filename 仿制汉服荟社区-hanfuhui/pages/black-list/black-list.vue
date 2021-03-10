@@ -22,7 +22,7 @@
                   <text class="f28r fbold mr18r">{{user.nick_name}}</text>
                   <i-icon :type="user.Gender == '男' ?'nan':'nv' " size="28" :color="user.Gender == '男' ?'#479bd4':'#FF6699'"></i-icon>
                 </view>
-                <view class="f24r cgray ellipsis">{{calAddress(user.CityNames)}}</view>
+                <view class="f24r cgray ellipsis" v-if="user.city_info">{{calAddress(user.city_info)}}</view>
               </view>
               <view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnUserBlack(user.ID)">洗白</view>
             </view>

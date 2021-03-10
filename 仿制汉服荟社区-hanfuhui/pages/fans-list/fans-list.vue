@@ -14,7 +14,7 @@
 									<i-icon v-if="[0, 1].indexOf(item.user_info.user_sex) > -1" :type="item.user_info.user_sex_text == '男' ? 'nan':'nv' "
 									 size="28" :color="item.user_info.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
 								</view>
-								<view class="f24r cgray ellipsis">{{calAddress(item.user_info.CityNames)}}</view>
+								<view class="f24r cgray ellipsis" v-if="item.user_info.city_info">{{calAddress(item.user_info.city_info)}}</view>
 							</view>
 							<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnUserFollow(item.user_info)">{{ item.cross_correlation?'已关注':'关注'}}</view>
 						</view>
@@ -84,7 +84,7 @@
 			},
 			/// 地址逗号换空格
 			calAddress(addr) {
-				return typeof addr == 'string' ? addr.split(',').join(' ') : '     '
+				return typeof addr == 'string' ? addr.split(',').join(' ') : ''
 			},
 			/// 跳转用户信息页
 			fnUserInfo(user_id) {

@@ -84,17 +84,14 @@ export async function getUserInfo(user_id) {
 }
 
 /**
- * 获取用户发布信息列表
- * @param {Object} params 参数 {userid,objecttype,page:1,limit:20}
- * objecttype 全部可不传或传空
+ * 获取指定会员的动态列表
  */
 export async function getUserPublishList(params = {
-	userid: 26081,
-	objecttype: '',
+	user_id: 26081,
 	page: 1,
 	limit: 20
 }) {
-	return await request('/trend/GetTrendListForUserID', 'get', params)
+	return await request('/user/dynamics', 'get', params)
 }
 
 /**

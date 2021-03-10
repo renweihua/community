@@ -27,7 +27,7 @@
 									:color="calUser.user_sex_text == '男' ? '#479bd4' : '#FF6699'"
 								></i-icon>
 							</view>
-							<view class="f24r cgray">{{ calAddress }}</view>
+							<view class="f24r cgray" v-if="calUser.city_info">{{ calAddress }}</view>
 						</view>
 					</view>
 					<!-- 如果登录会员就是发布者，那么不展示 -->

@@ -8,7 +8,7 @@
         <i-icon type="shijian" size="32" color="#8F8F94"></i-icon>
         <text class="f28r cgray ml8r">{{calDatetime}}</text>
       </view>
-      <view>
+      <view v-if="infoData.city_info">
         <i-icon type="weizhi" size="32" color="#8F8F94"></i-icon>
         <text class="f28r cgray ml8r">{{calAddress}}</text>
       </view>
