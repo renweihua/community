@@ -125,14 +125,14 @@ export default {
 			});
 			this.user_id = parseInt(option.user_id);
 			// 初始获取用户信息
-			getUserInfo(this.user_id).then(userRes => {
-				this.$store.commit('user/setTempUserInfoData', userRes.data);
+			getUserInfo(this.user_id).then(res => {
+				this.$store.commit('user/setTempUserInfoData', res.data);
 				if (this.user_id == this.$store.getters['user/getLoginUserInfoData'].user_id) {
-					this.$store.commit('user/setLoginUserInfoData', userRes.data);
+					this.$store.commit('user/setLoginUserInfoData', res.data);
 				}
 				// 导航标题
 				uni.setNavigationBarTitle({
-					title: userRes.data.user_info.nick_name
+					title: res.data.user_info.nick_name
 				});
 			});
 			// 等待一秒页面渲染,$nextTick使用不能准确

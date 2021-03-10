@@ -40,6 +40,10 @@ import Release from '@/pages/release/release';
 // 启动封面组件
 import StartCover from '@/pages/start-cover/start-cover';
 
+
+import { getLoginUserInfo } from '@/api/UserServer.js';
+import { getMessageNoReadCount } from '@/api/MessageServer.js';
+
 export default {
 	components: {
 		BottomNav,
@@ -111,6 +115,7 @@ export default {
 	},
 	// 初始跳转
 	onLoad(option) {
+		// console.log('on-load')
 		// 带参数时改变选中项关闭启动封面
 		if (option && option.current) {
 			this.current = parseInt(option.current);
@@ -124,7 +129,35 @@ export default {
 			this.status.start = false;
 		}, 5000);
 	},
-	onShow() {},
+	onShow() {
+	},
+	onReady() {
+		// 如果存在token，那么就获取登录会员信息
+		let token = uni.getStorageSync('TOKEN');
+		if(token){
+			if(!this.$store.getters['user/getLoginUserInfoData']){
+				getLoginUserInfo().then(res => {
+					// 保存登录用户信息
+					this.$store.commit('user/setLoginUserInfoData', res.data);
+					
+					// 获取未读消息数
+					return getMessageNoReadCount();
+				}).then(result => {
+					// 保存未读消息数
+					this.$store.commit('setNewsCountData', result.data);
+				}).catch(err => {
+					console.log(err);
+				})
+			}else{
+				getMessageNoReadCount().then(result => {
+					// 保存未读消息数
+					this.$store.commit('setNewsCountData', result.data);
+				}).catch(err => {
+					console.log(err);
+				})
+			}
+		}
+	},
 	computed: {
 		// 消息气泡
 		bubble() {
