@@ -220,8 +220,7 @@
 					this.tabbarTop = data.top
 				}).exec();
 			},
-
-			/// 顶部导航选项点击
+			// 顶部导航选项点击
 			fnBarClick(current) {
 				// 是否当前项点击
 				if (this.current == current) {

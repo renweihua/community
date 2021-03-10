@@ -1,21 +1,42 @@
 <template>
-	<view>
+	<view class="page-session">
 		<view class="tips color_fff size_12 align_c" :class="{ show: ajax.loading }" @tap="getHistoryMsg">{{ ajax.loadText }}</view>
 		<view class="box-1" id="list-box">
-			<view class="talk-list">
-				<view v-for="(item, index) in messages_list" :key="index" :id="`msg-${item.record_id}`">
-					<view v-if="item.user_info.user_id == login_user.user_id" class="item flex_col" :class="'pull'">
-						<image :src="item.user_info ? item.user_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
-						<view class="content">{{ item.chat_content }}</view>
-					</view>
-					<view v-else class="item flex_col" :class="'push'">
-						<image :src="item.friend_info ? item.friend_info.user_avatar : ''" mode="aspectFill" class="pic"></image>
-						<view class="content">{{ item.chat_content }}</view>
-					</view>
+			<view class="talk-list chat-message">
+				<view
+					v-for="(item, index) in messages_list"
+					:key="index"
+					:id="`msg-${item.record_id}`"
+					class="item chat-message-item"
+					:class="item.user_id == login_user.user_id ? 'push is-right' : 'pull is-left'"
+				>
+					<!-- 如果上一条记录，在5分钟之内，那么此记录无需展示时间 -->
+					<uni-text class="date" v-if="(parseInt(messages_list[index-1] ? messages_list[index-1].created_time : 0) + parseInt(60 * 5)) < item.created_time">
+						<span>{{ getDateByTime(item.created_time) }}</span>
+					</uni-text>
+					<uni-view class="main">
+						<uni-view class="avatar">
+							<uni-view class="cl-avatar cl-avatar--circle" style="height: 38px; width: 38px;">
+								<uni-image class="cl-avatar__target">
+									<div
+										style="background-position: 0% 0%; background-size: 100% 100%; background-repeat: no-repeat;"
+										:style="{ backgroundImage: 'url(' + (item.user_info ? item.user_info.user_avatar : '') + ')' }"
+									></div>
+									<img :src="item.user_info ? item.user_info.user_avatar : ''" />
+								</uni-image>
+							</uni-view>
+						</uni-view>
+						<uni-view class="det">
+							<uni-text class="name">
+								<span>{{ item.user_info.nick_name }}</span>
+							</uni-text>
+							<uni-view class="content is-text">{{ item.chat_content }}</uni-view>
+						</uni-view>
+					</uni-view>
 				</view>
 			</view>
 		</view>
-		<view class="box-2">
+		<view class="box-2" v-if="friend_id">
 			<view class="flex_col">
 				<view class="flex_grow">
 					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容" placeholder-style="color:#DDD;" :cursor-spacing="6" />
@@ -27,9 +48,8 @@
 </template>
 
 <script>
-	import {
-		getUserInfo,
-	} from "@/api/UserServer.js"
+import { getUserInfo } from '@/api/UserServer.js';
+import { fnFormatDate } from '@/utils/CommonUtil.js';
 export default {
 	data() {
 		return {
@@ -45,6 +65,10 @@ export default {
 
 			// 登录会员
 			login_user: {},
+			// 指定会员
+			friend_id: 0,
+			// 指定会员的信息
+			friend_info: {},
 			// 消息记录
 			messages_list: [],
 			// 发送的文本
@@ -71,11 +95,10 @@ export default {
 	},
 	onLoad(options) {
 		console.log('---onLoad---');
-		console.log(options);
 		// 验证是否已登录
-		
+
 		// 是否设置了聊天会员Id
-		if(!options.friend_id){
+		if (!options.friend_id) {
 			uni.showToast({
 				title: '请指定聊天会员',
 				icon: 'none'
@@ -95,7 +118,7 @@ export default {
 		console.log(this.login_user);
 		// 聊天好友的Id
 		this.friend_id = options.friend_id;
-		
+
 		// 获取指定会员的基本信息
 		this.getUserInfoByAsync(this.friend_id);
 	},
@@ -106,12 +129,10 @@ export default {
 		const icon = document.getElementsByClassName('uni-page-head-btn')[0];
 		icon.style.display = 'none';
 		// #endif
-		
-		
-		
+
 		//  开始监听 Socket
 		this.monitorSocket();
-		
+
 		//录音开始事件
 		this.Recorder.onStart(e => {
 			this.beginVoice();
@@ -121,33 +142,39 @@ export default {
 			clearInterval(this.voiceInterval);
 			this.handleRecorder(res);
 		});
-		
+
 		//音频停止事件
 		this.Audio.onStop(e => {
 			this.closeAnmition();
 		});
-		
+
 		//音频播放结束事件
 		this.Audio.onEnded(e => {
 			this.closeAnmition();
 		});
 	},
 	methods: {
+		// 时间戳格式化
+		getDateByTime(created_time) {
+			return fnFormatDate(created_time);
+		},
 		// 获取好友信息
 		async getUserInfoByAsync(user_id) {
 			let friend = new Promise((resolve, reject) => {
-				getUserInfo(user_id).then(friend => {
-					this.friend_info = friend.data.user_info;
-		
-					// 导航栏设置为好友的昵称
-					uni.setNavigationBarTitle({
-						title: this.friend_info.nick_name
-					});
+				getUserInfo(user_id)
+					.then(friend => {
+						this.friend_info = friend.data.user_info;
 
-					resolve(friend);
-				}).catch(err => {
-					console.log(err);
-				});
+						// 导航栏设置为好友的昵称
+						uni.setNavigationBarTitle({
+							title: this.friend_info.nick_name
+						});
+
+						resolve(friend);
+					})
+					.catch(err => {
+						console.log(err);
+					});
 			});
 		},
 		//拼接消息 处理滚动
@@ -158,12 +185,11 @@ export default {
 			}
 			this.ajax.loading = false;
 			const data = await this.getPrivateChatRecords();
-			console.log(data);
 			this.ajax.loading = true;
 		},
 		// 发送信息
 		sendMsg(data) {
-			console.log(data);
+			// console.log(data);
 			const params = {
 				content: this.content,
 				friend_id: this.friend_id,
@@ -242,6 +268,7 @@ export default {
 
 			// 监听：私聊发送事件，服务端返回数据
 			this.socket.on('private-chat', (data, status, msg) => {
+				console.log('---获取私聊消息推送事件---');
 				console.log(data);
 				console.log(status);
 				console.log(msg);
@@ -249,15 +276,18 @@ export default {
 				// demo  test
 				setTimeout(() => {
 					uni.hideLoading();
-
 					// 数据追加到当前消息列表
 					if (status == 1) {
 						data.anmitionPlay = false; //标识音频是否在播放
 						this.messages_list.push(data);
 					} else {
 						// 提醒发送者，消息发送失败
+						uni.showToast({
+							title: msg,
+							icon: 'none'
+						});
+						return;
 					}
-
 					this.$nextTick(() => {
 						// 清空内容框中的内容
 						this.content = '';
@@ -267,13 +297,11 @@ export default {
 						});
 					});
 				}, 1500);
-
-				console.log(this.messages_list);
 			});
 
 			// 监听：获取私聊历史聊天记录
 			this.socket.on('private-chat-records', (lists, status, msg) => {
-				console.log('---获取私聊历史聊天记录---')
+				console.log('---获取私聊历史聊天记录---');
 				console.log(lists);
 				console.log(status);
 				console.log(msg);
@@ -285,21 +313,20 @@ export default {
 
 				if (this.ajax.page > 1) {
 					// 非第一页，则取历史消息数据的第一条信息元素
-					if(lists.data.length > 0) selector = `#msg-${this.messages_list[0].record_id}`;
+					if (lists.data.length > 0) selector = `#msg-${this.messages_list[0].record_id}`;
 				} else {
 					// 第一页，则取当前消息数据的最后一条信息元素
-					console.log(lists.data.length);
-					if(lists.data.length > 0) selector = `#msg-${lists.data[lists.data.length - 1].record_id}`;
+					if (lists.data.length > 0) selector = `#msg-${lists.data[lists.data.length - 1].record_id}`;
 				}
 				// 将获取到的消息数据合并到消息数组中
 				this.messages_list = [...lists.data, ...this.messages_list];
 				// 数据挂载后执行，不懂的请自行阅读 Vue.js 文档对 Vue.nextTick 函数说明。
 				this.$nextTick(() => {
 					// 设置当前滚动的位置
-					if(selector) this.setPageScrollTo(selector);
+					if (selector) this.setPageScrollTo(selector);
 
 					this.hideLoadTips(true);
-					
+
 					// 设置下一次请求页码
 					this.ajax.page = parseInt(lists.current_page) + parseInt(1);
 					// 设置月份
@@ -315,13 +342,10 @@ export default {
 						}, 200);
 					}
 				});
-
-				console.log(this.messages_list);
 			});
 		},
 		// 获取历史聊天记录
 		getPrivateChatRecords() {
-			console.log(this.ajax.flag);
 			if (!this.ajax.flag) {
 				return; //
 			}
@@ -349,13 +373,11 @@ export default {
 		},
 		// 设置页面滚动位置
 		setPageScrollTo(selector) {
-			console.log('---setPageScrollTo---');
 			let view = uni
 				.createSelectorQuery()
 				.in(this)
 				.select(selector);
 			view.boundingClientRect(res => {
-				console.log(res);
 				uni.pageScrollTo({
 					scrollTop: res.top - 30, // -30 为多显示出大半个消息的高度，示意上面还有信息。
 					duration: 0
@@ -487,6 +509,7 @@ page {
 
 		/* 收到的消息 */
 		&.pull {
+			clear: both;
 			.content {
 				margin-left: 32rpx;
 				background-color: #fff;
@@ -510,6 +533,7 @@ page {
 		&.push {
 			/* 主轴为水平方向，起点在右端。使不修改DOM结构，也能改变元素排列顺序 */
 			flex-direction: row-reverse;
+			clear: both;
 
 			.content {
 				margin-right: 32rpx;
@@ -531,4 +555,189 @@ page {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 聊天样式
+ *
+ * 参考地址：http://uni-chat.cool-admin.com/#/pages/chat/session
+ */
+@import 'index.c4fe38c7.css';
+
+.page-session {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-sizing: border-box;
+    background-color: #fff;
+}
+uni-view {
+    display: block;
+}
+.chat-message-item{
+    font-size: 12px;
+    padding: 9px;
+}
+.chat-message-item .date {
+    display: block;
+    text-align: center;
+    margin: 9px 0;
+    font-size: 11px;
+}
+.chat-message-item .main {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.chat-message-item .main .avatar {
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    height: 38px;
+}
+.chat-message-item.is-left .det {
+    margin-left: 9px;
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+}
+.chat-message-item .main .det {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    max-width: 60%;
+}
+.cl-avatar--circle {
+    border-radius: 100%;
+}
+.cl-avatar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    background-color: #c0c4cc;
+    font-size: 13px;
+    color: #fff;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.cl-avatar__target {
+    height: 100%;
+    width: 100%;
+}
+uni-image {
+    width: 320px;
+    height: 240px;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+}
+uni-image>div, uni-image>img {
+    width: 100%;
+    height: 100%;
+}
+uni-image>img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.chat-message-item .main .det .name {
+    margin-bottom: 4px;
+}
+.chat-message-item.is-left .det .content.is-text, .chat-message-item.is-left .det .content.is-voice {
+    border-top-left-radius: 0;
+    background-color: #f6f7f9;
+}
+.chat-message-item .main .det .content.is-text, .chat-message-item .main .det .content.is-voice {
+    padding: 9px;
+    line-height: 19px;
+    letter-spacing: 1px;
+}
+.chat-message-item .main .det .content {
+    display: inline-block;
+    border-radius: 7px;
+    box-sizing: border-box;
+}
+
+.chat-message-item.is-right .det {
+    margin-right: 9px;
+    -webkit-box-align: end;
+    -webkit-align-items: flex-end;
+    align-items: flex-end;
+}
+.chat-message-item .main .det .content.is-image uni-image {
+    max-height: 144px;
+    max-width: 144px;
+    border-radius: 7px;
+}
+uni-image {
+    width: 320px;
+    height: 240px;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+}
+.chat-message-item.is-right .det .content.is-text, .chat-message-item.is-right .det .content.is-voice {
+    border-top-right-radius: 0;
+    background-color: #ffc100;
+}
+.chat-message-item .main .det .content.is-text, .chat-message-item .main .det .content.is-voice {
+    padding: 9px;
+    line-height: 19px;
+    letter-spacing: 1px;
+}
+.chat-message-item .main .det .content {
+    display: inline-block;
+    border-radius: 7px;
+    box-sizing: border-box;
+}
+.chat-message-item.is-right .main {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -webkit-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+}
+
 </style>

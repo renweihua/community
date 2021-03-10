@@ -53,14 +53,14 @@ export default {
 		}
 	},
 	computed: {
-		/// 内容截取字符长度80
+		// 内容截取字符长度80
 		calStringCut() {
 			let content = this.infoData.dynamic_content + ''; //转成字符串
 			if (content == null || content == '' || content == 'undefined' || content == 'null') return;
 			let { cutstring, cutflag } = fnCutString(content, 80);
 			return cutflag ? cutstring + '...' : cutstring;
 		},
-		/// 时间格式
+		// 时间格式
 		calDatetime() {
 			return fnFormatDate(this.infoData.created_time);
 		}
