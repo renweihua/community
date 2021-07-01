@@ -17,8 +17,10 @@ class VersionService extends BaseService
             $request = request();
             // 按照名称进行搜索
             if (!empty($search = $request->input('search', ''))){
-                $query->where('version_name', 'LIKE', '%' . trim($search) . '%')
-                    ->whereOr('version_number', 'LIKE', '%' . trim($search) . '%');
+                $query->where(function($query)use ($search){
+                    $query->where('version_name', 'LIKE', '%' . trim($search) . '%')
+                          ->orWhere('version_number', 'LIKE', '%' . trim($search) . '%');
+                });
             }
         };
         $params['order'] = 'version_sort';

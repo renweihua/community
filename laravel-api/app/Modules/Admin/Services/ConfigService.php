@@ -17,8 +17,10 @@ class ConfigService extends BaseService
             $request = request();
             // 按照名称进行搜索
             if (!empty($search = $request->input('search', ''))){
-                $query->where('config_title', 'LIKE', '%' . trim($search) . '%')
-                    ->whereOr('config_name', 'LIKE', '%' . trim($search) . '%');
+                $query->where(function($query)use ($search){
+                    $query->where('config_title', 'LIKE', '%' . trim($search) . '%')
+                          ->orWhere('config_name', 'LIKE', '%' . trim($search) . '%');
+                });
             }
             // 状态
             $is_check = $request->input('is_check', -1);
