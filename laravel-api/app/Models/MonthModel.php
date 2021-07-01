@@ -39,11 +39,10 @@ class MonthModel extends Model
         // 替换为日期格式，否则将无法转化为时间戳（有效的日期格式 - 拼接才可以）
         $month = str_replace('_', '-', $month);
 
-        // 当表名大于最小表名时，依旧设置表名。
+        // 当表名大于最小表名时，设置表名。
         // if ( $month >= str_replace('_', '-', self::MIN_TABLE) ) {}
         $this->month = date(self::MONTH_FORMAT, strtotime($month));
         $this->table = $this->getOldTableName() . '_' . $this->month;
-
         return $this;
     }
 

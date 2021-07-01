@@ -92,11 +92,12 @@ class SystemInfo
             $rs = fread($fp, 1024);
             $sys_info = explode("\n", $rs);
             $mem_info = explode(",", $sys_info[2]); //内存占有量 数组
-            $this->memory['total'] = trim(trim($mem_info[0], 'KiB Mem : '), ' total');
-            $this->memory['used'] = trim(trim($mem_info[2], 'used'));
+
+            $this->memory['total'] = round(trim(trim($mem_info[0], 'KiB Mem : '), ' total'), 0);
+            $this->memory['used'] = round(trim(trim($mem_info[2], 'used')), 0);
             $this->memory['buffer_cache'] = trim(trim($mem_info[3], 'buff/cache'));
-            $this->memory['free'] = trim(trim($mem_info[1], 'free'));
-            $this->memory['usage_ratio'] = round($this->memory['used'] / intval($this->memory['total']), 4) * 100; //百分比
+            $this->memory['free'] = round(trim(trim($mem_info[1], 'free')), 0);
+            $this->memory['usage_ratio'] = round($this->memory['used'] / $this->memory['total'], 4) * 100; //百分比
         }
         return $this->memory;
     }
