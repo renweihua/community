@@ -10,31 +10,16 @@
                 <el-input v-model.trim="form.link_name" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="站点图标" prop="link_cover">
-                <pan-thumb :image="image_url"/>
+                <pan-thumb :image="form.link_cover" />
 
                 <el-button
-                        type="primary"
-                        icon="el-icon-upload"
-                        style="position: absolute;bottom: 15px;margin-left: 40px;"
-                        @click="show=true"
+                    type="primary"
+                    icon="el-icon-upload"
+                    style="position: absolute;bottom: 15px;margin-left: 40px;"
+                    @click="openSelectFiles"
                 >
-                    站点图标
+                    选择图标
                 </el-button>
-
-                <my-upload
-                        v-model="show"
-                        img-format="png"
-                        :size="size"
-                        :width="50"
-                        :height="50"
-                        lang-type="zh"
-                        :no-rotate="false"
-                        field="file"
-                        :url="upload_url"
-                        @crop-success="cropSuccess"
-                        @crop-upload-success="cropUploadSuccess"
-                        @crop-upload-fail="cropUploadFail"
-                />
             </el-form-item>
             <el-form-item label="站点网址" prop="link_url">
                 <el-input v-model.trim="form.link_url" autocomplete="off"/>
@@ -53,6 +38,7 @@
             <el-button @click="close">取 消</el-button>
             <el-button type="primary" @click="save">确 定</el-button>
         </div>
+        <file-select v-if="show_files" ref="file" :batch_select="false" @handleSubmit="selectImageSubmit" />
     </el-dialog>
 </template>
 
@@ -61,8 +47,8 @@
     import {getUploadUrl} from '@/api/common'
     import {isUrl} from '@/utils/validate'
 
-    import myUpload from '@/components/Uploads/image/index'
     import PanThumb from '@/components/PanThumb'
+    import FileSelect from '@/components/FilesSelect/index'
 
     // 定义一个全局的变量，谁用谁知道
     var validUrl = (rule, value, callback) => {
@@ -76,8 +62,8 @@
     export default {
         name: '',
         components: {
-            'my-upload': myUpload,
-            PanThumb
+            PanThumb,
+            FileSelect
         },
         data() {
             return {
@@ -85,7 +71,7 @@
                     link_name: '',
                     link_cover: '',
                     link_url: '',
-                    link_sort: 0,
+                    link_sort: 100,
                     is_check: 0
                 },
                 rules: {
@@ -107,34 +93,24 @@
                 dialogFormVisible: false,
 
                 // 图片上传
-                show: false,
-                size: 2.1,
-
-                // 图片上传
                 upload_url: '',
-                image_url: ''
+                show_files: false,
             }
         },
         created() {
-            this.upload_url = getUploadUrl()
+            this.upload_url = getUploadUrl();
         },
         methods: {
-            toggleShow() {
-                this.show = !this.show
+            // 打开文件选择器
+            openSelectFiles(){
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
             },
-            cropSuccess(imgDataUrl, field) {
-                // console.log('-------- crop success --------', imgDataUrl, field)
-            },
-            // 上传成功回调
-            cropUploadSuccess(result, field) {
-                this.image_url = result.path_url;
-                this.form.link_cover = result.data;
-            },
-            // 上传失败回调
-            cropUploadFail(status, field) {
-                // console.log('-------- upload fail --------');
-                console.log('上传失败状态' + status);
-                console.log('field: ' + field)
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e){
+                this.form.link_cover = e.file_url;
             },
             showEdit(row) {
                 const detail = Object.assign({}, row);
@@ -143,10 +119,8 @@
                 } else {
                     this.title = '编辑';
                     this.form = Object.assign(this.form, detail);
-                    // 设置展示的图标
-                    this.image_url = this.form.link_cover;
                 }
-                this.dialogFormVisible = true
+                this.dialogFormVisible = true;
             },
             close() {
                 this.$refs['form'].resetFields();
@@ -166,7 +140,7 @@
                     } else {
                         return false;
                     }
-                })
+                });
             }
         }
     }

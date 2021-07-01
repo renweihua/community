@@ -32,7 +32,7 @@
                 <el-input v-model="form.vue_redirect" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="图标" prop="vue_icon">
-                <el-input v-model="form.vue_icon" autocomplete="off"></el-input>
+                <e-icon-picker v-model="form.vue_icon" autocomplete="off" />
             </el-form-item>
             <el-form-item label="Vue文件路径" prop="vue_component">
                 <el-input v-model="form.vue_component" autocomplete="off"></el-input>

@@ -47,8 +47,24 @@ Route::prefix(cnpscy_config('admin_prefix'))
         Route::get('get_month_lists', 'IndexController@getMonthList');
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
-        // 多图批量上传
+	// 多图批量上传
         Route::post('upload_files', 'UploadController@files');
+        // 获取文件列表
+        Route::get('getFileList', 'FileController@index');
+        // 删除指定文件
+        Route::delete('files/delete', 'FileController@delete');
+        // 移动文件到指定分组
+        Route::put('files/removeFileGroup', 'FileController@removeFileGroup');
+
+
+        // 获取文件分组列表
+        Route::get('getGroupList', 'FileGroupController@index');
+        Route::prefix('fileGroup')->group(function() {
+            Route::post('/create', 'FileGroupController@create');
+            Route::put('/update', 'FileGroupController@update');
+            Route::delete('/delete', 'FileGroupController@delete');
+        });
+
 
         // 权限中间件
         Route::middleware([CheckRabc::class])->group(function () {

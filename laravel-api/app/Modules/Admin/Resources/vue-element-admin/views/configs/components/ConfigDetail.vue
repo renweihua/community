@@ -59,28 +59,13 @@
                     <pan-thumb :image="config_value_image" @click="show=true"/>
 
                     <el-button
-                        id="img-btn"
                         type="primary"
                         icon="el-icon-upload"
-                        @click="show=true"
+                        style="position: absolute;bottom: 15px;margin-left: 40px;"
+                        @click="openSelectFiles"
                     >
-                        图片
+                        选择图标
                     </el-button>
-
-                    <my-upload
-                        v-model="show"
-                        img-format="png"
-                        :size="size"
-                        :width="50"
-                        :height="50"
-                        lang-type="zh"
-                        :no-rotate="false"
-                        field="file"
-                        :url="upload_url"
-                        @crop-success="cropSuccess"
-                        @crop-upload-success="cropUploadSuccess"
-                        @crop-upload-fail="cropUploadFail"
-                    />
                 </el-form-item>
 
                 <el-form-item label="配置值（富文本）:" v-else-if="postForm.config_type == 6">
@@ -120,17 +105,18 @@
                 </el-form-item>
             </div>
         </el-form>
+        <file-select v-if="show_files" ref="file" :batch_select="false" @handleSubmit="selectImageSubmit" />
     </div>
 </template>
 
 <script>
     import MarkdownEditor from '@/components/MarkdownEditor'
-    import myUpload from '@/components/Uploads/image/index';
     import PanThumb from '@/components/PanThumb';
     import MDinput from '@/components/MDinput'
     import Sticky from '@/components/Sticky' // 粘性header组件
     import {getUploadUrl} from '@/api/common';
     import {detail, create, update, getConfigGroupType} from '@/api/configs';
+    import FileSelect from '@/components/FilesSelect/index'
 
     const defaultForm = {
         config_id: 0,
@@ -147,10 +133,11 @@
 
     export default {
         name: 'ConfigDetail',
-        components: {MDinput, Sticky,
-            'my-upload': myUpload,
+        components: {
+            MDinput, Sticky,
             PanThumb,
-            MarkdownEditor
+            MarkdownEditor,
+            FileSelect
         },
         props: {
             isEdit: {
@@ -181,12 +168,10 @@
                     config_value: [{validator: validateRequire}],
                 },
                 tempRoute: {},
-                // 图片上传
-                show: false,
-                size: 2.1,
 
                 // 图片上传
                 upload_url: '',
+                show_files: false,
 
                 // 分组与类型
                 config_group_list: [],
@@ -220,6 +205,17 @@
             this.getConfigGroupType();
         },
         methods: {
+            // 打开文件选择器
+            openSelectFiles(){
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
+            },
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e){
+                this.config_value_image = e.file_url;
+            },
             // 获取 配置分组与类型
             async getConfigGroupType(){
                 const {data} = await getConfigGroupType();
@@ -292,18 +288,6 @@
                         return false;
                     }
                 })
-            },
-            cropSuccess(imgDataUrl, field) {
-                // console.log('-------- crop success --------', imgDataUrl, field);
-            },
-            // 上传成功回调
-            cropUploadSuccess(result, field) {
-                this.config_value_image = result.path_url;
-            },
-            // 上传失败回调
-            cropUploadFail(status, field) {
-                console.log('上传失败状态' + status);
-                console.log('field: ' + field);
             },
         }
     }

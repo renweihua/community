@@ -6,6 +6,8 @@ export default {
     friendlinks: '友情链接',
     number: '数',
     route: {
+        backupsManage: '备份管理',
+        databaseManage:'数据库管理',
         articleLabels: '文章标签',
         articleLabelDetail: '标签详情',
         systemSettings: 'システム設定',
@@ -143,6 +145,7 @@ export default {
         search: '検索',
         add: '追加',
         export: 'エクスポート',
+        backups: '备份',
         reviewer: 'レビュアー',
         id: '番号',
         date: '日時',

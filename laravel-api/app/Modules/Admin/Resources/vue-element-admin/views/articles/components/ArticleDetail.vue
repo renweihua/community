@@ -50,24 +50,28 @@
                 <el-form-item label="文章多图">
                     <el-upload
                         class="upload-demo"
-                        action="https://blog.cnpscy.com"
+                        action="false"
                         :multiple="true"
                         list-type="picture-card"
                         :auto-upload="false"
-                        :http-request="uploadFile"
-                        ref="upload"
                         :file-list="filesList"
                         drag
                         :on-preview="handlePictureCardPreview"
                         :on-remove="handleRemove"
                     >
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                        <!--
-                        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                        -->
                     </el-upload>
-                    <el-button class="margin-top-20" type="primary" @click="subPicForm"> 开始上传 </el-button>
+                    <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                    </el-dialog>
+
+                    <el-button
+                        class="margin-top-20"
+                        type="primary"
+                        icon="el-icon-upload"
+                        @click="openSelectFiles"
+                    >
+                        选择图标
+                    </el-button>
                 </el-form-item>
 
                 <el-form-item label-width="70px" label="关键字:">
@@ -148,6 +152,7 @@
     import {getArticleLabelSelect} from "@/api/article_labels";
     import {getMenusSelect} from "@/api/menus";
 
+    import FileSelect from '@/components/FilesSelect/index'
     const defaultForm = {
         article_id: 0,
         article_title: '', // 文章题目
@@ -173,7 +178,8 @@
             'my-upload': myUpload,
             batchUploads,
             PanThumb,
-            MarkdownEditor
+            MarkdownEditor,
+            FileSelect
         },
         props: {
             isEdit: {
@@ -235,16 +241,14 @@
                     label: 'menu_name'
                 },
 
-
-
-
-                // 多图上传
+                // 多图的数量
+                image_limit:3,
+                // 测试
+                filesList: [],
+                // 预览图片
                 dialogImageUrl: '',
                 dialogVisible: false,
-                submit_msg: '开始上传',
-                formData:'',
-                filesList:[],
-                multiple:true,
+                disabled: false
             }
         },
         computed: {
@@ -303,6 +307,49 @@
             this.getArticleLabelSelect();
         },
         methods: {
+            handleRemove(file) {
+                let that = this;
+                that.postForm.article_images = [];
+                that.filesList.forEach(function (val, index) {
+                    if (val.url == file.url){
+                        // 再次点击则移除选中
+                        that.filesList.splice(index, 1);
+                        throw new Error('移除完毕');
+                    }
+                });
+                that.filesList.forEach(function (val, index) {
+                    that.postForm.article_images.push(val.url);
+                });
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            // 打开文件选择器
+            openSelectFiles() {
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
+            },
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e) {
+                let val;
+                for (var i = 0; i < e.length; i++) {
+                    val = e[i];
+                    this.postForm.article_images.push(val.file_url);
+                    this.filesList.push({
+                        'name': val.file_name,
+                        'url': val.file_url,
+                    });
+                }
+
+                // 验证文件数量
+                if (this.postForm.article_images.length > this.image_limit){
+                    this.postForm.article_images = this.postForm.article_images.slice(this.postForm.article_images.length - this.image_limit);
+                    this.filesList = this.filesList.slice(this.filesList.length - this.image_limit);
+                }
+            },
             // 获取文章标签列表
             async getArticleLabelSelect(){
                 const res = await getArticleLabelSelect();
@@ -402,59 +449,6 @@
                         return false;
                     }
                 })
-            },
-
-
-
-            // 多图上传
-            uploadFile(file){
-                console.log('uploadFile');
-                this.formData.append('files[]', file.file);
-            },
-            // 预览指定图片
-            handlePictureCardPreview(file) {//预览图片时调用
-                console.log('handlePictureCardPreview');
-                this.dialogImageUrl = file.url;
-                this.dialogVisible = true;
-            },
-            // 移除指定图片
-            handleRemove(file, fileList) {
-                const that = this;
-                that.postForm.article_images = [];
-                fileList.forEach(function(e, key){
-                    if (file.url == e.url){
-                        fileList.splice(key,1);
-                    }else{
-                        that.postForm.article_images.push(e.url);
-                    }
-                })
-                that.fileList = fileList;
-            },
-            // 图片批量上传
-            subPicForm(){
-                this.submit_msg = '上传中……';
-                const that = this;
-                this.formData = new FormData();
-                this.$refs.upload.submit();
-                uploads(this.formData, this.url, this.headers).then(response => {
-                    const {data, msg, status} = response;
-                    switch (status) {
-                        case 1:
-                            that.postForm.article_images.push.apply(that.postForm.article_images, data);
-                            this.$message.success(msg);
-                            // that.$emit('upload-success', this.filesList);
-                            break;
-                        default:
-                            // that.$emit('upload-fail', status, msg, data);
-                            this.$message.error(msg);
-                            break;
-                    }
-                    console.log(response);
-                }).then(error => {
-                    console.log(error)
-                });
-
-                this.submit_msg = '开始上传';
             },
         }
     }

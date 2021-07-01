@@ -21,31 +21,16 @@
                 />
             </el-form-item>
             <el-form-item label="头像：" prop="admin_head">
-                <pan-thumb :image="image_url"/>
+                <pan-thumb :image="form.admin_head"/>
 
                 <el-button
-                    id="img-btn"
                     type="primary"
                     icon="el-icon-upload"
-                    @click="show=true"
+                    style="position: absolute;bottom: 15px;margin-left: 40px;"
+                    @click="openSelectFiles"
                 >
-                    头像
+                    选择图标
                 </el-button>
-
-                <my-upload
-                        v-model="show"
-                        img-format="png"
-                        :size="size"
-                        :width="50"
-                        :height="50"
-                        lang-type="zh"
-                        :no-rotate="false"
-                        field="file"
-                        :url="upload_url"
-                        @crop-success="cropSuccess"
-                        @crop-upload-success="cropUploadSuccess"
-                        @crop-upload-fail="cropUploadFail"
-                />
             </el-form-item>
             <el-form-item label="密码：">
                 <el-input v-model="form.password" placeholder="登录密码"/>
@@ -82,17 +67,17 @@
             <el-button type="danger" @click="close">取 消</el-button>
             <el-button type="primary" @click="save">确 定</el-button>
         </div>
+        <file-select v-if="show_files" ref="file" :batch_select="false" @handleSubmit="selectImageSubmit" />
     </el-dialog>
 </template>
 
 <script>
     import {create, update} from '@/api/admins';
-    import {getUploadUrl} from '@/api/common';
     import {validEmail} from '@/utils/validate';
     import {getRolesSelect} from '@/api/admin_roles';
 
-    import myUpload from '@/components/Uploads/image/index';
     import PanThumb from '@/components/PanThumb';
+    import FileSelect from '@/components/FilesSelect/index';
 
     // 定义一个全局的变量，谁用谁知道
     var _validEmail = (rule, value, callback) => {
@@ -106,8 +91,8 @@
     export default {
         name: '',
         components: {
-            'my-upload': myUpload,
-            PanThumb
+            PanThumb,
+            FileSelect
         },
         data() {
             return {
@@ -147,42 +132,33 @@
                 // 角色列表
                 roles: [],
 
-                // 图片上传
-                show: false,
-                size: 2.1,
-
-                // 图片上传
-                upload_url: '',
-                image_url: '',
+                // 是否展示图片选择器
+                show_files:false,
             }
         },
         created() {
-            this.upload_url = getUploadUrl();
             // 获取菜单列表
             this.getRolesSelect();
         },
         methods: {
+            // 打开文件选择器
+            openSelectFiles(){
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
+            },
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e){
+                this.form.admin_head = e.file_url;
+            },
             // 获取菜单列表
             async getRolesSelect() {
                 const res = await getRolesSelect();
                 this.roles = res.data;
             },
             toggleShow() {
-                this.show = !this.show
-            },
-            cropSuccess(imgDataUrl, field) {
-                // console.log('-------- crop success --------', imgDataUrl, field)
-            },
-            // 上传成功回调
-            cropUploadSuccess(result, field) {
-                this.image_url = result.path_url;
-                this.form.admin_head = result.data;
-            },
-            // 上传失败回调
-            cropUploadFail(status, field) {
-                // console.log('-------- upload fail --------');
-                console.log('上传失败状态' + status);
-                console.log('field: ' + field)
+                this.show = !this.show;
             },
             showEdit(row) {
                 const detail = Object.assign({}, row);
@@ -196,8 +172,6 @@
                             this.form.role_ids.push(detail.roles[key].role_id);
                         }
                     }
-                    // 设置展示的图标
-                    this.image_url = this.form.admin_head;
                 }
                 this.dialogFormVisible = true
             },

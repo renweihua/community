@@ -44,7 +44,11 @@ class QueryListener
              * sql语句的监听
              */
             $sql = str_replace("?", "'%s'", $event->sql);
-            $log = vsprintf($sql, $event->bindings);
+            if ($event->bindings){
+                $log = vsprintf($sql, $event->bindings);
+            }else{
+                $log = $sql;
+            }
 
             $this->log->addRecord(Logger::DEBUG, '[' . $event->time . '] | ' . $log . ' |');
         }
