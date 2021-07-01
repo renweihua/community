@@ -7,20 +7,20 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ChangePasswordEmail extends Mailable
+class Activation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $code;
+    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($code)
+    public function __construct(User $user)
     {
-        $this->code = $code;
+        $this->user = $user;
     }
 
     /**
@@ -30,6 +30,7 @@ class ChangePasswordEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('bbs::mails.change-password', ['code' => $this->code]);
+        return $this->subject('请激活您的账户')
+                    ->markdown('mails.activation');
     }
 }

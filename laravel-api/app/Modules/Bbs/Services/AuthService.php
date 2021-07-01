@@ -13,6 +13,7 @@ use App\Models\System\Notify;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Emails\RegisterCodeForEmail;
+use App\Modules\Bbs\Jobs\SendActiveEmail;
 use App\Modules\Bbs\Jobs\SendRegisterEmail;
 use App\Services\Service;
 use Illuminate\Support\Facades\Cache;
@@ -166,6 +167,12 @@ class AuthService extends Service
                     ->delay(now()->addMinutes(10)) // 延迟10分钟
                     ->onConnection('database') // job 存储的服务：当前存储mysql
                     ->onQueue('mail-queue'); // mail-queue 队列
+
+                // 注册成功：邮箱激活
+                SendActiveEmail::dispatch($user_data['user_email'])
+                     ->delay(now()->addMinutes(10)) // 延迟10分钟
+                     ->onConnection('database') // job 存储的服务：当前存储mysql
+                     ->onQueue('mail-queue'); // mail-queue 队列
             }
 
             $this->setError('注册成功，请完善个人资料！');

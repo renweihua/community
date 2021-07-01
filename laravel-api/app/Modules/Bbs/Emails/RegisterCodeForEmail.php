@@ -30,6 +30,6 @@ class RegisterCodeForEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('bbs::mail.register-code', ['code' => $this->code]);
+        return $this->view('bbs::mails.register-code', ['code' => $this->code]);
     }
 }
