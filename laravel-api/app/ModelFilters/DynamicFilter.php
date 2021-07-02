@@ -36,10 +36,18 @@ class DynamicFilter extends ModelFilter
         }
     }
 
+    // 名称筛选
+    public function name(string $dynamic_title = '')
+    {
+        if ( $dynamic_title ) {
+            $this->where('dynamic_title', 'LIKE', "%{$dynamic_title}%");
+        }
+    }
+
     // 会员筛选
     public function user(int $user_id = -1)
     {
-        if ($user_id){
+        if ( $user_id ) {
             $this->where('user_id', $user_id);
         }
     }
@@ -47,7 +55,7 @@ class DynamicFilter extends ModelFilter
     // 话题筛选
     public function topic(int $topic_id = -1)
     {
-        if ($topic_id){
+        if ( $topic_id ) {
             $this->where('topic_id', $topic_id);
         }
     }
@@ -55,7 +63,7 @@ class DynamicFilter extends ModelFilter
     // 类型筛选
     public function type(int $dynamic_type = -1)
     {
-        if ($dynamic_type){
+        if ( $dynamic_type ) {
             $this->where('dynamic_type', $dynamic_type);
         }
     }
