@@ -70,7 +70,7 @@ export default {
   methods: {
     loadThreads (page = 1) {
       this.$http
-        .get(`threads?tab=${this.currentThreadsTab}&page=${page}`)
+        .get(`discover?tab=${this.currentThreadsTab}&page=${page}`)
         .then(threads => (this.threads[this.currentThreadsTab] = threads))
     },
     handlePageChanged (page) {

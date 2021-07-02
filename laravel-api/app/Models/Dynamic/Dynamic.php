@@ -6,10 +6,13 @@ use App\Models\Model;
 use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
+use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Storage;
 
 class Dynamic extends Model
 {
+    use Filterable;
+
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
 
@@ -137,6 +140,12 @@ class Dynamic extends Model
     public function praises()
     {
         return $this->hasMany(DynamicPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    // 评论
+    public function comments()
+    {
+        return $this->hasMany(DynamicComment::class, $this->primaryKey, $this->primaryKey);
     }
 
     /**
