@@ -23,7 +23,7 @@
                 <li class="nav-item">
                   <a class="text-gray-50 btn btn-sm btn-link" href="#comments">
                     <comment-icon></comment-icon>
-                    {{ thread.comment_count }} 条评论
+                    {{ thread.cache_extends.comment_count }} 条评论
                   </a>
                 </li>
                 <li class="nav-item">
@@ -130,7 +130,7 @@
       </div>
       <div class="col-md-3 position-relative">
         <user-profile-card class="user-profile-card" :user="thread.user_info"></user-profile-card>
-        <user-list-card title="他们觉得很赞" :users="thread.likers" class="mt-2"/>
+        <user-list-card title="他们觉得很赞" :users="praise_users" class="mt-2"/>
         <hot-tags class="mt-2"></hot-tags>
       </div>
     </div>
@@ -201,7 +201,8 @@ export default {
   data () {
     return {
       thread: null,
-      showReportForm: false
+      showReportForm: false,
+      praise_users: [],
     }
   },
   computed: {
@@ -233,6 +234,17 @@ export default {
         })
         .then(() => {
           window.pageUsers = [this.thread.user]
+
+          
+          this.getPraiseUsers(this.thread.dynamic_id);
+        })
+    },
+    // 点赞的会员列表
+    getPraiseUsers(dynamic_id){
+      this.$http
+        .get(`dynamic/getPraises?dynamic_id=${this.$route.params.dynamic_id}`)
+        .then(({data}) => {
+          this.praise_users = data.data
         })
     },
     handleDelete (thread) {

@@ -12,7 +12,7 @@ class UserInfo extends Model
     // 追加属性
     protected $appends = ['user_sex_text'];
 
-    // 会员的基础扩展信息
+    // 会员的基础扩展字段
     const BASIC_EXTENDS_FIELDS = [
         'user_birth' => '', // 生日
         'location' => '', // 所在城市地区
@@ -30,7 +30,7 @@ class UserInfo extends Model
         $this->attributes['basic_extends'] = json_encode(array_merge(json_decode($this->attributes['basic_extends'] ?? '{}', true), $value));
     }
 
-    // 会员的认证扩展信息
+    // 会员的认证扩展字段
     const AUTH_EXTENDS_FIELDS = [
         'auth_status' => 0, // 实名认证状态：0：否，1：是
         'auth_mobile' => 0, // 手机号验证状态：0：否，1：是
@@ -47,7 +47,7 @@ class UserInfo extends Model
         $this->attributes['auth_extends'] = json_encode(array_merge(json_decode($this->attributes['auth_extends'] ?? '{}', true), $value));
     }
 
-    // 会员的签到扩展信息
+    // 会员的签到扩展字段
     const SIGN_EXTENDS_FIELDS = [
         'total_sign_days' => 0, // 总共签到天数
         'year_sign_days' => 0, // 今年总共签到天数
@@ -65,7 +65,7 @@ class UserInfo extends Model
         $this->attributes['sign_extends'] = json_encode(array_merge(json_decode($this->attributes['sign_extends'] ?? '{}', true), $value));
     }
 
-    // 会员的扩展信息
+    // 会员的扩展字段
     const OTHER_EXTENDS_FIELDS = [
         'company' => '',
         'home_url' => '',

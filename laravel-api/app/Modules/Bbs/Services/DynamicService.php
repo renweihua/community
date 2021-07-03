@@ -199,6 +199,8 @@ class DynamicService extends Service
         ])) {
             return false;
         }
+        // 浏览量递增
+        $dynamic->update(['cache_extends->reads_num' => $dynamic->cache_extends['reads_num'] + 1]);
         // 是否已赞
         $dynamic->is_praise = $login_user_id == 0 ? false : ($dynamic->isPraise ? true : false);
         // 是否已收藏
@@ -224,12 +226,20 @@ class DynamicService extends Service
         $lists = DynamicPraise::where('dynamic_id', $dynamic_id)
             ->select('relation_id', 'user_id', 'created_time')
             ->with([
-                'userInfo' => function($query) {
-                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
+                'user' => function($query) {
+                    $query->with([
+                        'userInfo' => function($query) {
+                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'user_uuid');
+                        },
+                    ]);
                 },
             ])->orderBy('created_time', 'ASC')->paginate(10);
 
-        return $this->getPaginateFormat($lists);
+        $result = $this->getPaginateFormat($lists);
+        foreach ($result['data'] as &$item){
+            $item = $item['user'];
+        }
+        return $result;
     }
 
     /**

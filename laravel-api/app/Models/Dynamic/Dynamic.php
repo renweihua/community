@@ -33,6 +33,35 @@ class Dynamic extends Model
         return DynamicFactory::new();
     }
 
+    // 统计扩展字段
+    const CACHE_EXTENDS_FIELDS = [
+        'reads_num' => 0, // 浏览量
+        'comments_count' => 0, // 评论数量
+        'praises_count' => 0, // 点赞数量
+        'collections_count' => 0, // 收藏数量
+    ];
+
+    public function getCacheExtendsAttribute()
+    {
+        return \array_merge(self::CACHE_EXTENDS_FIELDS, json_decode($this->attributes['cache_extends'] ?? '{}', true));
+    }
+
+    public function setCacheExtendsAttribute($value)
+    {
+        $this->attributes['cache_extends'] = json_encode(array_merge(json_decode($this->attributes['cache_extends'] ?? '{}', true), $value));
+    }
+
+    // 刷新统计数据
+    public function refreshCache()
+    {
+        $this->update(['cache_extends' => \array_merge(self::CACHE_EXTENDS_FIELDS, [
+            'reads_num' => (int)$this->cache['reads_num'],
+            'comments_count' => $this->comments()->count(),
+            'praises_count' => $this->praises()->count(),
+            'collections_count' => $this->collection()->count(),
+        ])]);
+    }
+
     /**
      * 获取多图，自动转成数组
      *

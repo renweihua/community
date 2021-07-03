@@ -26,7 +26,7 @@ export default {
   },
   data () {
     return {
-      likers: this.item.cache.likes_count,
+      likers: this.item.cache_extends.praises_count,
       animationTimeline: null
     }
   },
@@ -47,8 +47,8 @@ export default {
           this.item.has_liked = !this.item.has_liked
 
           this.item.has_liked
-            ? this.$parent.thread.cache.likes_count++
-            : this.$parent.thread.cache.likes_count--
+            ? this.$parent.thread.cache_extends.praises_count++
+            : this.$parent.thread.cache_extends.praises_count--
         })
     },
     repeatClapping () {
@@ -61,7 +61,7 @@ export default {
     updateNumberOfClaps () {
       const clapCount = document.getElementById('clap--count')
       const clapTotalCount = document.getElementById('clap--count-total')
-      this.likers = this.$parent.thread.cache.likes_count
+      this.likers = this.$parent.thread.cache_extends.praises_count
 
       if (this.item.has_liked) {
         clapCount.innerHTML = '-1'
