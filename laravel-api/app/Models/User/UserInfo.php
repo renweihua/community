@@ -12,6 +12,31 @@ class UserInfo extends Model
     // 追加属性
     protected $appends = ['user_sex_text'];
 
+    // 会员的扩展信息
+    const EXTENDS_FIELDS = [
+        'company' => '',
+        'location' => '',
+        'home_url' => '',
+        'github' => '',
+        'twitter' => '',
+        'facebook' => '',
+        'instagram' => '',
+        'telegram' => '',
+        'coding' => '',
+        'steam' => '',
+        'weibo' => '',
+    ];
+
+    public function getExtendsAttribute()
+    {
+        return \array_merge(self::EXTENDS_FIELDS, json_decode($this->attributes['extends'] ?? '{}', true));
+    }
+
+    public function setExtendsAttribute($value)
+    {
+        $this->attributes['extends'] = json_encode(array_merge(json_decode($this->attributes['extends'] ?? '{}', true), $value));
+    }
+
     public function fans()
     {
         return $this->hasMany(UserFollowFan::class, 'friend_id', $this->primaryKey);

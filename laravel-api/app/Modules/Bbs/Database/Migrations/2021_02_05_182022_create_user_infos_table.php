@@ -28,6 +28,7 @@ class CreateUserInfosTable extends Migration
             $table->integer('get_likes')->unsigned()->default(0)->comment('获赞数');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->json('extends')->default('{}')->comment('会员的扩展信息');
             $table->integer('user_grade')->unsigned()->default(0)->comment('用户等级');
             $table->integer('user_experience')->unsigned()->default(0)->comment('用户经验');
             $table->boolean('auth_status')->unsigned()->default(0)->comment('实名认证状态：0：否，1：是');

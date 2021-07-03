@@ -44,17 +44,17 @@
               <li class="nav-item">
                 <div class="btn-group">
                   <a href="#" class="dropdown-toggle cursor-pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img :src="currentUser.avatar" class="avatar-40 mr-2" />
+                    <img :src="currentUser.user_info ? currentUser.user_info.user_avatar : ''" class="avatar-40 mr-2" />
                   </a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-item">
-                      <router-link :to="{ name: 'users.show', params: { username: currentUser.username } }">
-                        <div class="text-16 text-gray-30">{{ currentUser.name }}</div>
-                        <div>@{{ currentUser.username }}</div>
+                      <router-link :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }">
+                        <div class="text-16 text-gray-30">{{ currentUser.user_info ? currentUser.user_info.nick_name : '会员' }}</div>
+                        <div>@{{ currentUser.user_info ? currentUser.user_info.nick_name : '' }}</div>
                       </router-link>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { username: currentUser.username } }" exact>
+                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info.user_uuid } }" exact>
                       <account-icon class="mr-1"></account-icon>
                       个人中心
                     </router-link>

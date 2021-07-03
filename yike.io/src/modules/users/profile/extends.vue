@@ -171,7 +171,8 @@ export default {
     }
   },
   created () {
-    this.links = this.$user().extends
+    this.links = this.$user().user_info.extends
+    console.log(this.links);
   },
   methods: {
     submit () {

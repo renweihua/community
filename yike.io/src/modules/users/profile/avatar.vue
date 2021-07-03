@@ -23,7 +23,7 @@ export default {
   components: { AvatarCropper },
   data () {
     return {
-      url: this.$parent.currentUser.avatar,
+      url: this.$parent.currentUser.user_info.user_avatar,
       newUrl: null
     }
   },
