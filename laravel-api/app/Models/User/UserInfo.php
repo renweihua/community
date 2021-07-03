@@ -12,10 +12,62 @@ class UserInfo extends Model
     // 追加属性
     protected $appends = ['user_sex_text'];
 
+    // 会员的基础扩展信息
+    const BASIC_EXTENDS_FIELDS = [
+        'user_birth' => '', // 生日
+        'location' => '', // 所在城市地区
+        'user_introduction' => '', // 个人介绍
+        'get_likes' => 0, //获赞数
+    ];
+
+    public function getBasicExtendsAttribute()
+    {
+        return \array_merge(self::BASIC_EXTENDS_FIELDS, json_decode($this->attributes['basic_extends'] ?? '{}', true));
+    }
+
+    public function setBasicExtendsAttribute($value)
+    {
+        $this->attributes['basic_extends'] = json_encode(array_merge(json_decode($this->attributes['basic_extends'] ?? '{}', true), $value));
+    }
+
+    // 会员的认证扩展信息
+    const AUTH_EXTENDS_FIELDS = [
+        'auth_status' => 0, // 实名认证状态：0：否，1：是
+        'auth_mobile' => 0, // 手机号验证状态：0：否，1：是
+        'auth_email' => 0, // 邮箱验证状态：0：否，1：是
+    ];
+
+    public function getAUTHExtendsAttribute()
+    {
+        return \array_merge(self::AUTH_EXTENDS_FIELDS, json_decode($this->attributes['auth_extends'] ?? '{}', true));
+    }
+
+    public function setAUTHExtendsAttribute($value)
+    {
+        $this->attributes['auth_extends'] = json_encode(array_merge(json_decode($this->attributes['auth_extends'] ?? '{}', true), $value));
+    }
+
+    // 会员的签到扩展信息
+    const SIGN_EXTENDS_FIELDS = [
+        'total_sign_days' => 0, // 总共签到天数
+        'year_sign_days' => 0, // 今年总共签到天数
+        'sign_days' => 0, // 连续签到天数
+        'last_sign_time' => 0, // 上一次签到时间
+    ];
+
+    public function getSignExtendsAttribute()
+    {
+        return \array_merge(self::SIGN_EXTENDS_FIELDS, json_decode($this->attributes['sign_extends'] ?? '{}', true));
+    }
+
+    public function setSignExtendsAttribute($value)
+    {
+        $this->attributes['sign_extends'] = json_encode(array_merge(json_decode($this->attributes['sign_extends'] ?? '{}', true), $value));
+    }
+
     // 会员的扩展信息
-    const EXTENDS_FIELDS = [
+    const OTHER_EXTENDS_FIELDS = [
         'company' => '',
-        'location' => '',
         'home_url' => '',
         'github' => '',
         'twitter' => '',
@@ -27,14 +79,14 @@ class UserInfo extends Model
         'weibo' => '',
     ];
 
-    public function getExtendsAttribute()
+    public function getOtherExtendsAttribute()
     {
-        return \array_merge(self::EXTENDS_FIELDS, json_decode($this->attributes['extends'] ?? '{}', true));
+        return \array_merge(self::OTHER_EXTENDS_FIELDS, json_decode($this->attributes['other_extends'] ?? '{}', true));
     }
 
-    public function setExtendsAttribute($value)
+    public function setOtherExtendsAttribute($value)
     {
-        $this->attributes['extends'] = json_encode(array_merge(json_decode($this->attributes['extends'] ?? '{}', true), $value));
+        $this->attributes['other_extends'] = json_encode(array_merge(json_decode($this->attributes['other_extends'] ?? '{}', true), $value));
     }
 
     public function fans()
