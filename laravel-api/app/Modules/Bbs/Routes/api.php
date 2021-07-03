@@ -50,6 +50,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         /**
          * 会员相关
          */
+        Route::get('users', 'UserController@lists');
+        // 指定会员详情
         Route::prefix('user')->group(function () {
             // 指定会员详情
             Route::get('/detail', 'UserController@detail');

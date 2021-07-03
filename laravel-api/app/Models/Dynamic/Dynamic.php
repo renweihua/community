@@ -15,6 +15,7 @@ class Dynamic extends Model
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
+    protected $appends = ['time_formatting'];
 
     /**
      * 只查询 启用 的作用域
@@ -110,6 +111,12 @@ class Dynamic extends Model
     public function setVideoInfoAttribute($value)
     {
         $this->attributes['video_info'] = my_json_encode($value);
+    }
+
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value)
+    {
+        return formatting_timestamp($this->attributes['created_time']);
     }
 
     public function userInfo()

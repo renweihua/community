@@ -109,33 +109,34 @@ class DynamicService extends Service
     protected function getDynamics($request, int $login_user_id = 0, array $screen_params = [])
     {
         $lists = Dynamic::check()
-                        ->where(function($query)use($screen_params, $request){
-                            // 筛选所属会员动态
-                            if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
-                            // 筛选动态类型
-                            $dynamic_type = (int)$request->input('dynamic_type', -1);
-                            if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
-                        })
-                        ->with(
-                            [
-                                'userInfo' => function($query) use ($login_user_id) {
-                                    $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
-                                        'isFollow' => function($query) use ($login_user_id) {
-                                            $query->where('user_id', $login_user_id);
-                                        }
-                                    ]);
-                                },
-                                'isPraise' => function($query) use ($login_user_id) {
-                                    $query->where('user_id', $login_user_id);
-                                },
-                                'isCollection' => function($query) use ($login_user_id) {
-                                    $query->where('user_id', $login_user_id);
-                                },
-                                'topic'
-                            ]
-                        )
-                        ->orderBy('dynamic_id', 'DESC')
-                        ->paginate($this->getLimit(request()->input('limit', 10)));
+                    ->select('dynamic_id', 'user_id', 'topic_id', 'dynamic_title', 'dynamic_images', 'video_path', 'video_info', 'created_time', 'dynamic_type', 'read_num', 'comment_count', 'praise_count', 'collection_count')
+                    ->where(function($query)use($screen_params, $request){
+                        // 筛选所属会员动态
+                        if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
+                        // 筛选动态类型
+                        $dynamic_type = (int)$request->input('dynamic_type', -1);
+                        if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
+                    })
+                    ->with(
+                        [
+                            'userInfo' => function($query) use ($login_user_id) {
+                                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
+                                    'isFollow' => function($query) use ($login_user_id) {
+                                        $query->where('user_id', $login_user_id);
+                                    }
+                                ]);
+                            },
+                            'isPraise' => function($query) use ($login_user_id) {
+                                $query->where('user_id', $login_user_id);
+                            },
+                            'isCollection' => function($query) use ($login_user_id) {
+                                $query->where('user_id', $login_user_id);
+                            },
+                            'topic'
+                        ]
+                    )
+                    ->orderBy('dynamic_id', 'DESC')
+                    ->paginate($this->getLimit(request()->input('limit', 10)));
         foreach ($lists as $item) {
             // 是否已赞
             $item->is_praise = $login_user_id == 0 ? false : ($item->isPraise ? true : false);

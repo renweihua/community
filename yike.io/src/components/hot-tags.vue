@@ -4,9 +4,9 @@
       <div class="text-13">热门话题</div>
     </div>
     <ul class="plan-list text-13">
-      <template v-for="node in nodes">
-        <router-link tag="li" :key="node.id" :to="{name: 'nodes.node', params:{id: node.id}}" class="py-1 cursor-pointer">
-          #{{ node.title }} <span class="float-right">{{node.cache ? node.cache.threads_count : 0}}</span>
+      <template v-for="item in nodes">
+        <router-link tag="li" :key="item.topic_id" :to="{name: 'nodes.item', params:{topic_id: item.topic_id}}" class="py-1 cursor-pointer">
+          #{{ item.topic_name }} <span class="float-right">{{item.dynamic_count}}</span>
         </router-link>
       </template>
     </ul>
@@ -24,7 +24,7 @@ export default {
   methods: {
     loadNodes () {
       this.$http
-        .get('nodes?hot=5&per_page=5')
+        .get('topics?hot=5&per_page=5')
         .then(nodes => (this.nodes = nodes.data))
     }
   },

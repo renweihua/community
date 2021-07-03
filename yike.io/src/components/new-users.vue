@@ -7,7 +7,7 @@
       </div>
     </div>
     <ul class="plan-list px-2 pb-2">
-      <user-media type="vertical w25" v-for="item in users" :key="item.id" :user="item"></user-media>
+      <user-media type="vertical w25" v-for="item in users" :key="item.user_id" :user="item"></user-media>
     </ul>
   </div>
 </template>
@@ -28,7 +28,10 @@ export default {
     loadUsers () {
       this.$http
         .get('users?latest=1&limit=12')
-        .then(users => (this.users = users.data))
+        .then(users => {
+          this.users = users.data.data;
+        })
+
     }
   },
   mounted () {

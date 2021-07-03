@@ -8,6 +8,23 @@ use App\Services\Service;
 class UserService extends Service
 {
     /**
+     * 会员列表
+     *
+     * @param  array  $params
+     * @param  int    $limit
+     *
+     * @return mixed
+     */
+    public function lists(array $params = [], int $limit = 10)
+    {
+        return User::filter($params)
+            ->with(['userInfo' => function($query) {
+                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes']);
+            }])
+            ->paginate($this->getLimit($limit));
+    }
+
+    /**
      * 获取会员详情
      *
      * @param  int  $user_id

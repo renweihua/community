@@ -174,7 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        // Eloquent 条件查询
+        EloquentFilter\ServiceProvider::class,
     ],
 
     /*
