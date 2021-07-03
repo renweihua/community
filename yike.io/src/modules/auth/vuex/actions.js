@@ -8,7 +8,9 @@ import * as TYPES from './mutations-types'
 export const attemptLogin = ({ dispatch }, payload) =>
   services
     .postLogin(payload)
-    .then(data => {
+    .then(({data}) => {
+      console.log(data);
+
       dispatch('setToken', data.access_token)
 
       return Promise.resolve()
@@ -18,8 +20,8 @@ export const attemptLogin = ({ dispatch }, payload) =>
 export const attemptRegister = ({ dispatch }, payload) =>
   services
     .postRegister(payload)
-    .then(({ token }) => {
-      dispatch('setToken', token)
+    .then(({ data }) => {
+      dispatch('setToken', data.access_token)
 
       return Promise.resolve()
     })
@@ -84,5 +86,5 @@ export const loadUser = ({ dispatch }) =>
   services
     .loadUserData()
     // store user's data
-    .then(user => dispatch('setUser', user))
+    .then(({data}) => dispatch('setUser', data))
     .catch(logout)

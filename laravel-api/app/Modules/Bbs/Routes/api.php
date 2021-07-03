@@ -31,7 +31,7 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         // 登录
         Route::post('login', 'AuthController@login');
         // 登录会员信息
-        Route::post('me', 'AuthController@me')->middleware(CheckAuth::class);
+        Route::match(['get', 'post'], 'me', 'AuthController@me')->middleware(CheckAuth::class);
         // 退出登录
         Route::post('logout', 'AuthController@logout');
     });

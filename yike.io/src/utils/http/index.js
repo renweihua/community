@@ -13,7 +13,8 @@ interceptors(http)
  * Helper method to set the header with the token
  */
 export function setToken (token) {
-  http.defaults.headers.common.Authorization = `Bearer ${token}`
+	// Bearer 
+	http.defaults.headers.common.Authorization = `${token}`
 }
 
 export default http
