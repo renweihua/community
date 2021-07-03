@@ -4,15 +4,15 @@
       <div class="col-md-9">
         <article class="box box-flush">
           <header class="thread-header box-body d-flex justify-content-between align-items-center">
-            <user-media :user="thread.user">
-              <small class="text-muted" slot="description">发布于 {{ thread.created_at_timeago }}</small>
+            <user-media :user="thread.user_info">
+              <small class="text-muted" slot="description">发布于 {{ thread.time_formatting }}</small>
             </user-media>
           </header>
           <div class="thread-content box-body text-gray-40 text-16">
             <header>
-              <h2 class="mb-3 pb-2 border-bottom">{{ thread.title }}</h2>
+              <h2 class="mb-3 pb-2 border-bottom">{{ thread.dynamic_title }}</h2>
             </header>
-            <markdown-body v-model="thread.content.body"></markdown-body>
+            <markdown-body v-model="thread.dynamic_content"></markdown-body>
           </div>
           <div class="thread-stats-bar bg-white border-top py-1">
             <div class="container">
@@ -23,7 +23,7 @@
                 <li class="nav-item">
                   <a class="text-gray-50 btn btn-sm btn-link" href="#comments">
                     <comment-icon></comment-icon>
-                    {{ thread.cache.comments_count }} 条评论
+                    {{ thread.comment_count }} 条评论
                   </a>
                 </li>
                 <li class="nav-item">
@@ -74,7 +74,7 @@
                       <button
                         class="dropdown-item"
                         type="button"
-                        @click="$router.push({name:'threads.edit', params:{id: thread.id}})"
+                        @click="$router.push({name:'threads.edit', params:{dynamic_id: thread.dynamic_id}})"
                       >
                         <pencil-icon class="mr-1"></pencil-icon>编辑
                       </button>
@@ -104,24 +104,24 @@
           <div class="thread-author-card border-top p-3">
             <div class="d-flex align-items-center justify-content-between">
               <div class="user-info d-flex align-items-center">
-                <router-link :to="{name: 'users.show', params: {username: thread.user.username}}">
-                  <img :src="thread.user.avatar" alt="User avatar" class="avatar-60">
+                <router-link :to="{name: 'users.show', params: {username: thread.user_info.nick_name}}">
+                  <img :src="thread.user_info.user_avatar" alt="User avatar" class="avatar-60">
                 </router-link>
                 <div class="p-2">
-                  <router-link :to="{name: 'users.show', params: {username: thread.user.username}}">
-                    <h3 class="text-gray-50 text-14">{{ thread.user.name }}</h3>
+                  <router-link :to="{name: 'users.show', params: {username: thread.user_info.user_uuid}}">
+                    <h3 class="text-gray-50 text-14">{{ thread.user_info.nick_name }}</h3>
                   </router-link>
-                  <div class="text-12 text-muted">{{ thread.user.bio }}</div>
+                  <div class="text-12 text-muted">{{ thread.user_info.user_introduction }}</div>
                 </div>
               </div>
               <div class="right-action">
-                <follow-btn :item="thread.user"></follow-btn>
+                <follow-btn :item="thread.user_info"></follow-btn>
               </div>
             </div>
           </div>
         </article>
         <div class="thread-comments mt-3">
-          <comments object-type="App\Thread" :object-id="thread.id" @created="loadThread"></comments>
+          <comments object-type="App\Thread" :object-id="thread.dynamic_id" @created="loadThread"></comments>
         </div>
         <div class="thread-toolbar">
           <animate-action :item="thread"/>
@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="col-md-3 position-relative">
-        <user-profile-card class="user-profile-card" :user="thread.user"></user-profile-card>
+        <user-profile-card class="user-profile-card" :user="thread.user_info"></user-profile-card>
         <user-list-card title="他们觉得很赞" :users="thread.likers" class="mt-2"/>
         <hot-tags class="mt-2"></hot-tags>
       </div>
@@ -211,7 +211,7 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.params.id !== from.params.id) {
+    if (to.params.dynamic_id !== from.params.dynamic_id) {
       this.loadThread()
     }
 
@@ -220,15 +220,15 @@ export default {
   methods: {
     loadThread () {
       this.$http
-        .get(`threads/${this.$route.params.id}?include=user,likers`)
-        .then(response => (this.thread = response))
+        .get(`dynamic/detail?dynamic_id=${this.$route.params.dynamic_id}&include=user,likers`)
+        .then(response => (this.thread = response.data))
         .then(this.registerEventListener)
         .catch(response => {
           if (response.status === 404) {
             this.$message.error('该主题已被删除或锁定！')
             setTimeout(() => {
               this.$router.go(-1)
-            }, 1000)
+            }, 1500);
           }
         })
         .then(() => {
@@ -236,7 +236,7 @@ export default {
         })
     },
     handleDelete (thread) {
-      this.$http.delete(`threads/${thread.id}`).then(() => {
+      this.$http.delete(`threads/${thread.dynamic_id}`).then(() => {
         this.$message.success('已删除！')
         this.$router.go(-1)
       })
@@ -245,7 +245,7 @@ export default {
       this.thread[timestamp] = this.thread[timestamp]
         ? null
         : moment().format('YYYY-MM-DD HH:mm:ss')
-      this.$http.patch(`threads/${this.thread.id}`, this.thread).then(() => {
+      this.$http.patch(`threads/${this.thread.dynamic_id}`, this.thread).then(() => {
         this.$message.success('搞定！')
         this.loadThread()
       })

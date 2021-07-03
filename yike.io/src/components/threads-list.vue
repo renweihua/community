@@ -5,7 +5,7 @@
         class="list-group-item d-md-flex d-block align-items-center justify-content-between cursor-pointer"
         v-for="item in threads.data"
         :key="item.dynamic_id"
-        @click="$router.push({name: 'threads.show', params:{id: item.dynamic_id}})"
+        @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})"
       >
         <div class="d-flex align-items-center w-70">
           <a href="#" class="mr-2">
