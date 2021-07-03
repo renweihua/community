@@ -53,6 +53,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('users', 'UserController@lists');
         // 指定会员详情
         Route::prefix('user')->group(function () {
+            // 检测会员账户是否已被注册
+            Route::post('/exists', 'UserController@exists');
             // 指定会员详情
             Route::get('/detail', 'UserController@detail');
             // 指定会员的动态

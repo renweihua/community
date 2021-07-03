@@ -62,4 +62,29 @@ class UserController extends BbsController
         $list = $dynamicService->getDynamicsByUser($request, (int)$data['user_id'], (int)$this->getLoginUserId());
         return $this->successJson($list);
     }
+
+    /**
+     * 检测会员账户是否已被注册
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function exists(Request $request)
+    {
+        $user = User::getInstance();
+        if ($request->has('user_email')) {
+            return $user->getUserByEmail($request->get('user_email')) ? $this->successJson() : $this->errorJson();
+        }
+
+        if ($request->has('user_name')) {
+            return $user->getUserByName($request->get('user_name')) ? $this->successJson() : $this->errorJson();
+        }
+
+        if ($request->has('user_mobile')) {
+            return $user->getUserByMobile($request->get('user_mobile')) ? $this->successJson() : $this->errorJson();
+        }
+
+        \abort(400);
+    }
 }

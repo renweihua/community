@@ -11,7 +11,7 @@
               class="form-control"
               ref="emailInput"
               placeholder="example@yike.io"
-              v-model="email"
+              v-model="user_email"
               @blur="validateEmail"
               required
             >
@@ -23,7 +23,7 @@
               class="form-control"
               ref="usernameInput"
               placeholder="5 ~ 12 位字母或数字"
-              v-model="username"
+              v-model="user_name"
               @blur="validateUsername"
               required
             >
@@ -64,23 +64,23 @@ export default {
   components: { GooglePlus, FacebookIcon, QqIcon, GithubIcon },
   data () {
     return {
-      username: '',
-      email: '',
+      user_name: '',
+      user_email: '',
       password: '',
       ticket: null,
       randstr: null,
       error: true,
       regex: {
-        email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
-        username: /^[a-zA-Z]+[a-zA-Z0-9_-]+$/
+        user_email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
+        user_name: /^[a-zA-Z]+[a-zA-Z0-9_-]+$/
       }
     }
   },
   watch: {
-    username () {
+    user_name () {
       this.$refs['usernameInput'].classList.remove('is-invalid')
     },
-    email () {
+    user_email () {
       this.$refs['emailInput'].classList.remove('is-invalid')
     }
   },
@@ -88,10 +88,10 @@ export default {
     formReady () {
       return (
         !this.error &&
-        this.email.match(this.regex.email) &&
-        this.username.match(this.regex.username) &&
-        this.username.length >= 5 &&
-        this.username.length <= 12 &&
+        this.user_email.match(this.regex.user_email) &&
+        this.user_name.match(this.regex.user_name) &&
+        this.user_name.length >= 5 &&
+        this.user_name.length <= 12 &&
         this.password.length >= 6 &&
         this.password.length <= 32
       )
@@ -103,8 +103,8 @@ export default {
       this.error = false
 
       if (
-        !this.username.match(this.regex.username) ||
-        this.username.length < 5
+        !this.user_name.match(this.regex.user_name) ||
+        this.user_name.length < 5
       ) {
         this.error = true
         this.$refs['usernameInput'].classList.add('is-invalid')
@@ -112,9 +112,9 @@ export default {
       }
 
       this.$http
-        .post('user/exists', { username: this.username })
+        .post('user/exists', { user_name: this.user_name })
         .then(response => {
-          if (!response.success) {
+          if (response.status) {
             this.error = true
             this.$refs['usernameInput'].classList.add('is-invalid')
             return this.$message.error('用户名已经存在！')
@@ -124,15 +124,15 @@ export default {
     validateEmail () {
       this.error = false
 
-      if (!this.email.match(this.regex.email)) {
+      if (!this.user_email.match(this.regex.user_email)) {
         this.error = true
         this.$refs['emailInput'].classList.add('is-invalid')
         return this.$message.error('请输入正确的邮箱地址')
       }
 
-      this.$http.post('user/exists', { email: this.email }).then(response => {
-        if (!response.success) {
-          this.error = true
+      this.$http.post('user/exists', { user_email: this.user_email }).then(response => {
+        if (response.status) {
+          this.error = true;
           this.$refs['emailInput'].classList.add('is-invalid')
           return this.$message.error('邮箱已经存在！')
         }

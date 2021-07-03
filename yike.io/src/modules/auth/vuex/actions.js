@@ -9,8 +9,6 @@ export const attemptLogin = ({ dispatch }, payload) =>
   services
     .postLogin(payload)
     .then(({data}) => {
-      console.log(data);
-
       dispatch('setToken', data.access_token)
 
       return Promise.resolve()
