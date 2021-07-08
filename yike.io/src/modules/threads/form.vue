@@ -3,7 +3,8 @@
     <div v-if="currentUser.has_banned">
       <user-locked />
     </div>
-    <div v-else-if="$user() && !$user().has_activated">
+    <!-- $user() && !$user().has_activated -->
+    <div v-else-if="false">
       <div class="box-body py-4 text-center">
         <h1 class="display-4 text-gray-40">
           <alert />
@@ -27,7 +28,7 @@
                   <span class="text-muted">发布到</span>
                   <div class="dropdown ml-1">
                     <el-select filterable v-model="form.node_id">
-                      <el-option v-for="item in nodes" :key="item.id" :value="item.id" :label="item.title"></el-option>
+                      <el-option v-for="item in nodes" :key="item.topic_id" :value="item.topic_id" :label="item.topic_name"></el-option>
                     </el-select>
                   </div>
                 </div>
@@ -133,7 +134,7 @@ export default {
     loadNodes () {
       this.busing = true
       return this.$http
-        .get('nodes')
+        .get('topics')
         .then(response => {
           this.nodes = response.data
           this.busing = false
@@ -146,6 +147,8 @@ export default {
         .then(thread => (this.form = Object.assign(this.form, thread)))
     },
     showCaptcha (draft) {
+            this.submit(draft)
+            return;
       let captcha = new TencentCaptcha(
         process.env.VUE_APP_CAPTCHA_ID_PUBLISH,
         res => {
@@ -161,9 +164,10 @@ export default {
       captcha.show()
     },
     submit (draft = true) {
-      if (!this.form.ticket) {
-        return this.$message.error('请先完成验证！')
-      }
+
+    //  if (!this.form.ticket) {
+    //    return this.$message.error('请先完成验证！')
+    //  }
       this.form.is_draft = draft
       this.busing = true
       let promise = null
