@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\User\FollowUserRequest;
+use App\Modules\Bbs\Http\Requests\User\SpecialUserRequest;
 use App\Modules\Bbs\Services\User\FriendService;
 use Illuminate\Http\JsonResponse;
 
@@ -57,4 +58,27 @@ class FriendController extends BbsController
             return $this->errorJson($this->service->getError());
         }
     }
+
+    /**
+     * 指定会员，设置是否特别关注
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\SpecialUserRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setSpecial(SpecialUserRequest $request) : JsonResponse
+    {
+        $data = $request->validated();
+
+        if ($this->getLoginUserId() == $data['user_id']) {
+            return $this->errorJson('无需特别关注自己！');
+        }
+
+        if ($res = $this->service->setSpecial($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0))) {
+            return $this->successJson([], $this->service->getError(), $res);
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
 }

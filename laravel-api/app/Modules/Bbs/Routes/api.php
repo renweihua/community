@@ -108,6 +108,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/follow_topics', 'TopicController@follows');
             // 关注指定会员
             Route::post('/follow', 'FriendController@follow');
+            // 指定会员，设置是否特别关注
+            Route::put('/setSpecial', 'FriendController@setSpecial');
             // 我的粉丝
             Route::get('/fans', 'FriendController@fans');
             // 我的收藏
