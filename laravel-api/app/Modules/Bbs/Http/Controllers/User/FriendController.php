@@ -81,4 +81,25 @@ class FriendController extends BbsController
         }
     }
 
+    /**
+     * 指定会员，设置是否黑名单
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\SpecialUserRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setBlacklist(SpecialUserRequest $request) : JsonResponse
+    {
+        $data = $request->validated();
+
+        if ($this->getLoginUserId() == $data['user_id']) {
+            return $this->errorJson('无需拉黑自己！');
+        }
+
+        if ($res = $this->service->setBlacklist($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0))) {
+            return $this->successJson([], $this->service->getError(), $res);
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
 }

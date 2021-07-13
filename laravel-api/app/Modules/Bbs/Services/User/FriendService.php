@@ -136,8 +136,32 @@ class FriendService extends Service
 
         // 保证设置成功，手动更新updated_time
         $my_follow->save(['is_special' => $is_cancel == 1 ? 0 : 1, 'updated_time' => time()]);
-        $this->setError(($is_cancel == 1 ? '取消' : '设置') . '‘特别关注’成功！');
+        $this->setError(($is_cancel == 1 ? '取消' : '') . '‘特别关注’设置成功！');
         return true;
     }
 
+    /**
+     * 指定会员，设置是否黑名单
+     *
+     * @param  int  $login_user_id
+     * @param  int  $friend_id
+     * @param  int  $is_cancel
+     *
+     * @return bool
+     */
+    public function setBlacklist(int $login_user_id, int $friend_id, int $is_cancel = 0): bool
+    {
+        $userFollowFan = UserFollowFan::getInstance();
+        // 我是否关注对方
+        $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
+        if (!$my_follow){
+            $this->setError('您尚未关注对方，无法设为黑名单属性！');
+            return false;
+        }
+
+        // 保证设置成功，手动更新updated_time
+        $my_follow->save(['is_blacklist' => $is_cancel == 1 ? 0 : 1, 'updated_time' => time()]);
+        $this->setError(($is_cancel == 1 ? '取消' : '') . '‘拉黑’设置成功！');
+        return true;
+    }
 }
