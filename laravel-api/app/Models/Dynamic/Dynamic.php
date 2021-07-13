@@ -5,6 +5,7 @@ namespace App\Models\Dynamic;
 use App\Models\Model;
 use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
+use App\Models\User\UserOtherlogin;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
 use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Storage;
@@ -153,6 +154,10 @@ class Dynamic extends Model
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
 
+    public function userOtherLogin()
+    {
+        return $this->belongsTo(UserOtherlogin::class, 'user_id', 'user_id');
+    }
 
     // 是否收藏
     public function isCollection()

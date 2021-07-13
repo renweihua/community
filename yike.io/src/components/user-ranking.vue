@@ -5,7 +5,7 @@
       <!--<button class="btn btn-ghost btn-icon"><arrow-right-icon></arrow-right-icon></button>-->
     </div>
     <ul class="plan-list">
-      <user-media class="mb-2 d-flex align-items-center" v-for="item in users" :key="item.user_id" :user="item">
+      <user-media class="mb-2 d-flex align-items-center" v-for="item in users" :key="item.user_id" :user="item.user_info">
         <template slot="appends">
           <follow-btn :item="item" class="ml-auto" simple></follow-btn>
         </template>

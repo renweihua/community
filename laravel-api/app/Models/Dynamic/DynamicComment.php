@@ -9,6 +9,7 @@ class DynamicComment extends Model
 {
     protected $primaryKey = 'comment_id';
     protected $is_delete = 0;
+    protected $appends = ['comment_time'];
 
     public function dynamic()
     {
@@ -28,5 +29,10 @@ class DynamicComment extends Model
     public function replies()
     {
         return $this->hasMany(DynamicComment::class, 'top_level', $this->primaryKey);
+    }
+
+    public function getCommentTimeAttribute($key)
+    {
+        return formatting_timestamp($this->attributes[self::CREATED_AT]);
     }
 }
