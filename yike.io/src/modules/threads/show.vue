@@ -23,7 +23,7 @@
                 <li class="nav-item">
                   <a class="text-gray-50 btn btn-sm btn-link" href="#comments">
                     <comment-icon></comment-icon>
-                    {{ thread.cache_extends.comment_count }} 条评论
+                    {{ thread.cache_extends.comments_count }} 条评论
                   </a>
                 </li>
                 <li class="nav-item">
@@ -208,7 +208,7 @@ export default {
   computed: {
     ...mapGetters(['currentUser']),
     canEdit () {
-      return this.thread.user_id === this.$user().id || this.$user().is_admin
+      return this.thread.user_id === this.$user().user_id || this.$user().is_admin
     }
   },
   beforeRouteUpdate (to, from, next) {

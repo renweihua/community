@@ -177,7 +177,7 @@ export default {
   methods: {
     submit () {
       this.$http
-        .patch(`users/${this.$user().username}`, {
+        .patch(`users/${this.$user().user_id}`, {
           extends: this.links
         })
         .then(() => {

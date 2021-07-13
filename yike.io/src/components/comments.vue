@@ -1,7 +1,7 @@
 <template>
   <div class="comments" name="comments">
     <div class="py-2">
-      <div class="text-16 text-gray-50">{{ comments ? comments.total : 0 }} 条评论</div>
+      <div class="text-16 text-gray-50">{{ comments.total ? comments.total : 0 }} 条评论</div>
     </div>
     <div class="box mb-3" v-if="currentUser.user_id">
       <template v-if="currentUser.user_info.auth_email == 1">
@@ -193,7 +193,7 @@ export default {
       this.query.page = page
     },
     vote (type = 'up', item, index) {
-      if (!this.$user().id) {
+      if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
 
@@ -216,7 +216,7 @@ export default {
       }
     },
     reply (item) {
-      if (!this.$user().id) {
+      if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
       this.content = `@${item.user.username} `
