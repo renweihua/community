@@ -255,7 +255,7 @@ class DynamicService extends Service
             ->where('top_level', 0) // 评论要走多层级，默认查顶级
             ->with([
                 'userInfo' => function($query){
-                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
                 },
                 'replies' => function($query){
                     $query->with([

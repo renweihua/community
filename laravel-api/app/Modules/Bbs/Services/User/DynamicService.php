@@ -347,7 +347,9 @@ class DynamicService extends Service
                 'dynamic_id' => $dynamic->dynamic_id,
                 'reply_id' => $reply_id,
                 'top_level' => $top_level,
-                'comment_content' => $params['content'],
+                'content_type' => $params['content_type'],
+                'comment_content' => $params['content'] ?? '',
+                'comment_markdown' => $params['markdown'] ?? '',
                 'author_id' => $dynamic->user_id,
                 // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
                 'is_read' => $login_user_id == $reply_user ? 1 : 0,

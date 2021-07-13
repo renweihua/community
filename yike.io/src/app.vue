@@ -2,7 +2,7 @@
   <div id="wrapper" class="h-100" :class="{toggled: isToggled}">
     <div id="page-content-wrapper" class="w-100 position-absolute">
       <navbar v-if="shouldShowNavbar" />
-      <div class="alert alert-warning text-center m-0" role="alert" v-if="currentUser.id && !currentUser.has_activated">
+      <div class="alert alert-warning text-center m-0" role="alert" v-if="currentUser.id && !currentUser.user_info.auth_email">
         您的邮箱尚未验证，将影响你的正常使用。请先验证您的邮箱，如果未收到邮件，请点击<a href="javascript:void(0)" class="text-blue" @click="sendActiveMail">重新发送</a>！
       </div>
       <template v-if="$route.query['active-success'] && $route.query.type">

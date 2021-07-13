@@ -3,8 +3,7 @@
     <div v-if="currentUser.has_banned">
       <user-locked />
     </div>
-    <!-- $user() && !$user().has_activated -->
-    <div v-else-if="false">
+    <div v-else-if="$user() && !$user().user_info.auth_email">
       <div class="box-body py-4 text-center">
         <h1 class="display-4 text-gray-40">
           <alert />

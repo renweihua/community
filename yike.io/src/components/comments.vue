@@ -1,12 +1,12 @@
 <template>
   <div class="comments" name="comments">
     <div class="py-2">
-      <div class="text-16 text-gray-50">{{ comments.meta ? comments.meta.total : 0 }} 条评论</div>
+      <div class="text-16 text-gray-50">{{ comments ? comments.total : 0 }} 条评论</div>
     </div>
-    <div class="box mb-3" v-if="currentUser.id">
-      <template v-if="currentUser.has_activated">
+    <div class="box mb-3" v-if="currentUser.user_id">
+      <template v-if="currentUser.user_info.auth_email == 1">
         <div class="d-flex align-items-center">
-          <img :src="currentUser.avatar" class="avatar-40" :alt="currentUser.username" />
+          <img :src="currentUser.user_info.user_avatar" class="avatar-40" :alt="currentUser.user_info.nick_name" />
           <div class="text-18 text-muted ml-2 w-100" @click="writing = true">撰写评论...</div>
         </div>
       </template>
@@ -26,10 +26,10 @@
       </div>
     </div>
 
-    <paginator :meta="comments.meta" @change="handlePaginate"></paginator>
+    <paginator :meta="comments" @change="handlePaginate"></paginator>
 
     <div class="box box-flush">
-      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.id}" v-if="item.content && item.content.body" v-for="(item,index) in comments.data" :key="item.id" :id="'comment-' + item.id" :name="'comment-' + item.id">
+      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.id}" v-if="item.dynamic_content && item.dynamic_content" v-for="(item,index) in comments.data" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
         <user-media :user="item.user">
           <template slot="name-appends">
             <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {username: item.user.username}}">{{ item.user.username }}</router-link>
@@ -225,13 +225,11 @@ export default {
     },
     submit () {
       this.$http
-        .post('comments', {
+        .post('dynamic/comment', {
           commentable_type: this.objectType,
-          commentable_id: this.objectId,
-          content: {
+          dynamic_id: this.objectId,
             markdown: this.content,
-            type: 'markdown'
-          }
+            content_type: 'markdown',
         })
         .then(() => {
           this.content = ''
@@ -252,19 +250,25 @@ export default {
     loadComments () {
       return this.$http
         .get(
-          `comments?commentable_type=${this.objectType}&commentable_id=${
+          `dynamic/comments?commentable_type=${this.objectType}&dynamic_id=${
             this.objectId
           }&page=${this.query.page}`
         )
         .then(comments => {
-          this.comments = comments
+        console.log('loadComments');
+          console.log(comments);
+          this.comments = comments.data
+          console.log(this.comments);
           this.mapCommentsUserForMention(comments.data)
         })
     },
     mapCommentsUserForMention (comments) {
-      comments.map(comment => {
-        window.pageUsers.some(u => u.id === comment.user_id) ||
-          window.pageUsers.push(comment.user)
+      comments.data.map(comment => {
+        window.pageUsers.some(u => function(){
+          console.log(u);
+          u.id === comment.user_id
+        }) ||
+          window.pageUsers.push(comment.user_info)
       })
     }
   }
