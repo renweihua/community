@@ -53,6 +53,7 @@ class CreateUserInfosTable extends Migration
             $table->integer('user_grade')->unsigned()->default(0)->comment('用户等级');
             $table->integer('user_experience')->unsigned()->default(0)->comment('用户经验');
 
+            $table->integer('luckydraw_times')->unsigned()->default(0)->comment('抽奖的次数');
 
             $table->boolean('register_type')->unsigned()->default(0)->comment('注册方式：0：账户；1.邮箱；2.手机号；3.第三方登录');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
