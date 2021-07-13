@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Http\Controllers\User;
 
+use App\Models\UploadFile;
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,7 +29,10 @@ class UploadController extends BbsController
             config('filesystems')
         );
 
-        return $this->successJson($path, '上传成功', ['path_url' => Storage::url($path)]);
+        // 添加文件库记录
+        $uploadFile = UploadFile::addRecord($path, $request->file($file));
+
+        return $this->successJson($path, '上传成功', ['path_url' => $uploadFile->file_url]);
     }
 
     /**
@@ -44,10 +48,13 @@ class UploadController extends BbsController
             return $this->errorJson('请上传文件！');
         }
         foreach ($request->file($file) as $file){
-            $path[] = Storage::url($file->storePublicly(
+            $path = $file->storePublicly(
                 date('Ym'),
                 config('filesystems')
-            ));
+            );
+            // 添加文件库记录
+            $uploadFile = UploadFile::addRecord($path, $request->file($file));
+            $path[] = $uploadFile->file_url;
         }
         return $this->successJson($path, '上传成功！');
     }

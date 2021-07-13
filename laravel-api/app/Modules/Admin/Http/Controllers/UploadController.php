@@ -28,7 +28,7 @@ class UploadController extends BaseController
         );
 
         // 添加文件库记录
-        $uploadFile = $this->addUploadFile($path, $request->file($file));
+        $uploadFile = UploadFile::addRecord($path, $request->file($file));
 
         return $this->successJson($path, '上传成功', ['file_url' => $uploadFile->file_url]);
     }
@@ -46,35 +46,14 @@ class UploadController extends BaseController
             return $this->errorJson('请上传文件！');
         }
         foreach ($request->file($file) as $file){
-            $path[] = Storage::url($file->storePublicly(
+            $path = $file->storePublicly(
                 date('Ym'),
                 config('filesystems')
-            ));
+            );
+            // 添加文件库记录
+            $uploadFile = UploadFile::addRecord($path, $request->file($file));
+            $path[] = $uploadFile->file_url;
         }
         return $this->successJson($path, '上传成功！');
-    }
-    
-    /**
-     * 添加文件库上传记录
-     * @param $fileName
-     * @param $fileInfo
-     * @param $fileType
-     * @return UploadFile
-     */
-    private function addUploadFile($file_name, $file)
-    {
-        // 存储引擎
-        $storage = 'local';
-        // 存储域名
-        $host_url = '';
-        // 添加文件库记录
-        return UploadFile::create([
-            'storage' => $storage,
-            'host_url' => $host_url,
-            'file_name' => $file_name,
-            'file_size' => $file->getSize(),
-            'file_type' => $file->getMimeType(),
-            'extension' => $file->getClientOriginalExtension(),
-        ]);
     }
 }
