@@ -157,6 +157,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 删除评论 - 动态
             Route::delete('/delete/comment', 'DynamicController@deleteComment');
         });
+        Route::prefix('comment')->group(function () {
+            // 点赞 - 评论
+            Route::post('/praise', 'CommentController@praise');
+        });
 
         /**
          * 消息相关

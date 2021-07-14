@@ -26,6 +26,7 @@ class CreateDynamicCommentsTable extends Migration
             $table->mediumText('comment_markdown')->nullable()->comment('回复内容');
             $table->integer('top_level')->unsigned()->default(0)->comment('归属评论Id');
             $table->integer('reply_id')->unsigned()->default(0)->comment('回复评论的Id');
+            $table->integer('praise_count')->unsigned()->default(0)->comment('点赞量');
             $table->boolean('is_read')->unsigned()->default(0)->comment('是否已读：0：否；1：是');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
