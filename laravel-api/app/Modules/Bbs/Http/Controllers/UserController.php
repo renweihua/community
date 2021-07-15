@@ -74,15 +74,15 @@ class UserController extends BbsController
     {
         $user = User::getInstance();
         if ($request->has('user_email')) {
-            return $user->getUserByEmail($request->get('user_email')) ? $this->successJson() : $this->errorJson();
+            return $user->getUserByEmail($request->get('user_email')) ? $this->successJson() : $this->errorJson('');
         }
 
         if ($request->has('user_name')) {
-            return $user->getUserByName($request->get('user_name')) ? $this->successJson() : $this->errorJson();
+            return $user->getUserByName($request->get('user_name')) ? $this->successJson() : $this->errorJson('');
         }
 
         if ($request->has('user_mobile')) {
-            return $user->getUserByMobile($request->get('user_mobile')) ? $this->successJson() : $this->errorJson();
+            return $user->getUserByMobile($request->get('user_mobile')) ? $this->successJson() : $this->errorJson('');
         }
 
         \abort(400);
