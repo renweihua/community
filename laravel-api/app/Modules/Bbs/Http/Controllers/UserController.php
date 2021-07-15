@@ -87,4 +87,21 @@ class UserController extends BbsController
 
         \abort(400);
     }
+
+    /**
+     * 邮箱激活流程
+     *
+     * @param $verify_token
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function activeEmail($verify_token)
+    {
+        $result = $this->service->verifyEmailToken($verify_token);
+        if (!$result){
+            \abort(400, $this->service->getError());
+        }
+        // 激活成功，跳转Web的指定页面即可
+        return redirect(config('app.site_url').'?active-success=yes&type=register');
+    }
 }

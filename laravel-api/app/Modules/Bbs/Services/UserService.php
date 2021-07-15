@@ -2,8 +2,13 @@
 
 namespace App\Modules\Bbs\Services;
 
+use App\Exceptions\Bbs\FailException;
 use App\Models\User\User;
+use App\Models\User\UserEmailVerify;
+use App\Modules\Bbs\Notifications\ActiveEmailSuccess;
 use App\Services\Service;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class UserService extends Service
 {
@@ -54,5 +59,53 @@ class UserService extends Service
         }
         $this->setError('会员详情获取成功！');
         return $user;
+    }
+
+    /**
+     * 邮箱激活流程
+     *
+     * @param  string  $verify_token
+     *
+     * @return bool
+     */
+    public function verifyEmailToken(string $verify_token): bool
+    {
+        $detail = UserEmailVerify::where('verify_token', $verify_token)->first();
+        if (!$detail){
+            return false;
+        }
+        if ($detail->auth_email == 1){
+            $this->setError('已认证！');
+            return false;
+        }
+        // 激活链接有效期为7天
+        if ($detail->created_time + 7 * 24 * 3600 < time()){
+            $this->setError('激活链接已过期！');
+            return false;
+        }
+        $user = User::where('user_email', $detail->user_email)->with(['userInfo' => function($query){
+            $query->select('user_id', 'auth_email');
+        }])->first();
+        if (!$user){
+            $this->setError('无效邮箱验证！');
+            return false;
+        }
+        DB::beginTransaction();
+        try{
+            // 更新验证记录表
+            $detail->update(['auth_email' => 1]);
+            // 更新会员基本信息表的认证状态
+            $user->userInfo->update(['auth_email' => 1]);
+            // 发送已激活的消息
+            Notification::route('mail', $detail->user_email)->notify(new ActiveEmailSuccess());
+
+            DB::commit();
+            $this->setError('激活成功！');
+            return true;
+        }catch (FailException $e){
+            DB::rollBack();
+            $this->setError('激活失败！');
+            return false;
+        }
     }
 }

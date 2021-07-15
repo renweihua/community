@@ -59,6 +59,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/detail', 'UserController@detail');
             // 指定会员的动态
             Route::get('/dynamics', 'UserController@dynamics');
+            // 邮箱激活
+            Route::get('/activate/{verify_token}', 'UserController@activeEmail')->name('user.activate');
         });
 
         /**
