@@ -983,40 +983,6 @@ if ( !function_exists('config') ) {
     }
 }
 
-if ( !function_exists('abort') ) {
-    /**
-     * Throw an HttpException with the given data.
-     *
-     * @param          $code
-     * @param  string  $msg
-     * @param  array   $headers
-     *
-     * @return mixed
-     */
-    function abort($code, $msg = '', array $headers = [])
-    {
-        return \Cnpscy\Embedded\Router::throwException($msg, $code);
-        exit;
-        //return http_response_code($code);
-
-        try {
-            if ( $code instanceof Response ) {
-                throw new \Cnpscy\Exceptions\HttpResponseException($code);
-            } elseif ( $code instanceof Responsable ) {
-                throw new \Cnpscy\Exceptions\HttpResponseException($code->toResponse(request()));
-            }
-            if ( $code == 404 ) {
-                throw new \Cnpscy\Exceptions\NotFoundHttpException($msg);
-            }
-            throw new \Cnpscy\Exceptions\HttpException($code, $msg, null, $headers);
-        } catch (\Cnpscy\Exceptions\HttpExceptionInterface $e) {
-            http_response_code($e->getStatusCode());
-
-            \Cnpscy\Embedded\Response::new()->failMsg(\app\lib\code::EMAIL_NO_EXIST, $e->getMessage() ?? $msg);
-        }
-    }
-}
-
 if ( !function_exists('http_response_code') ) {
     function http_response_code($code = null)
     {
@@ -2275,7 +2241,7 @@ function get_rand($sum = 6)
  * @return string
  */
 if ( !function_exists('rand_str') ) {
-    function rand_str($randLength = 6, $create_time = 1, $includenumber = 1)
+    function rand_str($randLength = 6, $create_time = 0, $includenumber = 1)
     {
         if ( $includenumber ) {
             $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQEST123456789';

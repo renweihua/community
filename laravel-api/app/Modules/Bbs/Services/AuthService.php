@@ -11,6 +11,7 @@ use App\Library\Encrypt\Rsa;
 use App\Models\Log\UserLoginLog;
 use App\Models\System\Notify;
 use App\Models\User\User;
+use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Emails\RegisterCodeForEmail;
 use App\Modules\Bbs\Jobs\SendActiveEmail;
@@ -168,8 +169,11 @@ class AuthService extends Service
                     ->onConnection('database') // job 存储的服务：当前存储mysql
                     ->onQueue('mail-queue'); // mail-queue 队列
 
+                // 生成待激活邮箱的记录
+                $email_verify = UserEmailVerify::randRecord($user);
+
                 // 注册成功：邮箱激活
-                SendActiveEmail::dispatch($user_data['user_email'])
+                SendActiveEmail::dispatch($user, $email_verify->verify_token)
                      ->delay(now()->addMinutes(10)) // 延迟10分钟
                      ->onConnection('database') // job 存储的服务：当前存储mysql
                      ->onQueue('mail-queue'); // mail-queue 队列

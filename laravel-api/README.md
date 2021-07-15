@@ -23,8 +23,8 @@
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`community.sql`
 * 任务调度：`php artisan schedule:run`
-* 队列[后置进程]：`php artisan queue:listen`
-    - mysql存储的[注册邮件]的队列： `php artisan queue:listen database --queue=mail-queue`
+* 队列[后置进程]：`php artisan queue:work --daemon`
+    - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
 
 #### 使用说明
 

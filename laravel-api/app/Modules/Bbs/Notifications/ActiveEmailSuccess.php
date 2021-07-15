@@ -29,7 +29,7 @@ class ActiveEmail extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     public function viaQueues()

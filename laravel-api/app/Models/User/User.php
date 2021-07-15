@@ -73,4 +73,9 @@ class User extends Model
     {
         return $this->where('user_mobile', $user_mobile)->first();
     }
+
+    public function getActivationLink($token)
+    {
+        return route('user.activate', ['verify_token' => $token]);
+    }
 }
