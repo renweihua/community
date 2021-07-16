@@ -54,7 +54,7 @@
                       </router-link>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info.user_uuid } }" exact>
+                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
                       <account-icon class="mr-1"></account-icon>
                       个人中心
                     </router-link>

@@ -32,7 +32,7 @@
       <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments.data" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
         <user-media :user="item.user_info">
           <template slot="name-appends">
-            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {user_uuid: item.user_info.user_uuid}}">{{ item.user_info.nick_name }}</router-link>
+            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
           </template>
           <small slot="description"><a :href="'#comment-' + item.comment_id" class="text-gray-70">{{ item.comment_time }}</a></small>
           <div class="text-16 text-gray-60 ml-auto d-flex align-items-center" slot="appends">
@@ -185,6 +185,7 @@ export default {
       this.query.page = page;
     },
     vote (type = 'up', item, index) {
+    
       if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }

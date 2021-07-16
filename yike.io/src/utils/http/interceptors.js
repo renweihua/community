@@ -22,11 +22,15 @@ export default http => {
      * requests
      */
     error => {
+      console.log('interceptors');
+      console.log(error);
       if (!error['response']) {
         return Promise.reject(error)
       }
 
       switch (error.response.status) {
+        case -1:
+        case 0:
         case 422:
           let data = error.response.data.errors
           let content = ''

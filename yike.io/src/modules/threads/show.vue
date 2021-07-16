@@ -104,11 +104,11 @@
           <div class="thread-author-card border-top p-3">
             <div class="d-flex align-items-center justify-content-between">
               <div class="user-info d-flex align-items-center">
-                <router-link :to="{name: 'users.show', params: {username: thread.user_info.nick_name}}">
+                <router-link :to="{name: 'users.show', params: {user_uuid: thread.user_info ? thread.user_info.user_uuid : ''}}">
                   <img :src="thread.user_info.user_avatar" alt="User avatar" class="avatar-60">
                 </router-link>
                 <div class="p-2">
-                  <router-link :to="{name: 'users.show', params: {username: thread.user_info.user_uuid}}">
+                  <router-link :to="{name: 'users.show', params: {user_uuid: thread.user_info ? thread.user_info.user_uuid : ''}}">
                     <h3 class="text-gray-50 text-14">{{ thread.user_info.nick_name }}</h3>
                   </router-link>
                   <div class="text-12 text-muted">{{ thread.user_info.user_introduction }}</div>
