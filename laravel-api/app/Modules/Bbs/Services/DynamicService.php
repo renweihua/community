@@ -279,7 +279,7 @@ class DynamicService extends Service
             ])
             ->orderBy('created_time', 'DESC')
             ->paginate(10);
-        
+
         return $this->getPaginateFormat($comments);
     }
 

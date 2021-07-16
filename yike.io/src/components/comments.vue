@@ -129,6 +129,7 @@ export default {
   },
   data () {
     return {
+        reply_id: 0,
       writing: false,
       content: '',
       comments: [],
@@ -148,24 +149,24 @@ export default {
     query: {
       deep: true,
       handler () {
-        this.$router.replace({ query: this.query })
-        this.loadComments()
+        this.$router.replace({ query: this.query });
+        this.loadComments();
       }
     },
     content () {
-      localforage.setItem(this.cacheKey, this.content)
+      localforage.setItem(this.cacheKey, this.content);
     },
     writing () {
       if (!this.writing) {
-        this.content = ''
-        localforage.removeItem(this.cacheKey)
-        this.$refs['editor'].editor.setValue('')
+        this.content = '';
+        localforage.removeItem(this.cacheKey);
+        this.$refs['editor'].editor.setValue('');
       } else {
-        let editor = this.$refs['editor'].editor
-        editor.focus()
+        let editor = this.$refs['editor'].editor;
+        editor.focus();
         setTimeout(() => {
-          editor.setCursor(editor.lineCount(), 0)
-        })
+          editor.setCursor(editor.lineCount(), 0);
+        });
       }
     }
   },
@@ -173,15 +174,15 @@ export default {
     this.loadComments().then(() => {
       if (window.location.hash.length > 0) {
         setTimeout(() => {
-          window.location.replace(window.location.hash)
+          window.location.replace(window.location.hash);
         })
       }
     })
-    this.syncCachedContent()
+    this.syncCachedContent();
   },
   methods: {
     handlePaginate (page) {
-      this.query.page = page
+      this.query.page = page;
     },
     vote (type = 'up', item, index) {
       if (!this.$user().user_id) {
@@ -201,9 +202,10 @@ export default {
       if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
-      this.content = `@${item.user.username} `
-      this.writing = true
-      window.scrollTo(0, document.querySelector('[name="comments"]').offsetTop)
+      this.reply_id = item.comment_id;
+      this.content = `@${item.user_info.nick_name} `;
+      this.writing = true;
+      window.scrollTo(0, document.querySelector('[name="comments"]').offsetTop);
     },
     submit () {
       this.$http
@@ -212,20 +214,21 @@ export default {
           dynamic_id: this.objectId,
             markdown: this.content,
             content_type: 'markdown',
+            reply_id: this.reply_id
         })
         .then(() => {
-          this.content = ''
-          this.writing = false
-          this.$message.success('评论成功！')
-          this.$emit('created')
-          this.loadComments()
+          this.content = '';
+          this.writing = false;
+          this.$message.success('评论成功！');
+          this.$emit('created');
+          this.loadComments();
         })
     },
     syncCachedContent () {
       localforage.getItem(this.cacheKey, (err, content) => {
         if (!err && content && content.length > 0) {
-          this.writing = true
-          this.content = content
+          this.writing = true;
+          this.content = content;
         }
       })
     },
@@ -239,9 +242,9 @@ export default {
         .then(comments => {
         console.log('loadComments');
           console.log(comments);
-          this.comments = comments.data
+          this.comments = comments.data;
           console.log(this.comments);
-          this.mapCommentsUserForMention(comments.data)
+          this.mapCommentsUserForMention(comments.data);
         })
     },
     mapCommentsUserForMention (comments) {
