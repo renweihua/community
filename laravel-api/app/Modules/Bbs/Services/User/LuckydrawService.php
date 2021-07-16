@@ -7,6 +7,11 @@ use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
+use App\Models\Luckydraw\Luckydraw;
+use App\Models\Luckydraw\LuckydrawConfig;
+use App\Models\Luckydraw\LuckydrawLog;
+use App\Models\Luckydraw\LuckydrawProduct;
+use App\Models\Luckydraw\LuckydrawQualificationSource;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -21,7 +26,7 @@ class LuckydrawService extends Service
      * 抽奖活动流程处理
      * @param array $params
      */
-    public function lotteryProcessHandle($user_id, $params = [])
+    public function lotteryProcessHandle($user_id, $activity_id, $params = [])
     {
         /**
          * 1.检测会员是否有抽奖的资格
@@ -39,30 +44,29 @@ class LuckydrawService extends Service
          *
          * 活动方法是否已经设置了奖项配置
          */
-        if (empty($activity = Db::name(LuckydrawActivityService::$table_name)->where([
-            ['is_open', '=', 1],
-        ])->lock(true)->find())) return DataReturn('系统尚未开放抽奖活动', -1);
-
-        if (empty($activity_details = Db::name(LuckydrawActivityService::$table_name . '_detail')
-            ->alias('ad')
-            ->leftJoin(LuckydrawProductsService::$table_name . ' lp', 'ad.product_id = lp.product_id')
-            ->where([
+        $activity = Luckydraw::where(['activity_id' => $activity_id, 'is_open' => 1])->first();
+        if (empty($activity)){
+            $this->setError('系统尚未开放抽奖活动');
+            return false;
+        }
+        $activity_details = LuckydrawConfig::leftJoin(LuckydrawProduct::getInstance()->getTable(), 'ad.product_id = lp.product_id')
+            ->where(
                 ['ad.activity_id', '=', $activity['activity_id']],
 
                 ['ad.reward_category', '<>', 0],
                 ['ad.probability_of_winning', '>', 0],
                 ['ad.awards_num', '>', 0],
-            ])
-            ->whereOr(function ($query) use ($activity){
-                $query->where([
-                    ['ad.reward_category', '=', 0],
-                ])->where([
-                    ['ad.activity_id', '=', $activity['activity_id']],
-                ]);
-            })
-            ->field('ad.*, lp.title, lp.images')
+            )->orWhere(
+                ['ad.reward_category', '=', 0],
+                ['ad.activity_id', '=', $activity['activity_id']],
+            )
+            ->select(['*', 'lp.title', 'lp.images'])
             ->lock(true)
-            ->select())) return DataReturn('活动方案尚未设置奖项配置', -1);
+            ->first();
+        if (empty($activity_details)){
+            $this->setError('活动方案尚未设置奖项配置');
+            return false;
+        }
 
         $_activity_details = [];
         //设置抽奖比例与Id标识对应的数组
@@ -78,14 +82,19 @@ class LuckydrawService extends Service
         $detail_id = self::checkRandAvailable($arr, $_activity_details);
 
         //抽奖最终的数据为：
-        if (empty($lucky_draw_results = $_activity_details[$detail_id])) return DataReturn('抽奖失败', -1);
+        if (empty($lucky_draw_results = $_activity_details[$detail_id])){
+            $this->setError('抽奖失败');
+            return false;
+        }
 
-        if (!array_key_exists($lucky_draw_results['reward_category'], $common_luckydraw_activity_reward_category_list)) return DataReturn('后台配置非法', -1);
+        if (!array_key_exists($lucky_draw_results['reward_category'], $common_luckydraw_activity_reward_category_list)){
+            $this->setError('后台配置奖励有误');
+            return false;
+        }
 
-        Db::startTrans();
+        Db::beginTransaction();
         try {
-            $update_time = time();
-            $operation_ip = GetClientIP(true);
+            $operation_ip = get_ip();
             /**
              * 无奖励的类型，那么无需减去发奖的次数
              *
@@ -93,16 +102,16 @@ class LuckydrawService extends Service
              */
             if (intval($lucky_draw_results['reward_category']) != 0) {
                 //剩余可抽奖获取奖励的次数 递减
-                Db::name(LuckydrawActivityService::$table_name . '_detail')->where([
+                LuckydrawConfig::where([
                     'detail_id' => $lucky_draw_results['detail_id'],
-                ])->setDec('awards_num');
+                ])->decrement('awards_num');
             }
 
             // 会员当前可抽奖的机会次数 递减
-            Db::name('UserMoney')->where('user_id', $user_id)->setDec('luckydraw_times');
+            $user_info->decrement('luckydraw_times');
 
             //抽奖获取记录新增
-            $log_id = Db::name(self::$table_name)->insertGetId([
+            $luckydrawLog = LuckydrawLog::create([
                 'activity_id' => $lucky_draw_results['activity_id'],
                 'detail_id' => $lucky_draw_results['detail_id'],
                 'user_id' => $user_id,
@@ -110,18 +119,16 @@ class LuckydrawService extends Service
                 'reward_quota' => $lucky_draw_results['reward_quota'],
                 'product_id' => $lucky_draw_results['product_id'],
                 'create_ip' => $operation_ip,
-                'create_time' => $update_time,
-                'update_time' => $update_time,
                 'is_receive' => in_array(intval($lucky_draw_results['reward_category']), [0, 1, 2]) ? 1 : 0,//是否领取【只有 积分与抵扣分 才需要领取】
             ]);
+            $log_id = $luckydrawLog->log_id;
 
             /**
              * 抽奖资格的消耗记录变更
              */
-            Db::name('LuckydrawQualificationSource')->insert([
+            LuckydrawQualificationSource::create([
                 'user_id' => $user_id,
                 'source_type' => 2,//抽奖减少资格
-                'create_time' => $update_time,
                 'luckydraw_times' => 1,
                 'create_ip' => $operation_ip,
                 'extend_info' => json_encode([
@@ -177,10 +184,12 @@ class LuckydrawService extends Service
             }
 
             Db::commit();// 提交事务
-            return DataReturn($msg, 0, ['id' => $detail_id, 'images' => $lucky_draw_results['images'], 'reward_category' => $lucky_draw_results['reward_category']]);
+            $this->setError($msg);
+            return ['id' => $detail_id, 'images' => $lucky_draw_results['images'], 'reward_category' => $lucky_draw_results['reward_category']];
         } catch (\Exception $e) {
             Db::rollback();// 回滚事务
-            return DataReturn('抽奖失败', -1);
+            $this->setError('抽奖失败');
+            return false;
         }
     }
 
