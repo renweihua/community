@@ -37,22 +37,13 @@
           <small slot="description"><a :href="'#comment-' + item.comment_id" class="text-gray-70">{{ item.comment_time }}</a></small>
           <div class="text-16 text-gray-60 ml-auto d-flex align-items-center" slot="appends">
             <div class="mx-1 cursor-pointer d-flex" @click="vote('up', item, index)">
-              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_up_voted">
+              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_praise">
                 <thumb-up-outline />
               </button>
               <button class="btn btn-icon btn-primary" v-else>
                 <thumb-up />
               </button>
-              <span class="ml-1 align-self-center">{{ item.up_voters }}</span>
-            </div>
-            <div class="mx-1 cursor-pointer d-flex" @click="vote('down', item, index)">
-              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_down_voted">
-                <thumb-down-outline />
-              </button>
-              <button class="btn btn-icon btn-danger" v-else>
-                <thumb-down />
-              </button>
-              <span class="ml-1 align-self-center">{{ item.down_voters }}</span>
+              <span class="ml-1 align-self-center">{{ item.praise_count }}</span>
             </div>
             <div class="mx-1 cursor-pointer" @click="reply(item)">
               <button class="btn btn-icon btn-light text-gray-60">
@@ -196,24 +187,15 @@ export default {
       if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
-
-      let reverse = type == 'up' ? 'down' : 'up'
-
-      if (item[`has_${type}_voted`]) {
-        this.$http.post(`comments/${item.id}/cancel-vote`)
-
-        this.comments.data[index][`${type}_voters`]--
-        this.comments.data[index][`has_${type}_voted`] = false
-      } else {
-        this.$http.post(`comments/${item.id}/${type}-vote`)
-
-        if (item[`has_${reverse}_voted`]) {
-          this.comments.data[index][`${reverse}_voters`]--
-          this.comments.data[index][`has_${reverse}_voted`] = false
-        }
-        this.comments.data[index][`${type}_voters`]++
-        this.comments.data[index][`has_${type}_voted`] = true
-      }
+        this.$http.post(`comment/praise`, {comment_id: item.comment_id}).then((res) => {
+          if (res.is_cancel) {
+            this.comments.data[index][`praise_count`]--;
+            this.comments.data[index][`has_praise`] = false;
+          }else{
+            this.comments.data[index][`praise_count`]++;
+            this.comments.data[index][`has_praise`] = true;
+          }
+        });
     },
     reply (item) {
       if (!this.$user().user_id) {

@@ -252,7 +252,7 @@ class DynamicService extends Service
      *
      * @return array
      */
-    public function getDynamicComments(int $dynamic_id)
+    public function getDynamicComments(int $dynamic_id, int $login_user_id = 0)
     {
         $comments = DynamicComment::where('dynamic_id', $dynamic_id)
             ->where('top_level', 0) // 评论要走多层级，默认查顶级
@@ -270,13 +270,16 @@ class DynamicService extends Service
                         },
                     ]);
                 },
+                'hasPraise' => function($query) use($login_user_id){
+                    $query->where('user_id', $login_user_id);
+                }
             ])
             ->withCount([
                 'replies'
             ])
             ->orderBy('created_time', 'DESC')
             ->paginate(10);
-
+        
         return $this->getPaginateFormat($comments);
     }
 

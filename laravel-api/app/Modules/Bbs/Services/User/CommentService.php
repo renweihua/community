@@ -39,7 +39,7 @@ class CommentService extends Service
      *
      * @return bool
      */
-    public function praise(int $login_user_id, int $comment_id) : bool
+    public function praise(int $login_user_id, int $comment_id, &$is_cancel = 0) : bool
     {
         if ( !$comment = $this->checkComment($comment_id, true)) {
             return false;
@@ -65,6 +65,7 @@ class CommentService extends Service
                 $userInfoInstance->setGetLikes($author, -1);
 
                 $this->setError('取消点赞成功！');
+                $is_cancel = 1;
             } else {
                 $ip_agent = get_client_info();
                 $commentPraise->create(array_merge($data, [

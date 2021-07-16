@@ -1,11 +1,10 @@
-# 社区
+# 小丑路人社区
 
 #### 介绍
-社区
+小丑路人社区
 
 #### 软件架构
 软件架构说明
-
 
 #### 安装教程
 
@@ -44,6 +43,21 @@
             is_string($relations) ? func_get_args() : $relations
         );
     }
+```
+
+2.为模型生成注释
+```
+    php artisan ide-helper:models
+```
+
+3.生成 PHPstorm Meta file
+```
+    php artisan ide-helper:meta
+```
+
+4.为 Facades 生产注释
+```
+php artisan ide-helper:generate
 ```
 
 #### 参与贡献

@@ -25,8 +25,8 @@ class CommentController extends BbsController
     {
         $data = $request->validated();
 
-        if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['comment_id'])) {
-            return $this->successJson([], $this->service->getError());
+        if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['comment_id'], $is_cancel)) {
+            return $this->successJson([], $this->service->getError(), ['is_cancel' => $is_cancel]);
         } else {
             return $this->errorJson($this->service->getError());
         }

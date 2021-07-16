@@ -1410,6 +1410,33 @@ if ( !function_exists('get_ip') ) {
     }
 }
 
+/**
+ * [GetClientIP 客户端ip地址]
+ * @author   Devil
+ * @blog     http://gong.gg/
+ * @version  0.0.1
+ * @datetime 2017-02-09T12:53:13+0800
+ * @param    [boolean]        $long [是否将ip转成整数]
+ * @return   [string|int]           [ip地址|ip地址整数]
+ */
+function GetClientIP($long = false)
+{
+    $onlineip = '';
+    if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+        $onlineip = getenv('HTTP_CLIENT_IP');
+    } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+        $onlineip = getenv('HTTP_X_FORWARDED_FOR');
+    } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+        $onlineip = getenv('REMOTE_ADDR');
+    } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        $onlineip = $_SERVER['REMOTE_ADDR'];
+    }
+    if ($long) {
+        $onlineip = sprintf("%u", ip2long($onlineip));
+    }
+    return $onlineip;
+}
+
 if ( !function_exists('get_this_url') ) {
     function get_this_url()
     {

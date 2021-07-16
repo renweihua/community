@@ -31,6 +31,11 @@ class DynamicComment extends Model
         return $this->hasMany(DynamicComment::class, 'top_level', $this->primaryKey);
     }
 
+    public function hasPraise()
+    {
+        return $this->hasOne(DynamicCommentPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
     public function getCommentTimeAttribute($key)
     {
         return formatting_timestamp($this->attributes[self::CREATED_AT]);

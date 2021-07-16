@@ -139,7 +139,6 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 通过邮箱更改登录密码
             Route::put('/changePassByEmail', 'IndexController@changePassByEmail');
 
-
             // 指定会员是否在黑名单：前期先测试数据返回
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
         });
