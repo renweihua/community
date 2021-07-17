@@ -25,6 +25,21 @@
 * 队列[后置进程]：`php artisan queue:work --daemon`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
 
+
+###### ES设置
+* 启动ES：` .\elasticsearch.bat`
+* 初始化ES，创建模板与索引：`php artisan es:init`
+* 导入数据：`php artisan scout:import "模型命名空间"`
+* 使用ES搜索：
+```
+    $startTime = Carbon::now()->getPreciseTimestamp(3);
+    $articles = Dynamic::search($request->input('search'))->get()->toArray();
+    $userTime = Carbon::now()->getPreciseTimestamp(3) - $startTime;
+    echo "耗时(毫秒)：{$userTime} \n";
+    var_dump($articles);
+``` 
+
+
 #### 使用说明
 
 1.  按月、按年分表的模型，皆不可使用 `with`，可使用 `load` 代替,`static::query` 会重新 实例化当前模型，之前设置的分表名称将被替换。
