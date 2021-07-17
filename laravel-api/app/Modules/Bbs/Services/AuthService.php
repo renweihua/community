@@ -86,30 +86,40 @@ class AuthService extends Service
                 $user_data['user_name'] = $params['user_name'];
                 break;
             case 1: // 邮箱注册
-                if (!is_email($params['user_name'])){
+                $user_email = $params['user_name'];
+                if (isset($params['user_email'])){
+                    $user_email = $params['user_email'];
+                }
+                if (!is_email($user_email)){
                     $this->setError('请输入有效的邮箱地址！');
                     return false;
                 }
-                if ($userInstance->getUserByEmail($params['user_name'])){
+                if ($userInstance->getUserByEmail($user_email)){
                     $this->setError('该邮箱已被注册！');
                     return false;
                 }
-                /**
-                 * 邮箱验证码：匹配验证
-                 */
-                $cache = $this->getMailCode($params['user_name']);
-                if (!$cache){
-                    $this->setError('验证码已过期，请重新发送！');
-                    return false;
+                // PC端无需验证邮箱验证码，注册之后发送邮件，激活邮箱即可
+                if (
+                    isset($params['is_pc']) && !$params['is_pc']
+                    && isset($params['email_code'])
+                ){
+                    /**
+                     * 邮箱验证码：匹配验证
+                     */
+                    $cache = $this->getMailCode($user_email);
+                    if (!$cache){
+                        $this->setError('验证码已过期，请重新发送！');
+                        return false;
+                    }
+                    if ($cache != $params['email_code']){
+                        $this->setError('验证码不匹配！');
+                        return false;
+                    }
+                    // 删除缓存
+                    Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $user_email);
                 }
-                if ($cache != $params['email_code']){
-                    $this->setError('验证码不匹配！');
-                    return false;
-                }
-                // 删除缓存
-                Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $params['user_name']);
 
-                $user_data['user_email'] = $params['user_name'];
+                $user_data['user_email'] = $user_email;
                 break;
             case 2: // 手机号注册
                 if (!is_mobile($params['user_name'])){

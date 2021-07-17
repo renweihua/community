@@ -8,6 +8,7 @@ use App\Modules\Bbs\Database\factories\UserFactory;
 class User extends Model
 {
     protected $primaryKey = 'user_id';
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for arrays.

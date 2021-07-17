@@ -47,14 +47,14 @@ export default {
       const { username, password } = this
 
       try {
-        await this.attemptLogin({ username, password })
+        let res = await this.attemptLogin({ username, password });
+        console.log(res);
 
-        this.$message.success('欢迎回来~')
-        this.$router.push({ name: 'home' })
+        this.$message.success('欢迎回来~');
+        this.$router.push({ name: 'home' });
       } catch (e) {
-        if (e.status !== 422) {
-          this.$message.error('账号密码错误！')
-        }
+        console.log(e);
+        this.$message.error(e);
       }
     }
   }
