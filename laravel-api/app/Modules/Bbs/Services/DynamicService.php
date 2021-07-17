@@ -192,15 +192,19 @@ class DynamicService extends Service
             'userOtherLogin' => function($query) use($login_user_id){
                 $query->select(['user_id', 'qq_info', 'baidu_info', 'weibo_info', 'github_info', 'weixin_info']);
             },
-            'isPraise' => function($query) use ($login_user_id) {
-                $query->where('user_id', $login_user_id);
-            },
-            'isCollection' => function($query) use ($login_user_id) {
-                $query->where('user_id', $login_user_id);
-            },
             'topic'
         ])) {
             return false;
+        }
+        if ( !empty($login_user_id)) {
+            $dynamic->load([
+                'isPraise' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+                'isCollection' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+            ]);
         }
         // 浏览量递增
         $dynamic->update(['cache_extends->reads_num' => $dynamic->cache_extends['reads_num'] + 1]);

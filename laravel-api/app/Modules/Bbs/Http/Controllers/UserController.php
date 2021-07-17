@@ -48,6 +48,22 @@ class UserController extends BbsController
     }
 
     /**
+     * 通过UUID获取会员详情
+     *
+     * @param $user_uuid
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uuid($user_uuid): JsonResponse
+    {
+        if ($detail = $this->service->detail($user_uuid, $this->getLoginUserId())) {
+            return $this->successJson($detail, $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
      * 指定会员的动态列表
      *
      * @param  \App\Modules\Bbs\Http\Requests\UserIdRequest  $request

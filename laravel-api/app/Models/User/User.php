@@ -17,6 +17,7 @@ class User extends Model
      */
     protected $hidden = [
         'password',
+        'login_token'
     ];
 
     public function setPasswordAttribute($password = 123456)

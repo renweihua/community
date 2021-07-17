@@ -15,55 +15,49 @@ class Dynamic extends Model
 {
     use Filterable;
 
-    use Searchable;
-
-    protected $fillable = [
-        'dynamic_id',
-        'dynamic_title',
-        'dynamic_content',
-    ];
-
-    /**
-     * 指定索引
-     * 搜索的type
-     *
-     * @return string
-     */
-    public function searchableAs()
-    {
-        return 'dynamics_index';
-    }
-
-    /**
-     * 设置导入索引的数据字段
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return [
-            // 'dynamic_id' => $this->dynamic_id,
-            'title'   => $this->dynamic_title,
-            'content' => $this->dynamic_content,
-        ];
-    }
-
-    /**
-     * 指定 搜索索引中存储的唯一ID
-     * @return mixed
-     */
-    public function getScoutKey()
-    {
-        return $this->dynamic_id;
-    }
-
-    /**
-     * 指定 搜索索引中存储的唯一ID的键名
-     * @return string
-     */
-    public function getScoutKeyName()
-    {
-        return $this->primaryKey;
-    }
+//    use Searchable;
+//
+//    /**
+//     * 指定索引
+//     * 搜索的type
+//     *
+//     * @return string
+//     */
+//    public function searchableAs()
+//    {
+//        return 'dynamics_index';
+//    }
+//
+//    /**
+//     * 设置导入索引的数据字段
+//     * @return array
+//     */
+//    public function toSearchableArray()
+//    {
+//        return [
+//            // 'dynamic_id' => $this->dynamic_id,
+//            'title'   => $this->dynamic_title,
+//            'content' => $this->dynamic_content,
+//        ];
+//    }
+//
+//    /**
+//     * 指定 搜索索引中存储的唯一ID
+//     * @return mixed
+//     */
+//    public function getScoutKey()
+//    {
+//        return $this->dynamic_id;
+//    }
+//
+//    /**
+//     * 指定 搜索索引中存储的唯一ID的键名
+//     * @return string
+//     */
+//    public function getScoutKeyName()
+//    {
+//        return $this->primaryKey;
+//    }
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;

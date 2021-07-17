@@ -36,7 +36,7 @@ export default {
         node: 'App\\Node'
       },
       actions: {
-        like: 'has_liked',
+        like: 'is_praise',
         follow: 'has_followed',
         subscribe: 'has_subscribed'
       }

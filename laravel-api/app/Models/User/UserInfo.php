@@ -10,7 +10,7 @@ class UserInfo extends Model
 {
     protected $primaryKey = 'user_id';
     // 追加属性
-    protected $appends = ['user_sex_text'];
+    protected $appends = ['user_sex_text', 'time_formatting'];
 
     // 会员的基础扩展字段
     const BASIC_EXTENDS_FIELDS = [
@@ -176,6 +176,13 @@ class UserInfo extends Model
             return $text;
         }
         return '';
+    }
+
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value): string
+    {
+        if (!isset($this->attributes['created_time'])) return '';
+        return formatting_timestamp($this->attributes['created_time']);
     }
 
     /**
