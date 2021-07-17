@@ -208,15 +208,15 @@ export default {
   computed: {
     ...mapGetters(['currentUser']),
     canEdit () {
-      return this.thread.user_id === this.$user().user_id || this.$user().is_admin
+      return this.thread.user_id === this.$user().user_id || this.$user().is_admin;
     }
   },
   beforeRouteUpdate (to, from, next) {
     if (to.params.dynamic_id !== from.params.dynamic_id) {
-      this.loadThread()
+      this.loadThread();
     }
 
-    next()
+    next();
   },
   methods: {
     loadThread () {
@@ -226,14 +226,14 @@ export default {
         .then(this.registerEventListener)
         .catch(response => {
           if (response.status === 404) {
-            this.$message.error('该主题已被删除或锁定！')
+            this.$message.error('该主题已被删除或锁定！');
             setTimeout(() => {
-              this.$router.go(-1)
+              this.$router.go(-1);
             }, 1500);
           }
         })
         .then(() => {
-          window.pageUsers = [this.thread.user]
+          window.pageUsers = [this.thread.user];
 
           
           this.getPraiseUsers(this.thread.dynamic_id);
@@ -244,13 +244,13 @@ export default {
       this.$http
         .get(`dynamic/getPraises?dynamic_id=${this.$route.params.dynamic_id}`)
         .then(({data}) => {
-          this.praise_users = data.data
+          this.praise_users = data.data;
         })
     },
     handleDelete (thread) {
       this.$http.delete(`threads/${thread.dynamic_id}`).then(() => {
-        this.$message.success('已删除！')
-        this.$router.go(-1)
+        this.$message.success('已删除！');
+        this.$router.go(-1);
       })
     },
     toggleStatus (timestamp) {
@@ -258,13 +258,13 @@ export default {
         ? null
         : moment().format('YYYY-MM-DD HH:mm:ss')
       this.$http.patch(`threads/${this.thread.dynamic_id}`, this.thread).then(() => {
-        this.$message.success('搞定！')
-        this.loadThread()
+        this.$message.success('搞定！');
+        this.loadThread();
       })
     }
   },
   mounted () {
-    this.loadThread()
+    this.loadThread();
   }
 }
 </script>

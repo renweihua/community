@@ -36,7 +36,7 @@ trait Json
         $data['data'] = $data['data'] ?? [];
         $data['status'] = intval($data['status'] ?? (empty($data['data']) ? 0 : 1));
         $data['msg'] = $data['msg'] ?? (empty($data['status']) ? '数据不存在！' : 'success');
-
+        $data['execution_time'] = microtime(true) - LARAVEL_START;
         return response()->json($data, $this->http_code);
     }
 }
