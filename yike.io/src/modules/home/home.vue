@@ -75,7 +75,6 @@ export default {
       this.$http
         .get(`discover?tab=${this.currentThreadsTab}&page=${page}`)
         .then(threads => {
-          console.log(threads);
           this.threads[this.currentThreadsTab] = threads.data
         })
     },

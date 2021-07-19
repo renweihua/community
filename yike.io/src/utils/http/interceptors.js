@@ -14,6 +14,8 @@ export default http => {
     // https://github.com/mzabriskie/axios#interceptors
     http.interceptors.response.use(
         response => {
+            console.log(response);
+
             let data = response.data;
             if (data.status) {
                 return data;
