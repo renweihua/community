@@ -1,4 +1,4 @@
-import {Message} from 'element-ui'
+import {Message} from 'element-ui';
 
 export default http => {
     // 请求拦截
@@ -14,13 +14,15 @@ export default http => {
     // https://github.com/mzabriskie/axios#interceptors
     http.interceptors.response.use(
         response => {
-            console.log(response);
-
             let data = response.data;
-            if (data.status) {
-                return data;
-            } else {
+            if (data.status == 0) {
                 return Promise.reject(data.msg);
+            } else {
+                // 如果服务端返回新的Token，那么自动存储于data，避免更改现有返回结果
+                if (response.headers.authorization) {
+                    data.authorization = response.headers.authorization;
+                }
+                return data;
             }
         },
         /**
