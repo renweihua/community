@@ -16,9 +16,9 @@ export default {
   methods: {
     loadThreads (page = 1) {
       this.$http
-        .get(`threads?user_id=${this.$parent.user.user_id}&page=${page}`)
+        .get(`dynamics?user_id=${this.$parent.user.user_id}&page=${page}`)
         .then(threads => {
-          this.threads = threads
+          this.threads = threads.data;
         })
     },
     handlePageChanged (page) {
