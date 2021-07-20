@@ -87,13 +87,6 @@ export const loadUser = ({dispatch}) =>
         .loadUserData()
         // store user's data
         .then(({status, data, authorization}) => {
-            if (status == -1) { // 如果返回未登录时，清除Token与会员信息
-                dispatch('setToken', null);
-                dispatch('setUser', {});
-            }else{
-                dispatch('setUser', data);
-            }
-            // 存在新Token时，自动更新
-            if (authorization) dispatch('setToken', authorization);
+            dispatch('setUser', data);
         })
         .catch(logout)

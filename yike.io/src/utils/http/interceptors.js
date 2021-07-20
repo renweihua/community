@@ -1,4 +1,5 @@
 import {Message} from 'element-ui';
+import store from '../../vuex'
 
 export default http => {
     // 请求拦截
@@ -18,9 +19,14 @@ export default http => {
             if (data.status == 0) {
                 return Promise.reject(data.msg);
             } else {
+                if (data.status == -1) {
+                    store.dispatch('setToken', null);
+                    store.dispatch('setUser', {});
+                }
                 // 如果服务端返回新的Token，那么自动存储于data，避免更改现有返回结果
                 if (response.headers.authorization) {
-                    data.authorization = response.headers.authorization;
+                    // data.authorization = response.headers.authorization;
+                    store.dispatch('setToken', response.headers.authorization);
                 }
                 return data;
             }
