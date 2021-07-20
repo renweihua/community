@@ -43,7 +43,7 @@
       </div>
       <div class="form-group">
         <label>个人主页</label>
-        <input type="text" class="form-control" v-model="user.user_info.other_extends.home_url">
+        <input type="url" class="form-control" v-model="user.user_info.other_extends.home_url">
       </div>
       <div class="form-group">
         <label>公司</label>
