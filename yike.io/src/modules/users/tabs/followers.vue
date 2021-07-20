@@ -6,9 +6,9 @@
     <!--</div>-->
     <!--</form>-->
     <div class="list-group list-group-flush">
-      <user-list-item class="list-group-item" :user="user" :key="user.user_id" v-for="user of users.data"></user-list-item>
-      <empty-state v-if="users.data && users.data.length == 0"></empty-state>
-      <paginator :meta="users.meta"></paginator>
+      <user-list-item class="list-group-item" :user="user.user_info" :key="user.user_info.user_id" v-for="user of users"></user-list-item>
+      <empty-state v-if="users && users.length == 0"></empty-state>
+      <paginator :meta="paginator_data"></paginator>
     </div>
     <div class="text-center" v-if="false">
       <button class="mt-2 btn btn-ghost">Load More</button>
@@ -29,7 +29,8 @@ export default {
   components: { UserListItem, EmptyState, Paginator, PlusIcon, EmailIcon },
   data () {
     return {
-      users: []
+      users: [],
+      paginator_data: {}
     }
   },
   created () {
@@ -40,9 +41,11 @@ export default {
   },
   methods: {
     async followers () {
-      this.users = await this.$http.get(
-        `user/${this.$parent.user.username}/followers`
-      )
+      let lists = await this.$http.get(
+        `user/${this.$parent.user.user_id}/fans`
+      );
+      this.paginator_data = lists.data;
+      this.users = lists.data.data;
     }
   }
 }

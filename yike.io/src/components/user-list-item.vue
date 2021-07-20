@@ -6,7 +6,7 @@
     <div class="ml-2">
       <div>
         <router-link tag="a" :to="{name: 'users.show', params: {user_uuid: user.user_uuid}}">
-          <h5 class="mb-0 text-gray-50 d-inline">{{ user.name }}</h5>
+          <h5 class="mb-0 text-gray-50 d-inline">{{ user.nick_name }}</h5>
         </router-link>
         <router-link
           tag="a"
@@ -17,7 +17,7 @@
       <div class="text-12 text-gray-70">{{ user.basic_extends.user_introduction }}</div>
     </div>
     <slot name="appends" :data="user">
-      <follow-btn :item="user" simple class="ml-auto"></follow-btn>
+      <follow-btn :item="user" :simple=user.is_friend class="ml-auto"></follow-btn>
     </slot>
   </div>
 </template>

@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Models\User\User;
 use App\Modules\Bbs\Http\Requests\UserIdRequest;
 use App\Modules\Bbs\Services\DynamicService;
+use App\Modules\Bbs\Services\User\FriendService;
 use App\Modules\Bbs\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -119,5 +120,27 @@ class UserController extends BbsController
         }
         // 激活成功，跳转Web的指定页面即可
         return redirect(config('app.site_url').'?active-success=yes&type=register');
+    }
+
+    /**
+     * 我的关注
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function follows($user_id, FriendService $service) : JsonResponse
+    {
+        $lists = $service->getFollows($user_id);
+        return $this->successJson($lists);
+    }
+
+    /**
+     * 我的粉丝
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function fans($user_id, FriendService $service) : JsonResponse
+    {
+        $lists = $service->getFans($user_id);
+        return $this->successJson($lists);
     }
 }

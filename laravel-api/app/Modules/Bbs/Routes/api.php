@@ -63,6 +63,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/dynamics', 'UserController@dynamics');
             // 邮箱激活
             Route::get('/activate/{verify_token}', 'UserController@activeEmail')->name('user.activate');
+            // 指定会员的粉丝
+            Route::get('/{user_id}/fans', 'UserController@fans');
+            // 指定会员的关注
+            Route::get('/{user_id}/follows', 'UserController@follows');
         });
 
         /**

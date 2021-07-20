@@ -31,12 +31,12 @@ class DynamicFactory extends Factory
             'is_public' => $this->faker->numberBetween(0, 2),
             'access_password' => hash_make(123456),
             'dynamic_type' => $this->faker->numberBetween(0, 3),
-            'cache_extends' => json_encode([
+            'cache_extends' => [
                 'read_num' => $this->faker->numberBetween(0, 10000),
                 'comment_count' => $this->faker->numberBetween(0, 10000),
                 'praise_count' => $this->faker->numberBetween(0, 10000),
                 'collection_count' => $this->faker->numberBetween(0, 10000),
-            ]),
+            ],
             'created_time' => time(),
             'updated_time' => time(),
         ];

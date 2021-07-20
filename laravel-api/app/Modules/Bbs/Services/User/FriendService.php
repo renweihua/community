@@ -22,12 +22,15 @@ class FriendService extends Service
         $lists = UserFollowFan::where('user_id', $login_user_id)
                               ->with([
                                   'friendInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
                               ->paginate(10);
-
+        foreach ($lists as $key => $item){
+            if ($item->friendInfo) $item->friendInfo->is_friend = true;
+            else unset($lists[$key]);
+        }
         return $this->getPaginateFormat($lists);
     }
 
@@ -43,7 +46,7 @@ class FriendService extends Service
         $lists = UserFollowFan::where('friend_id', $login_user_id)
                               ->with([
                                   'userInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
