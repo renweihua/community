@@ -8,7 +8,7 @@
     <div class="list-group list-group-flush">
       <user-list-item class="list-group-item" :user="user.user_info" :key="user.user_info.user_id" v-for="user of users"></user-list-item>
       <empty-state v-if="users && users.length == 0"></empty-state>
-      <paginator :meta="paginator_data"></paginator>
+      <paginator :meta="paginator_data" @change="handleChange"></paginator>
     </div>
     <div class="text-center" v-if="false">
       <button class="mt-2 btn btn-ghost">Load More</button>
@@ -40,12 +40,15 @@ export default {
     ...mapGetters(['currentUser'])
   },
   methods: {
-    async followers () {
+    async followers (page = 1) {
       let lists = await this.$http.get(
-        `user/${this.$parent.user.user_id}/fans`
+        `user/${this.$parent.user.user_id}/fans?page=${page}`
       );
       this.paginator_data = lists.data;
       this.users = lists.data.data;
+    },
+    handleChange (page) {
+      this.followers(page);
     }
   }
 }

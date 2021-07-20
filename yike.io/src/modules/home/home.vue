@@ -73,7 +73,7 @@ export default {
   methods: {
     loadThreads (page = 1) {
       this.$http
-        .get(`discover?tab=${this.currentThreadsTab}&page=${page}`)
+        .get(`discover?tab=${this.currentThreadsTab}&page=${page}&limit=20`)
         .then(threads => {
           this.threads[this.currentThreadsTab] = threads.data
         })

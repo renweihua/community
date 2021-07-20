@@ -44,7 +44,7 @@
         <empty-state message="该分类下无相关讨论哦~"></empty-state>
       </li>
     </ul>
-    <paginator :meta="threads.meta" @change="handleChange"></paginator>
+    <paginator :meta="threads" @change="handleChange"></paginator>
   </div>
 </template>
 
