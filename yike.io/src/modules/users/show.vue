@@ -15,7 +15,7 @@
               class="ml-md-1 d-block d-md-inline text-gray-90 text-16"
             >@{{ user.user_info ? user.user_info.user_uuid : '' }}</a>
           </h1>
-          <div class="my-1" v-if="!user.banned_at">{{ user.bio }}</div>
+          <div class="my-1" v-if="!user.banned_at">{{ user.user_introduction }}</div>
 
           <div class="extends text-white d-none d-md-block d-lg-flex" v-if="!user.banned_at">
             <div class="mr-1" v-if="user.user_info && user.user_info.basic_extends.location">

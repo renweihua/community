@@ -2,21 +2,21 @@
   <div class="user-card box box-flush text-center" v-if="user">
     <div class="box-body">
       <div>
-        <router-link :to="{name:'users.show', params: {username: user.username}}">
-          <img :src="user.avatar" class="avatar-80" :alt="user.name">
+        <router-link :to="{name:'users.show', params: {user_uuid: user.user_uuid}}">
+          <img :src="user.user_avatar" class="avatar-80" :alt="user.name">
         </router-link>
       </div>
       <h6 class="mt-1 mb-0 text-22 d-inline-block">
-        <router-link :to="{name:'users.show', params: {username: user.username}}">{{ user.name }}</router-link>
+        <router-link :to="{name:'users.show', params: {user_uuid: user.user_uuid}}">{{ user.nick_name }}</router-link>
       </h6>
       <div>
         <router-link
           class="text-12 text-muted"
-          :to="{name: 'users.show', params: {username: user.username}}"
-        >@{{ user.username }}</router-link>
+          :to="{name: 'users.show', params: {user_uuid: user.user_uuid}}"
+        >@{{ user.nick_name }}</router-link>
       </div>
       <div class="text-gray-50">
-        <div class="py-1">{{ user.bio }}</div>
+        <div class="py-1">{{ user.user_introduction }}</div>
       </div>
       <user-social-btns
         :user="user"
