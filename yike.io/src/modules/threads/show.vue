@@ -111,7 +111,7 @@
                   <router-link :to="{name: 'users.show', params: {user_uuid: thread.user_info ? thread.user_info.user_uuid : ''}}">
                     <h3 class="text-gray-50 text-14">{{ thread.user_info.nick_name }}</h3>
                   </router-link>
-                  <div class="text-12 text-muted">{{ thread.user_info.user_introduction }}</div>
+                  <div class="text-12 text-muted">{{ thread.user_info.basic_extends.user_introduction }}</div>
                 </div>
               </div>
               <div class="right-action">

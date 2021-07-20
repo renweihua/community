@@ -131,7 +131,7 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 我的签到记录：按月筛选
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
-            Route::put('/update', 'IndexController@update');
+            Route::match(['put', 'patch'], '/update', 'IndexController@update');
             // 更换头像
             Route::match(['put', 'patch'], '/updateAvatar', 'IndexController@updateAvatar');
             // 更换背景封面图

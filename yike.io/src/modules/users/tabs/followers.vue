@@ -6,7 +6,7 @@
     <!--</div>-->
     <!--</form>-->
     <div class="list-group list-group-flush">
-      <user-list-item class="list-group-item" :user="user" :key="user.id" v-for="user of users.data"></user-list-item>
+      <user-list-item class="list-group-item" :user="user" :key="user.user_id" v-for="user of users.data"></user-list-item>
       <empty-state v-if="users.data && users.data.length == 0"></empty-state>
       <paginator :meta="users.meta"></paginator>
     </div>

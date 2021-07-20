@@ -22,7 +22,7 @@ class FriendService extends Service
         $lists = UserFollowFan::where('user_id', $login_user_id)
                               ->with([
                                   'friendInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
@@ -43,7 +43,7 @@ class FriendService extends Service
         $lists = UserFollowFan::where('friend_id', $login_user_id)
                               ->with([
                                   'userInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')

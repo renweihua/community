@@ -30,7 +30,7 @@
 					placeholder="请输入简介"
 					placeholder-style="font-size: 14px;color:#8F8F94"
 					auto-height
-					v-model="info.user_introduction"
+					v-model="info.basic_extends.user_introduction"
 				></textarea>
 			</view>
 		</view>
@@ -50,7 +50,9 @@ export default {
 		return {
 			// 用户信息
 			info: {
-				user_introduction: '',
+				basic_extends: {
+					user_introduction: '',
+				},
 				user_sex: '',
 				user_avatar: '',
 				nick_name: ''
@@ -74,7 +76,7 @@ export default {
 		// 获取登录账户用户信息
 		let login_user = this.$store.getters['user/getLoginUserInfoData'].user_info;
 		this.info = {
-			user_introduction: typeof login_user.user_introduction == 'string' ? login_user.user_introduction : '该同袍还不知道怎么描述寄己 (╯▽╰)╭',
+			user_introduction: typeof login_user.basic_extends.user_introduction == 'string' ? login_user.basic_extends.user_introduction : '该同袍还不知道怎么描述寄己 (╯▽╰)╭',
 			user_sex: login_user.user_sex,
 			user_avatar: login_user.user_avatar,
 			nick_name: login_user.nick_name
@@ -87,7 +89,7 @@ export default {
 		fnModify() {
 			this.isModify = true;
 			let paramArray = [];
-			let { cityid, nick_name, user_sex, user_avatar, user_introduction } = this.info;
+			let { cityid, nick_name, user_sex, user_avatar, basic_extends } = this.info;
 			// 用户信息
 			let userInfo = Object.assign({}, this.$store.getters['user/getLoginUserInfoData']);
 			// 修改昵称
@@ -112,7 +114,7 @@ export default {
 				});
 			}
 			// 修改简介
-			if (user_introduction != this.tempInfo.user_introduction) {
+			if (basic_extends.user_introduction != this.tempInfo.basic_extends.user_introduction) {
 				paramArray.push({
 					option: '5',
 					value: user_introduction

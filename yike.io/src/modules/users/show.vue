@@ -15,7 +15,7 @@
               class="ml-md-1 d-block d-md-inline text-gray-90 text-16"
             >@{{ user.user_info ? user.user_info.user_uuid : '' }}</a>
           </h1>
-          <div class="my-1" v-if="!user.banned_at">{{ user.user_introduction }}</div>
+          <div class="my-1" v-if="!user.banned_at">{{ user.basic_extends.user_introduction }}</div>
 
           <div class="extends text-white d-none d-md-block d-lg-flex" v-if="!user.banned_at">
             <div class="mr-1" v-if="user.user_info && user.user_info.basic_extends.location">
@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="pt-2">
-            <user-social-btns :user="user" :spacing="2"></user-social-btns>
+            <user-social-btns :user="user.user_info" :spacing="2"></user-social-btns>
           </div>
         </div>
         <template v-if="currentUser && currentUser.user_id != user.user_id && !user.banned_at">

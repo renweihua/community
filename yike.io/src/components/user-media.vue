@@ -13,7 +13,7 @@
         </router-link>
       </div>
       <slot name="description">
-        <div class="text-12 text-gray-70">{{ user.user_introduction ? user.user_introduction : '' }}</div>
+        <div class="text-12 text-gray-70">{{ user.basic_extends.user_introduction ? user.basic_extends.user_introduction : '' }}</div>
       </slot>
     </div>
     <slot name="appends" :data="user"></slot>

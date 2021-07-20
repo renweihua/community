@@ -12,11 +12,11 @@
         <label>性别</label>
         <div>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="male" class="custom-control-input" value="0" v-model="user.user_sex">
+            <input type="radio" id="male" class="custom-control-input" value="0" v-model="user.user_info.user_sex">
             <label class="custom-control-label" for="male">男</label>
           </div>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="female" class="custom-control-input" value="1" v-model="user.user_sex">
+            <input type="radio" id="female" class="custom-control-input" value="1" v-model="user.user_info.user_sex">
             <label class="custom-control-label" for="female">女</label>
           </div>
         </div>
@@ -38,21 +38,21 @@
       </div>
       <div class="form-group">
         <label>座右铭</label>
-        <textarea class="form-control" v-model="user.user_introduction"></textarea>
+        <textarea class="form-control" v-model="user.user_info.basic_extends.user_introduction"></textarea>
         <small class="form-text text-muted">You can @mention other users and organizations to link to them.</small>
       </div>
       <div class="form-group">
         <label>个人主页</label>
-        <input type="text" class="form-control" v-model="user.user_info.extends.home_url">
+        <input type="text" class="form-control" v-model="user.user_info.other_extends.home_url">
       </div>
       <div class="form-group">
         <label>公司</label>
-        <input type="text" class="form-control" v-model="user.user_info.extends.company">
+        <input type="text" class="form-control" v-model="user.user_info.other_extends.company">
         <small class="form-text text-muted">You can @mention your company’s GitHub organization to link it.</small>
       </div>
       <div class="form-group">
         <label>当前所在地</label>
-        <input type="text" class="form-control" v-model="user.user_info.extends.location">
+        <input type="text" class="form-control" v-model="user.user_info.basic_extends.location">
       </div>
       <button type="submit" class="btn btn-primary rounded">保存</button>
     </form>
@@ -67,9 +67,11 @@ export default {
   data () {
     return {
       user: {
-        extends: {
+        other_extends: {
           home_url: '',
           company: '',
+        },
+        basic_extends: {
           location: ''
         }
       }
@@ -85,8 +87,8 @@ export default {
     ...mapActions(['setUser']),
     async submit () {
       const result = await this.$http.patch(
-        `users/${this.user.username}`,
-        this.user
+        `user/update`,
+        this.user.user_info
       )
 
       if (result) {

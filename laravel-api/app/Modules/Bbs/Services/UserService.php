@@ -41,11 +41,11 @@ class UserService extends Service
     {
         if (is_numeric($user_id)){
             $user = User::with(['userInfo' => function($query) {
-                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes']);
+                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes', 'basic_extends', 'other_extends']);
             }])->find($user_id);
         }else{
             $user = User::with(['userInfo' => function($query) use($user_id) {
-                $query->where('user_uuid', $user_id)->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes']);
+                $query->where('user_uuid', $user_id)->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'user_introduction', 'get_likes', 'basic_extends', 'other_extends']);
             }])->first();
         }
         if (empty($user)) {

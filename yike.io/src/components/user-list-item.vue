@@ -14,7 +14,7 @@
           :to="{name: 'users.show', params: {user_uuid: user.user_uuid}}"
         >@{{ user.nick_name }}</router-link>
       </div>
-      <div class="text-12 text-gray-70">{{ user.user_introduction }}</div>
+      <div class="text-12 text-gray-70">{{ user.basic_extends.user_introduction }}</div>
     </div>
     <slot name="appends" :data="user">
       <follow-btn :item="user" simple class="ml-auto"></follow-btn>

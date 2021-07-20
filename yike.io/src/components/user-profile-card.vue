@@ -16,7 +16,7 @@
         >@{{ user.nick_name }}</router-link>
       </div>
       <div class="text-gray-50">
-        <div class="py-1">{{ user.user_introduction }}</div>
+        <div class="py-1">{{ user.basic_extends.user_introduction }}</div>
       </div>
       <user-social-btns
         :user="user"

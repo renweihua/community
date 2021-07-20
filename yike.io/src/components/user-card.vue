@@ -18,7 +18,7 @@
       <follow-btn :item="user" class="ml-md-auto mt-1 mtsm-0"></follow-btn>
     </div>
     <div class="text-gray-70">
-      <div class="py-2">{{ user.user_introduction }}</div>
+      <div class="py-2">{{ user.basic_extends.user_introduction }}</div>
       <div>
         <map-marker-icon></map-marker-icon>Beijing, China
       </div>

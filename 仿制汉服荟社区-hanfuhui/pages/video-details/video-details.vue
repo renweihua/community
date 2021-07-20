@@ -31,7 +31,7 @@
 								:color="calUser.user_sex_text == '男' ? '#479bd4' : '#FF6699'"
 							></i-icon>
 						</view>
-						<view class="f24r cgray ellipsis">{{ calUser.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
+						<view class="f24r cgray ellipsis">{{ calUser.basic_extends.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
 					</view>
 					<!-- 如果登录会员就是发布者，那么不展示 -->
 					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">

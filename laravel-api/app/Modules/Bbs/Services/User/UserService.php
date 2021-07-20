@@ -36,7 +36,12 @@ class UserService extends Service
         $user_info->nick_name = $params['nick_name'];
         $user_info->user_sex = $params['user_sex'];
         $user_info->user_avatar = $params['user_avatar'];
-        $user_info->user_introduction = $params['user_introduction'] ?? '';
+        $user_info->other_extends = $params['other_extends'];
+        $user_info->basic_extends = array_merge($user_info->basic_extends, [
+            'location' => $params['basic_extends']['location'] ?? $user_info->basic_extends['location'],
+            'user_birth' => $params['basic_extends']['user_birth'] ?? $user_info->basic_extends['user_birth'],
+            'user_introduction' => $params['basic_extends']['user_introduction'] ?? $user_info->basic_extends['user_introduction'],
+        ]);
 
         if ($user_info->save()){
             $this->setError('个人资料编辑成功！');

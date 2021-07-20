@@ -41,7 +41,7 @@
 				<!-- UUID 唯一标识 -->
 				<view v-if="tempUserInfoData.user_info.user_uuid" class="f24r cgray fword">UUID：{{ tempUserInfoData.user_info.user_uuid }}</view>
 				<!-- 简介说明 -->
-				<view class="f24r c555 fword">{{ tempUserInfoData.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
+				<view class="f24r c555 fword">{{ tempUserInfoData.basic_extends.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
 				<!-- 城市位置 -->
 				<view class="flex flex-aic mtb18r" v-if="tempUserInfoData.user_info.city_info">
 					<i-icon type="weizhi" size="32" color="#8F8F94"></i-icon>

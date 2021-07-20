@@ -171,14 +171,14 @@ export default {
     }
   },
   created () {
-    this.links = this.$user().user_info.extends
+    this.links = this.$user().user_info.other_extends
     console.log(this.links);
   },
   methods: {
     submit () {
       this.$http
         .patch(`users/${this.$user().user_id}`, {
-          extends: this.links
+          other_extends: this.links
         })
         .then(() => {
           this.$message.success('修改成功！')

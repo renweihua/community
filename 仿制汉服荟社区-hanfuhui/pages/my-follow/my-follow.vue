@@ -42,7 +42,7 @@
 								</view>
 								<view class="f24r cgray ellipsis">{{ calFormatDate(item.created_time) }}</view>
 
-								<view class="f24r cgray ellipsis">{{ item.friend_info.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
+								<view class="f24r cgray ellipsis">{{ item.friend_info.basic_extends.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
 							</view>
 							<view class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="fnUserFollow(item)">
 								{{ item.cross_correlation ? '已关注' : '关注' }}
