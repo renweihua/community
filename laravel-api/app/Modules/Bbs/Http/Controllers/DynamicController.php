@@ -72,7 +72,7 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        $comments = $this->service->getDynamicComments((int)$data['dynamic_id'], $this->getLoginUserId());
+        $comments = $this->service->getDynamicComments((int)$data['dynamic_id'], $this->getLoginUserId(), $request->input('is_pc', 0));
         return $this->successJson($comments);
     }
 

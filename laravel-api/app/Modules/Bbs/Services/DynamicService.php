@@ -256,33 +256,47 @@ class DynamicService extends Service
      *
      * @return array
      */
-    public function getDynamicComments(int $dynamic_id, int $login_user_id = 0)
+    public function getDynamicComments(int $dynamic_id, int $login_user_id = 0, $is_pc = 0)
     {
-        $comments = DynamicComment::where('dynamic_id', $dynamic_id)
-            ->where('top_level', 0) // 评论要走多层级，默认查顶级
-            ->with([
-                'userInfo' => function($query){
-                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
-                },
-                'replies' => function($query){
-                    $query->with([
-                        'userInfo' => function($query){
-                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
-                        },
-                        'replyUser' => function($query){
-                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
-                        },
-                    ]);
-                },
-                'hasPraise' => function($query) use($login_user_id){
-                    $query->where('user_id', $login_user_id);
-                }
-            ])
-            ->withCount([
-                'replies'
-            ])
-            ->orderBy('created_time', 'DESC')
-            ->paginate(10);
+        if ($is_pc){ // PC端只是就是评论列展示，无需回复树状结构
+            $comments = DynamicComment::where('dynamic_id', $dynamic_id)
+                ->with([
+                    'userInfo' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
+                    },
+                    'hasPraise' => function($query) use($login_user_id){
+                        $query->where('user_id', $login_user_id);
+                    }
+                ])
+                ->orderBy('created_time', 'DESC')
+                ->paginate(10);
+        }else{
+            $comments = DynamicComment::where('dynamic_id', $dynamic_id)
+                ->where('top_level', 0) // 评论要走多层级，默认查顶级
+                ->with([
+                    'userInfo' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
+                    },
+                    'replies' => function($query){
+                        $query->with([
+                            'userInfo' => function($query){
+                                $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                            },
+                            'replyUser' => function($query){
+                                $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                            },
+                        ]);
+                    },
+                    'hasPraise' => function($query) use($login_user_id){
+                        $query->where('user_id', $login_user_id);
+                    }
+                ])
+                ->withCount([
+                    'replies'
+                ])
+                ->orderBy('created_time', 'DESC')
+                ->paginate(10);
+        }
 
         return $this->getPaginateFormat($comments);
     }

@@ -238,7 +238,7 @@ export default {
         .get(
           `dynamic/comments?commentable_type=${this.objectType}&dynamic_id=${
             this.objectId
-          }&page=${this.query.page}`
+          }&page=${this.query.page}&is_pc=1`
         )
         .then(comments => {
         console.log('loadComments');
