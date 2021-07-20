@@ -35,7 +35,7 @@ class DynamicFilter extends ModelFilter
                 break;
         }
     }
-    
+
     // 名称筛选
     public function name(string $dynamic_title = '')
     {

@@ -22,7 +22,7 @@ class DynamicComment extends Model
 
         static::created($saveContent);
 
-        static::deleting($saveContent);
+        static::deleted($saveContent);
     }
 
     public function dynamic()

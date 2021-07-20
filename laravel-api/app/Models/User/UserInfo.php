@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Models\Dynamic\Dynamic;
 use App\Models\Model;
 use App\Modules\Bbs\Database\factories\UserInfoFactory;
 use Illuminate\Support\Facades\Storage;
@@ -12,12 +13,29 @@ class UserInfo extends Model
     // 追加属性
     protected $appends = ['user_sex_text', 'time_formatting'];
 
+    // 刷新统计数据
+    public function refreshCache()
+    {
+        return $this->update(['basic_extends' => \array_merge(self::BASIC_EXTENDS_FIELDS, [
+            'user_birth' => $this->basic_extends['user_birth'],
+            'location' => $this->basic_extends['location'],
+            'user_introduction' => $this->basic_extends['user_introduction'],
+            'get_likes' => $this->basic_extends['get_likes'],
+            'dynamics_count' => $this->dynamics()->count(),
+            'fans_count' => $this->fans()->count(),
+            'follows_count' => $this->follows()->count(),
+        ])]);
+    }
+
     // 会员的基础扩展字段
     const BASIC_EXTENDS_FIELDS = [
         'user_birth' => '', // 生日
         'location' => '', // 所在城市地区
         'user_introduction' => '', // 个人介绍
         'get_likes' => 0, //获赞数
+        'dynamics_count' => 0, // 动态总量
+        'fans_count' => 0, // 粉丝数量
+        'follows_count' => 0, // 关注数量
     ];
 
     public function getBasicExtendsAttribute()
@@ -87,6 +105,11 @@ class UserInfo extends Model
     public function setOtherExtendsAttribute($value)
     {
         $this->attributes['other_extends'] = json_encode(array_merge(json_decode($this->attributes['other_extends'] ?? '{}', true), $value));
+    }
+
+    public function dynamics()
+    {
+        return $this->hasMany(Dynamic::class, $this->primaryKey, $this->primaryKey);
     }
 
     public function fans()

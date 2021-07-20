@@ -53,23 +53,23 @@
           <div class="nav-item">
             <router-link :to="{ name: 'users.threads' }" class="nav-link" exact>
               讨论
-              <span class="text-gray-70 pl-1">{{ user.cache ? user.cache.threads_count : 0 }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.dynamics_count : 0 }}</span>
             </router-link>
           </div>
           <!--<div class="nav-item"><a href="#" class="nav-link">回复 234</a></div>-->
           <div class="nav-item">
             <router-link :to="{ name: 'users.following' }" class="nav-link" exact>
               关注
-              <span class="text-gray-70 pl-1">{{ user.cache ? user.cache.followings_count : 0 }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.follows_count : 0 }}</span>
             </router-link>
           </div>
           <div class="nav-item">
             <router-link :to="{ name: 'users.followers' }" class="nav-link" exact>
               粉丝
-              <span class="text-gray-70 pl-1">{{ user.cache ? user.cache.followers_count : 0 }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.fans_count : 0 }}</span>
             </router-link>
           </div>
-          <div class="nav-item ml-auto" v-if="currentUser.is_admin">
+          <div class="nav-item ml-auto" v-if="currentUser.user_info.is_admin">
             <div class="btn-group">
               <button
                 type="button"

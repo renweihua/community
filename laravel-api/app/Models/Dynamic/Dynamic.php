@@ -63,6 +63,20 @@ class Dynamic extends Model
     protected $is_delete  = 0;
     protected $appends = ['time_formatting'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除动态时，调用会员的统计缓存字段
+        $saveContent = function (self $dynamic) {
+            $dynamic->userInfo->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleted($saveContent);
+    }
+
     /**
      * 只查询 启用 的作用域
      *
