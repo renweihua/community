@@ -16,9 +16,13 @@ class TopicService extends Service
      *
      * @return mixed
      */
-    public function lists()
+    public function lists($limit = -1)
     {
-        $lists = Topic::orderBy('topic_sort', 'ASC')->get();
+        if ($limit > 0){
+            $lists = Topic::limit($limit)->orderBy('topic_sort', 'ASC')->get();
+        }else{
+            $lists = Topic::orderBy('topic_sort', 'ASC')->get();
+        }
         return $lists;
     }
 

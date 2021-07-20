@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Modules\Bbs\Http\Requests\TopicIdRequest;
 use App\Modules\Bbs\Services\TopicService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class TopicController extends BbsController
 {
@@ -18,9 +19,9 @@ class TopicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function lists(): JsonResponse
+    public function lists(Request $request): JsonResponse
     {
-        $lists = $this->service->lists();
+        $lists = $this->service->lists($request->input('limit', -1));
         return $this->successJson($lists);
     }
 
