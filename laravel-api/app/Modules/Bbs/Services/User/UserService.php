@@ -48,6 +48,23 @@ class UserService extends Service
     }
 
     /**
+     * 更换头像
+     *
+     * @param          $login_user
+     * @param  string  $user_avatar
+     *
+     * @return bool
+     */
+    public function updateAvatarCover($login_user, string $user_avatar): bool
+    {
+        $login_user->userInfo->user_avatar = $user_avatar;
+        $login_user->userInfo->save();
+
+        $this->setError('头像设置成功！');
+        return true;
+    }
+
+    /**
      * 更换背景封面图
      *
      * @param          $login_user

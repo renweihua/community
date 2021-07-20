@@ -6,6 +6,7 @@ use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest;
+use App\Modules\Bbs\Http\Requests\User\UpdateAvatarRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,24 @@ class IndexController extends BbsController
         $request->validated();
 
         if ($this->service->updateUser($this->getLoginUserId(), $request->all())) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 更换会员头像
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\UpdateAvatarRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateAvatar(UpdateAvatarRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        if ($this->service->updateAvatarCover($this->getLoginUser(), $request->input('user_avatar'))) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

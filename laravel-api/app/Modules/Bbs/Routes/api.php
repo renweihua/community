@@ -132,6 +132,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
             Route::put('/update', 'IndexController@update');
+            // 更换头像
+            Route::match(['put', 'patch'], '/updateAvatar', 'IndexController@updateAvatar');
             // 更换背景封面图
             Route::put('/updateBackgroundCover', 'IndexController@updateBackgroundCover');
             // 更改登录密码

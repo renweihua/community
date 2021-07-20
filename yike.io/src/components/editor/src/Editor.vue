@@ -168,7 +168,7 @@ export default {
         jsonFieldName: 'url',
         uploadUrl: this.$http.defaults.baseURL + '/files/upload',
         extraHeaders: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `${this.authToken}`
         }
       })
     },
