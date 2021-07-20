@@ -68,7 +68,7 @@
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.comment_count || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.cache_extends.comment_count || 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -82,11 +82,11 @@
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
 				<i-icon type="dianzan" size="48" :color="albumInfoData.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ albumInfoData.praise_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ albumInfoData.cache_extends.praise_count || 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
 				<i-icon type="shoucang" size="48" :color="albumInfoData.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ albumInfoData.collection_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ albumInfoData.cache_extends.collection_count || 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>
@@ -316,16 +316,16 @@ export default {
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				// 用户是否点过赞
 				if (filItem.is_praise) {
-					filItem.praise_count--;
+					filItem.cache_extends.praise_count--;
 					this.albumInfoData.is_praise = filItem.is_praise = false;
-					this.albumInfoData.praise_count--;
+					this.albumInfoData.cache_extends.praise_count--;
 					// 点赞列表减头像
 					let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
 					this.$store.commit('interact/setTopListData', filTopList);
 				} else {
-					filItem.praise_count++;
+					filItem.cache_extends.praise_count++;
 					this.albumInfoData.is_praise = filItem.is_praise = true;
-					this.albumInfoData.praise_count++;
+					this.albumInfoData.cache_extends.praise_count++;
 					if (!login_user.user_id) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
@@ -342,13 +342,13 @@ export default {
 			if (filItem.is_praise) {
 				delCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.praise_count--;
+					filItem.cache_extends.praise_count--;
 					filItem.is_praise = false;
 				});
 			} else {
 				addCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.praise_count++;
+					filItem.cache_extends.praise_count++;
 					filItem.is_praise = true;
 				});
 			}
@@ -447,13 +447,13 @@ export default {
 
 				// 用户是否已收藏
 				if (filItem.is_collection) {
-					filItem.collection_count--;
+					filItem.cache_extends.collection_count--;
 					this.albumInfoData.is_collection = filItem.is_collection = false;
-					this.albumInfoData.collection_count--;
+					this.albumInfoData.cache_extends.collection_count--;
 				} else {
-					filItem.collection_count++;
+					filItem.cache_extends.collection_count++;
 					this.albumInfoData.is_collection = filItem.is_collection = true;
-					this.albumInfoData.collection_count++;
+					this.albumInfoData.cache_extends.collection_count++;
 				}
 			});
 		},
@@ -501,8 +501,8 @@ export default {
 				}
 				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
-				if (this.albumInfoData.comment_count == 0) this.mescroll.removeEmpty();
-				this.albumInfoData.comment_count++;
+				if (this.albumInfoData.cache_extends.comment_count == 0) this.mescroll.removeEmpty();
+				this.albumInfoData.cache_extends.comment_count++;
 				this.$refs.comm.visible = false;
 				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
@@ -531,7 +531,7 @@ export default {
 				if (this.fromPage == 'find') {
 					filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 				}
-				filItem.comment_count++;
+				filItem.cache_extends.comment_count++;
 			});
 		},
 		// 评论项操作
@@ -577,18 +577,18 @@ export default {
 									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
 									let filreplies = filCommentList.replies;
 									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
-									filCommentList.comment_count = filCommentList.comment_count - res.data.length;
+									filCommentList.cache_extends.comment_count = filCommentList.cache_extends.comment_count - res.data.length;
 									filCommentList.replies = filreplies;
 									// 评论数量减少
-									this.dynamic.comment_count = this.dynamic.comment_count - res.data.length;
+									this.dynamic.cache_extends.comment_count = this.dynamic.cache_extends.comment_count - res.data.length;
 								} else {
 									// 评论发布项删除
 									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
 									// 评论数量减少
-									this.dynamic.comment_count--;
+									this.dynamic.cache_extends.comment_count--;
 								}
-								if (this.albumInfoData.comment_count == 0) this.mescroll.showEmpty();
+								if (this.albumInfoData.cache_extends.comment_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = [];
 								// 来自主要跳转
@@ -611,7 +611,7 @@ export default {
 								if (this.fromPage == 'find') {
 									filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 								}
-								filItem.comment_count = filItem.comment_count - res.data.length;
+								filItem.cache_extends.comment_count = filItem.cache_extends.comment_count - res.data.length;
 							});
 							break;
 						default:

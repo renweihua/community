@@ -148,12 +148,10 @@ class DynamicService extends Service
             $author = $dynamic->user_id;
 
             $userInfoInstance = UserInfo::getInstance();
-            $parise_num = 1;
             // 是否已点赞过了该动态
             if ($dynamicPraise->isPraise($login_user_id, $dynamic_id)) {
-                $parise_num = -1;
-                // 删除点赞记录
-                $dynamicPraise->where($data)->delete();
+                // 删除点赞记录[先first再delete，为了触发模型实际]
+                $dynamicPraise->where($data)->first()->delete();
                 // 会员获赞数递减
                 $userInfoInstance->setGetLikes($author, -1);
 
@@ -186,9 +184,6 @@ class DynamicService extends Service
                 $this->setError('点赞成功！');
             }
 
-            // 动态的点赞量实时变动（沉余字段）
-            $dynamic->increment('praise_count', $parise_num);
-
             DB::commit();
             return true;
         } catch (FailException $e) {
@@ -211,7 +206,7 @@ class DynamicService extends Service
                                   ->select('relation_id', 'user_id', 'dynamic_id', 'created_time')
                                   ->with([
                                       'dynamic' => function($query) use($login_user_id){
-                                          $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'praise_count', 'collection_count', 'comment_count', 'dynamic_type', 'topic_id')
+                                          $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'cache_extends', 'dynamic_type', 'topic_id')
                                               ->with([
                                                   'userInfo' => function($query) use($login_user_id){
                                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex')->with([
@@ -265,12 +260,10 @@ class DynamicService extends Service
         ];
         DB::beginTransaction();
         try {
-            $parise_num = 1;
             // 是否已点赞过了该动态
             if ($dynamicCollection->isCollection($login_user_id, $dynamic_id)) {
-                $parise_num = -1;
-                // 删除点赞记录
-                $dynamicCollection->where($data)->delete();
+                // 删除点赞记录[先first再delete，为了触发模型实际]
+                $dynamicCollection->where($data)->first()->delete();
                 $this->setError('取消收藏成功！');
             } else {
                 $ip_agent = get_client_info();
@@ -297,9 +290,6 @@ class DynamicService extends Service
 
                 $this->setError('收藏成功！');
             }
-
-            // 动态的收藏量实时变动（沉余字段）
-            $dynamic->increment('collection_count', $parise_num);
 
             DB::commit();
             return true;
@@ -356,9 +346,6 @@ class DynamicService extends Service
             ];
             $comment = $dynamicCommentInstance->create($validate_data);
 
-            // 动态的评论量实时变动（沉余字段）
-            $dynamic->increment('comment_count');
-
             // 给动态归属者发送消息：互动消息：谁评论了你的动态
             if ($dynamic->user_id != $login_user_id){
                 if (!Notify::insert([
@@ -382,7 +369,7 @@ class DynamicService extends Service
             // 默认关联数据设置
             $comment->replies = [];
             $comment->is_praise = false;
-            $comment->praise_count = $comment->replies_count = 0;
+            $comment->replies_count = 0;
 
             return $comment;
         } catch (FailException $e) {
@@ -437,10 +424,6 @@ class DynamicService extends Service
                 // 评论的所有回复记录：批量假删除
                 $dynamicCommentInstance->whereIn('comment_id', $reply_ids)->update([$delete_filed => 1]);
             }
-
-            // 动态的评论量实时变动（沉余字段）
-            // 评论数量累减：count($reply_ids) + 1 是表示：评论与回复做占用的总条数
-            $comment->dynamic->decrement('comment_count', count($reply_ids) + 1);
 
             DB::commit();
             $this->setError('评论删除成功！');

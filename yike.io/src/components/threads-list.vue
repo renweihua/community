@@ -21,15 +21,15 @@
           <div class="text-gray-60 d-flex justify-content-between align-items-center">
             <a class="p-1">
               <like-icon></like-icon>
-              {{ item.praise_count }}
+              {{ item.cache_extends.praises_count }}
             </a>
             <a class="p-1">
               <comment-icon></comment-icon>
-              {{ item.collection_count }}
+              {{ item.cache_extends.comments_count }}
             </a>
             <a class="p-1">
               <view-icon></view-icon>
-              {{ item.read_num }}
+              {{ item.cache_extends.reads_num }}
             </a>
           </div>
           <div class="ml-1 text-gray-60">

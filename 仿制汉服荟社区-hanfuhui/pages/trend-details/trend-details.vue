@@ -68,12 +68,12 @@
 					</block>
 					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">
 						{{ dynamic.is_praise ? '已赞' : '赞' }}
-						<text class="f24r cbrown ml18r">{{ dynamic.praise_count }}</text>
+						<text class="f24r cbrown ml18r">{{ dynamic.cache_extends.praise_count }}</text>
 					</view>
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ dynamic.comment_count || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ dynamic.cache_extends.comment_count || 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -87,11 +87,11 @@
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
 				<i-icon type="dianzan" size="48" :color="dynamic.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ dynamic.praise_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ dynamic.cache_extends.praise_count || 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
 				<i-icon type="shoucang" size="48" :color="dynamic.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ dynamic.collection_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ dynamic.cache_extends.collection_count || 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>
@@ -303,16 +303,16 @@ export default {
 				if (!res.status) return;
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				if (filItem.is_praise) {
-					filItem.praise_count--;
+					filItem.cache_extends.praise_count--;
 					this.trendData.is_praise = filItem.is_praise = false;
-					this.trendData.praise_count--;
+					this.trendData.cache_extends.praise_count--;
 					// 点赞列表减头像
 					let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
 					this.$store.commit('interact/setTopListData', filTopList);
 				} else {
-					filItem.praise_count++;
+					filItem.cache_extends.praise_count++;
 					this.trendData.is_praise = filItem.is_praise = true;
-					this.trendData.praise_count++;
+					this.trendData.cache_extends.praise_count++;
 					if (login_user.user_id) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
@@ -329,13 +329,13 @@ export default {
 			if (filItem.is_praise) {
 				delCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.praise_count--;
+					filItem.cache_extends.praise_count--;
 					filItem.is_praise = false;
 				});
 			} else {
 				addCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.praise_count++;
+					filItem.cache_extends.praise_count++;
 					filItem.is_praise = true;
 				});
 			}
@@ -422,13 +422,13 @@ export default {
 
 				// 用户是否已收藏
 				if (filItem.is_collection) {
-					filItem.collection_count--;
+					filItem.cache_extends.collection_count--;
 					this.trendData.is_collection = filItem.is_collection = false;
-					this.trendData.collection_count--;
+					this.trendData.cache_extends.collection_count--;
 				} else {
-					filItem.collection_count++;
+					filItem.cache_extends.collection_count++;
 					this.trendData.is_collection = filItem.is_collection = true;
-					this.trendData.collection_count++;
+					this.trendData.cache_extends.collection_count++;
 				}
 			});
 		},
@@ -472,13 +472,13 @@ export default {
 				} else if (this.reply_id > 0) {
 					// 有回复项追加
 					let filCommentList = this.commentListData.filter(item => item.comment_id == this.top_level)[0];
-					filCommentList.comment_count++;
+					filCommentList.cache_extends.comment_count++;
 					filCommentList.replies = filCommentList.replies.concat([res.data]);
 				}
 				this.$store.commit('setCommContentData', '');
 				// 动态的评论数
-				if (this.dynamic.comment_count == 0) this.mescroll.removeEmpty();
-				this.dynamic.comment_count++;
+				if (this.dynamic.cache_extends.comment_count == 0) this.mescroll.removeEmpty();
+				this.dynamic.cache_extends.comment_count++;
 				this.$refs.comm.visible = false;
 				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
@@ -528,18 +528,18 @@ export default {
 									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
 									let filreplies = filCommentList.replies;
 									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
-									filCommentList.comment_count = filCommentList.comment_count - res.data.length;
+									filCommentList.cache_extends.comment_count = filCommentList.cache_extends.comment_count - res.data.length;
 									filCommentList.replies = filreplies;
 									// 评论数量减少
-									this.dynamic.comment_count = this.dynamic.comment_count - res.data.length;
+									this.dynamic.cache_extends.comment_count = this.dynamic.cache_extends.comment_count - res.data.length;
 								} else {
 									// 评论发布项删除
 									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
 									// 评论数量减少
-									this.dynamic.comment_count--;
+									this.dynamic.cache_extends.comment_count--;
 								}
-								if (this.dynamic.comment_count == 0) this.mescroll.showEmpty();
+								if (this.dynamic.cache_extends.comment_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = [];
 								// 来自主要跳转
@@ -559,7 +559,7 @@ export default {
 									// 赞过
 									if (this.current == 1) filItem = this.$store.getters['user/getUserTopListData'].filter(item => item.dynamic_id == this.dynamic.dynamic_id)[0];
 								}
-								filItem.comment_count = filItem.comment_count - res.data.length;
+								filItem.cache_extends.comment_count = filItem.cache_extends.comment_count - res.data.length;
 							});
 							break;
 						default:

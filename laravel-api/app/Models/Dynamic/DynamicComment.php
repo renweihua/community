@@ -11,6 +11,20 @@ class DynamicComment extends Model
     protected $is_delete = 0;
     protected $appends = ['comment_time'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除评论时，调用动态的统计缓存字段
+        $saveContent = function (self $dynamicPraise) {
+            $dynamicPraise->dynamic->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleting($saveContent);
+    }
+
     public function dynamic()
     {
         return $this->belongsTo(Dynamic::class, 'dynamic_id', 'dynamic_id')->where('is_delete', 0);

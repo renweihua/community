@@ -101,7 +101,7 @@ class Dynamic extends Model
     public function refreshCache()
     {
         $this->update(['cache_extends' => \array_merge(self::CACHE_EXTENDS_FIELDS, [
-            'reads_num' => (int)$this->cache['reads_num'],
+            'reads_num' => (int)$this->cache_extends['reads_num'],
             'comments_count' => $this->comments()->count(),
             'praises_count' => $this->praises()->count(),
             'collections_count' => $this->collection()->count(),

@@ -11,6 +11,25 @@ class DynamicPraise extends Model
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除点赞时，调用动态的统计缓存字段
+        $saveContent = function (self $dynamicPraise) {
+            $dynamicPraise->dynamic->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleting($saveContent);
+    }
+
+    public function dynamic()
+    {
+        return $this->belongsTo(Dynamic::class, 'dynamic_id', 'dynamic_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
