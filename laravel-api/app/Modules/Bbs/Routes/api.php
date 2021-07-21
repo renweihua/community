@@ -136,6 +136,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
             Route::match(['put', 'patch'], '/update', 'IndexController@update');
+            // 编辑扩展信息
+            Route::match(['put', 'patch'], '/extend', 'IndexController@extend');
             // 更换头像
             Route::match(['put', 'patch'], '/updateAvatar', 'IndexController@updateAvatar');
             // 更换背景封面图

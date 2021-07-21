@@ -87,6 +87,33 @@ class UserService extends Service
     }
 
     /**
+     * 编辑扩展信息
+     *
+     * @param         $login_user
+     * @param  array  $params
+     *
+     * @return bool
+     */
+    public function updateExtend($login_user, array $params): bool
+    {
+        if (isset($params['other_extends'])){
+            $login_user->userInfo->other_extends = array_merge($login_user->userInfo->other_extends, [
+                'github' => $params['other_extends']['github'] ?? $login_user->userInfo->other_extends['github'],
+                'twitter' => $params['other_extends']['twitter'] ?? $login_user->userInfo->other_extends['twitter'],
+                'facebook' => $params['other_extends']['facebook'] ?? $login_user->userInfo->other_extends['facebook'],
+                'instagram' => $params['other_extends']['instagram'] ?? $login_user->userInfo->other_extends['instagram'],
+                'telegram' => $params['other_extends']['telegram'] ?? $login_user->userInfo->other_extends['telegram'],
+                'coding' => $params['other_extends']['coding'] ?? $login_user->userInfo->other_extends['coding'],
+                'steam' => $params['other_extends']['steam'] ?? $login_user->userInfo->other_extends['steam'],
+                'weibo' => $params['other_extends']['weibo'] ?? $login_user->userInfo->other_extends['weibo'],
+            ]);
+        }
+        $login_user->userInfo->save();
+        $this->setError('设置成功！');
+        return true;
+    }
+
+    /**
      * 更改登录密码
      *
      * @param          $login_user

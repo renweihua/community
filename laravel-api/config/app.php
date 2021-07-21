@@ -179,7 +179,7 @@ return [
         // Eloquent 条件查询
         EloquentFilter\ServiceProvider::class,
         // ES
-        \Matchish\ScoutElasticSearch\ElasticSearchServiceProvider::class,
+        // \Matchish\ScoutElasticSearch\ElasticSearchServiceProvider::class,
     ],
 
     /*

@@ -10,6 +10,7 @@ use App\Modules\Bbs\Http\Requests\User\UpdateAvatarRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class IndexController extends BbsController
 {
@@ -66,6 +67,22 @@ class IndexController extends BbsController
         $request->validated();
 
         if ($this->service->updateBackgroundCover($this->getLoginUser(), $request->input('background_cover'))) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 编辑扩展信息
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function extend(Request $request): JsonResponse
+    {
+        if ($this->service->updateExtend($this->getLoginUser(), $request->input())) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
