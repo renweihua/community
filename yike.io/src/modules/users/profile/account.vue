@@ -24,7 +24,7 @@
             <form class="w-50" @submit.prevent="updateEmail">
                 <div class="form-group">
                     <label>原邮箱</label>
-                    <input type="text" disabled class="form-control" :value="currentUser.email">
+                    <input type="text" disabled class="form-control" :value="currentUser.user_email">
                 </div>
                 <div class="form-group">
                     <label>新邮箱</label>
@@ -39,9 +39,9 @@
                 <h5>修改手机号码</h5>
             </div>
             <form class="w-50">
-                <div class="form-group" v-if="currentUser.phone">
+                <div class="form-group" v-if="currentUser.user_mobile">
                     <label>原号码</label>
-                    <input type="text" disabled class="form-control" :value="currentUser.phone">
+                    <input type="text" disabled class="form-control" :value="currentUser.user_mobile">
                 </div>
                 <div class="form-group">
                     <label>新号码</label>
@@ -87,11 +87,14 @@
         },
         methods: {
             async updateEmail() {
-                let result = await this.$http.post('user/mail', {
-                    email: this.email
+                await this.$http.post('user/changeEmail', {
+                    user_email: this.email
+                }).then((res) => {
+                    this.$message.success(res.msg)
+                })
+                .catch((e) => {
+                    this.$message.error(e);
                 });
-
-                this.$message.warning(result.message);
             },
             resetPassword() {
                 this.$http.put('user/changePassword', {

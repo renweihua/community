@@ -3,8 +3,11 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Constants\UserCacheKeys;
+use App\Models\User\User;
+use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Emails\ChangePasswordEmail;
+use App\Modules\Bbs\Jobs\SendChangeEmail;
 use App\Services\Service;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -188,6 +191,28 @@ class UserService extends Service
         $login_user->save();
 
         $this->setError('登录密码更改成功！');
+        return true;
+    }
+
+    /**
+     * 变更邮箱
+     *
+     * @param          $login_user
+     * @param  string  $user_email
+     *
+     * @return bool
+     */
+    public function changeEmail($login_user, string $user_email): bool
+    {
+        // 生成待激活邮箱的记录
+        $email_verify = UserEmailVerify::randRecord($login_user, $user_email);
+
+        // 注册成功：邮箱激活
+        SendChangeEmail::dispatch($login_user, $user_email, $email_verify->verify_token)
+            ->onConnection('database') // job 存储的服务：当前存储mysql
+            ->onQueue('mail-queue'); // mail-queue 队列
+
+        $this->setError('确认邮件已发送到新邮箱，请注意查收！');
         return true;
     }
 }

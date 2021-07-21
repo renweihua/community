@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Http\Controllers\User;
 
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
+use App\Modules\Bbs\Http\Requests\User\ChangeEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateAvatarRequest;
@@ -130,6 +131,24 @@ class IndexController extends BbsController
         $request->validated();
 
         if ($this->service->checkEmailCodeAndUpdatePassword($this->getLoginUser(), $request->input('code'), $request->input('password'))) {
+            return $this->successJson([], $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 更改邮箱，发送邮件
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\ChangeEmailRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeEmail(ChangeEmailRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        if ($this->service->changeEmail($this->getLoginUser(), $data['user_email'])) {
             return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());

@@ -123,6 +123,23 @@ class UserController extends BbsController
     }
 
     /**
+     * 激活变更之后的邮箱
+     *
+     * @param $verify_token
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function activeChangeEmail($verify_token)
+    {
+        $result = $this->service->verifyEmailToken($verify_token, true);
+        if (!$result){
+            \abort(400, $this->service->getError());
+        }
+        // 激活成功，跳转Web的指定页面即可
+        return redirect(config('app.site_url').'?active-success=yes&type=email');
+    }
+
+    /**
      * 我的关注
      *
      * @return \Illuminate\Http\JsonResponse
