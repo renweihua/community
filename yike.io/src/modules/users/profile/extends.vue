@@ -177,11 +177,11 @@ export default {
   methods: {
     submit () {
       this.$http
-        .patch(`users/${this.$user().user_id}`, {
+        .patch(`user/extend`, {
           other_extends: this.links
         })
-        .then(() => {
-          this.$message.success('修改成功！')
+        .then((res) => {
+          this.$message.success(res.msg)
         })
     }
   }

@@ -76,8 +76,27 @@ class User extends Model
         return $this->where('user_mobile', $user_mobile)->first();
     }
 
+    /**
+     * 邮箱的激活链接
+     *
+     * @param $token
+     *
+     * @return string
+     */
     public function getActivationLink($token)
     {
         return route('user.activate', ['verify_token' => $token]);
+    }
+
+    /**
+     * 更改邮箱的激活链接
+     *
+     * @param $token
+     *
+     * @return string
+     */
+    public function getChangeEmailLink($token)
+    {
+        return route('user.activate_change_email', ['verify_token' => $token]);
     }
 }

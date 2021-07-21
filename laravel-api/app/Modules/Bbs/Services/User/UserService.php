@@ -3,8 +3,11 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Constants\UserCacheKeys;
+use App\Models\User\User;
+use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Emails\ChangePasswordEmail;
+use App\Modules\Bbs\Jobs\SendChangeEmail;
 use App\Services\Service;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -87,6 +90,33 @@ class UserService extends Service
     }
 
     /**
+     * 编辑扩展信息
+     *
+     * @param         $login_user
+     * @param  array  $params
+     *
+     * @return bool
+     */
+    public function updateExtend($login_user, array $params): bool
+    {
+        if (isset($params['other_extends'])){
+            $login_user->userInfo->other_extends = array_merge($login_user->userInfo->other_extends, [
+                'github' => $params['other_extends']['github'] ?? $login_user->userInfo->other_extends['github'],
+                'twitter' => $params['other_extends']['twitter'] ?? $login_user->userInfo->other_extends['twitter'],
+                'facebook' => $params['other_extends']['facebook'] ?? $login_user->userInfo->other_extends['facebook'],
+                'instagram' => $params['other_extends']['instagram'] ?? $login_user->userInfo->other_extends['instagram'],
+                'telegram' => $params['other_extends']['telegram'] ?? $login_user->userInfo->other_extends['telegram'],
+                'coding' => $params['other_extends']['coding'] ?? $login_user->userInfo->other_extends['coding'],
+                'steam' => $params['other_extends']['steam'] ?? $login_user->userInfo->other_extends['steam'],
+                'weibo' => $params['other_extends']['weibo'] ?? $login_user->userInfo->other_extends['weibo'],
+            ]);
+        }
+        $login_user->userInfo->save();
+        $this->setError('设置成功！');
+        return true;
+    }
+
+    /**
      * 更改登录密码
      *
      * @param          $login_user
@@ -161,6 +191,28 @@ class UserService extends Service
         $login_user->save();
 
         $this->setError('登录密码更改成功！');
+        return true;
+    }
+
+    /**
+     * 变更邮箱
+     *
+     * @param          $login_user
+     * @param  string  $user_email
+     *
+     * @return bool
+     */
+    public function changeEmail($login_user, string $user_email): bool
+    {
+        // 生成待激活邮箱的记录
+        $email_verify = UserEmailVerify::randRecord($login_user, $user_email);
+
+        // 注册成功：邮箱激活
+        SendChangeEmail::dispatch($login_user, $user_email, $email_verify->verify_token)
+            ->onConnection('database') // job 存储的服务：当前存储mysql
+            ->onQueue('mail-queue'); // mail-queue 队列
+
+        $this->setError('确认邮件已发送到新邮箱，请注意查收！');
         return true;
     }
 }
