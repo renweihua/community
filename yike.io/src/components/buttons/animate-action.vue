@@ -1,7 +1,7 @@
 <template>
   <div id="clap" class="text-center clap d-flex align-items-center justify-content-center" @click="toggle">
     <span id="clap--icon" class="clap--icon">
-      <thumb-up-outline v-if="!item.has_liked" />
+      <thumb-up-outline v-if="!item.is_praise" />
       <thumb-up v-else />
     </span>
     <span id="clap--count" class="clap--count"></span>
@@ -26,7 +26,7 @@ export default {
   },
   data () {
     return {
-      likers: this.item.cache.likes_count,
+      likers: this.item.cache_extends.praises_count,
       animationTimeline: null
     }
   },
@@ -44,11 +44,11 @@ export default {
           followable_id: this.item.id
         })
         .then(() => {
-          this.item.has_liked = !this.item.has_liked
+          this.item.is_praise = !this.item.is_praise
 
-          this.item.has_liked
-            ? this.$parent.thread.cache.likes_count++
-            : this.$parent.thread.cache.likes_count--
+          this.item.is_praise
+            ? this.$parent.thread.cache_extends.praises_count++
+            : this.$parent.thread.cache_extends.praises_count--
         })
     },
     repeatClapping () {
@@ -61,9 +61,9 @@ export default {
     updateNumberOfClaps () {
       const clapCount = document.getElementById('clap--count')
       const clapTotalCount = document.getElementById('clap--count-total')
-      this.likers = this.$parent.thread.cache.likes_count
+      this.likers = this.$parent.thread.cache_extends.praises_count
 
-      if (this.item.has_liked) {
+      if (this.item.is_praise) {
         clapCount.innerHTML = '-1'
         clapTotalCount.innerHTML = this.likers - 1
         this.likers--

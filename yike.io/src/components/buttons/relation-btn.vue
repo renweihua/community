@@ -36,7 +36,7 @@ export default {
         node: 'App\\Node'
       },
       actions: {
-        like: 'has_liked',
+        like: 'is_praise',
         follow: 'has_followed',
         subscribe: 'has_subscribed'
       }
@@ -46,14 +46,19 @@ export default {
     toggle () {
       // let action = !this.item[this.actions[this.action]] ? this.action : `${this.action}`
 
-      this.$http.post(`relations/${this.action}`, {
+      console.log(this.item);
+      console.log(this.action);
+
+      this.$http.post(this.action == 'like' ? 'dynamic/praise' : `relations/${this.action}`, {
         followable_type: this.types[this.relation],
-        followable_id: this.item.id
-      }).then(() => {
-        this.item[this.actions[this.action]] = !this.item[
-          this.actions[this.action]
-        ]
-        this.$emit('after-toggle', this.item[this.actions[this.action]])
+        dynamic_id: this.item.dynamic_id
+      }).then((res) => {
+        if(res.status == 1){
+          this.item[this.actions[this.action]] = !this.item[
+            this.actions[this.action]
+          ]
+          this.$emit('after-toggle', this.item[this.actions[this.action]])
+        }
       })
     }
   }

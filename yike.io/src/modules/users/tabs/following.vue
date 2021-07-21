@@ -6,9 +6,9 @@
     <!--</div>-->
     <!--</form>-->
     <div class="list-group list-group-flush">
-      <user-list-item class="list-group-item" :user="user" :key="user.id" v-for="user of users.data"></user-list-item>
-      <empty-state v-if="users.data && users.data.length == 0"></empty-state>
-      <paginator :meta="users.meta"></paginator>
+      <user-list-item class="list-group-item" :user="user.friend_info" :key="user.friend_info.user_id" v-for="user of users"></user-list-item>
+      <empty-state v-if="users && users.length == 0"></empty-state>
+      <paginator :meta="paginator_data" @change="handleChange"></paginator>
     </div>
     <div class="text-center" v-if="false">
       <button class="mt-2 btn btn-ghost">Load More</button>
@@ -37,7 +37,8 @@ export default {
   },
   data () {
     return {
-      users: []
+      users: [],
+      paginator_data: {}
     }
   },
   computed: {
@@ -47,10 +48,15 @@ export default {
     this.followings()
   },
   methods: {
-    async followings () {
-      this.users = await this.$http.get(
-        `user/${this.$parent.user.username}/followings`
-      )
+    async followings (page = 1) {
+      let lists = await this.$http.get(
+        `user/${this.$parent.user.user_id}/follows?page=${page}`
+      );
+      this.paginator_data = lists.data;
+      this.users = lists.data.data;
+    },
+    handleChange (page) {
+      this.followings(page);
     }
   }
 }

@@ -8,6 +8,7 @@ use App\Modules\Bbs\Database\factories\UserFactory;
 class User extends Model
 {
     protected $primaryKey = 'user_id';
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -16,6 +17,7 @@ class User extends Model
      */
     protected $hidden = [
         'password',
+        'login_token'
     ];
 
     public function setPasswordAttribute($password = 123456)
@@ -72,5 +74,29 @@ class User extends Model
     public function getUserByMobile(string $user_mobile)
     {
         return $this->where('user_mobile', $user_mobile)->first();
+    }
+
+    /**
+     * 邮箱的激活链接
+     *
+     * @param $token
+     *
+     * @return string
+     */
+    public function getActivationLink($token)
+    {
+        return route('user.activate', ['verify_token' => $token]);
+    }
+
+    /**
+     * 更改邮箱的激活链接
+     *
+     * @param $token
+     *
+     * @return string
+     */
+    public function getChangeEmailLink($token)
+    {
+        return route('user.activate_change_email', ['verify_token' => $token]);
     }
 }

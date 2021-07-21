@@ -2,12 +2,13 @@
 
 namespace App\Modules\Bbs\Jobs;
 
-use App\Modules\Bbs\Notifications\ActiveEmail;
+use App\Modules\Bbs\Emails\Activation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -28,16 +29,18 @@ class SendActiveEmail implements ShouldQueue
      */
     public $timeout = 120;
 
-    public $user_email;
+    public $user;
+    public $verify_token;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($user_email)
+    public function __construct($user, $verify_token)
     {
-        $this->user_email = $user_email;
+        $this->user = $user;
+        $this->verify_token = $verify_token;
     }
 
     /**
@@ -47,6 +50,9 @@ class SendActiveEmail implements ShouldQueue
      */
     public function handle()
     {
-        Notification::route('mail', $this->user_email)->notify(new ActiveEmail());
+        // 发送邮件
+        Mail::to($this->user->user_email)->send(
+            new Activation($this->user, $this->verify_token)
+        );
     }
 }

@@ -1,6 +1,6 @@
 export default [
   {
-    path: '/:username',
+    path: '/:user_uuid',
     component: () => import('./show'),
     children: [
       {

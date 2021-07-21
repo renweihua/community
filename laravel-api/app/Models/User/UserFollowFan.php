@@ -7,7 +7,6 @@ use App\Models\Model;
 class UserFollowFan extends Model
 {
     protected $primaryKey = 'relation_id';
-    public $timestamps = false;
 
     public function userInfo()
     {

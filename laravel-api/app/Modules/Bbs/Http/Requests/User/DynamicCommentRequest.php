@@ -15,7 +15,8 @@ class DynamicCommentRequest extends BaseRequest
     {
         return [
             'dynamic_id' => 'required|gt:0',
-            'content' => 'required',
+            'content' => 'required_if:content_type,html',
+            'markdown' => 'required_if:content_type,markdown',
         ];
     }
 

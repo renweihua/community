@@ -11,7 +11,7 @@
               class="form-control"
               ref="emailInput"
               placeholder="example@yike.io"
-              v-model="email"
+              v-model="user_email"
               @blur="validateEmail"
               required
             >
@@ -23,7 +23,7 @@
               class="form-control"
               ref="usernameInput"
               placeholder="5 ~ 12 位字母或数字"
-              v-model="username"
+              v-model="user_name"
               @blur="validateUsername"
               required
             >
@@ -36,6 +36,17 @@
               ref="passwordInput"
               placeholder="6 ~ 32 位安全密码"
               v-model="password"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label>确认密码</label>
+            <input
+              type="password"
+              class="form-control"
+              ref="passwordInput"
+              placeholder="6 ~ 32 位安全密码"
+              v-model="password_confirmation"
               required
             >
           </div>
@@ -64,34 +75,35 @@ export default {
   components: { GooglePlus, FacebookIcon, QqIcon, GithubIcon },
   data () {
     return {
-      username: '',
-      email: '',
-      password: '',
-      ticket: null,
-      randstr: null,
+      is_pc: 1,
+      register_type: 1, // 邮箱注册
+      user_name: 'a123456',
+      user_email: '2278757482@qq.com',
+      password: '123456',
+      password_confirmation: '123456',
       error: true,
       regex: {
-        email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
-        username: /^[a-zA-Z]+[a-zA-Z0-9_-]+$/
+        user_email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
+        user_name: /^[a-zA-Z]+[a-zA-Z0-9_-]+$/
       }
     }
   },
   watch: {
-    username () {
-      this.$refs['usernameInput'].classList.remove('is-invalid')
+    user_name () {
+      this.$refs['usernameInput'].classList.remove('is-invalid');
     },
-    email () {
-      this.$refs['emailInput'].classList.remove('is-invalid')
+    user_email () {
+      this.$refs['emailInput'].classList.remove('is-invalid');
     }
   },
   computed: {
     formReady () {
       return (
         !this.error &&
-        this.email.match(this.regex.email) &&
-        this.username.match(this.regex.username) &&
-        this.username.length >= 5 &&
-        this.username.length <= 12 &&
+        this.user_email.match(this.regex.user_email) &&
+        this.user_name.match(this.regex.user_name) &&
+        this.user_name.length >= 5 &&
+        this.user_name.length <= 12 &&
         this.password.length >= 6 &&
         this.password.length <= 32
       )
@@ -100,73 +112,55 @@ export default {
   methods: {
     ...mapActions(['attemptRegister']),
     validateUsername () {
-      this.error = false
+      this.error = false;
 
       if (
-        !this.username.match(this.regex.username) ||
-        this.username.length < 5
+        !this.user_name.match(this.regex.user_name) ||
+        this.user_name.length < 5
       ) {
-        this.error = true
-        this.$refs['usernameInput'].classList.add('is-invalid')
-        return this.$message.error('请输入 5 ~ 12 位正确格式用户名')
+        this.error = true;
+        this.$refs['usernameInput'].classList.add('is-invalid');
+        return this.$message.error('请输入 5 ~ 12 位正确格式用户名');
       }
 
       this.$http
-        .post('user/exists', { username: this.username })
+        .post('user/exists', { user_name: this.user_name })
         .then(response => {
-          if (!response.success) {
-            this.error = true
-            this.$refs['usernameInput'].classList.add('is-invalid')
-            return this.$message.error('用户名已经存在！')
+          if (response.status) {
+            this.error = true;
+            this.$refs['usernameInput'].classList.add('is-invalid');
+            return this.$message.error('用户名已经存在！');
           }
         })
     },
     validateEmail () {
-      this.error = false
+      this.error = false;
 
-      if (!this.email.match(this.regex.email)) {
-        this.error = true
-        this.$refs['emailInput'].classList.add('is-invalid')
-        return this.$message.error('请输入正确的邮箱地址')
+      if (!this.user_email.match(this.regex.user_email)) {
+        this.error = true;
+        this.$refs['emailInput'].classList.add('is-invalid');
+        return this.$message.error('请输入正确的邮箱地址');
       }
 
-      this.$http.post('user/exists', { email: this.email }).then(response => {
-        if (!response.success) {
-          this.error = true
-          this.$refs['emailInput'].classList.add('is-invalid')
-          return this.$message.error('邮箱已经存在！')
+      this.$http.post('user/exists', { user_email: this.user_email }).then(response => {
+        if (response.status) {
+          this.error = true;
+          this.$refs['emailInput'].classList.add('is-invalid');
+          return this.$message.error('邮箱已经存在！');
         }
       })
     },
     showCaptcha () {
-      let captcha = new window.TencentCaptcha(
-        process.env.VUE_APP_CAPTCHA_ID_REGISTER,
-        res => {
-          if (res.ret === 0) {
-            this.ticket = res.ticket
-            this.randstr = res.randstr
-            this.submit()
-          } else {
-            return this.$message.error('请先完成验证！')
-          }
-        }
-      )
-      captcha.show()
+      this.submit();
     },
     async submit () {
-      if (!this.ticket) {
-        return this.$message.error('请先完成验证！')
-      }
-
       try {
-        await this.attemptRegister(this.$data)
+        await this.attemptRegister(this.$data);
 
-        this.$message.warning('注册成功，请先验证你邮箱地址！')
-        this.$router.push({ name: 'home' })
+        this.$message.warning('注册成功，请先验证你邮箱地址！');
+        this.$router.push({ name: 'home' });
       } catch (e) {
-        if (e.status !== 422) {
-          this.$message.error('注册失败！')
-        }
+          this.$message.error(e);
       }
     }
   }

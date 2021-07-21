@@ -1,12 +1,12 @@
 <template>
   <div class="comments" name="comments">
     <div class="py-2">
-      <div class="text-16 text-gray-50">{{ comments.meta ? comments.meta.total : 0 }} 条评论</div>
+      <div class="text-16 text-gray-50">{{ comments.total ? comments.total : 0 }} 条评论</div>
     </div>
-    <div class="box mb-3" v-if="currentUser.id">
-      <template v-if="currentUser.has_activated">
+    <div class="box mb-3" v-if="currentUser.user_id">
+      <template v-if="currentUser.user_info.auth_email == 1">
         <div class="d-flex align-items-center">
-          <img :src="currentUser.avatar" class="avatar-40" :alt="currentUser.username" />
+          <img :src="currentUser.user_info.user_avatar" class="avatar-40" :alt="currentUser.user_info.nick_name" />
           <div class="text-18 text-muted ml-2 w-100" @click="writing = true">撰写评论...</div>
         </div>
       </template>
@@ -26,33 +26,24 @@
       </div>
     </div>
 
-    <paginator :meta="comments.meta" @change="handlePaginate"></paginator>
+    <paginator :meta="comments" @change="handlePaginate"></paginator>
 
     <div class="box box-flush">
-      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.id}" v-if="item.content && item.content.body" v-for="(item,index) in comments.data" :key="item.id" :id="'comment-' + item.id" :name="'comment-' + item.id">
-        <user-media :user="item.user">
+      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments.data" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
+        <user-media :user="item.user_info">
           <template slot="name-appends">
-            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {username: item.user.username}}">{{ item.user.username }}</router-link>
+            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
           </template>
-          <small slot="description"><a :href="'#comment-' + item.id" class="text-gray-70">{{ item.created_at_timeago }}</a></small>
+          <small slot="description"><a :href="'#comment-' + item.comment_id" class="text-gray-70">{{ item.comment_time }}</a></small>
           <div class="text-16 text-gray-60 ml-auto d-flex align-items-center" slot="appends">
             <div class="mx-1 cursor-pointer d-flex" @click="vote('up', item, index)">
-              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_up_voted">
+              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_praise">
                 <thumb-up-outline />
               </button>
               <button class="btn btn-icon btn-primary" v-else>
                 <thumb-up />
               </button>
-              <span class="ml-1 align-self-center">{{ item.up_voters }}</span>
-            </div>
-            <div class="mx-1 cursor-pointer d-flex" @click="vote('down', item, index)">
-              <button class="btn btn-icon btn-light text-gray-60" v-if="!item.has_down_voted">
-                <thumb-down-outline />
-              </button>
-              <button class="btn btn-icon btn-danger" v-else>
-                <thumb-down />
-              </button>
-              <span class="ml-1 align-self-center">{{ item.down_voters }}</span>
+              <span class="ml-1 align-self-center">{{ item.praise_count }}</span>
             </div>
             <div class="mx-1 cursor-pointer" @click="reply(item)">
               <button class="btn btn-icon btn-light text-gray-60">
@@ -60,11 +51,11 @@
             </div>
           </div>
         </user-media>
-        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.content.body"></markdown-body>
+        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.comment_markdown"></markdown-body>
       </div>
     </div>
 
-    <paginator :meta="comments.meta" @change="handlePaginate"></paginator>
+    <paginator :meta="comments" @change="handlePaginate"></paginator>
 
     <div class="card card-flush shadow-30 pop-comment-form" :class="{'show': writing}">
       <editor v-model="content" class="comment-editor" ref="editor" placeholder="请使用 markdown 语法" :options="editorOptions"></editor>
@@ -138,6 +129,7 @@ export default {
   },
   data () {
     return {
+        reply_id: 0,
       writing: false,
       content: '',
       comments: [],
@@ -157,24 +149,24 @@ export default {
     query: {
       deep: true,
       handler () {
-        this.$router.replace({ query: this.query })
-        this.loadComments()
+        this.$router.replace({ query: this.query });
+        this.loadComments();
       }
     },
     content () {
-      localforage.setItem(this.cacheKey, this.content)
+      localforage.setItem(this.cacheKey, this.content);
     },
     writing () {
       if (!this.writing) {
-        this.content = ''
-        localforage.removeItem(this.cacheKey)
-        this.$refs['editor'].editor.setValue('')
+        this.content = '';
+        localforage.removeItem(this.cacheKey);
+        this.$refs['editor'].editor.setValue('');
       } else {
-        let editor = this.$refs['editor'].editor
-        editor.focus()
+        let editor = this.$refs['editor'].editor;
+        editor.focus();
         setTimeout(() => {
-          editor.setCursor(editor.lineCount(), 0)
-        })
+          editor.setCursor(editor.lineCount(), 0);
+        });
       }
     }
   },
@@ -182,89 +174,87 @@ export default {
     this.loadComments().then(() => {
       if (window.location.hash.length > 0) {
         setTimeout(() => {
-          window.location.replace(window.location.hash)
+          window.location.replace(window.location.hash);
         })
       }
     })
-    this.syncCachedContent()
+    this.syncCachedContent();
   },
   methods: {
     handlePaginate (page) {
-      this.query.page = page
+      this.query.page = page;
     },
     vote (type = 'up', item, index) {
-      if (!this.$user().id) {
+    
+      if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
-
-      let reverse = type == 'up' ? 'down' : 'up'
-
-      if (item[`has_${type}_voted`]) {
-        this.$http.post(`comments/${item.id}/cancel-vote`)
-
-        this.comments.data[index][`${type}_voters`]--
-        this.comments.data[index][`has_${type}_voted`] = false
-      } else {
-        this.$http.post(`comments/${item.id}/${type}-vote`)
-
-        if (item[`has_${reverse}_voted`]) {
-          this.comments.data[index][`${reverse}_voters`]--
-          this.comments.data[index][`has_${reverse}_voted`] = false
-        }
-        this.comments.data[index][`${type}_voters`]++
-        this.comments.data[index][`has_${type}_voted`] = true
-      }
+        this.$http.post(`comment/praise`, {comment_id: item.comment_id}).then((res) => {
+          if (res.is_cancel) {
+            this.comments.data[index][`praise_count`]--;
+            this.comments.data[index][`has_praise`] = false;
+          }else{
+            this.comments.data[index][`praise_count`]++;
+            this.comments.data[index][`has_praise`] = true;
+          }
+        });
     },
     reply (item) {
-      if (!this.$user().id) {
+      if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
-      this.content = `@${item.user.username} `
-      this.writing = true
-      window.scrollTo(0, document.querySelector('[name="comments"]').offsetTop)
+      this.reply_id = item.comment_id;
+      this.content = `@${item.user_info.nick_name} `;
+      this.writing = true;
+      window.scrollTo(0, document.querySelector('[name="comments"]').offsetTop);
     },
     submit () {
       this.$http
-        .post('comments', {
+        .post('dynamic/comment', {
           commentable_type: this.objectType,
-          commentable_id: this.objectId,
-          content: {
+          dynamic_id: this.objectId,
             markdown: this.content,
-            type: 'markdown'
-          }
+            content_type: 'markdown',
+            reply_id: this.reply_id
         })
         .then(() => {
-          this.content = ''
-          this.writing = false
-          this.$message.success('评论成功！')
-          this.$emit('created')
-          this.loadComments()
+          this.content = '';
+          this.writing = false;
+          this.$message.success('评论成功！');
+          this.$emit('created');
+          this.loadComments();
         })
     },
     syncCachedContent () {
       localforage.getItem(this.cacheKey, (err, content) => {
         if (!err && content && content.length > 0) {
-          this.writing = true
-          this.content = content
+          this.writing = true;
+          this.content = content;
         }
       })
     },
     loadComments () {
       return this.$http
         .get(
-          `comments?commentable_type=${this.objectType}&commentable_id=${
+          `dynamic/comments?commentable_type=${this.objectType}&dynamic_id=${
             this.objectId
-          }&page=${this.query.page}`
+          }&page=${this.query.page}&is_pc=1`
         )
         .then(comments => {
-          this.comments = comments
-          this.mapCommentsUserForMention(comments.data)
+        console.log('loadComments');
+          console.log(comments);
+          this.comments = comments.data;
+          console.log(this.comments);
+          this.mapCommentsUserForMention(comments.data);
         })
     },
     mapCommentsUserForMention (comments) {
-      comments.map(comment => {
-        window.pageUsers.some(u => u.id === comment.user_id) ||
-          window.pageUsers.push(comment.user)
+      comments.data.map(comment => {
+        window.pageUsers.some(u => function(){
+          console.log(u);
+          u.id === comment.user_id
+        }) ||
+          window.pageUsers.push(comment.user_info)
       })
     }
   }

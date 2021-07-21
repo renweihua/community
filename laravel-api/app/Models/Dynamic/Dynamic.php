@@ -5,13 +5,77 @@ namespace App\Models\Dynamic;
 use App\Models\Model;
 use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
+use App\Models\User\UserOtherlogin;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
+use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 
 class Dynamic extends Model
 {
+    use Filterable;
+
+//    use Searchable;
+//
+//    /**
+//     * 指定索引
+//     * 搜索的type
+//     *
+//     * @return string
+//     */
+//    public function searchableAs()
+//    {
+//        return 'dynamics_index';
+//    }
+//
+//    /**
+//     * 设置导入索引的数据字段
+//     * @return array
+//     */
+//    public function toSearchableArray()
+//    {
+//        return [
+//            // 'dynamic_id' => $this->dynamic_id,
+//            'title'   => $this->dynamic_title,
+//            'content' => $this->dynamic_content,
+//        ];
+//    }
+//
+//    /**
+//     * 指定 搜索索引中存储的唯一ID
+//     * @return mixed
+//     */
+//    public function getScoutKey()
+//    {
+//        return $this->dynamic_id;
+//    }
+//
+//    /**
+//     * 指定 搜索索引中存储的唯一ID的键名
+//     * @return string
+//     */
+//    public function getScoutKeyName()
+//    {
+//        return $this->primaryKey;
+//    }
+
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
+    protected $appends = ['time_formatting'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除动态时，调用会员的统计缓存字段
+        $saveContent = function (self $dynamic) {
+            $dynamic->userInfo->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleted($saveContent);
+    }
 
     /**
      * 只查询 启用 的作用域
@@ -27,6 +91,35 @@ class Dynamic extends Model
     protected static function newFactory()
     {
         return DynamicFactory::new();
+    }
+
+    // 统计扩展字段
+    const CACHE_EXTENDS_FIELDS = [
+        'reads_num' => 0, // 浏览量
+        'comments_count' => 0, // 评论数量
+        'praises_count' => 0, // 点赞数量
+        'collections_count' => 0, // 收藏数量
+    ];
+
+    public function getCacheExtendsAttribute()
+    {
+        return \array_merge(self::CACHE_EXTENDS_FIELDS, json_decode($this->attributes['cache_extends'] ?? '{}', true));
+    }
+
+    public function setCacheExtendsAttribute($value)
+    {
+        $this->attributes['cache_extends'] = json_encode(array_merge(json_decode($this->attributes['cache_extends'] ?? '{}', true), $value));
+    }
+
+    // 刷新统计数据
+    public function refreshCache()
+    {
+        $this->update(['cache_extends' => \array_merge(self::CACHE_EXTENDS_FIELDS, [
+            'reads_num' => (int)$this->cache_extends['reads_num'],
+            'comments_count' => $this->comments()->count(),
+            'praises_count' => $this->praises()->count(),
+            'collections_count' => $this->collection()->count(),
+        ])]);
     }
 
     /**
@@ -109,11 +202,21 @@ class Dynamic extends Model
         $this->attributes['video_info'] = my_json_encode($value);
     }
 
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value)
+    {
+        return formatting_timestamp($this->attributes['created_time']);
+    }
+
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
 
+    public function userOtherLogin()
+    {
+        return $this->belongsTo(UserOtherlogin::class, 'user_id', 'user_id');
+    }
 
     // 是否收藏
     public function isCollection()
@@ -137,6 +240,12 @@ class Dynamic extends Model
     public function praises()
     {
         return $this->hasMany(DynamicPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    // 评论
+    public function comments()
+    {
+        return $this->hasMany(DynamicComment::class, $this->primaryKey, $this->primaryKey);
     }
 
     /**

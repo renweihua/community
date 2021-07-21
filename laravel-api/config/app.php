@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'site_url' => env('APP_SITE_URL', 'http://localhost'),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*
@@ -174,7 +176,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        // Eloquent 条件查询
+        EloquentFilter\ServiceProvider::class,
+        // ES
+        // \Matchish\ScoutElasticSearch\ElasticSearchServiceProvider::class,
     ],
 
     /*

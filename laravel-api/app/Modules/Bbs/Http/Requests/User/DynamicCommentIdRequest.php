@@ -21,8 +21,8 @@ class DynamicCommentIdRequest extends BaseRequest
     public function messages()
     {
         return [
-            'comment_id.required' => '请指定动态评论！',
-            'comment_id.gt' => '请指定有效的动态评论！',
+            'comment_id.required' => '请指定评论！',
+            'comment_id.gt' => '请指定有效的评论！',
         ];
     }
 }

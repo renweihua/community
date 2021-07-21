@@ -275,10 +275,10 @@ export default {
 
 				// 用户是否点过赞
 				if (filItem.is_praise) {
-					filItem.praise_count--;
+					filItem.cache_extends.praise_count--;
 					filItem.is_praise = false;
 				} else {
-					filItem.praise_count++;
+					filItem.cache_extends.praise_count++;
 					filItem.is_praise = true;
 				}
 			});
@@ -298,10 +298,10 @@ export default {
 				if (!res.status) return;
 				// 用户是否已收藏
 				if (filItem.is_collection) {
-					filItem.collection_count--;
+					filItem.cache_extends.collection_count--;
 					filItem.is_collection = false;
 				} else {
-					filItem.collection_count++;
+					filItem.cache_extends.collection_count++;
 					filItem.is_collection = true;
 				}
 			});

@@ -1,5 +1,5 @@
 <?php return array (
-  'site_web_title' => '小丑路人博客',
+  'site_web_title' => '小丑路人社区',
   'site_web_author' => '小丑路人',
   'site_web_keywords' => '小丑路人,小丑,路人,小丑疯狂吧,小丑博客,博客,laravel,yii,mysql',
   'site_web_description' => '小丑路人,小丑,路人,小丑疯狂吧,小丑博客,博客,laravel,yii,mysql',

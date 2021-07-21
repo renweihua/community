@@ -983,40 +983,6 @@ if ( !function_exists('config') ) {
     }
 }
 
-if ( !function_exists('abort') ) {
-    /**
-     * Throw an HttpException with the given data.
-     *
-     * @param          $code
-     * @param  string  $msg
-     * @param  array   $headers
-     *
-     * @return mixed
-     */
-    function abort($code, $msg = '', array $headers = [])
-    {
-        return \Cnpscy\Embedded\Router::throwException($msg, $code);
-        exit;
-        //return http_response_code($code);
-
-        try {
-            if ( $code instanceof Response ) {
-                throw new \Cnpscy\Exceptions\HttpResponseException($code);
-            } elseif ( $code instanceof Responsable ) {
-                throw new \Cnpscy\Exceptions\HttpResponseException($code->toResponse(request()));
-            }
-            if ( $code == 404 ) {
-                throw new \Cnpscy\Exceptions\NotFoundHttpException($msg);
-            }
-            throw new \Cnpscy\Exceptions\HttpException($code, $msg, null, $headers);
-        } catch (\Cnpscy\Exceptions\HttpExceptionInterface $e) {
-            http_response_code($e->getStatusCode());
-
-            \Cnpscy\Embedded\Response::new()->failMsg(\app\lib\code::EMAIL_NO_EXIST, $e->getMessage() ?? $msg);
-        }
-    }
-}
-
 if ( !function_exists('http_response_code') ) {
     function http_response_code($code = null)
     {
@@ -1442,6 +1408,33 @@ if ( !function_exists('get_ip') ) {
         $data = get_client_info();
         return $data['ip'] ?? '';
     }
+}
+
+/**
+ * [GetClientIP 客户端ip地址]
+ * @author   Devil
+ * @blog     http://gong.gg/
+ * @version  0.0.1
+ * @datetime 2017-02-09T12:53:13+0800
+ * @param    [boolean]        $long [是否将ip转成整数]
+ * @return   [string|int]           [ip地址|ip地址整数]
+ */
+function GetClientIP($long = false)
+{
+    $onlineip = '';
+    if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+        $onlineip = getenv('HTTP_CLIENT_IP');
+    } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+        $onlineip = getenv('HTTP_X_FORWARDED_FOR');
+    } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+        $onlineip = getenv('REMOTE_ADDR');
+    } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        $onlineip = $_SERVER['REMOTE_ADDR'];
+    }
+    if ($long) {
+        $onlineip = sprintf("%u", ip2long($onlineip));
+    }
+    return $onlineip;
 }
 
 if ( !function_exists('get_this_url') ) {
@@ -2275,7 +2268,7 @@ function get_rand($sum = 6)
  * @return string
  */
 if ( !function_exists('rand_str') ) {
-    function rand_str($randLength = 6, $create_time = 1, $includenumber = 1)
+    function rand_str($randLength = 6, $create_time = 0, $includenumber = 1)
     {
         if ( $includenumber ) {
             $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQEST123456789';

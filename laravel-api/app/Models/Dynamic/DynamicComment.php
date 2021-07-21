@@ -9,6 +9,21 @@ class DynamicComment extends Model
 {
     protected $primaryKey = 'comment_id';
     protected $is_delete = 0;
+    protected $appends = ['comment_time'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除评论时，调用动态的统计缓存字段
+        $saveContent = function (self $dynamicPraise) {
+            $dynamicPraise->dynamic->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleted($saveContent);
+    }
 
     public function dynamic()
     {
@@ -28,5 +43,15 @@ class DynamicComment extends Model
     public function replies()
     {
         return $this->hasMany(DynamicComment::class, 'top_level', $this->primaryKey);
+    }
+
+    public function hasPraise()
+    {
+        return $this->hasOne(DynamicCommentPraise::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function getCommentTimeAttribute($key)
+    {
+        return formatting_timestamp($this->attributes[self::CREATED_AT]);
     }
 }

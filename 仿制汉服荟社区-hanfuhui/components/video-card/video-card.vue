@@ -9,7 +9,7 @@
 		  <i-icon v-if="[0, 1].indexOf(infoData.user_info.user_sex) > -1" :type="infoData.user_info.user_sex_text == '男' ? 'nan':'nv' "
 		   size="28" :color="infoData.user_info.user_sex_text == '男' ?'#479bd4':'#FF6699'"></i-icon>
         </view>
-        <view class="f24r cgray ellipsis">{{infoData.user_info.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
+        <view class="f24r cgray ellipsis">{{infoData.user_info.basic_extends.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭'}}</view>
       </view>
 	  <!-- 如果登录会员就是发布者，那么不展示 -->
       <view v-if="!infoData.user_info.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r flex-asc" @tap="$emit('follow', infoData.user_info)">{{ infoData.user_info.is_follow?'已关注':'关注'}}</view>

@@ -4,36 +4,36 @@
       <li
         class="list-group-item d-md-flex d-block align-items-center justify-content-between cursor-pointer"
         v-for="item in threads.data"
-        :key="item.id"
-        @click="$router.push({name: 'threads.show', params:{id: item.id}})"
+        :key="item.dynamic_id"
+        @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})"
       >
         <div class="d-flex align-items-center w-70">
           <a href="#" class="mr-2">
-            <img :src="item.user.avatar" alt class="avatar-30">
+            <img :src="item.user_info.user_avatar" alt class="avatar-30">
           </a>
           <div class="text-gray-50">
             <span v-if="item.excellent_at" class="badge badge-success">精华</span>
             <span v-if="item.pinned_at" class="badge badge-danger">置顶</span>
-            {{ item.title }}
+            {{ item.dynamic_title }}
           </div>
         </div>
         <div class="ml-auto d-flex align-items-center justify-content-md-end">
           <div class="text-gray-60 d-flex justify-content-between align-items-center">
             <a class="p-1">
               <like-icon></like-icon>
-              {{ item.cache.likes_count }}
+              {{ item.cache_extends.praises_count }}
             </a>
             <a class="p-1">
               <comment-icon></comment-icon>
-              {{ item.cache.comments_count }}
+              {{ item.cache_extends.comments_count }}
             </a>
             <a class="p-1">
               <view-icon></view-icon>
-              {{ item.cache.views_count }}
+              {{ item.cache_extends.reads_num }}
             </a>
           </div>
           <div class="ml-1 text-gray-60">
-            <small>{{ item.created_at_timeago }}</small>
+            <small>{{ item.time_formatting }}</small>
           </div>
         </div>
       </li>
@@ -44,7 +44,7 @@
         <empty-state message="该分类下无相关讨论哦~"></empty-state>
       </li>
     </ul>
-    <paginator :meta="threads.meta" @change="handleChange"></paginator>
+    <paginator :meta="threads" @change="handleChange"></paginator>
   </div>
 </template>
 

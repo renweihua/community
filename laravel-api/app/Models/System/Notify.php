@@ -30,6 +30,7 @@ class Notify extends MonthModel
         'COMMENT' => 2, // 评论
         'REPLY_COMMENT' => 3, // 回复
         'DELETE_COMMENT' => 4, // 删除评论
+        'COMMENT_PRAISE' => 5, // 点赞评论
     ];
 
     // 发送者类型:系统通知

@@ -23,37 +23,37 @@ export default {
   components: { AvatarCropper },
   data () {
     return {
-      url: this.$parent.currentUser.avatar,
+      url: this.$parent.currentUser.user_info.user_avatar,
       newUrl: null
     }
   },
   computed: {
     ...mapGetters(['authToken']),
     uploadUrl () {
-      return this.$http.defaults.baseURL + '/files/upload'
+      return this.$http.defaults.baseURL + 'upload_file';
     },
     uploadHeaders () {
       return {
-        Authorization: `Bearer ${this.authToken}`
+        Authorization: `${this.authToken}`
       }
     }
   },
   methods: {
     handleUploaded (response) {
-      if (!response['url']) {
-        this.$message.error(response.error)
+      if (!response['path_url']) {
+        this.$message.error(response.error);
       }
 
-      this.url = this.newUrl = response.url
+      this.url = this.newUrl = response.path_url;
     },
     async submit () {
       await this.$http
-        .patch(`users/${this.$parent.currentUser.username}`, {
-          avatar: this.newUrl
+        .patch(`user/updateAvatar`, {
+          user_avatar: this.newUrl
         })
         .then(() => {
-          this.$message.success('头像已更新')
-          this.$store.dispatch('loadUser')
+          this.$message.success('头像已更新');
+          this.$store.dispatch('loadUser');
         })
     }
   }

@@ -42,14 +42,17 @@ abstract class Service
      *
      * @return array
      */
-    public function getPaginateFormat($paginate):array
+    public function getPaginateFormat($paginate): array
     {
+        return $paginate->toArray();
         return [
             'current_page' => $paginate->currentPage(),
             'per_page' => $paginate->perPage(),
             'count_page' => $paginate->lastPage(),
             'total' => $paginate->total(),
             'data' => $paginate->items(),
+            'path' => $paginate->path(),
+            'first_page_url' => $paginate->get(),
         ];
     }
 }

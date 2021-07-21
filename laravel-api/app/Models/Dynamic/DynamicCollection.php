@@ -9,6 +9,20 @@ class DynamicCollection extends Model
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // 新增与删除收藏时，调用动态的统计缓存字段
+        $saveContent = function (self $dynamicPraise) {
+            $dynamicPraise->dynamic->refreshCache();
+        };
+
+        static::created($saveContent);
+
+        static::deleted($saveContent);
+    }
+
     public function dynamic()
     {
         return $this->hasOne(Dynamic::class, 'dynamic_id', 'dynamic_id');

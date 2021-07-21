@@ -22,12 +22,15 @@ class FriendService extends Service
         $lists = UserFollowFan::where('user_id', $login_user_id)
                               ->with([
                                   'friendInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
                               ->paginate(10);
-
+        foreach ($lists as $key => $item){
+            if ($item->friendInfo) $item->friendInfo->is_friend = true;
+            else unset($lists[$key]);
+        }
         return $this->getPaginateFormat($lists);
     }
 
@@ -43,7 +46,7 @@ class FriendService extends Service
         $lists = UserFollowFan::where('friend_id', $login_user_id)
                               ->with([
                                   'userInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
@@ -114,5 +117,54 @@ class FriendService extends Service
             $this->setError($msg . '失败！');
             return false;
         }
+    }
+
+    /**
+     * 指定会员，设置是否特别关注
+     *
+     * @param  int  $login_user_id
+     * @param  int  $friend_id
+     *
+     * @return bool
+     */
+    public function setSpecial(int $login_user_id, int $friend_id, int $is_cancel = 0): bool
+    {
+        $userFollowFan = UserFollowFan::getInstance();
+        // 我是否关注对方
+        $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
+        if (!$my_follow){
+            $this->setError('您尚未关注对方，无法设置特别关注！');
+            return false;
+        }
+
+        // 保证设置成功，手动更新updated_time
+        $my_follow->save(['is_special' => $is_cancel == 1 ? 0 : 1, 'updated_time' => time()]);
+        $this->setError(($is_cancel == 1 ? '取消' : '') . '‘特别关注’设置成功！');
+        return true;
+    }
+
+    /**
+     * 指定会员，设置是否黑名单
+     *
+     * @param  int  $login_user_id
+     * @param  int  $friend_id
+     * @param  int  $is_cancel
+     *
+     * @return bool
+     */
+    public function setBlacklist(int $login_user_id, int $friend_id, int $is_cancel = 0): bool
+    {
+        $userFollowFan = UserFollowFan::getInstance();
+        // 我是否关注对方
+        $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
+        if (!$my_follow){
+            $this->setError('您尚未关注对方，无法设为黑名单属性！');
+            return false;
+        }
+
+        // 保证设置成功，手动更新updated_time
+        $my_follow->save(['is_blacklist' => $is_cancel == 1 ? 0 : 1, 'updated_time' => time()]);
+        $this->setError(($is_cancel == 1 ? '取消' : '') . '‘拉黑’设置成功！');
+        return true;
     }
 }

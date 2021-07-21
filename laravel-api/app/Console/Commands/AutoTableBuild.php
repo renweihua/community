@@ -57,7 +57,9 @@ class AutoTableBuild extends Command
     public function handle()
     {
         foreach ($this->model_lists as $model){
-            (new $model)->createMonthTable('', strtotime('+1 month'));
+            $new = (new $model);
+            $new->createMonthTable('', strtotime('+0 month'));
+            $new->createMonthTable('', strtotime('+1 month'));
         }
     }
 

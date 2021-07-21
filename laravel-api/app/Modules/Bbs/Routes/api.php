@@ -29,9 +29,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         // 注册
         Route::post('register', 'AuthController@register');
         // 登录
-        Route::post('login', 'AuthController@login');
+        Route::match(['get', 'post'], 'login', 'AuthController@login');
         // 登录会员信息
-        Route::post('me', 'AuthController@me')->middleware(CheckAuth::class);
+        Route::match(['get', 'post'], 'me', 'AuthController@me')->middleware(CheckAuth::class);
         // 退出登录
         Route::post('logout', 'AuthController@logout');
     });
@@ -50,11 +50,25 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         /**
          * 会员相关
          */
+        Route::get('users', 'UserController@lists');
+        // 指定会员详情
         Route::prefix('user')->group(function () {
+            // 通过UUID获取会员详情
+            Route::get('/{user_uuid}', 'UserController@uuid');
+            // 检测会员账户是否已被注册
+            Route::post('/exists', 'UserController@exists');
             // 指定会员详情
             Route::get('/detail', 'UserController@detail');
             // 指定会员的动态
             Route::get('/dynamics', 'UserController@dynamics');
+            // 邮箱激活
+            Route::get('/activate/{verify_token}', 'UserController@activeEmail')->name('user.activate');
+            // 更改邮箱激活
+            Route::get('/activate.changeEamil/{verify_token}', 'UserController@activeChangeEmail')->name('user.activate_change_email');
+            // 指定会员的粉丝
+            Route::get('/{user_id}/fans', 'UserController@fans');
+            // 指定会员的关注
+            Route::get('/{user_id}/follows', 'UserController@follows');
         });
 
         /**
@@ -104,8 +118,14 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/follow_topics', 'TopicController@follows');
             // 关注指定会员
             Route::post('/follow', 'FriendController@follow');
+            // 指定会员，设置是否特别关注
+            Route::put('/setSpecial', 'FriendController@setSpecial');
+            // 指定会员，设置是否拉黑
+            Route::put('/setBlacklist', 'FriendController@setBlacklist');
             // 我的粉丝
             Route::get('/fans', 'FriendController@fans');
+
+
             // 我的收藏
             Route::get('/collections', 'DynamicController@collections');
             // 今日签到信息
@@ -117,7 +137,11 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             // 我的签到记录：按月筛选
             Route::get('/getSignsByMonth', 'SignController@getSignsByMonth');
             // 编辑个人资料
-            Route::put('/update', 'IndexController@update');
+            Route::match(['put', 'patch'], '/update', 'IndexController@update');
+            // 编辑扩展信息
+            Route::match(['put', 'patch'], '/extend', 'IndexController@extend');
+            // 更换头像
+            Route::match(['put', 'patch'], '/updateAvatar', 'IndexController@updateAvatar');
             // 更换背景封面图
             Route::put('/updateBackgroundCover', 'IndexController@updateBackgroundCover');
             // 更改登录密码
@@ -126,8 +150,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::get('/sendMailByChangePassword', 'IndexController@sendMailByChangePassword')->withoutMiddleware(CheckAuth::class);
             // 通过邮箱更改登录密码
             Route::put('/changePassByEmail', 'IndexController@changePassByEmail');
-
-
+            // 更改邮箱，发送邮件
+            Route::post('/changeEmail', 'IndexController@changeEmail');
             // 指定会员是否在黑名单：前期先测试数据返回
             Route::get('/getUserBlackExists', 'TestController@getUserBlackExists');
         });
@@ -146,6 +170,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
             Route::post('/comment', 'DynamicController@comment');
             // 删除评论 - 动态
             Route::delete('/delete/comment', 'DynamicController@deleteComment');
+        });
+        Route::prefix('comment')->group(function () {
+            // 点赞 - 评论
+            Route::post('/praise', 'CommentController@praise');
         });
 
         /**

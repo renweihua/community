@@ -108,34 +108,35 @@ class DynamicService extends Service
      */
     protected function getDynamics($request, int $login_user_id = 0, array $screen_params = [])
     {
-        $lists = Dynamic::check()
-                        ->where(function($query)use($screen_params, $request){
-                            // 筛选所属会员动态
-                            if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
-                            // 筛选动态类型
-                            $dynamic_type = (int)$request->input('dynamic_type', -1);
-                            if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
-                        })
-                        ->with(
-                            [
-                                'userInfo' => function($query) use ($login_user_id) {
-                                    $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
-                                        'isFollow' => function($query) use ($login_user_id) {
-                                            $query->where('user_id', $login_user_id);
-                                        }
-                                    ]);
-                                },
-                                'isPraise' => function($query) use ($login_user_id) {
-                                    $query->where('user_id', $login_user_id);
-                                },
-                                'isCollection' => function($query) use ($login_user_id) {
-                                    $query->where('user_id', $login_user_id);
-                                },
-                                'topic'
-                            ]
-                        )
-                        ->orderBy('dynamic_id', 'DESC')
-                        ->paginate($this->getLimit(request()->input('limit', 10)));
+        $lists = Dynamic::check()->filter($request->all())
+                    ->select('dynamic_id', 'user_id', 'topic_id', 'dynamic_title', 'dynamic_images', 'video_path', 'video_info', 'created_time', 'dynamic_type', 'cache_extends')
+                    ->where(function($query)use($screen_params, $request){
+                        // 筛选所属会员动态
+                        if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
+                        // 筛选动态类型
+                        $dynamic_type = (int)$request->input('dynamic_type', -1);
+                        if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
+                    })
+                    ->with(
+                        [
+                            'userInfo' => function($query) use ($login_user_id) {
+                                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
+                                    'isFollow' => function($query) use ($login_user_id) {
+                                        $query->where('user_id', $login_user_id);
+                                    }
+                                ]);
+                            },
+                            'isPraise' => function($query) use ($login_user_id) {
+                                $query->where('user_id', $login_user_id);
+                            },
+                            'isCollection' => function($query) use ($login_user_id) {
+                                $query->where('user_id', $login_user_id);
+                            },
+                            'topic'
+                        ]
+                    )
+                    ->orderBy('dynamic_id', 'DESC')
+                    ->paginate($this->getLimit(request()->input('limit', 10)));
         foreach ($lists as $item) {
             // 是否已赞
             $item->is_praise = $login_user_id == 0 ? false : ($item->isPraise ? true : false);
@@ -182,22 +183,31 @@ class DynamicService extends Service
     {
         if ( !$dynamic = $this->getDynamicDetail($dynamic_id, false, [
             'userInfo' => function($query) use($login_user_id){
-                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_introduction'])->with([
+                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_uuid', 'basic_extends'])->with([
                     'isFollow' => function($query) use ($login_user_id) {
                         $query->where('user_id', $login_user_id);
                     }
                 ]);
             },
-            'isPraise' => function($query) use ($login_user_id) {
-                $query->where('user_id', $login_user_id);
-            },
-            'isCollection' => function($query) use ($login_user_id) {
-                $query->where('user_id', $login_user_id);
+            'userOtherLogin' => function($query) use($login_user_id){
+                $query->select(['user_id', 'qq_info', 'baidu_info', 'weibo_info', 'github_info', 'weixin_info']);
             },
             'topic'
         ])) {
             return false;
         }
+        if ( !empty($login_user_id)) {
+            $dynamic->load([
+                'isPraise' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+                'isCollection' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+            ]);
+        }
+        // 浏览量递增
+        $dynamic->update(['cache_extends->reads_num' => $dynamic->cache_extends['reads_num'] + 1]);
         // 是否已赞
         $dynamic->is_praise = $login_user_id == 0 ? false : ($dynamic->isPraise ? true : false);
         // 是否已收藏
@@ -223,12 +233,20 @@ class DynamicService extends Service
         $lists = DynamicPraise::where('dynamic_id', $dynamic_id)
             ->select('relation_id', 'user_id', 'created_time')
             ->with([
-                'userInfo' => function($query) {
-                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade');
+                'user' => function($query) {
+                    $query->with([
+                        'userInfo' => function($query) {
+                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'user_uuid');
+                        },
+                    ]);
                 },
             ])->orderBy('created_time', 'ASC')->paginate(10);
 
-        return $this->getPaginateFormat($lists);
+        $result = $this->getPaginateFormat($lists);
+        foreach ($result['data'] as &$item){
+            $item = $item['user'];
+        }
+        return $result;
     }
 
     /**
@@ -238,30 +256,47 @@ class DynamicService extends Service
      *
      * @return array
      */
-    public function getDynamicComments(int $dynamic_id)
+    public function getDynamicComments(int $dynamic_id, int $login_user_id = 0, $is_pc = 0)
     {
-        $comments = DynamicComment::where('dynamic_id', $dynamic_id)
-            ->where('top_level', 0) // 评论要走多层级，默认查顶级
-            ->with([
-                'userInfo' => function($query){
-                    $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
-                },
-                'replies' => function($query){
-                    $query->with([
-                        'userInfo' => function($query){
-                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
-                        },
-                        'replyUser' => function($query){
-                            $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
-                        },
-                    ]);
-                },
-            ])
-            ->withCount([
-                'replies'
-            ])
-            ->orderBy('created_time', 'DESC')
-            ->paginate(10);
+        if ($is_pc){ // PC端只是就是评论列展示，无需回复树状结构
+            $comments = DynamicComment::where('dynamic_id', $dynamic_id)
+                ->with([
+                    'userInfo' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
+                    },
+                    'hasPraise' => function($query) use($login_user_id){
+                        $query->where('user_id', $login_user_id);
+                    }
+                ])
+                ->orderBy('created_time', 'DESC')
+                ->paginate(10);
+        }else{
+            $comments = DynamicComment::where('dynamic_id', $dynamic_id)
+                ->where('top_level', 0) // 评论要走多层级，默认查顶级
+                ->with([
+                    'userInfo' => function($query){
+                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
+                    },
+                    'replies' => function($query){
+                        $query->with([
+                            'userInfo' => function($query){
+                                $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                            },
+                            'replyUser' => function($query){
+                                $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+                            },
+                        ]);
+                    },
+                    'hasPraise' => function($query) use($login_user_id){
+                        $query->where('user_id', $login_user_id);
+                    }
+                ])
+                ->withCount([
+                    'replies'
+                ])
+                ->orderBy('created_time', 'DESC')
+                ->paginate(10);
+        }
 
         return $this->getPaginateFormat($comments);
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Scopes\DeleteScope;
 use App\Traits\Instance;
 use App\Traits\MysqlTable;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
@@ -13,6 +14,7 @@ class Model extends EloquentModel
     use MysqlTable;
     use Instance;
     use HasFactory;
+    use Filterable;
 
     /**
      * 与表关联的主键

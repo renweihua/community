@@ -1,11 +1,10 @@
-# 社区
+# 小丑路人社区
 
 #### 介绍
-社区
+小丑路人社区
 
 #### 软件架构
 软件架构说明
-
 
 #### 安装教程
 
@@ -23,8 +22,23 @@
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`community.sql`
 * 任务调度：`php artisan schedule:run`
-* 队列[后置进程]：`php artisan queue:listen`
-    - mysql存储的[注册邮件]的队列： `php artisan queue:listen database --queue=mail-queue`
+* 队列[后置进程]：`php artisan queue:work --daemon`
+    - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
+
+
+###### ES设置
+* 启动ES：` .\elasticsearch.bat`
+* 初始化ES，创建模板与索引：`php artisan es:init`
+* 导入数据：`php artisan scout:import "模型命名空间"`
+* 使用ES搜索：
+```
+    $startTime = Carbon::now()->getPreciseTimestamp(3);
+    $articles = Dynamic::search($request->input('search'))->get()->toArray();
+    $userTime = Carbon::now()->getPreciseTimestamp(3) - $startTime;
+    echo "耗时(毫秒)：{$userTime} \n";
+    var_dump($articles);
+``` 
+
 
 #### 使用说明
 
@@ -44,6 +58,21 @@
             is_string($relations) ? func_get_args() : $relations
         );
     }
+```
+
+2.为模型生成注释
+```
+    php artisan ide-helper:models
+```
+
+3.生成 PHPstorm Meta file
+```
+    php artisan ide-helper:meta
+```
+
+4.为 Facades 生产注释
+```
+php artisan ide-helper:generate
 ```
 
 #### 参与贡献

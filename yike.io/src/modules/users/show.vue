@@ -1,5 +1,5 @@
 <template>
-  <div class="page-user-show" v-if="user.id">
+  <div class="page-user-show" v-if="user.user_id > 0">
     <header
       class="page-header d-flex align-items-end bg-grey-blue py-2"
       style="background-image: url(/banners/shanghai.jpg)"
@@ -7,39 +7,39 @@
       <div
         class="user-profile container position-relative w-100 text-white p-2 d-md-flex flex-row align-items-center"
       >
-        <img :src="user.avatar" alt="User avatar" class="avatar avatar-120">
+        <img :src="user.user_info ? user.user_info.user_avatar : ''" alt="User avatar" class="avatar avatar-120">
         <div class="ml-md-3">
           <h1 class="mt-2 mb-0">
-            {{ user.name }}
+            {{ user.user_info ? user.user_info.nick_name : '' }}
             <a
               class="ml-md-1 d-block d-md-inline text-gray-90 text-16"
-            >@{{ user.username }}</a>
+            >@{{ user.user_info ? user.user_info.user_uuid : '' }}</a>
           </h1>
-          <div class="my-1" v-if="!user.banned_at">{{ user.bio }}</div>
+          <div class="my-1" v-if="!user.banned_at">{{ user.user_info.basic_extends.user_introduction }}</div>
 
           <div class="extends text-white d-none d-md-block d-lg-flex" v-if="!user.banned_at">
-            <div class="mr-1" v-if="user.extends.location">
+            <div class="mr-1" v-if="user.user_info && user.user_info.basic_extends.location">
               <map-marker-icon class="mr-1"></map-marker-icon>
-              {{ user.extends.location }}
+              {{ user.user_info ? user.user_info.basic_extends.location : '' }}
             </div>
-            <div class="mr-1" v-if="user.extends.company">
+            <div class="mr-1" v-if="user.user_info && user.user_info.other_extends.company">
               <domain-icon class="mr-1"></domain-icon>
-              {{ user.extends.company }}
+              {{ user.user_info.other_extends.company }}
             </div>
-            <div class="mr-1" v-if="user.extends.home_url">
+            <div class="mr-1" v-if="user.user_info && user.user_info.other_extends.home_url">
               <link-icon class="mr-1"></link-icon>
-              <a class="text-white" :href="user.extends.home_url">{{ user.extends.home_url }}</a>
+              <a class="text-white" target="_blank" :href="user.user_info.other_extends.home_url">{{ user.user_info.other_extends.home_url }}</a>
             </div>
             <div class="mr-1">
               <calendar-check-icon class="mr-1"></calendar-check-icon>
-              加入于 {{ user.created_at_timeago }}
+              加入于 {{ user.user_info ? user.user_info.time_formatting : '' }}
             </div>
           </div>
           <div class="pt-2">
-            <user-social-btns :user="user" :spacing="2"></user-social-btns>
+            <user-social-btns :user="user.user_info" :spacing="2"></user-social-btns>
           </div>
         </div>
-        <template v-if="currentUser && currentUser.id != user.id && !user.banned_at">
+        <template v-if="currentUser && currentUser.user_id != user.user_id && !user.banned_at">
           <follow-btn :item="user" class="d-inline-block ml-md-auto"></follow-btn>
         </template>
       </div>
@@ -53,23 +53,23 @@
           <div class="nav-item">
             <router-link :to="{ name: 'users.threads' }" class="nav-link" exact>
               讨论
-              <span class="text-gray-70 pl-1">{{ user.cache.threads_count }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.dynamics_count : 0 }}</span>
             </router-link>
           </div>
           <!--<div class="nav-item"><a href="#" class="nav-link">回复 234</a></div>-->
           <div class="nav-item">
             <router-link :to="{ name: 'users.following' }" class="nav-link" exact>
               关注
-              <span class="text-gray-70 pl-1">{{ user.cache.followings_count }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.follows_count : 0 }}</span>
             </router-link>
           </div>
           <div class="nav-item">
             <router-link :to="{ name: 'users.followers' }" class="nav-link" exact>
               粉丝
-              <span class="text-gray-70 pl-1">{{ user.cache.followers_count }}</span>
+              <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.fans_count : 0 }}</span>
             </router-link>
           </div>
-          <div class="nav-item ml-auto" v-if="currentUser.is_admin">
+          <div class="nav-item ml-auto" v-if="currentUser.user_info.is_admin">
             <div class="btn-group">
               <button
                 type="button"
@@ -157,28 +157,30 @@ export default {
     ...mapGetters(['currentUser'])
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.params.username !== from.params.username) {
-      this.getUser(to.params.username)
+    if (to.params.user_uuid !== from.params.user_uuid) {
+      this.getUser(to.params.user_uuid)
     }
 
     next()
   },
   created () {
-    this.getUser(this.$route.params.username)
+    this.getUser(this.$route.params.user_uuid)
     this.$nextTick(this.registerEventListener)
   },
   methods: {
-    async getUser (username) {
-      username = username || this.$route.params.username
-      this.user = await this.$http.get(`users/${username}`).catch(() => {
+    async getUser (user_uuid) {
+      user_uuid = user_uuid || this.$route.params.user_uuid
+      let res = await this.$http.get(`user/${user_uuid}`).catch(() => {
         this.$router.replace({ name: 'pages.not-found' })
-      })
+      });
+      this.user = res.data;
+      console.log(this.user);
     },
     toggleStatus (timestamp) {
       this.user[timestamp] = this.user[timestamp]
         ? null
         : moment().format('YYYY-MM-DD HH:mm:ss')
-      this.$http.patch(`users/${this.user.username}`, this.user).then(() => {
+      this.$http.patch(`user/${this.user.user_uuid}`, this.user).then(() => {
         this.$message.success('搞定！')
         this.getUser()
       })

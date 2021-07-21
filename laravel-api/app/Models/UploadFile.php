@@ -19,4 +19,28 @@ class UploadFile extends Model
         }
         return $this->attributes['host_url'] . '/' . trim($this->attributes['file_name'],'/');
     }
+
+    /**
+     * 添加文件库上传记录
+     * @param $fileName
+     * @param $fileInfo
+     * @param $fileType
+     * @return UploadFile
+     */
+    public static function addRecord($file_name, $file)
+    {
+        // 存储引擎
+        $storage = 'local';
+        // 存储域名
+        $host_url = '';
+        // 添加文件库记录
+        return UploadFile::create([
+            'storage' => $storage,
+            'host_url' => $host_url,
+            'file_name' => $file_name,
+            'file_size' => $file->getSize(),
+            'file_type' => $file->getMimeType(),
+            'extension' => $file->getClientOriginalExtension(),
+        ]);
+    }
 }

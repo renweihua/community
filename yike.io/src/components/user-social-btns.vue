@@ -2,55 +2,55 @@
   <div class="user-social-btns d-flex justify-content-start flex-wrap">
     <a
       class="btn btn-dark btn-icon"
-      :href="'https://github.com/'+user.extends.github"
+      :href="'https://github.com/'+user.other_extends.github"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.github"
+      v-if="user.other_extends.github"
     >
       <github-icon></github-icon>
     </a>
     <a
       class="btn btn-twitter btn-icon"
-      :href="'https://twitter.com/' + user.extends.twitter"
+      :href="'https://twitter.com/' + user.other_extends.twitter"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.twitter"
+      v-if="user.other_extends.twitter"
     >
       <twitter-icon></twitter-icon>
     </a>
     <a
       class="btn btn-facebook btn-icon"
-      :href="'https://www.facebook.com/' + user.extends.facebook"
+      :href="'https://www.facebook.com/' + user.other_extends.facebook"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.facebook"
+      v-if="user.other_extends.facebook"
     >
       <facebook-icon></facebook-icon>
     </a>
     <a
       class="btn btn-orange btn-icon text-white"
-      :href="'https://www.instagram.com/' + user.extends.instagram"
+      :href="'https://www.instagram.com/' + user.other_extends.instagram"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.instagram"
+      v-if="user.other_extends.instagram"
     >
       <instagram-icon></instagram-icon>
     </a>
     <a
       class="btn btn-teal-blue btn-icon text-white"
-      :href="'https://t.me/' + user.extends.telegram"
+      :href="'https://t.me/' + user.other_extends.telegram"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.telegram"
+      v-if="user.other_extends.telegram"
     >
       <telegram-icon></telegram-icon>
     </a>
     <a
       class="btn btn-payne-grey btn-icon text-white"
-      :href="'https://steamcommunity.com/id/'+user.extends.steam"
+      :href="'https://steamcommunity.com/id/'+user.other_extends.steam"
       target="_blank"
       :class="btnClass"
-      v-if="user.extends.steam"
+      v-if="user.other_extends.steam"
     >
       <steam-icon></steam-icon>
     </a>
