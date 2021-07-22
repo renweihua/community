@@ -34,6 +34,6 @@ return [
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_REDIRECT', env('APP_URL') . 'oauth/callback/github')
+        'redirect' => env('GITHUB_REDIRECT', env('APP_URL') . '/oauth/github/callback')
     ],
 ];
