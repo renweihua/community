@@ -16,13 +16,17 @@ class TopicService extends Service
      *
      * @return mixed
      */
-    public function lists($limit = -1)
+    public function lists(bool $all = false, $limit = -1)
     {
-        if ($limit > 0){
-            $lists = Topic::limit($limit)->orderBy('topic_sort', 'ASC')->get();
+        if ($all){
+            $build = Topic::with('childs');
         }else{
-            $lists = Topic::orderBy('topic_sort', 'ASC')->get();
+            $build = Topic::where('parent_id', '>', 0);
         }
+        if ($limit > 0){
+            $build = $build->limit($limit);
+        }
+        $lists = $build->orderBy('topic_sort', 'ASC')->get();
         return $lists;
     }
 
@@ -65,6 +69,7 @@ class TopicService extends Service
         $detail->is_follow = $login_user_id == 0 ? false : ($detail->isFollow ? true : false);
         unset($detail->isFollow);
         $this->setError('荟吧详情获取成功！');
+
         return $detail;
     }
 
@@ -78,7 +83,7 @@ class TopicService extends Service
      */
     public function dynamics($request, int $login_user_id = 0)
     {
-        $lists = Dynamic::check()
+        $lists = Dynamic::check()->filter($request->all())
             ->where('topic_id', $request->input('topic_id'))
             ->with(
                 [

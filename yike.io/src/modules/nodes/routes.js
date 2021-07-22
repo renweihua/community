@@ -5,7 +5,7 @@ export default [
     component: () => import('./list')
   },
   {
-    path: '/nodes/:id',
+    path: '/nodes/:topic_id',
     name: 'nodes.node',
     component: () => import('./show'),
     meta: {

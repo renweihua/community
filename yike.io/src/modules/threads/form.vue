@@ -100,7 +100,6 @@ export default {
   },
   mounted () {
     this.loadNodes();
-    console.log(this.busing);
     if (this.$route.name == 'threads.edit') {
       this.loadThread(this.$route.params.id)
         .then(this.syncFromCache)
@@ -133,10 +132,8 @@ export default {
       return this.$http
         .get('topics')
         .then(response => {
-            console.log(response);
           this.nodes = response.data;
           this.busing = false;
-            console.log(this.busing);
         })
         .finally(() => (this.busing = false))
     },

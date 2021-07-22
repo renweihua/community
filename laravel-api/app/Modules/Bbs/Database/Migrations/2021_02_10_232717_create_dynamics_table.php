@@ -35,7 +35,7 @@ class CreateDynamicsTable extends Migration
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
             $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.动态；1.文章；2.视频；3.相册');
-
+            $table->integer('excellent_time')->unsigned()->default(0)->comment('精选标记时间');
 
             $table->json('cache_extends')->nullable()->comment('统计的扩展字段');
             // $table->integer('read_num')->unsigned()->default(0)->comment('阅读数量');
@@ -45,6 +45,7 @@ class CreateDynamicsTable extends Migration
             $table->index(['is_check']);
             $table->index(['user_id']);
             $table->index(['is_public']);
+            $table->index(['excellent_time']);
             $table->index(['is_delete']);
         });
     }
