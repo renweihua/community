@@ -21,4 +21,14 @@ class TopicFilter extends ModelFilter
             $this->where('topic_name', 'LIKE', "%{$topic_name}%");
         }
     }
+
+    // 热门话题
+    public function hot($count)
+    {
+        \request()->merge(['per_page' => $count]);
+
+        $this->orderBy('dynamic_count', 'desc')
+            ->orderBy('follow_count', 'desc')
+            ->take($count);
+    }
 }

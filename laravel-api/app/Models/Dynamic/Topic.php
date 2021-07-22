@@ -19,9 +19,4 @@ class Topic extends Model
     {
         return $this->hasOne(TopicFollow::class, $this->primaryKey, $this->primaryKey);
     }
-
-    public function childs()
-    {
-        return $this->hasMany(self::class, 'parent_id', $this->primaryKey);
-    }
 }

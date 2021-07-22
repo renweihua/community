@@ -21,7 +21,7 @@ class TopicController extends BbsController
      */
     public function lists(Request $request): JsonResponse
     {
-        $lists = $this->service->lists($request->input('all', false), $request->input('limit', -1));
+        $lists = $this->service->lists($request->input('limit', -1));
         return $this->successJson($lists);
     }
 

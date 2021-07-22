@@ -16,13 +16,9 @@ class TopicService extends Service
      *
      * @return mixed
      */
-    public function lists(bool $all = false, $limit = -1)
+    public function lists($limit = -1)
     {
-        if ($all){
-            $build = Topic::with('childs');
-        }else{
-            $build = Topic::where('parent_id', '>', 0);
-        }
+        $build = Topic::getInstance();
         if ($limit > 0){
             $build = $build->limit($limit);
         }
