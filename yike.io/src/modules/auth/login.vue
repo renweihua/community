@@ -44,16 +44,14 @@ export default {
     ...mapActions(['attemptLogin']),
 
     async submit () {
-      const { username, password } = this
+      const { username, password } = this;
 
       try {
-        let res = await this.attemptLogin({ username, password });
-        console.log(res);
+        await this.attemptLogin({ username, password });
 
         this.$message.success('欢迎回来~');
         this.$router.push({ name: 'home' });
       } catch (e) {
-        console.log(e);
         this.$message.error(e);
       }
     }

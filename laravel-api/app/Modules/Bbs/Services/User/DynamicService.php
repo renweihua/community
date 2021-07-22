@@ -39,8 +39,12 @@ class DynamicService extends Service
                     $this->setError('请输入文章标题！');
                     return false;
                 }
-                if (!isset($params['dynamic_content']) || empty($params['dynamic_content'])){
-                    $this->setError('请输入动态内容！');
+                if ($params['content_type'] == 'html' && (!isset($params['dynamic_content']) || empty($params['dynamic_content']))){
+                    $this->setError('请输入动态内容(html)！');
+                    return false;
+                }
+                if ($params['content_type'] == 'markdown' && (!isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))){
+                    $this->setError('请输入动态内容(markdown)！');
                     return false;
                 }
                 break;
@@ -82,14 +86,17 @@ class DynamicService extends Service
         DB::beginTransaction();
         try {
             $ip_agent = get_client_info();
-            Dynamic::create([
+            $result = Dynamic::create([
                 'user_id' => $login_user_id,
+                'topic_id' => $params['topic_id'] ?? 0,
                 'dynamic_title' => $params['dynamic_title'] ?? '',
                 'dynamic_type' => $params['dynamic_type'],
                 'dynamic_images' => $params['dynamic_images'] ?? '',
                 'video_path' => $params['video_path'] ?? '',
                 'video_info' => $params['video_info'] ?? '',
-                'dynamic_content' => $params['dynamic_content'],
+                'content_type' => $params['content_type'],
+                'dynamic_content' => $params['dynamic_content'] ?? '',
+                'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
                 'is_check' => 1, // 暂时默认无需审核
                 'is_public' => $params['is_public'] ?? 1,
                 'created_ip' => $ip_agent['ip'] ?? get_ip(),
@@ -98,7 +105,7 @@ class DynamicService extends Service
             $this->setError('发布成功！');
 
             DB::commit();
-            return true;
+            return $result->dynamic_id;
         } catch (FailException $e) {
             DB::rollBack();
             $this->setError($e->getMessage());

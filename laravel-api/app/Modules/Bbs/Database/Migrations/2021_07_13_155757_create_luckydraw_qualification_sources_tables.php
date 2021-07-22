@@ -24,7 +24,7 @@ class CreateLuckydrawQualificationSourcesTables extends Migration
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->boolean('change_type')->unsigned()->default(1)->comment('变更类型：0.减少；1.增加');
             $table->integer('luckydraw_times')->unsigned()->default(0)->comment('抽奖的次数【获取的次数】');
-            $table->json('express_info')->comment('扩展信息【JSON】');
+            $table->json('express_info')->nullable()->comment('扩展信息【JSON】');
             $table->index(['user_id']);
         });
         // 设置表注释

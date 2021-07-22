@@ -18,15 +18,15 @@
             <div class="card">
               <div class="card-header pt-3 border-bottom-0">
                 <div class="input-group input-group">
-                  <input type="text" ref="title_input" class="form-control form-control-lg" v-model="form.title" placeholder="请在这里输入标题（请精准表达）">
+                  <input type="text" ref="title_input" class="form-control form-control-lg" v-model="form.dynamic_title" placeholder="请在这里输入标题（请精准表达）">
                 </div>
               </div>
-              <editor v-model="form.content.markdown" :toolbar="false" :options="{maxLines: Infinity}" placeholder="请使用 Markdown 格式详细并精准的表达，不得少于30个字符~"></editor>
+              <editor v-model="form.dynamic_markdown" :toolbar="false" :options="{maxLines: Infinity}" placeholder="请使用 Markdown 格式详细并精准的表达，不得少于30个字符~"></editor>
               <div class="card-footer border-top p-2 d-flex justify-content-between">
                 <div class="left-actions d-flex align-items-center">
                   <span class="text-muted">发布到</span>
                   <div class="dropdown ml-1">
-                    <el-select filterable v-model="form.node_id">
+                    <el-select filterable v-model="form.topic_id">
                       <el-option v-for="item in nodes" :key="item.topic_id" :value="item.topic_id" :label="item.topic_name"></el-option>
                     </el-select>
                   </div>
@@ -68,16 +68,13 @@ export default {
       nodes: [],
       busing: false,
       form: {
-        node_id: null,
-        type: 'markdown',
+        dynamic_type: 1,
+        topic_id: null,
         is_draft: true,
-        title: '',
-        content: {
-          markdown: '',
-          body: ''
-        },
-        ticket: null,
-        randstr: null
+        dynamic_title: '',
+        content_type: 'markdown',
+        dynamic_markdown: '',
+        dynamic_content: '',
       }
     }
   },
@@ -94,28 +91,29 @@ export default {
     formReady () {
       return (
         !this.busing &&
-        this.form.title.length >= 5 &&
-        this.form.node_id > 0 &&
-        this.form.content.markdown &&
-        this.form.content.markdown.length >= 30
+        this.form.dynamic_title.length >= 5 &&
+        this.form.topic_id > 0 &&
+        this.form.dynamic_markdown &&
+        this.form.dynamic_markdown.length >= 30
       )
     }
   },
   mounted () {
-    this.loadNodes()
+    this.loadNodes();
+    console.log(this.busing);
     if (this.$route.name == 'threads.edit') {
       this.loadThread(this.$route.params.id)
         .then(this.syncFromCache)
         .then(() => {
-          this.ready = true
+          this.ready = true;
         })
     } else {
-      this.syncFromCache()
-      this.ready = true
+      this.syncFromCache();
+      this.ready = true;
     }
     this.$nextTick(() => {
       if (this.ready) {
-        this.$refs['title_input'].focus()
+        this.$refs['title_input'].focus();
       }
     })
   },
@@ -123,20 +121,22 @@ export default {
     syncFromCache () {
       localforage.getItem('thread.form', (err, form) => {
         if (!err && typeof form === 'object') {
-          this.form = Object.assign(this.form, form)
+          this.form = Object.assign(this.form, form);
         }
       })
     },
     clearCache () {
-      localforage.removeItem('thread.form')
+      localforage.removeItem('thread.form');
     },
     loadNodes () {
-      this.busing = true
+      this.busing = true;
       return this.$http
         .get('topics')
         .then(response => {
-          this.nodes = response.data
-          this.busing = false
+            console.log(response);
+          this.nodes = response.data;
+          this.busing = false;
+            console.log(this.busing);
         })
         .finally(() => (this.busing = false))
     },
@@ -146,51 +146,36 @@ export default {
         .then(thread => (this.form = Object.assign(this.form, thread)))
     },
     showCaptcha (draft) {
-            this.submit(draft)
-            return;
-      let captcha = new TencentCaptcha(
-        process.env.VUE_APP_CAPTCHA_ID_PUBLISH,
-        res => {
-          if (res.ret === 0) {
-            this.form.ticket = res.ticket
-            this.form.randstr = res.randstr
-            this.submit(draft)
-          } else {
-            return this.$message.error('请先完成验证！')
-          }
-        }
-      )
-      captcha.show()
+      this.submit(draft);
     },
     submit (draft = true) {
-
-    //  if (!this.form.ticket) {
-    //    return this.$message.error('请先完成验证！')
-    //  }
-      this.form.is_draft = draft
-      this.busing = true
-      let promise = null
-      let isEdit = this.$route.name == 'threads.edit'
+      this.form.is_draft = draft;
+      this.busing = true;
+      let promise = null;
+      let isEdit = this.$route.name == 'threads.edit';
 
       if (isEdit) {
         promise = this.$http
-          .patch(`threads/${this.$route.params.id}`,this.form)
+          .patch(`threads/${this.$route.params.id}`,this.form);
       } else {
-        promise = this.$http.post('threads', this.form)
+        promise = this.$http.post('dynamic/push', this.form);
       }
 
       promise
         .then(response => {
-          this.$message.success(
-            '内容已' + (draft ? '保存为草稿' : isEdit ? '更新' : '发布')
-          )
+          this.$message.success(response.msg);
+
           this.$router.replace({
             name: 'threads.show',
-            params: { id: response.id }
-          })
-          this.clearCache()
+            params: { dynamic_id: response.data }
+          });
+
+          this.clearCache();
         })
-        .finally(() => (this.busing = false))
+        .catch((e) => {
+            this.$message.error(e);
+        })
+        .finally(() => (this.busing = false));
     }
   }
 }
