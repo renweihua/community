@@ -37,42 +37,41 @@
         },
         computed: {
             centerStart() {
-                console.log(this.meta);
                 if (this.meta.last_page <= 10) {
-                    return 1
+                    return 1;
                 }
 
                 let count =
                     this.meta.last_page - this.meta.current_page <= 4
                         ? 9 - (this.meta.last_page - this.meta.current_page)
-                        : 4
+                        : 4;
 
                 return this.meta.current_page - count > 1
                     ? this.meta.current_page - count
-                    : 1
+                    : 1;
             },
             centerEnd() {
                 if (this.meta.last_page <= 10) {
-                    return this.meta.last_page
+                    return this.meta.last_page;
                 }
 
                 let count =
-                    this.meta.current_page <= 4 ? 9 - (this.meta.current_page - 1) : 4
+                    this.meta.current_page <= 4 ? 9 - (this.meta.current_page - 1) : 4;
 
                 return this.meta.current_page + count < this.meta.last_page - 1
                     ? this.meta.current_page + count
-                    : this.meta.last_page
+                    : this.meta.last_page;
             }
         },
         methods: {
             range(start, end) {
                 return Array(end - start + 1)
                     .fill()
-                    .map((_, idx) => start + idx)
+                    .map((_, idx) => start + idx);
             },
             change(page) {
-                this.meta.current_page = page
-                this.$emit('change', page)
+                this.meta.current_page = page;
+                this.$emit('change', page);
             }
         }
     }
