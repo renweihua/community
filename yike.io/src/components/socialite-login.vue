@@ -3,6 +3,9 @@
     <div class="text-20 btn mx-1 btn-icon btn-dark" @click="oauth('github')">
       <github-icon/>
     </div>
+    <div class="text-20 btn mx-1 btn-icon btn-dark" @click="oauth('qq')">
+      <qq-icon/>
+    </div>
     <div class="text-20 btn mx-1 btn-icon btn-pink" @click="oauth('google')">
       <google-plus/>
     </div>

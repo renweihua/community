@@ -11,6 +11,7 @@ use App\Models\System\Notify;
 use App\Models\User\User;
 use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
+use App\Models\User\UserOtherlogin;
 use App\Modules\Bbs\Emails\RegisterCodeForEmail;
 use App\Modules\Bbs\Jobs\SendActiveEmail;
 use App\Modules\Bbs\Jobs\SendRegisterEmail;
@@ -59,73 +60,74 @@ class AuthService extends Service
      * @param array $params
      * @return array|bool
      */
-    public function register(array $params)
+    public function register(array $params, bool $third_login = false)
     {
         $userInstance = User::getInstance();
+        if (isset($params['nick_name'])) $user_info['nick_name'] = $params['nick_name'];
         $user_info['register_type'] = (int)$params['register_type'];
-        switch ((int)$user_info['register_type']){
-            case 0: // 用户名注册
-                if ($userInstance->getUserByName($params['user_name'])){
-                    $this->setError('该账户已被注册！');
-                    return false;
-                }
-                $user_data['user_name'] = $params['user_name'];
-                break;
-            case 1: // 邮箱注册
-                $user_email = $params['user_name'];
-                if (isset($params['user_email'])){
-                    $user_email = $params['user_email'];
-                }
-                if (!is_email($user_email)){
-                    $this->setError('请输入有效的邮箱地址！');
-                    return false;
-                }
-                if ($userInstance->getUserByEmail($user_email)){
-                    $this->setError('该邮箱已被注册！');
-                    return false;
-                }
-                // PC端无需验证邮箱验证码，注册之后发送邮件，激活邮箱即可
-                if (
-                    isset($params['is_pc']) && !$params['is_pc']
-                    && isset($params['email_code'])
-                ){
-                    /**
-                     * 邮箱验证码：匹配验证
-                     */
-                    $cache = $this->getMailCode($user_email);
-                    if (!$cache){
-                        $this->setError('验证码已过期，请重新发送！');
+        $user_data = [];
+        if (!$third_login) {
+            switch ((int)$user_info['register_type']) {
+                case 0: // 用户名注册
+                    if ( $userInstance->getUserByName($params['user_name']) ) {
+                        $this->setError('该账户已被注册！');
                         return false;
                     }
-                    if ($cache != $params['email_code']){
-                        $this->setError('验证码不匹配！');
+                    $user_data['user_name'] = $params['user_name'];
+                    break;
+                case 1: // 邮箱注册
+                    $user_email = $params['user_name'];
+                    if ( isset($params['user_email']) ) {
+                        $user_email = $params['user_email'];
+                    }
+                    if ( !is_email($user_email) ) {
+                        $this->setError('请输入有效的邮箱地址！');
                         return false;
                     }
-                    // 删除缓存
-                    Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $user_email);
-                }
+                    if ( $userInstance->getUserByEmail($user_email) ) {
+                        $this->setError('该邮箱已被注册！');
+                        return false;
+                    }
+                    // PC端无需验证邮箱验证码，注册之后发送邮件，激活邮箱即可
+                    if ( isset($params['is_pc']) && !$params['is_pc'] && isset($params['email_code']) ) {
+                        /**
+                         * 邮箱验证码：匹配验证
+                         */
+                        $cache = $this->getMailCode($user_email);
+                        if ( !$cache ) {
+                            $this->setError('验证码已过期，请重新发送！');
+                            return false;
+                        }
+                        if ( $cache != $params['email_code'] ) {
+                            $this->setError('验证码不匹配！');
+                            return false;
+                        }
+                        // 删除缓存
+                        Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $user_email);
+                    }
 
-                $user_data['user_email'] = $user_email;
-                break;
-            case 2: // 手机号注册
-                if (!is_mobile($params['user_name'])){
-                    $this->setError('请输入有效的手机号！');
+                    $user_data['user_email'] = $user_email;
+                    break;
+                case 2: // 手机号注册
+                    if ( !is_mobile($params['user_name']) ) {
+                        $this->setError('请输入有效的手机号！');
+                        return false;
+                    }
+                    if ( $userInstance->getUserByMobile($params['user_name']) ) {
+                        $this->setError('该手机号已被注册！');
+                        return false;
+                    }
+                    $user_data['user_mobile'] = $params['user_name'];
+                    break;
+                default:
+                    $this->setError('无效注册！');
                     return false;
-                }
-                if ($userInstance->getUserByMobile($params['user_name'])){
-                    $this->setError('该手机号已被注册！');
-                    return false;
-                }
-                $user_data['user_mobile'] = $params['user_name'];
-                break;
-            default:
-                $this->setError('无效注册！');
-                return false;
-                break;
+                    break;
+            }
         }
         DB::beginTransaction();
         try {
-            $user_data['password'] = $params['password'];
+            if (!$third_login) $user_data['password'] = $params['password'];
             // 会员账户
             $user = $userInstance->create($user_data);
 
@@ -134,7 +136,7 @@ class AuthService extends Service
             $user_info = array_merge($user_info, [
                 'user_id' => $user->user_id,
                 'user_uuid' => UserInfo::getUniqueUuid(),
-                'user_avatar' => Storage::url(cnpscy_config('site_web_logo')),
+                'user_avatar' => !$third_login ? Storage::url(cnpscy_config('site_web_logo')) : $params['user_avatar'],
                 'user_sex' => 0,
                 'user_grade' => 1, // 会员等级
                 'last_actived_time' => time(), // 上一次在线时间
@@ -143,9 +145,9 @@ class AuthService extends Service
             ]);
             $user->userInfo()->create($user_info);
             // 第三方登录相关
-            $user->userOtherlogin()->create([
+            $user->userOtherlogin()->create(array_merge([
                 'user_id' => $user->user_id,
-            ]);
+            ], $params['otherlogins']));
 
             DB::commit();
 
@@ -207,43 +209,47 @@ class AuthService extends Service
      * @return array
      * @throws AuthException
      */
-    public function login($params): array
+    public function login($params, bool $third_login = false): array
     {
         $userInstance = User::getInstance();
+        if (!$third_login){
+            $auth_success = false;
+            if ($user_name = $userInstance->getUserByName($params['user_name'])){
+                if (hash_verify($params['password'], $user_name->password)){
+                    $auth_success = true;
+                    $user = $user_name;
+                }
+            }
+            if (
+                $auth_success == false
+                &&
+                $user_email = $userInstance->getUserByEmail($params['user_name'])
+            )
+            {
+                if (hash_verify($params['password'], $user_email->password)){
+                    $auth_success = true;
+                    $user = $user_email;
+                }
+            }
+            if (
+                $auth_success == false
+                &&
+                $user_mobile = $userInstance->getUserByMobile($params['user_name'])
+            )
+            {
+                if (hash_verify($params['password'], $user_mobile->password)){
+                    $auth_success = true;
+                    $user = $user_mobile;
+                }
+            }
+            // 如果账户、邮箱、手机号，都验证失败 ，那么登录失败
+            if (!$auth_success){
+                throw new AuthException('认证失败！');
+            }
+        }else{
+            $user = $params;
+        }
 
-        $auth_success = false;
-        if ($user_name = $userInstance->getUserByName($params['user_name'])){
-            if (hash_verify($params['password'], $user_name->password)){
-                $auth_success = true;
-                $user = $user_name;
-            }
-        }
-        if (
-            $auth_success == false
-            &&
-            $user_email = $userInstance->getUserByEmail($params['user_name'])
-        )
-        {
-            if (hash_verify($params['password'], $user_email->password)){
-                $auth_success = true;
-                $user = $user_email;
-            }
-        }
-        if (
-            $auth_success == false
-            &&
-            $user_mobile = $userInstance->getUserByMobile($params['user_name'])
-        )
-        {
-            if (hash_verify($params['password'], $user_mobile->password)){
-                $auth_success = true;
-                $user = $user_mobile;
-            }
-        }
-        // 如果账户、邮箱、手机号，都验证失败 ，那么登录失败
-        if (!$auth_success){
-            throw new AuthException('认证失败！');
-        }
         if (!$user) throw new AuthException('账户不存在！');
         switch ($user->is_check) {
             case 0:
@@ -275,6 +281,43 @@ class AuthService extends Service
         UserLoginRedisService::getInstance()->saveUserToken($redis_user_info, $result['access_token']);
 
         return $result;
+    }
+
+    public function oauthLogin(string $oauth, $oauth_user)
+    {
+        $userOtherlogin = UserOtherlogin::getInstance();
+        $openid = $oauth_user->getId();
+        $login = $userOtherlogin->with('user')->where($oauth . '_openid', $openid)->first();
+        if (!$login){ // 未绑定直接登录即可
+            $user_origin = 0;
+            switch (strtoupper($oauth)){
+                case 'QQ': // QQ
+                    $user_origin = 1;
+                    break;
+                case 'BAIDU': // 百度
+                    $user_origin = 2;
+                    break;
+                case 'WEIBO': // 新浪微博
+                    $user_origin = 3;
+                    break;
+                case 'GITHUB': // GitHub
+                    $user_origin = 4;
+                    break;
+            }
+            // 注册流程
+            return $this->register([
+                'nick_name' => $oauth_user->nickname,
+                'user_avatar' => $oauth_user->avatar,
+                'register_type' => 3, // 第三方登录
+                'otherlogins' => [
+                    $oauth . '_openid' => $openid,
+                    'change_account' => 1,
+                    'user_origin' => $user_origin,
+                ]
+            ], true);
+        }else{ // 第三方登录流程
+            return $this->login($login->user, true);
+        }
     }
 
     /**

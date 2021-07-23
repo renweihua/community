@@ -2,7 +2,9 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Modules\Bbs\Services\AuthService;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class OauthController extends BbsController
 {
@@ -17,13 +19,18 @@ class OauthController extends BbsController
      *
      * @return \Illuminate\Http\Response
      */
-    public function callback($oauth)
+    public function callback($oauth, AuthService $authService)
     {
         $user = Socialite::driver($oauth)->user();
-        var_dump($user);
+
+        var_dump($authService->oauthLogin($oauth, $user));
         exit;
 
-        var_dump($user->token);
-        var_dump($user);
+        try{
+        }catch (InvalidStateException $e){
+            var_dump($e->getMessage());
+            var_dump($e->getCode());
+            var_dump($e->getFile());
+        }
     }
 }

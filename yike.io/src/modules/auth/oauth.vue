@@ -11,11 +11,12 @@ export default {
   mounted () {
     let platform = this.$route.params.platform
     if (this.$route.name === 'auth.oauth_redirect') {
-      this.$http.get('oauth/redirect-url/' + platform).then(redirectUrl => {
+      this.$http.get('oauth/' + platform).then(redirectUrl => {
+        console.log(redirectUrl);
         window.location = redirectUrl
       })
     } else {
-      this.$http.get('oauth/callback/' + platform).then(response => {
+      this.$http.get('oauth/' + platform + '/callback').then(response => {
         this.$store.dispatch('setToken', response.token)
         this.$store.dispatch('setUser', response.user)
         this.$store.dispatch('loadUser')
