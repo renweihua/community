@@ -34,13 +34,13 @@ return [
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_REDIRECT', env('APP_URL') . '/oauth/github/callback')
+        'redirect' => env('GITHUB_REDIRECT', env('APP_SITE_URL') . '/oauth/github/callback'),
     ],
 
     // QQ第三方登录
     'qq' => [
         'client_id' => env('QQ_CLIENT_ID'),
         'client_secret' => env('QQ_CLIENT_SECRET'),
-        'redirect' => env('QQ_REDIRECT', env('APP_URL') . '/oauth/qq/callback')
+        'redirect' => env('QQ_REDIRECT', env('APP_SITE_URL') . '/oauth/qq/callback')
     ],
 ];

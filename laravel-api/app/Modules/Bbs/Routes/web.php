@@ -18,9 +18,4 @@ use App\Modules\Bbs\Http\Middleware\RestrictIPAccess;
 Route::prefix('')->middleware([
 ])->group(function() {
     Route::get('/', 'BbsController@index');
-
-    // 第三方登录
-    Route::get('oauth/{oauth}', 'OauthController@redirect');
-    // 第三方登录的回调
-    Route::get('oauth/{oauth}/callback', 'OauthController@callback');
 });

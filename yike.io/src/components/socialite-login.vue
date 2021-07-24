@@ -28,7 +28,7 @@ export default {
     oauth (platform) {
       let iOSChrome =
         /Mobile/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent)
-      let url = '/auth/oauth-redirect/' + platform
+      let url = '/oauth/oauth-redirect/' + platform
       if (iOSChrome) {
         window.location.href = url
       } else {

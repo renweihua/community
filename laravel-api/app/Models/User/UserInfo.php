@@ -141,6 +141,7 @@ class UserInfo extends Model
     public function getUserAvatarAttribute($value)
     {
         if (empty($value)) return '';
+        if (check_url($value)) return $value;
         return Storage::url($value);
     }
 

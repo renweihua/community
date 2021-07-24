@@ -306,8 +306,8 @@ class AuthService extends Service
             }
             // 注册流程
             return $this->register([
-                'nick_name' => $oauth_user->nickname,
-                'user_avatar' => $oauth_user->avatar,
+                'nick_name' => $oauth_user->getNickname() ?? $oauth_user->getName(),
+                'user_avatar' => $oauth_user->getAvatar(),
                 'register_type' => 3, // 第三方登录
                 'otherlogins' => [
                     $oauth . '_openid' => $openid,

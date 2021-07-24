@@ -37,9 +37,9 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
     });
 
     // 第三方登录
-    Route::get('oauth/{oauth}', 'OauthController@redirect');
+    Route::match(['get', 'post'], 'oauth/{oauth}', 'OauthController@redirect');
     // 第三方登录的回调
-    Route::get('oauth/{oauth}/callback', 'OauthController@callback');
+    Route::match(['get', 'post'], 'oauth/{oauth}/callback', 'OauthController@callback');
 
     Route::prefix('')->middleware(GetUserByToken::class)->group(function(){
         /**

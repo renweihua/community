@@ -27,6 +27,9 @@ class Kernel extends HttpKernel
 
         // 自定义的：空字符串自动转换为null的中间件
         ConvertEmptyStringsToNull::class,
+
+        // 开启Session
+        \Illuminate\Session\Middleware\StartSession::class,
     ];
 
     /**
@@ -42,9 +45,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-
-            // 开启Session
-            \Illuminate\Session\Middleware\StartSession::class,
         ],
 
         'api' => [
