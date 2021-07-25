@@ -10,9 +10,6 @@ export default {
   name: 'oauth',
   mounted () {
     let platform = this.$route.params.platform;
-    console.log(this.$route.params);
-    console.log(this.$route.query);
-    console.log(this.$route.name);
     if (this.$route.name === 'oauth.oauth_redirect') {
         this.$http.get('oauth/' + platform).then(res => {
             console.log(res.data);
@@ -27,14 +24,14 @@ export default {
             console.log(response);
             
             this.$store.dispatch('setToken', response.data.access_token);
-            this.$store.dispatch('loadUser')
-            this.$message.success('欢迎回来~')
+            this.$store.dispatch('loadUser');
+            this.$message.success('欢迎回来~');
 
             if (window.opener) {
-              window.opener.location.reload()
-              window.close()
+                window.opener.location.reload();
+                window.close();
             } else {
-              window.location.href = '/'
+                window.location.href = '/';
             }
         });
     }
