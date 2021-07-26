@@ -9,6 +9,37 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * App\Models\Rabc\Admin
+ *
+ * @property int $admin_id
+ * @property string $admin_name 用户名
+ * @property string $password 密码
+ * @property string $admin_head 头像
+ * @property string $admin_email 邮箱
+ * @property string $login_token login_token
+ * @property int $is_check 登陆状态[0.尚未开放；1.正常；2.禁用]
+ * @property int $kick_out 是否踢出登录[0：表示在线；1：踢出登录；2.未登录]
+ * @property int $use_role 正在使用的角色Id
+ * @property int $is_delete 是否删除：1：是；0：否
+ * @property-read \App\Models\Rabc\AdminInfo|null $adminInfo
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rabc\AdminRole[] $roles
+ * @property-read int|null $roles_count
+ * @method static Builder|Admin newModelQuery()
+ * @method static Builder|Admin newQuery()
+ * @method static Builder|Admin query()
+ * @method static Builder|Admin whereAdminEmail($value)
+ * @method static Builder|Admin whereAdminHead($value)
+ * @method static Builder|Admin whereAdminId($value)
+ * @method static Builder|Admin whereAdminName($value)
+ * @method static Builder|Admin whereIsCheck($value)
+ * @method static Builder|Admin whereIsDelete($value)
+ * @method static Builder|Admin whereKickOut($value)
+ * @method static Builder|Admin whereLoginToken($value)
+ * @method static Builder|Admin wherePassword($value)
+ * @method static Builder|Admin whereUseRole($value)
+ * @mixin \Eloquent
+ */
 class Admin extends Authenticatable implements JWTSubject
 {
     use Instance;

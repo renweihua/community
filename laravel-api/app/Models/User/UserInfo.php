@@ -7,6 +7,93 @@ use App\Models\Model;
 use App\Modules\Bbs\Database\factories\UserInfoFactory;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * App\Models\User\UserInfo
+ *
+ * @property int $user_id 用户的id-会员基本信息表
+ * @property string $user_uuid UUID
+ * @property string $pay_pass 支付密码
+ * @property string $nick_name 昵称
+ * @property string $user_avatar 头像
+ * @property string $background_cover 背景封面图
+ * @property int $user_sex 性别：0：男；1：女；2.保密
+ * @property int $user_birth 出生年月日
+ * @property string $city_info 城市信息：省份,城市
+ * @property int $get_likes 获赞数
+ * @property string $created_ip 创建时的IP
+ * @property string $browser_type 创建时浏览器类型
+ * @property int $user_grade 用户等级
+ * @property int $user_experience 用户经验
+ * @property int $auth_status 实名认证状态：0：否，1：是
+ * @property int $auth_mobile 手机号验证状态：0：否，1：是
+ * @property int $auth_email 邮箱验证状态：0：否，1：是
+ * @property \Illuminate\Support\Carbon $created_time 创建时间
+ * @property \Illuminate\Support\Carbon $updated_time 更新时间
+ * @property int $last_actived_time 上次活跃时间
+ * @property int $notification_count 未读消息
+ * @property int $sign_days 连续签到天数
+ * @property int $last_sign_time 上次签到时间
+ * @property int $total_sign_days 总共签到天数
+ * @property int $year_sign_days 今年总共签到天数
+ * @property int $register_type 注册方式：0：账户；1.邮箱；2.手机号；3.第三方登录
+ * @property mixed|null $other_extends 会员的其它扩展信息
+ * @property mixed|null $basic_extends 会员的基础扩展信息
+ * @property mixed|null $auth_extends 会员的认证扩展信息
+ * @property mixed|null $sign_extends 会员的签到扩展信息
+ * @property int $luckydraw_times 抽奖的次数
+ * @property-read \Illuminate\Database\Eloquent\Collection|Dynamic[] $dynamics
+ * @property-read int|null $dynamics_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User\UserFollowFan[] $fans
+ * @property-read int|null $fans_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User\UserFollowFan[] $follows
+ * @property-read int|null $follows_count
+ * @property mixed $a_u_t_h_extends
+ * @property-read bool $is_sign
+ * @property-read string $time_formatting
+ * @property-read string $user_sex_text
+ * @property-read \App\Models\User\UserFollowFan|null $isFollow
+ * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model paginateFilter($perPage = null, $columns = [], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereAuthEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereAuthExtends($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereAuthMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereAuthStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereBackgroundCover($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereBasicExtends($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereBrowserType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereCityInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereCreatedIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereCreatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereGetLikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereLastActivedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereLastSignTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereLuckydrawTimes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereNickName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereNotificationCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereOtherExtends($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo wherePayPass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereRegisterType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereSignDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereSignExtends($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereTotalSignDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUpdatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserExperience($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserSex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereUserUuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserInfo whereYearSignDays($value)
+ * @mixin \Eloquent
+ */
 class UserInfo extends Model
 {
     protected $primaryKey = 'user_id';

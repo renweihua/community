@@ -6,6 +6,36 @@ use App\Constants\CacheKeys;
 use App\Models\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * App\Models\Article\ArticleCategory
+ *
+ * @property int $category_id
+ * @property string $category_name 分类名称
+ * @property int $parent_id 父级Id
+ * @property int $category_sort 排序
+ * @property int $is_check 是否可用：1：可用；0：禁用
+ * @property int $is_delete 是否删除：1：删除；0：正常
+ * @property \Illuminate\Support\Carbon $created_time 创建时间
+ * @property \Illuminate\Support\Carbon $updated_time 更新时间
+ * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model paginateFilter($perPage = null, $columns = [], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereCategorySort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereCreatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereIsCheck($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereIsDelete($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleCategory whereUpdatedTime($value)
+ * @mixin \Eloquent
+ */
 class ArticleCategory extends Model
 {
     protected $primaryKey = 'category_id';

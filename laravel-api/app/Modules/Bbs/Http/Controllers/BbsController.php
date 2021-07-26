@@ -29,6 +29,10 @@ class BbsController extends Controller
      */
     public function index()
     {
+        // $rsa = new \App\Library\Encrypt\Rsa;
+        // var_dump($rsa->generate(1024));
+
+
         return view('bbs::index');
     }
 }

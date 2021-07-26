@@ -11,6 +11,76 @@ use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
+/**
+ * App\Models\Dynamic\Dynamic
+ *
+ * @property int $dynamic_id 动态表
+ * @property int $user_id 会员Id
+ * @property int $topic_id 话题/荟吧 Id
+ * @property string $dynamic_title 标题
+ * @property false|string[] $dynamic_images 多图
+ * @property string $video_path 视频地址
+ * @property mixed|object $video_info 视频信息（JSON）
+ * @property string|null $dynamic_content 动态内容
+ * @property int $is_check 是否审核：0：待审核；1：通过；2.拒绝
+ * @property int $is_public 公开度：0.私密；1.完全公开；2.密码访问
+ * @property string $access_password 对于公开度的“密码访问”设置的密码
+ * @property int $is_delete 是否删除
+ * @property \Illuminate\Support\Carbon $created_time 创建时间
+ * @property \Illuminate\Support\Carbon $updated_time 更新时间
+ * @property string $created_ip 创建时的IP
+ * @property string $browser_type 创建时浏览器类型
+ * @property int $dynamic_type 动态类型：0.图文；1.视频
+ * @property mixed|null $cache_extends 统计的扩展字段
+ * @property string $content_type 内容的格式：html；markdown
+ * @property string|null $dynamic_markdown 动态内容
+ * @property int $excellent_time 精选标记时间
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dynamic\DynamicCollection[] $collection
+ * @property-read int|null $collection_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dynamic\DynamicComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read UserFollowFan|null $fanUser
+ * @property-read mixed $time_formatting
+ * @property-read \App\Models\Dynamic\DynamicCollection|null $isCollection
+ * @property-read \App\Models\Dynamic\DynamicPraise|null $isPraise
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dynamic\DynamicPraise[] $praises
+ * @property-read int|null $praises_count
+ * @property-read \App\Models\Dynamic\Topic $topic
+ * @property-read UserInfo $userInfo
+ * @property-read UserOtherlogin $userOtherLogin
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic check()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic filter(array $input = [], $filter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic paginateFilter($perPage = null, $columns = [], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereAccessPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereBrowserType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereCacheExtends($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereContentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereCreatedIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereCreatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicMarkdown($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereDynamicType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereEndsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereExcellentTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereIsCheck($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereIsDelete($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereLike(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereTopicId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereUpdatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoPath($value)
+ * @mixin \Eloquent
+ */
 class Dynamic extends Model
 {
     use Filterable;

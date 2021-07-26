@@ -69,7 +69,7 @@
               <span class="text-gray-70 pl-1">{{ user.user_info.basic_extends ? user.user_info.basic_extends.fans_count : 0 }}</span>
             </router-link>
           </div>
-          <div class="nav-item ml-auto" v-if="currentUser.user_info.is_admin">
+          <div class="nav-item ml-auto" v-if="currentUser.user_info && currentUser.user_info.is_admin">
             <div class="btn-group">
               <button
                 type="button"

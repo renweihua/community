@@ -4,6 +4,36 @@ namespace App\Models\Rabc;
 
 use App\Models\Model;
 
+/**
+ * App\Models\Rabc\AdminRole
+ *
+ * @property int $role_id 角色表
+ * @property string $role_name 角色名称
+ * @property string $role_remarks 备注
+ * @property int $is_check 是否可用：1：可用；0：禁用
+ * @property int $is_delete 是否删除
+ * @property \Illuminate\Support\Carbon $created_time 创建时间
+ * @property \Illuminate\Support\Carbon $updated_time 更新时间
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rabc\AdminMenu[] $menus
+ * @property-read int|null $menus_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model paginateFilter($perPage = null, $columns = [], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereCreatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereIsCheck($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereIsDelete($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereRoleName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereRoleRemarks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AdminRole whereUpdatedTime($value)
+ * @mixin \Eloquent
+ */
 class AdminRole extends Model
 {
     protected $primaryKey = 'role_id';
