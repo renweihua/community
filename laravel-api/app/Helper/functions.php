@@ -3264,23 +3264,6 @@ function is_mobile(string $text) : bool
 }
 
 /**
- * [check_url]
- *
- * @param  string  $_url  [description]
- *
- * @return bool
- * @author           :cnpscy <[2278757482@qq.com]>
- * @chineseAnnotation:检测URL地址格式
- * @englishAnnotation:
- * @version          :1.0
- */
-function check_url(string $_url) : bool
-{
-    $str = "/^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/";
-    if ( !preg_match($str, $_url) ) return false; else return true;
-}
-
-/**
  * [roundDownDecimal]
  *
  * @param  float|integer  $money_num  [description]
