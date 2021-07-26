@@ -3,8 +3,8 @@
 namespace App\Modules\Bbs\Http\Controllers;
 
 use App\Modules\Bbs\Services\AuthService;
-use Laravel\Socialite\Facades\Socialite;
-use Laravel\Socialite\Two\InvalidStateException;
+use Cnpscy\Socialite\Facades\Socialite;
+use Cnpscy\Socialite\Two\InvalidStateException;
 
 class OauthController extends BbsController
 {
@@ -21,7 +21,8 @@ class OauthController extends BbsController
      */
     public function callback($oauth, AuthService $authService)
     {
-        $user = Socialite::driver($oauth)->user();
+        // 无状态认证：stateless 方法可用于禁止会话状态验证
+        $user = Socialite::driver($oauth)->stateless()->user();
 
         try{
             return $this->successJson($authService->oauthLogin($oauth, $user));

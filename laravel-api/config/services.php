@@ -43,4 +43,11 @@ return [
         'client_secret' => env('QQ_CLIENT_SECRET'),
         'redirect' => env('QQ_REDIRECT', env('APP_SITE_URL') . '/oauth/qq/callback')
     ],
+
+    // 微博第三方登录
+    'weibo' => [
+        'client_id' => env('WEIBO_CLIENT_ID'),
+        'client_secret' => env('WEIBO_CLIENT_SECRET'),
+        'redirect' => env('WEIBO_REDIRECT', env('APP_SITE_URL') . '/oauth/weibo/callback')
+    ],
 ];
