@@ -29,7 +29,6 @@ class CreateAdminMenusTable extends Migration
             $table->string('external_links', 200)->default('')->comment('外链');
             $table->string('api_url', 200)->default('')->comment('接口路由');
             $table->string('api_method', 10)->default('')->comment('接口的请求方式');
-            $table->string('external_links', 200)->default('')->comment('外链');
             $table->integer('menu_sort')->unsigned()->default(99)->comment('排序[由小到大]');
             $table->tinyInteger('is_hidden')->unsigned()->default(0)->comment('是否隐藏菜单栏：1：是；0：否');
             $table->boolean('is_check')->unsigned()->default(1)->comment('是否可用：1：可用；0：禁用');
