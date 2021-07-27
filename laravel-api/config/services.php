@@ -30,4 +30,24 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // github第三方登录
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT', env('APP_SITE_URL') . '/oauth/github/callback'),
+    ],
+
+    // QQ第三方登录
+    'qq' => [
+        'client_id' => env('QQ_CLIENT_ID'),
+        'client_secret' => env('QQ_CLIENT_SECRET'),
+        'redirect' => env('QQ_REDIRECT', env('APP_SITE_URL') . '/oauth/qq/callback')
+    ],
+
+    // 微博第三方登录
+    'weibo' => [
+        'client_id' => env('WEIBO_CLIENT_ID'),
+        'client_secret' => env('WEIBO_CLIENT_SECRET'),
+        'redirect' => env('WEIBO_REDIRECT', env('APP_SITE_URL') . '/oauth/weibo/callback')
+    ],
 ];

@@ -4,8 +4,8 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-6">
-            <h1>{{ node.title }}</h1>
-            <p>{{ node.description }}</p>
+            <h1>{{ node.topic_name }}</h1>
+            <p>{{ node.topic_description }}</p>
           </div>
           <div class="col-md-6 d-flex justify-content-end">
             <subscribe-btn relation="node" :item="node" />
@@ -69,35 +69,38 @@ export default {
     ...mapGetters(['currentUser'])
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.params.id != from.params.id) {
-      this.getNode(to.params.id)
-      this.loadThreads(to.params.id)
+    if (to.params.topic_id != from.params.topic_id) {
+      this.getNode(to.params.topic_id);
+      this.loadThreads(to.params.topic_id);
     }
 
-    next()
+    next();
   },
   created () {
-    this.getNode(this.$route.params.id)
-    this.loadThreads(this.$route.params.id)
+    this.getNode(this.$route.params.topic_id);
+    this.loadThreads(this.$route.params.topic_id);
   },
   watch: {
     currentThreadsTab () {
-      this.loadThreads(this.$route.params.id, 1)
+      this.loadThreads(this.$route.params.topic_id, 1);
     }
   },
   methods: {
-    loadThreads (id, page = 1) {
+    loadThreads (topic_id, page = 1) {
       this.$http
-        .get(`nodes/${id}/threads?all=yes&page=${page}`)
-        .then(threads => (this.threads[this.currentThreadsTab] = threads))
+        .get(`topic/dynamics?topic_id=${topic_id}&tab=${this.currentThreadsTab}&page=${page}`)
+        .then(({data})=> {
+            console.log(data);
+            this.threads[this.currentThreadsTab] = data;
+        });
     },
     handlePageChanged (page) {
-      this.loadThreads(page)
+        this.loadThreads(this.node.topic_id, page);
     },
-    getNode (id) {
-      this.$http.get(`nodes/${id}`).then(data => {
-        this.node = data
-      })
+    getNode (topic_id) {
+        this.$http.get(`topic/detail?topic_id=${topic_id}`).then(data => {
+            this.node = data.data;
+        });
     }
   }
 }

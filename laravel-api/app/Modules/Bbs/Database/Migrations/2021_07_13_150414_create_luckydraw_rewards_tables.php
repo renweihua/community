@@ -20,8 +20,8 @@ class CreateLuckydrawRewardsTables extends Migration
             $table->integer('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->integer('log_id')->unsigned()->default(0)->comment('活动抽奖记录Id');
             $table->integer('product_id')->unsigned()->default(0)->comment('产品Id');
-            $table->json('receive_info')->comment('收货信息【JSON】');
-            $table->json('express_info')->comment('快递信息【JSON】');
+            $table->json('receive_info')->nullable()->comment('收货信息【JSON】');
+            $table->json('express_info')->nullable()->comment('快递信息【JSON】');
             $table->integer('reward_quota')->unsigned()->default(0)->comment('获取商品的数量');
             $table->string('user_remarks', 200)->default('')->comment('会员备注');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');

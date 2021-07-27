@@ -1,31 +1,37 @@
 <template>
   <div class="oauth-btns d-flex align-items-center justify-content-between">
-    <div class="text-20 btn mx-1 btn-icon btn-dark" @click="oauth('github')">
+    <div class="text-20 btn mx-1 btn-icon btn-pink" @click="oauth('github')">
       <github-icon/>
     </div>
-    <div class="text-20 btn mx-1 btn-icon btn-pink" @click="oauth('google')">
-      <google-plus/>
+    <div class="text-20 btn mx-1 btn-icon btn-dark" @click="oauth('qq')">
+      <qq-icon/>
     </div>
-    <div class="text-20 btn mx-1 btn-icon btn-facebook" @click="oauth('facebook')">
-      <facebook-icon/>
+    <div class="text-20 btn mx-1 btn-icon btn-facebook" @click="oauth('weibo')">
+      <img src="/icon/weibo.ico" />
     </div>
   </div>
 </template>
 
+
+<style scoped>
+.btn.btn-icon{
+    padding: 0 0 0.13em 0;
+}
+</style>
 <script>
-import GooglePlus from '$icons/GooglePlus'
-import FacebookIcon from '$icons/Facebook'
-import QqIcon from '$icons/Qqchat'
-import GithubIcon from '$icons/GithubCircle'
+import QqIcon from '$icons/Qqchat';
+import GithubIcon from '$icons/GithubCircle';
+import WebBoxIcon from '$icons/WebBox';
+import WebIcon from '$icons/Web';
 
 export default {
   name: 'oauth-btn',
-  components: { GooglePlus, FacebookIcon, QqIcon, GithubIcon },
+  components: { QqIcon, GithubIcon, WebBoxIcon, WebIcon },
   methods: {
     oauth (platform) {
       let iOSChrome =
         /Mobile/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent)
-      let url = '/auth/oauth-redirect/' + platform
+      let url = '/oauth/oauth-redirect/' + platform
       if (iOSChrome) {
         window.location.href = url
       } else {
@@ -43,11 +49,10 @@ export default {
             heights[platform]
           )
         } else {
-          windowObjectReference.focus()
+          windowObjectReference.focus();
         }
       }
     },
-
     popupCenter (url, title, w, h) {
       // Fixes dual-screen position                         Most browsers      Firefox
       let dualScreenLeft =

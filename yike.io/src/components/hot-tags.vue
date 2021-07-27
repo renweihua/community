@@ -5,7 +5,7 @@
     </div>
     <ul class="plan-list text-13">
       <template v-for="item in nodes">
-        <router-link tag="li" :key="item.topic_id" :to="{name: 'nodes.item', params:{topic_id: item.topic_id}}" class="py-1 cursor-pointer">
+        <router-link tag="li" :key="item.topic_id" :to="{name: 'nodes.node', params:{topic_id: item.topic_id}}" class="py-1 cursor-pointer">
           #{{ item.topic_name }} <span class="float-right">{{item.dynamic_count}}</span>
         </router-link>
       </template>

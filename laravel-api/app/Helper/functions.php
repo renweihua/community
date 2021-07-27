@@ -1848,7 +1848,7 @@ function check_idcard(string $id) : bool
             ];
             $sign = 0;
             for ($i = 0; $i < 17; $i++) {
-                $b = (int)$id{$i};
+                $b = (int)$id[$i];
                 $w = $arr_int[$i];
                 $sign += $b * $w;
             }
@@ -2528,7 +2528,7 @@ function getFirstChar($s)
     $s0 = mb_substr($s, 0, 3); //获取名字的姓
     $s = iconv('UTF-8', 'gb2312', $s0); //将UTF-8转换成GB2312编码
     if ( ord($s0) > 128 ) { //汉字开头，汉字没有以U、V开头的
-        $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+        $asc = ord($s[0]) * 256 + ord($s[1]) - 65536;
         if ( $asc >= -20319 and $asc <= -20284 ) return "A";
         if ( $asc >= -20283 and $asc <= -19776 ) return "B";
         if ( $asc >= -19775 and $asc <= -19219 ) return "C";
@@ -3261,23 +3261,6 @@ function is_mobile(string $text) : bool
 {
     $search = '/^0?1[3|4|5|6|7|8][0-9]\d{8}$/';
     if ( preg_match($search, $text) ) return true; else return false;
-}
-
-/**
- * [check_url]
- *
- * @param  string  $_url  [description]
- *
- * @return bool
- * @author           :cnpscy <[2278757482@qq.com]>
- * @chineseAnnotation:检测URL地址格式
- * @englishAnnotation:
- * @version          :1.0
- */
-function check_url(string $_url) : bool
-{
-    $str = "/^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/";
-    if ( !preg_match($str, $_url) ) return false; else return true;
 }
 
 /**

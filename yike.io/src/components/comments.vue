@@ -1,7 +1,7 @@
 <template>
   <div class="comments" name="comments">
     <div class="py-2">
-      <div class="text-16 text-gray-50">{{ comments.total ? comments.total : 0 }} 条评论</div>
+      <div class="text-16 text-gray-50">{{ paginator_list.total ? paginator_list.total : 0 }} 条评论</div>
     </div>
     <div class="box mb-3" v-if="currentUser.user_id">
       <template v-if="currentUser.user_info.auth_email == 1">
@@ -26,10 +26,10 @@
       </div>
     </div>
 
-    <paginator :meta="comments" @change="handlePaginate"></paginator>
+    <paginator :meta="paginator_list" @change="handlePaginate"></paginator>
 
     <div class="box box-flush">
-      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments.data" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
+      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
         <user-media :user="item.user_info">
           <template slot="name-appends">
             <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <paginator :meta="comments" @change="handlePaginate"></paginator>
+    <paginator :meta="paginator_list" @change="handlePaginate"></paginator>
 
     <div class="card card-flush shadow-30 pop-comment-form" :class="{'show': writing}">
       <editor v-model="content" class="comment-editor" ref="editor" placeholder="请使用 markdown 语法" :options="editorOptions"></editor>
@@ -133,6 +133,7 @@ export default {
       writing: false,
       content: '',
       comments: [],
+      paginator_list: {},
       editorOptions: {
         minLines: 3,
         maxLines: 20
@@ -191,11 +192,11 @@ export default {
       }
         this.$http.post(`comment/praise`, {comment_id: item.comment_id}).then((res) => {
           if (res.is_cancel) {
-            this.comments.data[index][`praise_count`]--;
-            this.comments.data[index][`has_praise`] = false;
+            this.comments[index][`praise_count`]--;
+            this.comments[index][`has_praise`] = false;
           }else{
-            this.comments.data[index][`praise_count`]++;
-            this.comments.data[index][`has_praise`] = true;
+            this.comments[index][`praise_count`]++;
+            this.comments[index][`has_praise`] = true;
           }
         });
     },
@@ -241,20 +242,18 @@ export default {
           }&page=${this.query.page}&is_pc=1`
         )
         .then(comments => {
-        console.log('loadComments');
-          console.log(comments);
-          this.comments = comments.data;
-          console.log(this.comments);
-          this.mapCommentsUserForMention(comments.data);
+          this.paginator_list = comments.data;
+          this.comments = comments.data.data;
+          this.mapCommentsUserForMention(comments.data.data);
         })
     },
     mapCommentsUserForMention (comments) {
-      comments.data.map(comment => {
+      comments.map(comment => {
         window.pageUsers.some(u => function(){
           console.log(u);
           u.id === comment.user_id
         }) ||
-          window.pageUsers.push(comment.user_info)
+          window.pageUsers.push(comment.user_info);
       })
     }
   }

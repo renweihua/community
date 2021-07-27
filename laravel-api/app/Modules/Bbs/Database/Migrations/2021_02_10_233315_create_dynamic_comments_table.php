@@ -21,7 +21,7 @@ class CreateDynamicCommentsTable extends Migration
             $table->integer('reply_user')->unsigned()->default(0)->comment('会员Id');
             $table->integer('dynamic_id')->unsigned()->default(0)->comment('动态Id');
             $table->bigInteger('author_id')->unsigned()->default(0)->comment('作者Id');
-            $table->string('content_type', 10)->default(0)->comment('内容的格式：html；markdown');
+            $table->string('content_type', 10)->default('')->comment('内容的格式：html；markdown');
             $table->mediumText('comment_content')->nullable()->comment('回复内容');
             $table->mediumText('comment_markdown')->nullable()->comment('回复内容');
             $table->integer('top_level')->unsigned()->default(0)->comment('归属评论Id');

@@ -6,6 +6,47 @@ use App\Models\MonthModel;
 use App\Models\User\UserInfo;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * App\Models\System\Notify
+ *
+ * @property int $notify_id 系统消息通知记录表
+ * @property int $user_id 会员Id
+ * @property int $is_read 是否已读：1：是；0：否
+ * @property int $notify_type 通知类型：0.系统通知/公告；1.提醒；2.私信
+ * @property int $target_id 目标Id(比如动态ID)
+ * @property int $target_type 目标类型：0.动态
+ * @property int $sender_id 发送者Id
+ * @property int $sender_type 发送者类型：0.系统通知；1.指定会员
+ * @property \Illuminate\Support\Carbon $created_time 创建时间
+ * @property \Illuminate\Support\Carbon $updated_time 更新时间
+ * @property string|null $notify_content 通知内容
+ * @property int $dynamic_type 动态的类型：0.点赞；1.收藏；2.评论；3.分享；4.点赞评论；5.删除
+ * @property int $admin_id 管理员Id
+ * @property-read UserInfo|null $sender
+ * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model paginateFilter($perPage = null, $columns = [], $pageName = 'page', $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereCreatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereDynamicType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereIsRead($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereNotifyContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereNotifyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereNotifyType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereSenderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereSenderType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereTargetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereTargetType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUpdatedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Notify extends MonthModel
 {
     protected $primaryKey = 'notify_id';

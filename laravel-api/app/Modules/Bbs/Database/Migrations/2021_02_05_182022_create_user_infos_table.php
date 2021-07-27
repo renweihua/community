@@ -26,7 +26,7 @@ class CreateUserInfosTable extends Migration
 
 
             // user_birth：出生年月日、location：当前所在地、user_introduction：个人介绍、get_likes：获赞数
-            $table->json('base_extends')->default('{}')->comment('会员的基础扩展信息');
+            $table->json('base_extends')->nullable()->comment('会员的基础扩展信息');
             // $table->integer('user_birth')->unsigned()->default(0)->comment('出生年月日');
             // $table->string('city_info', 200)->default('')->comment('城市信息：省份,城市');
             // $table->string('user_introduction', 500)->default('')->comment('个人介绍');
@@ -34,14 +34,14 @@ class CreateUserInfosTable extends Migration
 
 
             // auth_status：实名认证状态、auth_mobile：手机号验证状态、auth_email：邮箱验证状态
-            $table->json('auth_extends')->default('{}')->comment('认证扩展信息');
+            $table->json('auth_extends')->nullable()->comment('认证扩展信息');
             // $table->boolean('auth_status')->unsigned()->default(0)->comment('实名认证状态：0：否，1：是');
             // $table->boolean('auth_mobile')->unsigned()->default(0)->comment('手机号验证状态：0：否，1：是');
             // $table->boolean('auth_email')->unsigned()->default(0)->comment('邮箱验证状态：0：否，1：是');
 
 
             //
-            $table->json('sign_extends')->default('{}')->comment('签到扩展信息');
+            $table->json('sign_extends')->nullable()->comment('签到扩展信息');
             // $table->integer('total_sign_days')->unsigned()->default(0)->comment('总共签到天数');
             // $table->integer('year_sign_days')->unsigned()->default(0)->comment('今年总共签到天数');
             // $table->integer('sign_days')->unsigned()->default(0)->comment('连续签到天数');

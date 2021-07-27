@@ -10,8 +10,8 @@ export default [
     component: () => import('./register')
   },
   {
-    path: 'auth/oauth-redirect/:platform',
-    name: 'auth.oauth_redirect',
+    path: 'oauth/oauth-redirect/:platform',
+    name: 'oauth.oauth_redirect',
     meta: {
       navbar: false,
       container: false
@@ -19,8 +19,8 @@ export default [
     component: () => import('./oauth')
   },
   {
-    path: 'auth/oauth-callback/:platform',
-    name: 'auth.oauth_callback',
+    path: 'oauth/:platform/callback',
+    name: 'oauth.oauth_callback',
     meta: {
       navbar: false,
       container: false

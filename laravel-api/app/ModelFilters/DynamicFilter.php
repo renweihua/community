@@ -23,9 +23,8 @@ class DynamicFilter extends ModelFilter
                 $this->latest('dynamic_id');
 
                 break;
-            case 'featured':
-                // $this->whereNotNull('excellent_at')->latest('excellent_at');
-
+            case 'featured': // 精选/加精
+                $this->where('excellent_time', '>', 0)->latest('excellent_time');
                 break;
             case 'recent':
                 $this->latest()->latest('updated_time');
@@ -34,6 +33,11 @@ class DynamicFilter extends ModelFilter
                 $this->doesntHave('comments')->latest();
                 break;
         }
+    }
+
+    public function search(string $dynamic_title)
+    {
+        $this->where('dynamic_title', 'LIKE', "%{$dynamic_title}%");
     }
 
     // 名称筛选

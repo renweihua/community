@@ -79,9 +79,9 @@ class Aes
     }
 }
 
-$ace_class = new Aes;
-
-$string = $ace_class->encrypt(['user_id' => 1, 'nick_name' => '小丑路人']);
-var_dump($string);
-
-var_dump($ace_class->decrypt($string));
+//$ace_class = new Aes;
+//
+//$string = $ace_class->encrypt(['user_id' => 1, 'nick_name' => '小丑路人']);
+//var_dump($string);
+//
+//var_dump($ace_class->decrypt($string));

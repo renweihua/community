@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Services;
 use App\Exceptions\Bbs\FailException;
 use App\Models\User\User;
 use App\Models\User\UserEmailVerify;
+use App\Models\User\UserInfo;
 use App\Modules\Bbs\Notifications\ActiveEmailSuccess;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
@@ -44,9 +45,9 @@ class UserService extends Service
                 $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'get_likes', 'basic_extends', 'other_extends']);
             }])->find($user_id);
         }else{
-            $user = User::with(['userInfo' => function($query) use($user_id) {
-                $query->where('user_uuid', $user_id)->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'get_likes', 'basic_extends', 'other_extends']);
-            }])->first();
+            $user = User::with(['userInfo' => function($query) {
+                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'get_likes', 'basic_extends', 'other_extends']);
+            }])->find(UserInfo::where('user_uuid', $user_id)->select(['user_id'])->first()->user_id);
         }
         if (empty($user)) {
             $this->setError('会员不存在！');
