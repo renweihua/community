@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Traits\Json;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -57,6 +58,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // 路由404异常监听
+        if($exception instanceof NotFoundHttpException){
+            $this->setHttpCode(404);
+            return $this->errorJson('路由不存在！');
+        }
+
         // Exception类的错误监听
         if($exception instanceof Exception){
             return $this->errorJson($exception->getMessage(), $exception->getCode());
