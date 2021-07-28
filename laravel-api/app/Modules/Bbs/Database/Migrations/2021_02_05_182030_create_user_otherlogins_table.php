@@ -13,17 +13,13 @@ class CreateUserOtherloginsTable extends Migration
      */
     public function up()
     {
-        var_dump('user_otherlogins');
-        var_dump(Schema::hasTable('user_otherlogins'));
         if (Schema::hasTable('user_otherlogins')) return;
         Schema::create('user_otherlogins', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id-会员基本信息表');
-            $table->string('qq_openid', 100)->default('')->comment('QQ登录的标识');
-            $table->string('baidu_openid', 100)->default('')->comment('百度登录的标识');
-            $table->string('weibo_openid', 100)->default('')->comment('微博登录的标识');
-            $table->string('github_openid', 100)->default('')->comment('github的标识');
-            $table->string('weixin_openid', 100)->default('')->comment('微信的标识');
+            $table->json('qq_info')->nullable()->comment('QQ登录的标识');
+            $table->json('weibo_info')->nullable()->comment('微博登录的标识');
+            $table->json('github_info')->nullable()->comment('github的标识');
             $table->boolean('user_origin')->unsigned()->default(0)->comment('来源：
                 0：普通注册；
                 1：QQ快捷登录；

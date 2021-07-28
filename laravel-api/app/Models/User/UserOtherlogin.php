@@ -60,4 +60,34 @@ class UserOtherlogin extends Model
     {
         return $this->belongsTo(User::class, $this->primaryKey, $this->primaryKey);
     }
+
+    public function getQqInfoAttribute()
+    {
+        return json_decode($this->attributes['qq_info'] ?? '{}', true);
+    }
+
+    public function setQqInfoAttribute($value)
+    {
+        $this->attributes['qq_info'] = json_encode($value);
+    }
+
+    public function getWeiboInfoAttribute()
+    {
+        return json_decode($this->attributes['weibo_info'] ?? '{}', true);
+    }
+
+    public function setWeiboInfoAttribute($value)
+    {
+        $this->attributes['weibo_info'] = json_encode($value);
+    }
+
+    public function getGithubInfoAttribute()
+    {
+        return json_decode($this->attributes['github_info'] ?? '{}', true);
+    }
+
+    public function setGithubInfoAttribute($value)
+    {
+        $this->attributes['github_info'] = json_encode($value);
+    }
 }
