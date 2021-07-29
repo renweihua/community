@@ -46,6 +46,7 @@ class AdminRequest extends BaseRequest
     {
         return [
             'admin_name.required' => '请输入管理员账户！',
+            'admin_name.unique' => '管理员账户已存在！',
             'password.confirmed' => '密码确认不匹配！',
         ];
     }
