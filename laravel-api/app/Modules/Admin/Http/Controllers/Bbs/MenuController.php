@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers\Bbs;
 use App\Modules\Admin\Http\Controllers\BaseController;
 use App\Modules\Admin\Http\Requests\Bbs\MenuRequest;
 use App\Modules\Admin\Services\MenuService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MenuController extends BaseController
@@ -14,17 +15,17 @@ class MenuController extends BaseController
         $this->service = $menuService;
     }
 
-    public function create(MenuRequest $request)
+    public function create(MenuRequest $request): JsonResponse
     {
         return $this->createService($request);
     }
 
-    public function update(MenuRequest $request)
+    public function update(MenuRequest $request): JsonResponse
     {
         return $this->updateService($request);
     }
 
-    public function getTplTypeAndViews(Request $request)
+    public function getTplTypeAndViews(Request $request): JsonResponse
     {
         // 获取所有视图文件列表
         $view_lists = getViewsByResource(config('modules.paths.modules') . '/Bbs/Resources/views');

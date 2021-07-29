@@ -64,14 +64,14 @@ class Handler extends ExceptionHandler
             return $this->errorJson('路由不存在！');
         }
 
-        // Exception类的错误监听
-        if($exception instanceof Exception){
-            return $this->errorJson($exception->getMessage(), $exception->getCode());
-        }
-
         // 验证器类的错误监听
         if($exception instanceof \Illuminate\Validation\ValidationException){
             return $this->errorJson($exception->validator->errors()->first());
+        }
+
+        // Exception类的错误监听
+        if($exception instanceof Exception){
+            return $this->errorJson($exception->getMessage(), $exception->getCode());
         }
 
         return parent::render($request, $exception);

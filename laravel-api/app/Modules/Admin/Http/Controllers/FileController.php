@@ -3,6 +3,7 @@
 namespace App\Modules\Admin\Http\Controllers;
 
 use App\Modules\Admin\Services\FileService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FileController extends BaseController
@@ -19,7 +20,7 @@ class FileController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeFileGroup(Request $request)
+    public function removeFileGroup(Request $request): JsonResponse
     {
         if ($this->service->removeFileGroup($request->all())){
             return $this->successJson([], $this->service->getError());

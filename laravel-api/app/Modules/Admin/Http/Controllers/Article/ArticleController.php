@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers\Article;
 use App\Modules\Admin\Http\Controllers\BaseController;
 use App\Modules\Admin\Http\Requests\Article\ArticleRequest;
 use App\Modules\Admin\Services\ArticleService;
+use Illuminate\Http\JsonResponse;
 
 class ArticleController extends BaseController
 {
@@ -13,12 +14,12 @@ class ArticleController extends BaseController
         $this->service = $articleService;
     }
 
-    public function create(ArticleRequest $request)
+    public function create(ArticleRequest $request): JsonResponse
     {
         return $this->createService($request);
     }
 
-    public function update(ArticleRequest $request)
+    public function update(ArticleRequest $request): JsonResponse
     {
         return $this->updateService($request);
     }

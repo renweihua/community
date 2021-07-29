@@ -35,6 +35,7 @@ class AdminRoleRequest extends BaseRequest
     {
         return [
             'role_name.required' => '请输入角色名称！',
+            'role_name.unique' => '角色名称已存在！',
         ];
     }
 }

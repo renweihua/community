@@ -127,7 +127,7 @@ class BaseService extends Service
     {
         $primaryKey = $this->model->getKeyName();
         if (empty($params[$primaryKey])) {
-            $this->setError('请指定删除标识！');
+            $this->setError('请指定标识！');
             return false;
         }
         if ( $this->model->where([$primaryKey => $params[$primaryKey]])->update([$params['change_field'] => $params['change_value']]) ) {

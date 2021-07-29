@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers\System;
 use App\Modules\Admin\Http\Controllers\BaseController;
 use App\Modules\Admin\Http\Requests\System\ConfigRequest;
 use App\Modules\Admin\Services\ConfigService;
+use Illuminate\Http\JsonResponse;
 
 class ConfigController extends BaseController
 {
@@ -13,17 +14,17 @@ class ConfigController extends BaseController
         $this->service = $configService;
     }
 
-    public function create(ConfigRequest $request)
+    public function create(ConfigRequest $request): JsonResponse
     {
         return $this->createService($request);
     }
 
-    public function update(ConfigRequest $request)
+    public function update(ConfigRequest $request): JsonResponse
     {
         return $this->updateService($request);
     }
 
-    public function getConfigGroupType()
+    public function getConfigGroupType(): JsonResponse
     {
         $config_type_list = $config_group_list = [];
         $config_group = cnpscy_config('config_group_list');
@@ -51,7 +52,7 @@ class ConfigController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function pushRefreshConfig()
+    public function pushRefreshConfig(): JsonResponse
     {
         $this->service->pushRefreshConfig();
         return $this->successJson([], '配置文件已同步成功！');

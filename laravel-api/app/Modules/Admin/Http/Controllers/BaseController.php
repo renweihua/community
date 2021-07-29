@@ -4,6 +4,7 @@ namespace App\Modules\Admin\Http\Controllers;
 
 use App\Traits\Json;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -20,7 +21,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
@@ -35,7 +36,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function detail(Request $request)
+    public function detail(Request $request): JsonResponse
     {
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
@@ -54,7 +55,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createService($request)
+    public function createService($request): JsonResponse
     {
         if ($request instanceof FormRequest){
             $request->validated();
@@ -77,7 +78,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateService($request)
+    public function updateService($request): JsonResponse
     {
         if ($request instanceof FormRequest){
             $request->validated();
@@ -100,7 +101,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(Request $request)
+    public function delete(Request $request): JsonResponse
     {
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
@@ -119,7 +120,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function changeFiledStatus(Request $request)
+    public function changeFiledStatus(Request $request): JsonResponse
     {
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
@@ -139,7 +140,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSelectLists(Request $request)
+    public function getSelectLists(Request $request): JsonResponse
     {
         $lists = $this->service->getSelectLists($request);
         return $this->successJson($lists);

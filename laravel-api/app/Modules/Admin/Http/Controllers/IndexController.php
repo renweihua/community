@@ -4,6 +4,7 @@ namespace App\Modules\Admin\Http\Controllers;
 
 use App\Models\MonthModel;
 use App\Modules\Admin\Services\IndexService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class IndexController extends BaseController
@@ -13,7 +14,7 @@ class IndexController extends BaseController
         $this->service = $indexService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         return $this->successJson($this->service->index());
     }
@@ -25,7 +26,7 @@ class IndexController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logsStatistics(Request $request)
+    public function logsStatistics(Request $request): JsonResponse
     {
         return $this->successJson($this->service->logsStatistics());
     }
@@ -35,7 +36,7 @@ class IndexController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMonthList()
+    public function getMonthList(): JsonResponse
     {
         return $this->successJson(MonthModel::getInstance()->getAllMonthes());
     }
@@ -47,7 +48,7 @@ class IndexController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): JsonResponse
     {
         if ( $this->service->updateAdmin($request) ) {
             return $this->successJson([], $this->service->getError());
@@ -61,7 +62,7 @@ class IndexController extends BaseController
      *
      * @return mixed
      */
-    public function versionLogs()
+    public function versionLogs(): JsonResponse
     {
         return $this->successJson($this->service->versionLogs());
     }
@@ -71,7 +72,7 @@ class IndexController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getServerStatus()
+    public function getServerStatus(): JsonResponse
     {
         return $this->successJson($this->service->getServerStatus());
     }

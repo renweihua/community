@@ -5,11 +5,12 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Modules\Bbs\Services\AuthService;
 use Cnpscy\Socialite\Facades\Socialite;
 use Cnpscy\Socialite\Two\InvalidStateException;
+use Illuminate\Http\JsonResponse;
 
 class OauthController extends BbsController
 {
     // http://community.cnpscy.com/oauth/github
-    public function redirect($oauth)
+    public function redirect($oauth): JsonResponse
     {
         return $this->successJson(Socialite::driver($oauth)->redirect()->getTargetUrl());
     }

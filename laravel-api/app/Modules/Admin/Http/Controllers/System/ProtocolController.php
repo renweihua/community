@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers\System;
 use App\Modules\Admin\Http\Controllers\BaseController;
 use App\Modules\Admin\Http\Requests\System\ProtocolRequest;
 use App\Modules\Admin\Services\ProtocolService;
+use Illuminate\Http\JsonResponse;
 
 class ProtocolController extends BaseController
 {
@@ -13,12 +14,12 @@ class ProtocolController extends BaseController
         $this->service = $protocolService;
     }
 
-    public function create(ProtocolRequest $request)
+    public function create(ProtocolRequest $request): JsonResponse
     {
         return $this->createService($request);
     }
 
-    public function update(ProtocolRequest $request)
+    public function update(ProtocolRequest $request): JsonResponse
     {
         return $this->updateService($request);
     }
