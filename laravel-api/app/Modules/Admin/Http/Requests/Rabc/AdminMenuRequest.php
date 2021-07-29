@@ -7,10 +7,10 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class AdminMenuRequest extends BaseRequest
 {
-    public function setInstance()
-    {
-        $this->instance = AdminMenu::getInstance();
-    }
+    // public function setInstance()
+    // {
+    //     $this->instance = AdminMenu::getInstance();
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,7 +23,7 @@ class AdminMenuRequest extends BaseRequest
             'menu_name' => [
                 'required',
                 'max:256',
-                'unique:' . $this->instance->getTable() . ',menu_name' . $this->validate_id
+                // 'unique:' . $this->instance->getTable() . ',menu_name' . $this->validate_id
             ],
         ];
     }
@@ -32,6 +32,7 @@ class AdminMenuRequest extends BaseRequest
     {
         return [
             'menu_name.required' => '请输入菜单名称！',
+            'menu_name.unique' => '菜单名称已存在！',
         ];
     }
 }
