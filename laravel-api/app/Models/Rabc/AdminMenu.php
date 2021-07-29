@@ -66,7 +66,7 @@ class AdminMenu extends Model
 
     public function getSelectLists()
     {
-        return list_to_tree($this->orderBy('menu_sort', 'ASC')->get()->toArray());
+        return list_to_tree($this->select(['menu_id', 'menu_name', 'parent_id'])->orderBy('menu_sort', 'ASC')->get()->toArray());
     }
 
     public function getMenusByIds(array $menu_ids)

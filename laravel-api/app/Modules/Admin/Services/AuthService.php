@@ -6,6 +6,8 @@ use App\Exceptions\Admin\AuthException;
 use App\Exceptions\Admin\AuthTokenException;
 use App\Exceptions\InvalidRequestException;
 use App\Models\Log\AdminLoginLog;
+use App\Models\Rabc\Admin;
+use App\Models\Rabc\AdminMenu;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,7 +60,7 @@ class AuthService extends Service
 
     /**
      * 获取拥有的权限
-     * 
+     *
      * @throws \App\Exceptions\Admin\AuthTokenException
      */
     public function getRabcList()
