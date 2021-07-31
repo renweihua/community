@@ -31,7 +31,7 @@ class AdminRequest extends BaseRequest
                 'email',
             ],
             'password' => [
-//                'confirmed',
+                // 'confirmed',
             ],
             'password_confirmation' => [
 
@@ -47,6 +47,7 @@ class AdminRequest extends BaseRequest
         return [
             'admin_name.required' => '请输入管理员账户！',
             'admin_name.unique' => '管理员账户已存在！',
+            'admin_email.email' => '请输入有效邮箱！',
             'password.confirmed' => '密码确认不匹配！',
         ];
     }

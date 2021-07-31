@@ -1230,7 +1230,8 @@ function get_array_diff($array1, $array2)
     if ( empty($array2) ) return $array1;
     $diff = [];
     foreach ($array1 as $key => $val) {
-        if ( !isset($array2[$val]) ) $diff[$val] = $val;
+        // if ( !isset($array2[$val]) ) $diff[$val] = $val;
+        if (!in_array($val, $array2)) $diff[$val] = $val;
     }
     return $diff;
 }

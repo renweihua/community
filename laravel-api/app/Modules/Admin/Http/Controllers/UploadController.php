@@ -31,7 +31,7 @@ class UploadController extends BaseController
         // 添加文件库记录
         $uploadFile = UploadFile::addRecord($path, $request->file($file));
 
-        return $this->successJson($path, '上传成功', ['file_url' => $uploadFile->file_url]);
+        return $this->successJson($path, '上传成功！', ['file_url' => $uploadFile->file_url]);
     }
 
     /**
