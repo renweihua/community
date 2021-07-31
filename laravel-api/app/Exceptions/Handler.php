@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
         // 路由404异常监听
         if($exception instanceof NotFoundHttpException){
             $this->setHttpCode(404);
-            return $this->errorJson('路由不存在！');
+            return $this->errorJson("路由{{$request->path()}}不存在！");
         }
 
         // 验证器类的错误监听
