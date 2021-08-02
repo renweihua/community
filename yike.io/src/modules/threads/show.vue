@@ -95,9 +95,11 @@
                     </button>
                   </div>
                 </li>
+                <!-- 动态订阅，暂无此功能
                 <li class="nav-item ml-auto">
                   <subscribe-btn relation="thread" :item="thread"/>
                 </li>
+                -->
               </ul>
             </div>
           </div>
