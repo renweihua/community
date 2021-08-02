@@ -56,7 +56,7 @@
                     <div class="dropdown-divider"></div>
                     <router-link class="dropdown-item" :to="{ name: 'users.threads', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
                       <account-icon class="mr-1"></account-icon>
-                      个人中心
+                      我的主页
                     </router-link>
                     <router-link class="dropdown-item" :to="{ name: 'user.profile' }" exact>
                       <account-edit-icon class="mr-1"></account-edit-icon>
