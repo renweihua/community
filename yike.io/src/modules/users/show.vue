@@ -47,9 +47,11 @@
     <div class="user-show-navbar bg-white">
       <div class="container">
         <div class="nav nav-tab-line text-center shadow-6 align-items-stretch">
+          <!--
           <div class="nav-item">
-            <router-link :to="{ name: 'users.show' }" class="nav-link" exact>最新动态</router-link>
+            <router-link :to="{ name: 'users.threads' }" class="nav-link" exact>最新动态</router-link>
           </div>
+          -->
           <div class="nav-item">
             <router-link :to="{ name: 'users.threads' }" class="nav-link" exact>
               讨论

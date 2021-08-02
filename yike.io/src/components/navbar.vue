@@ -48,13 +48,13 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-item">
-                      <router-link :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }">
+                      <router-link :to="{ name: 'users.threads', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }">
                         <div class="text-16 text-gray-30">{{ currentUser.user_info ? currentUser.user_info.nick_name : '会员' }}</div>
                         <div>@{{ currentUser.user_info ? currentUser.user_info.nick_name : '' }}</div>
                       </router-link>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
+                    <router-link class="dropdown-item" :to="{ name: 'users.threads', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
                       <account-icon class="mr-1"></account-icon>
                       个人中心
                     </router-link>

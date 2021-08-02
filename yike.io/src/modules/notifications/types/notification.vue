@@ -1,7 +1,7 @@
 <template>
   <div class="notification-item">
     <div class="heading d-flex align-items-center flex-wrap">
-      <router-link :to="{name: 'users.show', params: {username: notification.data.username}}" class="mr-1">
+      <router-link :to="{name: 'users.threads', params: {username: notification.data.username}}" class="mr-1">
         <img class="rounded-circle mr-1" width="30" :src="notification.data.avatar">
         {{ notification.data.name }}
       </router-link>

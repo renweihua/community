@@ -3,11 +3,11 @@
     <header class="page-header bg-grey-blue py-3 text-white">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-6">
+          <div class="col-md-10">
             <h1>{{ node.topic_name }}</h1>
             <p>{{ node.topic_description }}</p>
           </div>
-          <div class="col-md-6 d-flex justify-content-end">
+          <div class="col-md-2 d-flex justify-content-end">
             <subscribe-btn relation="node" :item="node" />
           </div>
         </div>
