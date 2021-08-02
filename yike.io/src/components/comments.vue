@@ -4,7 +4,8 @@
       <div class="text-16 text-gray-50">{{ paginator_list.total ? paginator_list.total : 0 }} 条评论</div>
     </div>
     <div class="box mb-3" v-if="currentUser.user_id">
-      <template v-if="currentUser.user_info.auth_email == 1">
+      <!-- currentUser.user_info.auth_email == 1 -->
+      <template v-if="true">
         <div class="d-flex align-items-center">
           <img :src="currentUser.user_info.user_avatar" class="avatar-40" :alt="currentUser.user_info.nick_name" />
           <div class="text-18 text-muted ml-2 w-100" @click="writing = true">撰写评论...</div>
@@ -106,7 +107,7 @@ export default {
   computed: {
     ...mapGetters(['currentUser']),
     formReady () {
-      return this.content.length >= 3
+      return this.content.length > 1
     },
     cacheKey () {
       return (
