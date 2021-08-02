@@ -145,6 +145,18 @@ class Dynamic extends Model
         static::created($saveContent);
 
         static::deleted($saveContent);
+
+        static::saving(function ($content) {
+            if ($content->isDirty('dynamic_markdown') && !empty($content->dynamic_markdown)) {
+                $content->dynamic_content = self::toHTML($content->dynamic_markdown);
+            }
+
+            // $content->body = Purifier::clean($content->body);
+        });
+
+        // static::saved(function ($content) {
+        //     \dispatch(new FetchContentMentions($content));
+        // });
     }
 
     /**
@@ -337,5 +349,10 @@ class Dynamic extends Model
     {
         $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type')->get()->toArray();
         return array_column($list, null, 'dynamic_id');
+    }
+
+    public static function toHTML(string $markdown)
+    {
+        return app(\ParsedownExtra::class)->text(\emoji($markdown));
     }
 }

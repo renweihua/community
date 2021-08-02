@@ -30,7 +30,7 @@
     <paginator :meta="paginator_list" @change="handlePaginate"></paginator>
 
     <div class="box box-flush">
-      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
+      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_content && item.comment_content" v-for="(item,index) in comments" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
         <user-media :user="item.user_info">
           <template slot="name-appends">
             <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.threads', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
@@ -52,7 +52,7 @@
             </div>
           </div>
         </user-media>
-        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.comment_markdown"></markdown-body>
+        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.comment_content"></markdown-body>
       </div>
     </div>
 

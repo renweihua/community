@@ -184,8 +184,8 @@ export default {
       }
       this.html = '预览生成中...'
       this.$http
-        .post('contents/preview', { markdown: this.value })
-        .then(html => (this.html = html))
+        .post('previewMarkdown', { markdown: this.value })
+        .then(res => (this.html = res.data))
     }
   },
   mounted () {
