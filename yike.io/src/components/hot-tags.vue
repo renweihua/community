@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'HotTags',
   data () {
@@ -21,10 +23,14 @@ export default {
       nodes: []
     }
   },
+  computed: {
+    ...mapGetters(['isLogged'])
+  },
   methods: {
     loadNodes () {
+      // 登录的会员，查看10个置顶话题；未登录会员查看6个【页面布局】
       this.$http
-        .get('topics?hot=5&limit=5')
+        .get('topics?hot=5&limit=' + (this.isLogged == true ? 10 : 6))
         .then(nodes => (this.nodes = nodes.data))
     }
   },
