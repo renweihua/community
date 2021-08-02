@@ -21,7 +21,9 @@
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`community.sql`
-* 任务调度：`php artisan schedule:run`
+* 定时任务：
+    - 自动按月分表：`php artisan command:autotablebuild`
+    - 或者使用任务调度：`php artisan schedule:run`
 * 队列[后置进程]：`php artisan queue:work --daemon`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
 

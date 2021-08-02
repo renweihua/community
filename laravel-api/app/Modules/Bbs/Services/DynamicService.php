@@ -120,7 +120,7 @@ class DynamicService extends Service
                     ->with(
                         [
                             'userInfo' => function($query) use ($login_user_id) {
-                                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade'])->with([
+                                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'user_uuid'])->with([
                                     'isFollow' => function($query) use ($login_user_id) {
                                         $query->where('user_id', $login_user_id);
                                     }
@@ -190,7 +190,7 @@ class DynamicService extends Service
                 ]);
             },
             'userOtherLogin' => function($query) use($login_user_id){
-                $query->select(['user_id', 'qq_info', 'baidu_info', 'weibo_info', 'github_info', 'weixin_info']);
+                $query->select(['user_id', 'qq_info', 'weibo_info', 'github_info']);
             },
             'topic'
         ])) {
