@@ -2,9 +2,11 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Models\Dynamic\Dynamic;
 use App\Models\System\Banner;
 use App\Models\System\StartDiagram;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class WebSitesController extends BbsController
 {
@@ -50,5 +52,17 @@ class WebSitesController extends BbsController
     {
         $lists = Banner::getBannersByWeb();
         return $this->successJson($lists);
+    }
+
+    /**
+     * 预览markdown的语法
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return string|string[]|null
+     */
+    public function previewMarkdown(Request $request)
+    {
+        return $this->successJson(Dynamic::toHTML($request->get('markdown')));
     }
 }

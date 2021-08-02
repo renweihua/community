@@ -209,5 +209,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('about_us', 'WebSitesController@aboutUs');
         // Banner图
         Route::get('banners', 'WebSitesController@banners');
+
+        // 预览markdown的语法
+        Route::post('previewMarkdown', 'WebSitesController@previewMarkdown');
     });
 });
