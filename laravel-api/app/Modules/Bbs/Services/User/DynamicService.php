@@ -363,6 +363,7 @@ class DynamicService extends Service
                     'sender_id'    => $login_user_id,
                     'sender_type'  => Notify::SYSTEM_SENDER,
                     'dynamic_type' => $reply_id == 0 ? Notify::DYNAMIC_TARGET_TYPE['COMMENT'] : Notify::DYNAMIC_TARGET_TYPE['REPLY_COMMENT'],
+                    'extend_id' => $comment->comment_id,
                 ]) ) {
                     throw new FailException('互动消息录入失败！');
                 }

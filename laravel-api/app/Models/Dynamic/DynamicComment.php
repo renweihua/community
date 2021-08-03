@@ -118,4 +118,10 @@ class DynamicComment extends Model
     {
         return app(\ParsedownExtra::class)->text(\emoji($markdown));
     }
+
+    public static function getListByIds(array $ids)
+    {
+        $list = self::whereIn('comment_id', $ids)->select('comment_id', 'comment_content', 'created_time')->get()->toArray();
+        return array_column($list, null, 'comment_id');
+    }
 }

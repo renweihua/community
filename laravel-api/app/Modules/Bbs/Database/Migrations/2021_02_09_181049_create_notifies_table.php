@@ -26,6 +26,7 @@ class CreateNotifiesTable extends Migration
             $table->bigInteger('sender_id')->unsigned()->default(0)->comment('发送者Id');
             $table->integer('sender_type')->unsigned()->default(0)->comment('发送者类型：0.系统通知');
             $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态的类型：0.点赞；1.收藏；2.评论；3.分享；4.点赞评论；5.删除');
+            $table->bigInteger('extend_id')->unsigned()->default(0)->comment('扩展Id');
             $table->text('notify_content')->comment('内容');
             $table->boolean('is_read')->unsigned()->default(0)->comment('是否已读：0：否；1：是');
             $table->bigInteger('admin_id')->unsigned()->default(0)->comment('管理员Id');

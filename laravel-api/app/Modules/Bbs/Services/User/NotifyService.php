@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Models\Dynamic\Dynamic;
+use App\Models\Dynamic\DynamicComment;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -107,7 +108,7 @@ class NotifyService extends Service
         /**
          * 消息数据格式处理
          */
-        $user_ids = $dynamic_ids = [];
+        $user_ids = $dynamic_ids = $comment_ids = [];
         $user_infos = $dynamics = [];
         // 设置已读数量
         $set_read_nums = 0;
@@ -115,6 +116,8 @@ class NotifyService extends Service
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $dynamic_ids[] = $item->target_id;
+                    // 评论动态
+                    if($item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']) $comment_ids[] = $item->extend_id;
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $user_ids[] = $item->sender_id;
@@ -135,10 +138,17 @@ class NotifyService extends Service
         if (!empty($user_ids)){
             $user_infos = UserInfo::getListByIds($user_ids);
         }
+        if (!empty($comment_ids)){
+            $comment_infos = DynamicComment::getListByIds($comment_ids);
+        }
         foreach ($paginates as $item){
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $item->relation = (object)$dynamics[$item->target_id];
+                    // 评论
+                    if($item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']){
+                        $item->comment = (object)($comment_infos[$item->extend_id] ?? []);
+                    }
                     $notifyInstance->setExplain($item);
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注

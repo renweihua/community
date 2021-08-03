@@ -111,6 +111,9 @@
                             case 0: // 点赞
                                 type = 'liked-my-thread';
                                 break;
+                            case 2: // 评论
+                                type = 'comment-my-thread';
+                                break;
                         }
                         break;
                 }
