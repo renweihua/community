@@ -36,6 +36,18 @@ class NotifyService extends Service
     }
 
     /**
+     * 我的所有消息通知
+     *
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
+    public function getAllNotify(int $login_user_id)
+    {
+        return $this->getNotify($login_user_id);
+    }
+
+    /**
      * 我的{点赞}消息通知
      *
      * @param  int  $login_user_id

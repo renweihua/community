@@ -347,7 +347,7 @@ class Dynamic extends Model
 
     public static function getListByIds(array $ids)
     {
-        $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type')->get()->toArray();
+        $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type', 'created_time')->get()->toArray();
         return array_column($list, null, 'dynamic_id');
     }
 

@@ -50,6 +50,13 @@ use Illuminate\Support\Facades\DB;
 class Notify extends MonthModel
 {
     protected $primaryKey = 'notify_id';
+    protected $appends = ['time_formatting'];
+
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value)
+    {
+        return formatting_timestamp($this->attributes['created_time']);
+    }
 
     // 消息类型
     const NOTIFY_TYPE = [
@@ -84,7 +91,7 @@ class Notify extends MonthModel
 
     public function sender()
     {
-        return $this->hasOne(UserInfo::class, 'user_id', 'sender_id')->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+        return $this->hasOne(UserInfo::class, 'user_id', 'sender_id')->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
     }
 
     public static function insert($data)

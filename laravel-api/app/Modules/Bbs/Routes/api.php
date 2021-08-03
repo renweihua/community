@@ -188,12 +188,14 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
         Route::prefix('')->group(function () {
             // 我的未读消息
             Route::get('/notify/unread', 'NotifyController@unread');
+            // 我的所有消息通知
+            Route::get('/getNotify', 'NotifyController@getNotify');
             // 我的{提醒|系统}消息通知
-            Route::get('/user/getSystemByNotify', 'NotifyController@getSystemByNotify');
+            Route::get('/getSystemByNotify', 'NotifyController@getSystemByNotify');
             // 我的{点赞}消息通知
-            Route::get('/user/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
+            Route::get('/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
             // 我的{评论}消息通知
-            Route::get('/user/getCommentByNotify', 'NotifyController@getCommentByNotify');
+            Route::get('/getCommentByNotify', 'NotifyController@getCommentByNotify');
         });
 
         // 登录日志记录

@@ -25,6 +25,17 @@ class NotifyController extends BbsController
     }
 
     /**
+     * 我的所有消息通知
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNotify(): JsonResponse
+    {
+        $lists = $this->service->getAllNotify($this->getLoginUserId());
+        return $this->successJson($lists, '获取成功！');
+    }
+
+    /**
      * 我的{点赞}消息通知
      *
      * @return \Illuminate\Http\JsonResponse
