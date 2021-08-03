@@ -2944,7 +2944,7 @@ function is_weixin()
 if ( !function_exists('is_mobile') ) {
     function is_mobile(string $text)
     {
-        $search = '/^0?1[3|4|5|6|7|8][0-9]\d{8}$/';
+        $search = '/^0?1[3|4|5|6|7|8|9][0-9]\d{8}$/';
         if ( preg_match($search, $text) ) return true; else return false;
     }
 }
