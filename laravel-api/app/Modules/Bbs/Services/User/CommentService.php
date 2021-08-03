@@ -48,6 +48,7 @@ class CommentService extends Service
         $data = [
             'user_id' => $login_user_id,
             'comment_id' => $comment_id,
+            'dynamic_id' => $comment->dynamic_id,
         ];
         DB::beginTransaction();
         try {
@@ -64,7 +65,7 @@ class CommentService extends Service
                 // 会员获赞数递减
                 $userInfoInstance->setGetLikes($author, -1);
 
-                $this->setError('取消点赞成功！');
+                $this->setError('取消评论点赞成功！');
                 $is_cancel = 1;
             } else {
                 $ip_agent = get_client_info();
@@ -86,12 +87,13 @@ class CommentService extends Service
                         'sender_id'    => $login_user_id,
                         'sender_type'  => Notify::SYSTEM_SENDER,
                         'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE'],
+                        'extend_id' => $comment_id,
                     ]) ) {
                         throw new FailException('互动消息录入失败！');
                     }
                 }
 
-                $this->setError('点赞成功！');
+                $this->setError('评论点赞成功！');
             }
 
             // 评论的点赞量实时变动（沉余字段）

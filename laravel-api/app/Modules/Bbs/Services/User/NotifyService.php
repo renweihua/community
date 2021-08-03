@@ -117,7 +117,11 @@ class NotifyService extends Service
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $dynamic_ids[] = $item->target_id;
                     // 评论动态
-                    if($item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']) $comment_ids[] = $item->extend_id;
+                    if(
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']
+                        ||
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE']
+                    ) $comment_ids[] = $item->extend_id;
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $user_ids[] = $item->sender_id;
@@ -146,7 +150,11 @@ class NotifyService extends Service
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $item->relation = (object)$dynamics[$item->target_id];
                     // 评论
-                    if($item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']){
+                    if(
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']
+                        ||
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE']
+                    ){
                         $item->comment = (object)($comment_infos[$item->extend_id] ?? []);
                     }
                     $notifyInstance->setExplain($item);

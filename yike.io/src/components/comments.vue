@@ -199,6 +199,7 @@ export default {
             this.comments[index][`praise_count`]++;
             this.comments[index][`has_praise`] = true;
           }
+          this.$message.success(res.msg);
         });
     },
     reply (item) {

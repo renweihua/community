@@ -1,11 +1,10 @@
 <template>
     <notification :notification="notification">
-        <template slot="title">
-            评论了你的文章
-            <router-link
-                :to="{name: 'threads.show', params: {dynamic_id: notification.relation.dynamic_id}, hash: '#comment-' + notification.extend_id}">
+        <template slot="title">赞了你对文章
+            <router-link :to="{name: 'threads.show', params: {dynamic_id: notification.relation.dynamic_id}}">
                 《{{ notification.relation.dynamic_title }}》
             </router-link>
+            的评论
         </template>
         <div class="pt-2 pl-md-4">
             <router-link v-if="notification.comment && notification.comment.comment_content"
@@ -17,14 +16,8 @@
     </notification>
 </template>
 
-
-<style lang="scss" scoped>
-    .red {
-        color: red;
-    }
-</style>
 <script>
-    import Notification from './notification'
+    import Notification from './notification';
 
     export default {
         components: { Notification },

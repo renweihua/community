@@ -22,7 +22,6 @@
                         <li class="list-group-item list-group-item-action" v-for="notification in notifications"
                             :key="notification.notify_id" :class="{'bg-gray-98': notification.is_read == 0}">
                             <keep-alive>
-                                {{getNotificationType(notification)}}
                                 <component :is="getNotificationType(notification)"
                                            :notification="notification"></component>
                             </keep-alive>
@@ -50,6 +49,7 @@
     import NewFollower from './types/new-follower'
     import CommentMyThread from './types/comment-my-thread'
     import LikedMyThread from './types/liked-my-thread'
+    import LikedMyComment from './types/liked-my-comment'
     import MentionedMe from './types/mentioned-me'
     import SubscribedMyThread from './types/subscribed-my-thread'
     import Welcome from './types/welcome'
@@ -64,6 +64,7 @@
             NewFollower,
             CommentMyThread,
             LikedMyThread,
+            LikedMyComment,
             SubscribedMyThread,
             Welcome
         },
@@ -113,6 +114,9 @@
                                 break;
                             case 2: // 评论
                                 type = 'comment-my-thread';
+                                break;
+                            case 5: // 点赞评论
+                                type = 'liked-my-comment';
                                 break;
                         }
                         break;
