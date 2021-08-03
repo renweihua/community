@@ -25,6 +25,9 @@
               <a class="nav-link" target="_blank" href="https://www.cnpscy.com"> 个人博客 </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://gitee.com/clown-passerby-community/community"> 项目仓库 </a>
+            </li>
+            <li class="nav-item">
               <nav-search />
             </li>
           </ul>
