@@ -35,8 +35,8 @@ import SocialiteBtns from '$components/socialite-login'
 export default {
   data () {
     return {
-      username: '13012345678',
-      password: '123456'
+      username: '',
+      password: ''
     }
   },
   components: { SocialiteBtns },

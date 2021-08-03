@@ -10,7 +10,7 @@
               type="text"
               class="form-control"
               ref="emailInput"
-              placeholder="example@yike.io"
+              placeholder="请输入QQ邮箱"
               v-model="user_email"
               @blur="validateEmail"
               required
@@ -22,7 +22,7 @@
               type="text"
               class="form-control"
               ref="usernameInput"
-              placeholder="5 ~ 12 位字母或数字"
+              placeholder="2 ~ 12 位字母或数字"
               v-model="user_name"
               @blur="validateUsername"
               required
@@ -77,14 +77,14 @@ export default {
     return {
       is_pc: 1,
       register_type: 1, // 邮箱注册
-      user_name: 'a123456',
-      user_email: '2278757482@qq.com',
-      password: '123456',
-      password_confirmation: '123456',
+      user_name: '',
+      user_email: '',
+      password: '',
+      password_confirmation: '',
       error: true,
       regex: {
         user_email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
-        user_name: /^[a-zA-Z]+[a-zA-Z0-9_-]+$/
+        user_name: /^[a-zA-Z]+[a-zA-Z0-9_-]+[\u4E00-\u9FA5]+$/
       }
     }
   },
@@ -102,7 +102,7 @@ export default {
         !this.error &&
         this.user_email.match(this.regex.user_email) &&
         this.user_name.match(this.regex.user_name) &&
-        this.user_name.length >= 5 &&
+        this.user_name.length >= 2 &&
         this.user_name.length <= 12 &&
         this.password.length >= 6 &&
         this.password.length <= 32
@@ -116,11 +116,11 @@ export default {
 
       if (
         !this.user_name.match(this.regex.user_name) ||
-        this.user_name.length < 5
+        this.user_name.length < 2
       ) {
         this.error = true;
         this.$refs['usernameInput'].classList.add('is-invalid');
-        return this.$message.error('请输入 5 ~ 12 位正确格式用户名');
+        return this.$message.error('请输入 2 ~ 12 位正确格式用户名');
       }
 
       this.$http
