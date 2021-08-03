@@ -84,7 +84,7 @@ export default {
       error: true,
       regex: {
         user_email: /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+.(com|io|cc|co|li|it|sh|cn|net|org|jp|tw|me|info|us|in|la|pro|im|so|at|my|ren|red|top|ltd|fun|vip)$/,
-        user_name: /^[a-zA-Z]+[a-zA-Z0-9_-]+[\u4E00-\u9FA5]+$/
+        user_name: /^([a-zA-Z]+[a-zA-Z0-9_-])|([\u4E00-\u9FA5]|([\u4E00-\u9FA5]+[a-zA-Z])|([\u4E00-\u9FA5]+[a-zA-Z0-9_-])|([a-zA-Z]+[\u4E00-\u9FA5])|([a-zA-Z]+[\u4E00-\u9FA5]+[a-zA-Z0-9_-]))+$/
       }
     }
   },
