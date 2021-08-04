@@ -34,6 +34,7 @@
                             </template>
                         </empty-state>
                     </div>
+                    <paginator :meta="paginator_data" @change="handlePageChanged"></paginator>
                 </div>
             </div>
         </div>
@@ -52,10 +53,12 @@
     import LikedMyComment from './types/liked-my-comment'
     import MentionedMe from './types/mentioned-me'
     import SubscribedMyThread from './types/subscribed-my-thread'
-    import Welcome from './types/welcome'
+    import Welcome from './types/welcome';
+    import Paginator from '$components/paginator';
 
     export default {
         components: {
+            Paginator,
             EmptyState,
             MentionedMe,
             BellIcon,
@@ -78,7 +81,9 @@
                     like: '点赞'
                 },
                 currentTab: 'all',
-                notifications: []
+                notifications: [],
+                paginator_data: {
+                }
             }
         },
         watch: {
@@ -100,8 +105,12 @@
                     .get(`/getNotify?tab=${this.currentTab}&page=${page}`)
                     .then(res => {
                         console.log(res.data.data);
-                        this.notifications = res.data.data
+                        this.paginator_data = res.data;
+                        this.notifications = res.data.data;
                     })
+            },
+            handlePageChanged (page) {
+                this.loadNotifications(page)
             },
             // 获取消息类型
             getNotificationType(notification){
