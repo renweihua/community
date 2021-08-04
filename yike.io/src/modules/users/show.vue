@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <template v-if="currentUser && currentUser.user_id != user.user_id">
-                    <follow-btn :item="user" :is_follow="user.user_info.is_follow" class="d-inline-block ml-md-auto"></follow-btn>
+                    <follow-btn :item="user.user_info" class="d-inline-block ml-md-auto"></follow-btn>
                 </template>
             </div>
         </header>

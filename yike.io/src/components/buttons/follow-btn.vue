@@ -4,8 +4,9 @@
         action="follow"
         :item="item"
         v-if="currentUser.user_id && item.user_id != currentUser.user_id"
+        @after-toggle="afterToggle"
     >
-        <template :slot="is_follow == true ? 'off' : 'on'">
+        <template slot="on">
             <button v-if="simple" class="btn btn-rounded btn-ghost btn-icon ml-auto" title="关注 TA">
                 <plus-icon></plus-icon>
             </button>
@@ -14,7 +15,7 @@
                 关注 TA
             </button>
         </template>
-        <template :slot="is_follow == true ? 'on' : 'off'">
+        <template slot="off">
             <button
                 v-if="simple"
                 class="btn btn-icon ml-auto"
@@ -78,6 +79,11 @@
         },
         computed: {
             ...mapGetters(['currentUser'])
+        },
+        methods: {
+            afterToggle (bool) {
+                this.item.is_follow = bool ? true : false;
+            }
         }
     }
 </script>
