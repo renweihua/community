@@ -37,7 +37,7 @@
                 // },
                 actions: {
                     like: 'is_praise',
-                    follow: 'has_followed',
+                    follow: 'is_follow',
                     subscribe: 'is_follow'
                 }
             }
@@ -59,6 +59,10 @@
                     case 'subscribe': // 关注话题
                         url = 'topic/follow';
                         params.topic_id = this.item.topic_id;
+                        break;
+                    case 'follow': // 关注会员
+                        url = 'user/follow';
+                        params.user_id = this.item.user_id;
                         break;
                     default:
                         this.$message.error('尚未对接');
