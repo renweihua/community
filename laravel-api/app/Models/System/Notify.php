@@ -68,7 +68,7 @@ class Notify extends MonthModel
     const TARGET_TYPE = [
         'REGISTER' => 0, // 注册成功
         'DYNAMIC' => 1, // 动态
-        'FOLLOW' => 2, // 关注
+        'FOLLOW' => 2, // 关注会员
     ];
 
     // 互动消息的类型，目标类型：动态
@@ -98,7 +98,9 @@ class Notify extends MonthModel
     public static function insert($data)
     {
         if (!isset($data['notify_content'])) $data['notify_content'] = '';
-        return self::create($data);
+        // 如果存在数据，那么不做录入
+        if(!self::where($data)->first()) return self::create($data);
+        return true;
     }
 
     /**

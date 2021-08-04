@@ -90,7 +90,7 @@ class FriendService extends Service
 
                     $data['cross_correlation'] = 1;
                 }
-                $detail = $userFollowFan->create(array_merge($data, [
+                $userFollowFan->create(array_merge($data, [
                     'created_time' => time(),
                 ]));
 
@@ -99,7 +99,6 @@ class FriendService extends Service
                     if (!Notify::insert([
                         'notify_type'  => Notify::NOTIFY_TYPE['SYSTEM_MSG'],
                         'user_id'      => $friend_id,
-                        'target_id'    => $detail->relation_id,
                         'target_type'  => Notify::TARGET_TYPE['FOLLOW'],
                         'sender_id'    => $login_user_id,
                         'sender_type'  => Notify::SYSTEM_SENDER,

@@ -120,6 +120,9 @@
                                 break;
                         }
                         break;
+                    case 2: // 关注会员
+                        type = 'new-follower';
+                        break;
                 }
                 return type;
             }
