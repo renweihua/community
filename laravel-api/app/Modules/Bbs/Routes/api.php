@@ -168,6 +168,8 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
         Route::prefix('dynamic')->group(function () {
             // 发布 - 动态
             Route::post('/push', 'DynamicController@push');
+            // 编辑动态
+            Route::patch('/update/{dynamic_id}', 'DynamicController@update');
             // 点赞 - 动态
             Route::post('/praise', 'DynamicController@praise');
             // 收藏 - 动态

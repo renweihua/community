@@ -151,7 +151,7 @@ class Dynamic extends Model
                 $content->dynamic_content = self::toHTML($content->dynamic_markdown);
             }
 
-            // $content->body = Purifier::clean($content->body);
+            // $content->dynamic_content = Purifier::clean($content->dynamic_content);
         });
 
         // static::saved(function ($content) {
@@ -287,6 +287,7 @@ class Dynamic extends Model
     // 时间戳格式化
     public function getTimeFormattingAttribute($value)
     {
+        if(!isset($this->attributes['created_time'])) return '';
         return formatting_timestamp($this->attributes['created_time']);
     }
 
