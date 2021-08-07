@@ -75,19 +75,19 @@
         },
         beforeRouteUpdate (to, from, next) {
             if (to.params.topic_id != from.params.topic_id) {
-                this.getNode(to.params.topic_id)
-                this.loadThreads(to.params.topic_id)
+                this.getNode(to.params.topic_id);
+                this.loadThreads(to.params.topic_id);
             }
 
-            next()
+            next();
         },
         created () {
-            this.getNode(this.$route.params.topic_id)
-            this.loadThreads(this.$route.params.topic_id)
+            this.getNode(this.$route.params.topic_id);
+            this.loadThreads(this.$route.params.topic_id);
         },
         watch: {
             currentThreadsTab () {
-                this.loadThreads(this.$route.params.topic_id, 1)
+                this.loadThreads(this.$route.params.topic_id, 1);
             }
         },
         methods: {
@@ -95,17 +95,16 @@
                 this.$http
                     .get(`topic/dynamics?topic_id=${topic_id}&tab=${this.currentThreadsTab}&page=${page}`)
                     .then(({ data }) => {
-                        console.log(data)
-                        this.threads[this.currentThreadsTab] = data
+                        this.threads[this.currentThreadsTab] = data;
                     })
             },
             handlePageChanged (page) {
-                this.loadThreads(this.node.topic_id, page)
+                this.loadThreads(this.node.topic_id, page);
             },
             getNode (topic_id) {
                 this.$http.get(`topic/detail?topic_id=${topic_id}`).then(data => {
-                    this.node = data.data
-                })
+                    this.node = data.data;
+                });
             }
         }
     }

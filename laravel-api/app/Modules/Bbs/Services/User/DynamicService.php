@@ -124,7 +124,7 @@ class DynamicService extends Service
      * @return bool
      * @throws \App\Exceptions\InvalidRequestException
      */
-    public function update(int $login_user_id, int $dynamic_id, array $params): bool
+    public function update(int $login_user_id, int $dynamic_id, array $params)
     {
         $dynamic = $this->checkDynamic($dynamic_id);
         if ( !$dynamic) {
@@ -167,7 +167,7 @@ class DynamicService extends Service
             'is_public'        => $params['is_public'] ?? 1,
         ]);
         $this->setError('动态编辑成功！');
-        return true;
+        return $dynamic->dynamic_id;
     }
 
     /**

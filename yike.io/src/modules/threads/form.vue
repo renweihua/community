@@ -93,7 +93,7 @@
                 busing: false,
                 form: {
                     dynamic_type: 1,
-                    topic_id: null,
+                    topic_id: 0,
                     is_draft: true,
                     dynamic_title: '',
                     content_type: 'markdown',
@@ -125,7 +125,7 @@
         mounted() {
             this.loadNodes();
             if (this.$route.name == 'threads.edit') {
-                this.loadThread(this.$route.params.id)
+                this.loadThread(this.$route.params.dynamic_id)
                     .then(this.syncFromCache)
                     .then(() => {
                         this.ready = true;
@@ -159,12 +159,13 @@
                         this.nodes = response.data;
                         this.busing = false;
                     })
-                    .finally(() => (this.busing = false))
+                    .finally(() => (this.busing = false));
             },
-            loadThread(id) {
+            loadThread(dynamic_id) {
+                localforage.removeItem('thread.form');
                 return this.$http
-                    .get(`threads/${id}`)
-                    .then(thread => (this.form = Object.assign(this.form, thread)))
+                    .get(`dynamic/detail?dynamic_id=${dynamic_id}`)
+                    .then(thread => (this.form = Object.assign(this.form, thread.data)));
             },
             showCaptcha(draft) {
                 this.submit(draft);
@@ -177,7 +178,7 @@
 
                 if (isEdit) {
                     promise = this.$http
-                        .patch(`threads/${this.$route.params.id}`, this.form);
+                        .patch(`dynamic/update/${this.$route.params.dynamic_id}`, this.form);
                 } else {
                     promise = this.$http.post('dynamic/push', this.form);
                 }
