@@ -69,6 +69,7 @@ class Notify extends MonthModel
         'REGISTER' => 0, // 注册成功
         'DYNAMIC' => 1, // 动态
         'FOLLOW' => 2, // 关注会员
+        'SUBSCRIBE' => 3, // 订阅话题
     ];
 
     // 互动消息的类型，目标类型：动态

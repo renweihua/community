@@ -99,6 +99,7 @@ class NotifyService extends Service
         $notifyInstance = Notify::getInstance();
 
         $paginates = $notifyInstance->setMonthTable($search_month)
+            ->filter(request()->all())
             ->where('user_id', $login_user_id)
             ->where($where)
             ->with(['sender'])
