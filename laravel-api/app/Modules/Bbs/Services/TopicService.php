@@ -6,6 +6,7 @@ use App\Exceptions\Bbs\FailException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\Topic;
 use App\Models\Dynamic\TopicFollow;
+use App\Models\System\Notify;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class TopicService extends Service
     public function lists($limit = -1)
     {
         $build = Topic::getInstance();
-        if ($limit > 0){
+        if ($limit > 0) {
             $build = $build->limit($limit);
         }
         $lists = $build->orderBy('topic_sort', 'ASC')->get();
@@ -128,7 +129,7 @@ class TopicService extends Service
         $topicFollowFan = TopicFollow::getInstance();
         // 获取当前荟吧详情
         $topic = Topic::lock(true)->find($topic_id);
-        if (!$topic){
+        if ( !$topic) {
             $this->setError('荟吧详情获取失败！');
             return false;
         }
@@ -139,7 +140,7 @@ class TopicService extends Service
         DB::beginTransaction();
         try {
             $data = [
-                'user_id' => $login_user_id,
+                'user_id'  => $login_user_id,
                 'topic_id' => $topic_id,
             ];
             if ($follow) {
@@ -158,6 +159,16 @@ class TopicService extends Service
                 $topic->increment('follow_count');
 
                 // 互动消息：我关注了荟吧<xxx>
+                if ( !Notify::insert([
+                    'notify_type' => Notify::NOTIFY_TYPE['SYSTEM_MSG'],
+                    'user_id'     => $login_user_id,
+                    'target_id'   => $topic_id,
+                    'target_type' => Notify::TARGET_TYPE['SUBSCRIBE'],
+                    'sender_id'   => 0,
+                    'sender_type' => Notify::SYSTEM_SENDER,
+                ])) {
+                    throw new FailException('互动消息录入失败！');
+                }
             }
 
             DB::commit();

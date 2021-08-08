@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Services\User;
 
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicComment;
+use App\Models\Dynamic\Topic;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -109,7 +110,7 @@ class NotifyService extends Service
         /**
          * 消息数据格式处理
          */
-        $user_ids = $dynamic_ids = $comment_ids = [];
+        $topic_ids = $user_ids = $dynamic_ids = $comment_ids = [];
         $user_infos = $dynamics = [];
         // 设置已读数量
         $set_read_nums = 0;
@@ -126,6 +127,9 @@ class NotifyService extends Service
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $user_ids[] = $item->sender_id;
+                    break;
+                case $notifyInstance::TARGET_TYPE['SUBSCRIBE']: // 订阅话题
+                    $topic_ids[] = $item->target_id;
                     break;
             }
 
@@ -146,6 +150,9 @@ class NotifyService extends Service
         if (!empty($comment_ids)){
             $comment_infos = DynamicComment::getListByIds($comment_ids);
         }
+        if (!empty($topic_ids)){
+            $topic_infos = Topic::getListByIds($topic_ids);
+        }
         foreach ($paginates as $item){
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
@@ -163,6 +170,10 @@ class NotifyService extends Service
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $item->relation = (object)$user_infos[$item->sender_id];
                     $item->explain = '关注了您';
+                    break;
+                case $notifyInstance::TARGET_TYPE['SUBSCRIBE']: // 订阅话题
+                    $item->relation = (object)$topic_infos[$item->target_id];
+                    $item->explain = '订阅话题{' . ($item->relation->topic_name ?? '') . '}';
                     break;
                 default:
                     $item->relation = (object)[];

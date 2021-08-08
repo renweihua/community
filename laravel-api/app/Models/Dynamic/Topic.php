@@ -54,4 +54,10 @@ class Topic extends Model
     {
         return $this->hasOne(TopicFollow::class, $this->primaryKey, $this->primaryKey);
     }
+
+    public static function getListByIds(array $ids)
+    {
+        $list = self::whereIn('topic_id', $ids)->select('topic_id', 'topic_name')->get()->toArray();
+        return array_column($list, null, 'topic_id');
+    }
 }
