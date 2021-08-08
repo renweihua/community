@@ -7,7 +7,7 @@
     <ul class="plan-list">
       <user-media class="mb-2 d-flex align-items-center" v-for="item in users" :key="item.user_id" :user="item.user_info">
         <template slot="appends">
-          <follow-btn :item="item" class="ml-auto" simple></follow-btn>
+          <follow-btn :item="item.user_info" class="ml-auto" simple></follow-btn>
         </template>
         <template slot="description">
           <div class="text-gray-70 text-12">{{ item.created_at_timeago }}</div>
