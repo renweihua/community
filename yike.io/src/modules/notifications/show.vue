@@ -53,6 +53,7 @@
     import LikedMyComment from './types/liked-my-comment'
     import MentionedMe from './types/mentioned-me'
     import SubscribedMyThread from './types/subscribed-my-thread'
+    import SubscribedTopic from './types/subscribed-topic'
     import Welcome from './types/welcome';
     import Paginator from '$components/paginator';
 
@@ -69,6 +70,7 @@
             LikedMyThread,
             LikedMyComment,
             SubscribedMyThread,
+            SubscribedTopic,
             Welcome
         },
         data () {
@@ -131,6 +133,9 @@
                         break;
                     case 2: // 关注会员
                         type = 'new-follower';
+                        break;
+                    case 3: // 订阅话题
+                        type = 'subscribed-topic';
                         break;
                 }
                 return type;
