@@ -8,6 +8,7 @@ use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
+use App\Models\Dynamic\Topic;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -103,6 +104,9 @@ class DynamicService extends Service
                 'created_ip'       => $ip_agent['ip'] ?? get_ip(),
                 'browser_type'     => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ]);
+
+            Topic::where('topic_id', $result->topic_id)->increment('dynamic_count');
+
             $this->setError('发布成功！');
 
             DB::commit();
@@ -152,22 +156,41 @@ class DynamicService extends Service
                 throw new InvalidRequestException('暂不支持移动端编辑动态！');
                 break;
         }
-        $dynamic->update([
-            'user_id'          => $login_user_id,
-            'topic_id'         => $params['topic_id'] ?? 0,
-            'dynamic_title'    => $params['dynamic_title'] ?? '',
-            'dynamic_type'     => $params['dynamic_type'],
-            'dynamic_images'   => $params['dynamic_images'] ?? '',
-            'video_path'       => $params['video_path'] ?? '',
-            'video_info'       => $params['video_info'] ?? '',
-            'content_type'     => $params['content_type'],
-            'dynamic_content'  => $params['dynamic_content'] ?? '',
-            'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
-            'is_check'         => 1, // 暂时默认无需审核
-            'is_public'        => $params['is_public'] ?? 1,
-        ]);
-        $this->setError('动态编辑成功！');
-        return $dynamic->dynamic_id;
+
+        DB::beginTransaction();
+        try{
+            $update = [
+                'user_id'          => $login_user_id,
+                'topic_id'         => $params['topic_id'] ?? 0,
+                'dynamic_title'    => $params['dynamic_title'] ?? '',
+                'dynamic_type'     => $params['dynamic_type'],
+                'dynamic_images'   => $params['dynamic_images'] ?? '',
+                'video_path'       => $params['video_path'] ?? '',
+                'video_info'       => $params['video_info'] ?? '',
+                'content_type'     => $params['content_type'],
+                'dynamic_content'  => $params['dynamic_content'] ?? '',
+                'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
+                'is_check'         => 1, // 暂时默认无需审核
+                'is_public'        => $params['is_public'] ?? 1,
+            ];
+
+            // 话题的动态数量统计
+            if ($dynamic->topic_id != $update['topic_id']){
+                Topic::where('topic_id', $dynamic->topic_id)->decrement('dynamic_count');
+                Topic::where('topic_id', $update['topic_id'])->increment('dynamic_count');
+            }
+
+            $dynamic->update($update);
+
+            $this->setError('动态编辑成功！');
+
+            DB::commit();
+            return $dynamic->dynamic_id;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
     }
 
     /**

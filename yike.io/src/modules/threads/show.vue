@@ -232,11 +232,7 @@
             loadThread () {
                 this.$http
                     .get(`dynamic/detail?dynamic_id=${this.$route.params.dynamic_id}&include=user,likers`)
-                    // .then(response => (this.thread = response.data))
-                    .then(response => {
-                        console.log(response);
-                        (this.thread = response.data)
-                    })
+                    .then(response => (this.thread = response.data))
                     .then(this.registerEventListener)
                     .catch(response => {
                         if (response.status === 404) {
@@ -258,13 +254,13 @@
                 this.$http
                     .get(`dynamic/getPraises?dynamic_id=${this.$route.params.dynamic_id}`)
                     .then(({ data }) => {
-                        this.praise_users = data.data
+                        this.praise_users = data.data;
                     })
             },
             handleDelete (thread) {
                 this.$http.delete(`threads/${thread.dynamic_id}`).then(() => {
-                    this.$message.success('已删除！')
-                    this.$router.go(-1)
+                    this.$message.success('已删除！');
+                    this.$router.go(-1);
                 })
             },
             toggleStatus (timestamp) {
@@ -272,8 +268,8 @@
                     ? null
                     : moment().format('YYYY-MM-DD HH:mm:ss')
                 this.$http.patch(`threads/${this.thread.dynamic_id}`, this.thread).then(() => {
-                    this.$message.success('搞定！')
-                    this.loadThread()
+                    this.$message.success('搞定！');
+                    this.loadThread();
                 })
             }
         },
