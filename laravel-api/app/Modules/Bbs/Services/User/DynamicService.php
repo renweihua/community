@@ -175,7 +175,7 @@ class DynamicService extends Service
                 'dynamic_images'   => $params['dynamic_images'] ?? '',
                 'video_path'       => $params['video_path'] ?? '',
                 'video_info'       => $params['video_info'] ?? '',
-                'content_type'     => $params['content_type'],
+                'content_type'     => $params['content_type'] ?? 'html',
                 'dynamic_content'  => $params['dynamic_content'] ?? '',
                 'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
                 'is_check'         => 1, // 暂时默认无需审核
@@ -433,7 +433,7 @@ class DynamicService extends Service
                 'dynamic_id'       => $dynamic->dynamic_id,
                 'reply_id'         => $reply_id,
                 'top_level'        => $top_level,
-                'content_type'     => $params['content_type'],
+                'content_type'     => $params['content_type'] ?? 'html',
                 'comment_content'  => $params['content'] ?? '',
                 'comment_markdown' => $params['markdown'] ?? '',
                 'author_id'        => $dynamic->user_id,

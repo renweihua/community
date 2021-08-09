@@ -68,7 +68,7 @@
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.cache_extends ? albumInfoData.cache_extends.comment_count : 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ albumInfoData.cache_extends ? albumInfoData.cache_extends.comments_count : 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -501,8 +501,8 @@ export default {
 				}
 				this.$store.commit('setCommContentData', '');
 				// 评论数量添加
-				if (this.albumInfoData.cache_extends.comment_count == 0) this.mescroll.removeEmpty();
-				this.albumInfoData.cache_extends.comment_count++;
+				if (this.albumInfoData.cache_extends.comments_count == 0) this.mescroll.removeEmpty();
+				this.albumInfoData.cache_extends.comments_count++;
 				this.$refs.comm.visible = false;
 				this.top_level = this.reply_id = 0;
 				uni.hideLoading();
@@ -531,7 +531,7 @@ export default {
 				if (this.fromPage == 'find') {
 					filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 				}
-				filItem.cache_extends.comment_count++;
+				filItem.cache_extends.comments_count++;
 			});
 		},
 		// 评论项操作
@@ -577,18 +577,18 @@ export default {
 									let filCommentList = this.commentListData.filter(item => item.comment_id == e.top_level)[0];
 									let filreplies = filCommentList.replies;
 									filreplies = filreplies.filter(item => res.data.indexOf(item.comment_id, res.data) == -1);
-									filCommentList.cache_extends.comment_count = filCommentList.cache_extends.comment_count - res.data.length;
+									filCommentList.cache_extends.comments_count = filCommentList.cache_extends.comments_count - res.data.length;
 									filCommentList.replies = filreplies;
 									// 评论数量减少
-									this.dynamic.cache_extends.comment_count = this.dynamic.cache_extends.comment_count - res.data.length;
+									this.dynamic.cache_extends.comments_count = this.dynamic.cache_extends.comments_count - res.data.length;
 								} else {
 									// 评论发布项删除
 									let filCommentList = this.commentListData.filter(item => item.comment_id != e.comment_id);
 									this.$store.commit('interact/setCommentListData', filCommentList);
 									// 评论数量减少
-									this.dynamic.cache_extends.comment_count--;
+									this.dynamic.cache_extends.comments_count--;
 								}
-								if (this.albumInfoData.cache_extends.comment_count == 0) this.mescroll.showEmpty();
+								if (this.albumInfoData.cache_extends.comments_count == 0) this.mescroll.showEmpty();
 								// 改变上一窗口的数据
 								let filItem = [];
 								// 来自主要跳转
@@ -611,7 +611,7 @@ export default {
 								if (this.fromPage == 'find') {
 									filItem = this.$store.getters['album/getAlbumListData'].filter(item => item.dynamic_id == this.dynamic_id)[0];
 								}
-								filItem.cache_extends.comment_count = filItem.cache_extends.comment_count - res.data.length;
+								filItem.cache_extends.comments_count = filItem.cache_extends.comments_count - res.data.length;
 							});
 							break;
 						default:
