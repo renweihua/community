@@ -26,7 +26,7 @@
 			<!-- 标题 -->
 			<view class="ellipsis f32r fbold c111 mb18r" v-if="calTitle" @tap="$_click('click')">{{calTitle}}</view>
 			<!-- 内容 -->
-			<view class="fword f28r c555" :class="{mb18r: calImageSrcs}" @tap="$_click('click')">{{calStringCut}}</view>
+			<view class="fword f28r c555" :class="{mb18r: calImageSrcs}" @tap="$_click('click')" v-html="calStringCut"></view>
 			<!-- 摄影信息 -->
 			<view class="bgf8 ptb18r" v-if="calAlbum" :class="{mb18r: calImageSrcs}" @tap="$_click('click')">
 				<view class="mlr18r f24r cgray ellipsis" v-for="album in calAlbum" :key="album.title">

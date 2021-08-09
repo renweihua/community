@@ -37,6 +37,7 @@ class DynamicService extends Service
                 }
                 break;
             case 1: // 文章
+                if (!isset($params['content_type'])) $params['content_type'] = 'html';
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
                     $this->setError('请输入文章标题！');
                     return false;

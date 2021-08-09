@@ -109,7 +109,7 @@ class DynamicService extends Service
     protected function getDynamics($request, int $login_user_id = 0, array $screen_params = [])
     {
         $lists = Dynamic::check()->filter($request->all())
-                    ->select('dynamic_id', 'user_id', 'topic_id', 'dynamic_title', 'dynamic_images', 'video_path', 'video_info', 'created_time', 'dynamic_type', 'cache_extends')
+                    ->select('dynamic_id', 'user_id', 'topic_id', 'dynamic_title', 'dynamic_images', 'video_path', 'video_info', 'created_time', 'dynamic_type', 'cache_extends', 'dynamic_content')
                     ->where(function($query)use($screen_params, $request){
                         // 筛选所属会员动态
                         if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);

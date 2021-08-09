@@ -44,7 +44,9 @@ abstract class Service
      */
     public function getPaginateFormat($paginate): array
     {
-        return $paginate->toArray();
+        $paginate = $paginate->toArray();
+        $paginate['count_page'] = $paginate['last_page'];
+        return $paginate;
         return [
             'current_page' => $paginate->currentPage(),
             'per_page' => $paginate->perPage(),
