@@ -31,7 +31,7 @@
 								:color="calUser.user_sex_text == '男' ? '#479bd4' : '#FF6699'"
 							></i-icon>
 						</view>
-						<view class="f24r cgray ellipsis">{{ calUser.basic_extends.user_introduction || '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
+						<view class="f24r cgray ellipsis">{{ calUser.basic_extends ? calUser.basic_extends.user_introduction : '该同袍还不知道怎么描述寄己 (╯▽╰)╭' }}</view>
 					</view>
 					<!-- 如果登录会员就是发布者，那么不展示 -->
 					<view v-if="!calUser.is_self" class="ball2r-ctheme f28r ctheme fcenter w128r br8r ptb8r" @tap="fnAtte(calUser)">
@@ -53,12 +53,12 @@
 					</block>
 					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">
 						{{ videoInfoData.is_praise ? '已赞' : '赞' }}
-						<text class="f24r cbrown ml18r">{{ videoInfoData.cache_extends.praise_count }}</text>
+						<text class="f24r cbrown ml18r">{{ videoInfoData.cache_extends ? videoInfoData.cache_extends.praise_count : 0}}</text>
 					</view>
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ videoInfoData.cache_extends.comment_count || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ videoInfoData.cache_extends ? videoInfoData.cache_extends.comment_count : 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -72,11 +72,11 @@
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
 				<i-icon type="dianzan" size="48" :color="videoInfoData.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ videoInfoData.cache_extends.praise_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ videoInfoData.cache_extends ? videoInfoData.cache_extends.praise_count : 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
 				<i-icon type="shoucang" size="48" :color="videoInfoData.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ videoInfoData.cache_extends.collection_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ videoInfoData.cache_extends ? videoInfoData.cache_extends.collection_count : 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>

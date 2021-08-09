@@ -21,7 +21,7 @@
 		</view>
 		<!-- 评论及回复 -->
 		<view class="comment">
-			<view class="comment-content" :class="{bbs2r: infoData.replies_count}" @tap="$emit('comm',infoData)">{{infoData.comment_content || '#'}}</view>
+			<view class="comment-content" :class="{bbs2r: infoData.replies_count}" @tap="$emit('comm',infoData)" v-html="infoData.comment_content || '#'"></view>
 			<block v-if="infoData.replies_count" v-for="(item, index) in infoData.replies" :key="index">
 				<view class="comment-childs">
 					<text class="f28r ctheme" @tap="$emit('user',item.user_info)">{{item.user_info.nick_name || '#'}}</text>

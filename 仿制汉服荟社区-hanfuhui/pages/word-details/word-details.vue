@@ -50,12 +50,12 @@
 					</block>
 					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">
 						{{ wordInfoData.is_praise ? '已赞' : '赞' }}
-						<text class="f24r cbrown ml18r">{{ wordInfoData.cache_extends.praise_count }}</text>
+						<text class="f24r cbrown ml18r">{{ wordInfoData.cache_extends ? wordInfoData.cache_extends.praise_count : 0}}</text>
 					</view>
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ wordInfoData.cache_extends.comment_count || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ wordInfoData.cache_extends ? wordInfoData.cache_extends.comment_count : 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -69,11 +69,11 @@
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
 				<i-icon type="dianzan" size="48" :color="wordInfoData.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ wordInfoData.cache_extends.praise_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ wordInfoData.cache_extends ? wordInfoData.cache_extends.praise_count : 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
 				<i-icon type="shoucang" size="48" :color="wordInfoData.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ wordInfoData.cache_extends.collection_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ wordInfoData.cache_extends ? wordInfoData.cache_extends.collection_count : 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>

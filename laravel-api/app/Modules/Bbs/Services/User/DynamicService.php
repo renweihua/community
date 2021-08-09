@@ -62,10 +62,18 @@ class DynamicService extends Service
 
                 // 通过 ffmpeg 获取视频的第一帧作为封面图
                 $params['dynamic_images'] = date('Ym') . '/' . Str::random(40) . '.jpg';
-                $ffmpeg                   = FFMpeg::create([
-                    'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
-                    'ffprobe.binaries' => '/www/server/ffmpeg-4.3.1/ffprobe',
-                ]);
+                if (env('APP_DEBUG') == true){
+                    $ffmpeg                   = FFMpeg::create([
+                        'ffmpeg.binaries'  => 'G:/ffmpeg/bin/ffmpeg.exe',
+                        'ffprobe.binaries' => 'G:/ffmpeg/bin/ffprobe.exe',
+                    ]);
+                }else{
+                    $ffmpeg                   = FFMpeg::create([
+                        'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
+                        'ffprobe.binaries' => '/www/server/ffmpeg-4.3.1/ffprobe',
+                    ]);
+                }
+
                 $video                    = $ffmpeg->open($params['video_path']);
                 // 获取封面图
                 $video->frame(TimeCode::fromSeconds(1))->save(storage_path('app/public/' . $params['dynamic_images']));
@@ -96,7 +104,7 @@ class DynamicService extends Service
                 'dynamic_images'   => $params['dynamic_images'] ?? '',
                 'video_path'       => $params['video_path'] ?? '',
                 'video_info'       => $params['video_info'] ?? '',
-                'content_type'     => $params['content_type'],
+                'content_type'     => $params['content_type'] ?? 'html',
                 'dynamic_content'  => $params['dynamic_content'] ?? '',
                 'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
                 'is_check'         => 1, // 暂时默认无需审核
