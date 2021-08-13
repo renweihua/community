@@ -12,7 +12,13 @@
                         <header>
                             <h2 class="mb-3 pb-2 border-bottom">{{ thread.dynamic_title }}</h2>
                         </header>
-                        <markdown-body v-model="thread.dynamic_content"></markdown-body>
+
+                        <!-- 视频动态  -->
+                        <video v-if="thread.dynamic_type" :preload="preload" :poster="thread.dynamic_images[0]" :height="height" align="center" :controls="controls" :autoplay="autoplay">
+                            <source :src="thread.video_path" type="video/mp4">
+                        </video>
+                        <!-- 图文或动态 -->
+                        <markdown-body v-else v-model="thread.dynamic_content"></markdown-body>
                     </div>
                     <div class="thread-stats-bar bg-white border-top py-1">
                         <div class="container">
@@ -150,6 +156,10 @@
 </template>
 
 <script>
+    // 视频播放器
+    import Video from 'video.js';
+    import 'video.js/dist/video-js.css';
+
     import moment from 'moment'
     import MedalIcon from '$icons/Medal'
     import LockIcon from '$icons/LockAlert'
@@ -213,6 +223,17 @@
                 thread: null,
                 showReportForm: false,
                 praise_users: [],
+
+                // 视频播放器
+                playStatus: '',
+                muteStatus: '',
+                isMute: true,
+                isPlay: false,
+                // width: '820', // 设置视频播放器的显示宽度（以像素为单位）
+                height: '500', // 设置视频播放器的显示高度（以像素为单位）
+                preload: 'auto', //  建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+                controls: true, // 确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+                autoplay: ''
             }
         },
         computed: {
@@ -280,6 +301,9 @@
 </script>
 
 <style lang="scss">
+    video{
+        width: 100%;
+    }
     .thread-toolbar {
         position: fixed;
         top: 150px;

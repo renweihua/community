@@ -65,8 +65,8 @@ class DynamicService extends Service
                 $params['dynamic_images'] = date('Ym') . '/' . Str::random(40) . '.jpg';
                 if (env('APP_DEBUG') == true){
                     $ffmpeg                   = FFMpeg::create([
-                        'ffmpeg.binaries'  => 'G:/ffmpeg/bin/ffmpeg.exe',
-                        'ffprobe.binaries' => 'G:/ffmpeg/bin/ffprobe.exe',
+                        'ffmpeg.binaries'  => 'H:/ffmpeg/bin/ffmpeg.exe',
+                        'ffprobe.binaries' => 'H:/ffmpeg/bin/ffprobe.exe',
                     ]);
                 }else{
                     $ffmpeg                   = FFMpeg::create([
