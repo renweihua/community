@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2dab056ffb5bbf0c1cb9fb361489bd",
+    "content-hash": "f7a05ebbbd45ff20f7cfe5dc99cc94f2",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -190,7 +190,7 @@
             "dist": {
                 "type": "path",
                 "url": "../cnpscy-socialite",
-                "reference": "81cccb2077a9ea3df60c2ab5d431d6083228b504"
+                "reference": "a54a09be9fc83f312f6502141b3ba155f356c3a7"
             },
             "require": {
                 "ext-json": "*",
@@ -3353,6 +3353,85 @@
                 "source": "https://github.com/overtrue/laravel-emoji/tree/master"
             },
             "time": "2018-05-26T04:29:33+00:00"
+        },
+        {
+            "name": "overtrue/qcloud-cos-client",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/qcloud-cos-client.git",
+                "reference": "3e96ebad0b79152c32733ccf00da0d60b3c23c10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/qcloud-cos-client/zipball/3e96ebad0b79152c32733ccf00da0d60b3c23c10",
+                "reference": "3e96ebad0b79152c32733ccf00da0d60b3c23c10",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "guzzlehttp/guzzle": "^7.2",
+                "php": ">=7.4",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.7",
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "mockery/mockery": "^1.0",
+                "monolog/monolog": "^2.1",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "hooks": {
+                    "pre-commit": [
+                        "composer test",
+                        "composer check-style"
+                    ],
+                    "pre-push": [
+                        "composer test",
+                        "composer check-style"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\CosClient\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "overtrue",
+                    "email": "anzhengchao@gmail.com"
+                }
+            ],
+            "description": "Client of QCloud.com COS",
+            "support": {
+                "issues": "https://github.com/overtrue/qcloud-cos-client/issues",
+                "source": "https://github.com/overtrue/qcloud-cos-client/tree/1.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://www.easywechat.com/img/pay/wechat.jpg",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/overtrue",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2021-05-31T02:18:32+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -11325,5 +11404,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
