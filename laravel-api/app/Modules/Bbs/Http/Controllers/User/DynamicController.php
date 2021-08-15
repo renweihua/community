@@ -25,10 +25,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function push(DynamicRequest $request) : JsonResponse
+    public function push(DynamicRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($result = $this->service->push($this->getLoginUserId(), $request->all())) {
             return $this->successJson($result, $this->service->getError());
         } else {
@@ -45,10 +44,9 @@ class DynamicController extends BbsController
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\InvalidRequestException
      */
-    public function update(DynamicRequest $request, $dynamic_id) : JsonResponse
+    public function update(DynamicRequest $request, $dynamic_id): JsonResponse
     {
         $request->validated();
-
         if ($result = $this->service->update($this->getLoginUserId(), $dynamic_id, $request->all())) {
             return $this->successJson($result, $this->service->getError());
         } else {
@@ -63,10 +61,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function praise(DynamicIdRequest $request) : JsonResponse
+    public function praise(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
@@ -79,7 +76,7 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function collections() : JsonResponse
+    public function collections(): JsonResponse
     {
         $lists = $this->service->getCollections($this->getLoginUserId());
         return $this->successJson($lists);
@@ -92,10 +89,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function collection(DynamicIdRequest $request) : JsonResponse
+    public function collection(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if ($result = $this->service->collection($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
@@ -110,10 +106,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function comment(DynamicCommentRequest $request) : JsonResponse
+    public function comment(DynamicCommentRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($data = $this->service->comment($this->getLoginUserId(), $request->all())) {
             return $this->successJson($data, $this->service->getError());
         } else {
@@ -128,10 +123,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteComment(DynamicCommentIdRequest $request) : JsonResponse
+    public function deleteComment(DynamicCommentIdRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'))) {
             return $this->successJson($result, $this->service->getError());
         } else {
@@ -139,10 +133,9 @@ class DynamicController extends BbsController
         }
     }
 
-    public function setDynamicFiled(DynamicIdRequest $request) : JsonResponse
+    public function setDynamicFiled(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if ($result = $this->service->setDynamicFiled($this->getLoginUser(), (int)$data['dynamic_id'], (string)$data['change_field'], $data['change_value'])) {
             return $this->successJson([], $this->service->getError());
         } else {
