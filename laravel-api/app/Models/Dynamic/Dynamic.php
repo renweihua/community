@@ -215,7 +215,9 @@ class Dynamic extends Model
         if (empty($key)) return [];
         $imgs = explode(',', $key);
         foreach ($imgs as &$img) {
-            $img = Storage::url($img);
+            if (!check_url($img)){
+                $img = Storage::url($img);
+            }
         }
         return $imgs;
     }
@@ -246,6 +248,9 @@ class Dynamic extends Model
     public function getVideoPathAttribute($value)
     {
         if (empty($value)) return '';
+        if (check_url($value)){
+            return $value;
+        }
         return Storage::url($value);
     }
 

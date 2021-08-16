@@ -1,5 +1,123 @@
 <?php
 
+if ( !function_exists('text_asterisk_except_first') ) {
+    /**
+     * 文本只展示首位，其余全部指定符号隐藏
+     *
+     * @param  string  $user_name
+     *
+     * @return string
+     */
+    function text_asterisk_except_first(string $user_name, string $symbol = '*') : string
+    {
+        //获取字符串长度
+        $str_length = mb_strlen($user_name, 'utf-8');
+        if ( $str_length <= 1 ) {
+            return $str_length;
+        }
+        //mb_substr — 获取字符串的部分
+        $first_str = mb_substr($user_name, 0, 1, 'utf-8');
+        //str_repeat — 重复一个字符串
+        $str = $first_str . str_repeat($symbol, $str_length - 1);
+        return $str;
+    }
+}
+
+if (!function_exists('show_text_duration')){
+    function add_0($str) {
+        if ($str < 10) $str = '0' . $str;
+        return $str;
+    }
+
+    /**
+     * 时长按照字符串展示（70s => 1:10 ）
+     * 
+     * @param  int  $time
+     *
+     * @return string
+     */
+    function show_text_duration(int $time)
+    {
+        $hour = $min = $sec = 0;
+        $str = '';
+        if ($time > 3600){
+            $hour = floor($time / 3600);
+            $str = $hour . ':';
+        }
+        $min = floor(($time - $hour * 3600) / 60);
+        $sec = floor($time - $hour * 3600 - $min * 60);
+        return $str . add_0($min) . ':' . add_0($sec);
+    }
+}
+
+if ( !function_exists('text_hidden') ) {
+    /**
+     * 文本隐藏：保留字符串前多少位与后多少位，隐藏中间用*代替（两个字符时只显示第一个）
+     * 
+     * @param  string  $text
+     * @param  int     $show_length 前后展示文本的长度
+     *
+     * @return string
+     */
+    function text_hidden(string $text, int $show_length = 2)
+    {
+        $strlen = mb_strlen($text, 'utf-8');
+        $firstStr = mb_substr($text, 0, $show_length, 'utf-8');
+        $lastStr = mb_substr($text, -2, $show_length, 'utf-8');
+        return ($strlen == 2) ? $firstStr . str_repeat('*', mb_strlen($text, 'utf-8') - $show_length) : $firstStr . str_repeat("*", $strlen - $show_length * 2) . $lastStr;
+    }
+}
+
+/**
+ * 匹配内容，追加图片的前缀
+ * @param          $content
+ * @param  string  $suffix
+ *
+ * @return string|string[]|null
+ */
+function merge_image_url($content, $suffix = '')
+{
+    $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+    // 如果不存在图片，则追加http；否则不变动
+    $pregRule = "/<[img|IMG].*?src=[\'|\"]((?!(http|https)\:\/).*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+    $content = preg_replace($pregRule, '<img src="' . $suffix . '${1}" style="max-width:100%">', $content);
+    return $content;
+}
+
+if ( !function_exists('number_show_text') ) {
+    /**
+     * 数字转换成文本展示
+
+     * @return string
+     */
+    function number_show_text(int $number):string
+    {
+        $length = strlen($number);  //数字长度
+        if($length > 8){ //亿单位
+            $str = substr_replace(strstr($number,substr($number,-7),' '),'.',-1,0)."亿";
+        }elseif($length > 4){ //万单位
+            //截取前俩为
+            $str = substr_replace(strstr($number,substr($number,-3),' '),'.',-1,0)."万";
+        }else{
+            return $number;
+        }
+        return $str;
+    }
+}
+
+function get_query_str($url,$key){
+    $query = explode($key . '=', urldecode($url));
+    return current(explode('&', $query[1]));
+}
+
+/**
+ * @计算中文字符串长度，只支持UTF8编码
+ */
+function utf8_strlen($string = null) {
+    preg_match_all("/./us", $string, $match);
+    return count($match[0]);
+}
+
 if ( !function_exists('get_distance') ) {
     /**
      * 根据经纬度算距离，返回结果单位是公里，先纬度，后经度
