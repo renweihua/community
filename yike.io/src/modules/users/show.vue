@@ -175,7 +175,7 @@
         methods: {
             async getUser (user_uuid) {
                 user_uuid = user_uuid || this.$route.params.user_uuid
-                let res = await this.$http.get(`user/${user_uuid}`).catch(() => {
+                let res = await this.$http.get(`user/${user_uuid}/detail`).catch(() => {
                     this.$router.replace({ name: 'pages.not-found' })
                 })
                 this.user = res.data
