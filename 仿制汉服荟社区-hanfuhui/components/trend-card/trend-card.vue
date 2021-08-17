@@ -60,7 +60,7 @@
 				<i-icon type="dianzan" size="48" :color="item.is_praise?'#FF6699':'#8f8f94'"></i-icon>
 				<text class="ml8r f28r cgray">
 				{{item.is_praise?'已赞':'赞'}}
-				<span v-if="item.cache_extends.praise_count > 0">({{item.cache_extends.praise_count}})</span>
+				<span v-if="item.cache_extends.praises_count > 0">({{item.cache_extends.praises_count}})</span>
 				</text>
 			</view>
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('comm')">

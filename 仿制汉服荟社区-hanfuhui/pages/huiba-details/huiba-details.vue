@@ -344,10 +344,10 @@ export default {
 					icon: 'none'
 				});
 				if (filItem.is_praise) {
-					filItem.cache_extends.praise_count--;
+					filItem.cache_extends.praises_count--;
 					filItem.is_praise = false;
 				} else {
-					filItem.cache_extends.praise_count++;
+					filItem.cache_extends.praises_count++;
 					filItem.is_praise = true;
 				}
 			});
