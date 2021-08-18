@@ -2,7 +2,7 @@
 	<view>
 		<!-- 主页 -->
 		<home v-if="status.home" :style="{ display: current == 0 ? 'block' : 'none' }" :refresh="current == 0 && clickRefresh"></home>
-		<!-- 发现 -->
+		<!-- 广场 -->
 		<find v-if="status.find" :style="{ display: current == 1 ? 'block' : 'none' }" :refresh="current == 1 && clickRefresh"></find>
 		<!-- 商城 -->
 		<!-- <shop v-if="status.shop" :style="{display: current==3 ? 'block' :'none'}" :refresh="current==3 && clickRefresh"></shop> -->
@@ -27,7 +27,7 @@
 import BottomNav from '@/components/bottom-nav/bottom-nav';
 // 底部导航栏组件-主页
 import Home from '@/pages/home/home';
-// 底部导航栏组件-发现
+// 底部导航栏组件-广场
 import Find from '@/pages/find/find';
 // 底部导航栏组件-我的
 import My from '@/pages/my/my';
@@ -115,7 +115,6 @@ export default {
 	},
 	// 初始跳转
 	onLoad(option) {
-		// console.log('on-load')
 		// 带参数时改变选中项关闭启动封面
 		if (option && option.current) {
 			this.current = parseInt(option.current);

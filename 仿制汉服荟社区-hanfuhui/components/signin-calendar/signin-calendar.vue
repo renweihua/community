@@ -82,6 +82,8 @@ export default {
 	methods: {
 		/// 初始化年月日
 		init() {
+			uni.showLoading({ title: '加载中……', mask: true });
+			
 			// 取日期对象
 			let now = this.date ? new Date(this.date) : new Date();
 			this.year = now.getFullYear();

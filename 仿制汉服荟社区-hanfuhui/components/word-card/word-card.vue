@@ -10,7 +10,7 @@
 		></image>
 		<view class="ptb18r plr18r">
 			<view class="f36r fbold fcenter c555 ellipsis" @tap="$emit('click', infoData)">{{ infoData.dynamic_title }}</view>
-			<view class="f28r cgray mtb18r" @tap="$emit('click', infoData)">{{ calStringCut }}</view>
+			<view class="f28r cgray mtb18r" @tap="$emit('click', infoData)" v-html="calStringCut"></view>
 			<view class="flex flex-aic">
 				<user-avatar
 					@click="$emit('user', infoData.user_info)"

@@ -27,8 +27,6 @@
 			   <view class="gonggao" :class="donghua">
 				   <image src="../../static/gonggao/gonggao.png" mode="aspectFit"></image>
 				   <view class="zhuyi">1.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
-				   <view class="zhuyi">2.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
-				   <view class="zhuyi">3.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
 				   <view class="zhuyi">一经核实将被封禁，情节严重者永久封禁！</view>
 				   <button type="default" @tap="ttt">朕知道了</button>
 			   </view>
@@ -100,7 +98,7 @@
 					title: '发布中',
 					mask: true
 				})
-				// 启动封面
+				// 批量上传图片
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
 						'dynamic_title': this.dynamic_title,

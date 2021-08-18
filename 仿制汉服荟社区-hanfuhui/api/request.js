@@ -16,9 +16,9 @@ export default function request(route, method = 'get', data = {}) {
 				'_version': 3,
 				'Authorization': !login_token ? '' : (login_token),
 				'_fromclient': 'android',
-				'content-type': 'application/x-www-form-urlencoded',
+				// 'content-type': 'application/x-www-form-urlencoded',
 			},
-			success: res => {
+			success: res => {				
 				// token失效时，自动重新登录
 				if (res.statusCode == 401 || res.data.status == -1) {
 					// 自动跳转登录页
@@ -59,6 +59,12 @@ export default function request(route, method = 'get', data = {}) {
 						icon: 'none'
 					})
 					return;
+				}
+				
+				// 如果服务端返回新的Token，那么自动存储新的Token，避免旧Token过期
+				if (res.headers && res.headers.authorization) {
+					// 存储Token
+					uni.setStorageSync('TOKEN', res.headers.authorization);
 				}
 
 				// 正常
