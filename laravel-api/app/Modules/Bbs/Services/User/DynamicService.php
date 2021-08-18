@@ -96,6 +96,10 @@ class DynamicService extends Service
         }
         DB::beginTransaction();
         try {
+            // 如果未设置归属话题，自动归属到默认话题
+            if (!isset($params['topic_id']) || empty($params['topic_id'])){
+                $params['topic_id'] = Topic::getDetaultTopicId();
+            }
             $ip_agent = get_client_info();
             $result   = Dynamic::create([
                 'user_id'          => $login_user_id,

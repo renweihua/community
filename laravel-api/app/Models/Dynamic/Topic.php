@@ -60,4 +60,14 @@ class Topic extends Model
         $list = self::whereIn('topic_id', $ids)->select('topic_id', 'topic_name')->get()->toArray();
         return array_column($list, null, 'topic_id');
     }
+
+    /**
+     * 获取默认的话题Id
+     *
+     * @return int
+     */
+    public static function getDetaultTopicId(): int
+    {
+        return self::where('is_default', 1)->value('topic_id', 0);
+    }
 }
