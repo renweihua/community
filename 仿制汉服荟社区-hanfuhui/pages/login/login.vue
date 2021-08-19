@@ -127,7 +127,23 @@
 				console.log('微信登录');
 				uni.showLoading({
 					title: '微信登录'
-				})
+				});
+				
+				uni.login({
+					provider: 'weixin',	//微信:wx
+					success: function (loginRes) {
+						console.log(loginRes.authResult);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'weixin',	//微信:wx
+							success: function (infoRes) {
+								console.log('微信会员信息：');
+								console.log(infoRes);
+							}
+						});
+					}
+				});
+				
 				setTimeout(() => {
 					uni.hideLoading()
 				}, 1200);
@@ -135,16 +151,16 @@
 			//调起QQ登录
 			fnQQ() {
 				if (this.isLogin) return;
-				
 				uni.login({
-					provider: 'qq',	//微信:wx   QQ:qq
+					provider: 'qq',	//QQ:qq
 					success: function (loginRes) {
 						console.log(loginRes.authResult);
 						// 获取用户信息
 						uni.getUserInfo({
-							provider: 'qq',	//微信:wx   QQ:qq
+							provider: 'qq',	//QQ:qq
 							success: function (infoRes) {
-								console.log('用户昵称为：' + infoRes.userInfo.nickName);
+								console.log('QQ信息：');
+								console.log(infoRes);
 							}
 						});
 					}
