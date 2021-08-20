@@ -35,6 +35,7 @@
     "video.js": "^7.14.3",
     "vue": "^2.6.14",
     "vue-avatar-cropper": "1.0.5",
+    "vue-concise-slider": "^4.1.8",
     "vue-material-design-icons": "^3.4.0",
     "vue-router": "^3.5.2",
     "vue-template-compiler": "^2.6.14",

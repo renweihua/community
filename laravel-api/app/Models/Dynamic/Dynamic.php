@@ -83,6 +83,7 @@ use Laravel\Scout\Searchable;
  */
 class Dynamic extends Model
 {
+
     use Filterable;
 
 //    use Searchable;
@@ -131,7 +132,7 @@ class Dynamic extends Model
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
-    protected $appends = ['time_formatting'];
+    protected $appends = ['time_formatting', 'dynamic_type_text'];
 
     protected static function boot()
     {
@@ -294,6 +295,28 @@ class Dynamic extends Model
     {
         if(!isset($this->attributes['created_time'])) return '';
         return formatting_timestamp($this->attributes['created_time']);
+    }
+
+    /**
+     * 获取动态类型文本
+     *
+     * @return string
+     */
+    public function getDynamicTypeTextAttribute(): string
+    {
+        $text = '动态';
+        switch ($this->attributes['dynamic_type']){
+            case 1: // 图文
+                $text = '图文';
+                break;
+            case 2: // 视频
+                $text = '视频';
+                break;
+            case 3: // 摄影/相册
+                $text = '相册';
+                break;
+        }
+        return $text;
     }
 
     public function userInfo()

@@ -13,10 +13,15 @@
                         <img :src="item.user_info ? item.user_info.user_avatar : ''"
                              :alt="item.user_info ? item.user_info.nick_name : ''" class="avatar-30">
                     </router-link>
-                    <div class="text-gray-50" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})">
+                    <div class="text-gray-50" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})" v-if="item.dynamic_type == 0">
                         <span v-if="item.excellent_at" class="badge badge-success">精华</span>
                         <span v-if="item.pinned_at" class="badge badge-danger">置顶</span>
-                        {{ item.dynamic_title }}
+                        {{ item.dynamic_content }}[{{item.dynamic_type_text}}]
+                    </div>
+                    <div class="text-gray-50" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})" v-else>
+                        <span v-if="item.excellent_at" class="badge badge-success">精华</span>
+                        <span v-if="item.pinned_at" class="badge badge-danger">置顶</span>
+                        {{ item.dynamic_title }}[{{item.dynamic_type_text}}]
                     </div>
                 </div>
                 <div class="ml-auto d-flex align-items-center justify-content-md-end" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})">
