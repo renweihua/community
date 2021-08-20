@@ -16,7 +16,7 @@
                     <div class="text-gray-50" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})" v-if="item.dynamic_type == 0">
                         <span v-if="item.excellent_at" class="badge badge-success">精华</span>
                         <span v-if="item.pinned_at" class="badge badge-danger">置顶</span>
-                        {{ item.dynamic_content }}[{{item.dynamic_type_text}}]
+                        {{ item.dynamic_content.slice(0, 30) + '…' }}[{{item.dynamic_type_text}}]
                     </div>
                     <div class="text-gray-50" @click="$router.push({name: 'threads.show', params:{dynamic_id: item.dynamic_id}})" v-else>
                         <span v-if="item.excellent_at" class="badge badge-success">精华</span>

@@ -12,17 +12,18 @@
                         <header>
                             <h2 class="mb-3 pb-2 border-bottom">{{ thread.dynamic_title }}</h2>
                         </header>
+                        
+                        <!-- 多图轮播展示 -->
+                        <div class="album">
+                            <slider ref="slider" :options="sliderinit">
+                                <slideritem v-for="(item,index) in albumData" :key="index" v-html="item.html"></slideritem>
+                            </slider>
+                        </div>
 
                         <!-- 视频动态  -->
                         <video v-if="thread.dynamic_type == 2" :preload="preload" :poster="thread.dynamic_images[0]" :height="height" align="center" :controls="controls" :autoplay="autoplay">
                             <source :src="thread.video_path" type="video/mp4">
                         </video>
-                        <!-- 摄影|相册 -->
-                        <div class="album" v-else-if="thread.dynamic_type == 3">
-                            <slider ref="slider" :options="sliderinit">
-                              <slideritem v-for="(item,index) in albumData" :key="index" v-html="item.html"></slideritem>
-                          </slider>
-                        </div>
                         <!-- 图文或动态 -->
                         <markdown-body v-else v-model="thread.dynamic_content"></markdown-body>
                     </div>
@@ -251,7 +252,7 @@
                 albumData:[],
                 sliderinit: {
                     currentPage: 0,//当前页码
-                    thresholdDistance: 500,//滑动判定距离
+                    // thresholdDistance: 500,//滑动判定距离
                     thresholdTime: 1000,//滑动判定时间
                     autoplay:3000,//自动滚动[ms]
                     loop:true,//循环滚动
@@ -282,24 +283,13 @@
                     .get(`dynamic/detail?dynamic_id=${this.$route.params.dynamic_id}&include=user,likers`)
                     .then(response => {
                         that.thread = response.data;
-                        // 如果是相册多图，那么配置相册数据
-                        if(that.thread.dynamic_type == 3){
-                            that.thread.dynamic_images.map(function(item){
-                                let style = {
-                                    background: 'url(' + item + ')',
-                                    position: 'fixed',
-                                    top: 0,
-                                    left: 0,
-                                    width:'100%',
-                                    height:'100%',
-                                    'min-width': '300px'
-                                }
-                                that.albumData.push({
-                                    title: item,
-                                    html: '<div class="slide1"><img src="' + item + '" /></div>'
-                                });
+                        // 多图轮播展示
+                        that.thread.dynamic_images.map(function(item){
+                            that.albumData.push({
+                                title: item,
+                                html: '<div class="slide1"><img src="' + item + '" /></div>'
                             });
-                        }
+                        });
                     })
                     .then(this.registerEventListener)
                     .catch(response => {
