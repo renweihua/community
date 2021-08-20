@@ -12,9 +12,9 @@
                         <header>
                             <h2 class="mb-3 pb-2 border-bottom">{{ thread.dynamic_title }}</h2>
                         </header>
-                        
+
                         <!-- 多图轮播展示 -->
-                        <div class="album">
+                        <div class="album" v-if="thread.dynamic_type != 2">
                             <slider ref="slider" :options="sliderinit">
                                 <slideritem v-for="(item,index) in albumData" :key="index" v-html="item.html"></slideritem>
                             </slider>
