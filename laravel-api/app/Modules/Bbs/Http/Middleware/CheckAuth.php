@@ -41,6 +41,10 @@ class CheckAuth
         if (empty($token_user_info)){
             return $this->errorJson('Token过期，请重新登录（Auth）！', -1);
         }
+        // Token认证类型是否匹配
+        if (!isset($token_user_info->auth_type) || $token_user_info->auth_type != 'user'){
+            return $this->errorJson('无效Token，请重新登录！', -1);
+        }
         /**
          * 关于Token的续签与过期操作，过期时长设置时多加20分钟：
          *  1.10分钟内将要过期的，自动更新过期时间 === 要么重新设置Token的过期时长

@@ -274,6 +274,7 @@ class AuthService extends Service
             'nick_name' => $user->userInfo->nick_name,
             'user_avatar' => $user->userInfo->user_avatar,
             'login_time' => time(),
+            'auth_type' => 'user', // Token认证类型
             'expires_time' => $result['expires_time'],
         ];
 
