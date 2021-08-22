@@ -110,7 +110,6 @@
 
 <script>
 import { getBannerTopicList } from '@/api/CommonServer.js';
-import { getHuibaList } from '@/api/HuibaServer.js';
 import { getRankFace } from '@/api/AlbumServer.js';
 import { getTopicList } from '@/api/TopicServer.js';
 import { followUser } from '@/api/UserServer.js';
@@ -126,10 +125,6 @@ import VideoCard from '@/components/video-card/video-card';
 import AlbumCard from '@/components/album-card/album-card';
 // 荟吧展示卡组件
 import HuibaCard from '@/components/huiba-card/huiba-card';
-
-let listData = {
-	3: getTopicList,
-};
 
 export default {
 	components: {

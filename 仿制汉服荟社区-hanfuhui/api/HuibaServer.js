@@ -7,10 +7,10 @@ import request from '@/api/request.js';
 
 
 /**
- * 获取荟吧列表
+ * 获取话题列表
  */
-export async function getHuibaList() {
-  return await request('/topics', 'get')
+export async function getTopicList() {
+    return await request('/topics', 'get');
 }
 
 /**
