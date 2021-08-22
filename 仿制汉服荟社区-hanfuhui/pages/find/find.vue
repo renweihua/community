@@ -307,7 +307,7 @@ export default {
 		downRecommend(mescroll) {
 			// console.log(mescroll);
 			this.mescroll[this.scrollInto] = mescroll;
-			Promise.all([getBannerTopicList(), getHuibaList()])
+			Promise.all([getBannerTopicList(), getTopicList()])
 				.then(resArray => {
 					// Banner
 					this.$store.commit('common/setBannerListData', resArray[0].data);
