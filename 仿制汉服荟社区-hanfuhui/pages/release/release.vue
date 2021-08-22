@@ -3,25 +3,19 @@
 		<view class="posif posi-all0 posi-lr0 anima-punch-in3 bgwhite-a98"></view>
 		<view class="release-popup">
 			<view class="list-flex3">
-				<view class="item flex-33v">
+				<view class="item flex-25v">
 					<image class="item-icon" src="/static/icon-nav-release/send_daily_icon.png" mode="aspectFit" @tap="push(0)"></image>
 					<view class="item-name">发日常</view>
 				</view>
-				<view class="item flex-33v">
+				<view class="item flex-25v">
 					<image class="item-icon" src="/static/icon-nav-release/send_photography_icon.png" mode="aspectFit" @tap="push(1)"></image>
 					<view class="item-name">发文章</view>
 				</view>
-				<view class="item flex-33v">
+				<view class="item flex-25v">
 					<image class="item-icon" src="/static/icon-nav-release/send_video_icon.png" mode="aspectFit" @tap="push(2)"></image>
 					<view class="item-name">发视频</view>
 				</view>
-			</view>
-			<view class="list-flex3">
-				<view class="item flex-50v">
-					<image class="item-icon" src="/static/icon-nav-release/send_topic_icon.png" mode="aspectFit"></image>
-					<view class="item-name">发话题</view>
-				</view>
-				<view class="item flex-50v">
+				<view class="item flex-25v">
 					<image class="item-icon" src="/static/icon-nav-release/send_photography_icon.png" mode="aspectFit" @tap="push(3)"></image>
 					<view class="item-name">发摄影</view>
 				</view>
