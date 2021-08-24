@@ -23,7 +23,7 @@
 									:color="calUser.user_sex_text == '男' ? '#479bd4' : '#FF6699'"
 								></i-icon>
 							</view>
-							<view class="f24r cgray">{{ calDatetime }} 共{{ albumInfoData.dynamic_images.length || 0 }}张图片</view>
+							<view class="f24r cgray">{{ calDatetime }} 共{{ albumInfoData.dynamic_images ? albumInfoData.dynamic_images.length : 0 }}张图片</view>
 						</view>
 					</view>
 					<!-- 如果登录会员就是发布者，那么不展示 -->
@@ -172,8 +172,6 @@ export default {
 		},
 		// 计算显示用户头像
 		calUserAvater() {
-			console.log('--- calUserAvater ---');
-			console.log(this.calUser);
 			return !!this.calUser.user_avatar ? this.calUser.user_avatar : '/static/default_avatar.png';
 		},
 		// 计算摄影背景封面
@@ -622,12 +620,10 @@ export default {
 		},
 		// 预览图片组
 		fnPreviewImage(current) {
-			let urls = this.albumInfoData.Images.map(item => item.ImgSrc + '_0.jpg/format/webp');
+			let urls = this.albumInfoData.dynamic_images.map(item => item);
 			previewImage(current, urls);
 		}
-		//
 	},
-
 	beforeDestroy() {
 		// 清空预评论内容
 		this.$store.commit('setCommContentData', '');
