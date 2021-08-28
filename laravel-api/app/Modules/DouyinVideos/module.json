@@ -1,0 +1,13 @@
+{
+    "name": "DouyinVideos",
+    "alias": "douyinvideos",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\DouyinVideos\\Providers\\DouyinVideosServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
