@@ -14,11 +14,11 @@ class CreateDouyinAuthorsTable extends Migration
      */
     public function up()
     {
-        $table = env('DB_PREFIX') . 'douyin_authors';
+        $table = 'douyin_authors';
         if (Schema::hasTable($table)) return;
         Schema::create($table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('id')->unsigned()->comment('Id');
+            $table->bigIncrements('author_id')->unsigned()->comment('Id');
             $table->string('sec_uid', 200)->default('')->comment('');
             $table->string('uid', 200)->default('')->comment('');
             $table->string('unique_id', 200)->default('')->comment('');
@@ -36,10 +36,11 @@ class CreateDouyinAuthorsTable extends Migration
             $table->unique(['uid']);
             $table->unique(['unique_id']);
         });
+        $table = env('DB_PREFIX') . $table;
         // 设置表注释
-        DB::statement("ALTER TABLE `" . $table . "` comment '抖音作者表'");
+        DB::statement("ALTER TABLE `{$table}` comment '抖音作者表'");
         // 设置自增Id从 10000 开始
-        DB::statement("ALERT TABLE {$table} AUTO_INCREMENT=10000");
+        DB::statement("ALTER TABLE `{$table}` AUTO_INCREMENT=10000");
     }
 
     /**

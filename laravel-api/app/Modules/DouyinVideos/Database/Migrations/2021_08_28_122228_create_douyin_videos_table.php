@@ -14,11 +14,11 @@ class CreateDouyinVideosTable extends Migration
      */
     public function up()
     {
-        $table = env('DB_PREFIX') . 'douyin_videos';
+        $table = 'douyin_videos';
         if (Schema::hasTable($table)) return;
         Schema::create($table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('id')->unsigned()->comment('Id');
+            $table->bigIncrements('video_id')->unsigned()->comment('Id');
             $table->bigInteger('author_id')->unsigned()->default(0)->comment('作者Id');
             $table->string('aweme_id', 200)->default('')->comment('视频Id');
             $table->string('cover', 200)->default('')->comment('封面图');
@@ -39,10 +39,11 @@ class CreateDouyinVideosTable extends Migration
             $table->index(['author_id']);
             $table->index(['is_delete']);
         });
+        $table = env('DB_PREFIX') . $table;
         // 设置表注释
-        DB::statement("ALTER TABLE `" . $table . "` comment '抖音视频表'");
+        DB::statement("ALTER TABLE `{$table}` comment '抖音视频表'");
         // 设置自增Id从 10000 开始
-        DB::statement("ALERT TABLE {$table} AUTO_INCREMENT=10000");
+        DB::statement("ALTER TABLE `{$table}` AUTO_INCREMENT=10000");
     }
 
     /**
