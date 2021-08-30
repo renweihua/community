@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7a05ebbbd45ff20f7cfe5dc99cc94f2",
+    "content-hash": "39b39dc51cbd863fb5bdbc2612810ca8",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -183,6 +183,37 @@
                 }
             ],
             "time": "2021-01-20T22:51:39+00:00"
+        },
+        {
+            "name": "cnpscy/douyin-download",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "../../douyin-download",
+                "reference": "9d1a5cb1b081add9ac3369569833256affba3d67"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cnpscy\\DouyinDownload\\": "./src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "cnpscy",
+                    "email": "2278757482@qq.com"
+                }
+            ],
+            "description": "A douyin download sdk.",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "cnpscy/socialite",
@@ -11396,6 +11427,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "cnpscy/douyin-download": 20,
         "cnpscy/socialite": 20
     },
     "prefer-stable": true,

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "cnpscy/douyin-download": "@dev",
         "cnpscy/socialite": "dev-master",
         "erusev/parsedown-extra": "^0.7.1",
         "fideloper/proxy": "^4.4",
@@ -85,6 +86,11 @@
         "cnpscy-socialite": {
             "type": "path",
             "url": "../cnpscy-socialite"
+        },
+        "douyin-download": {
+            "type": "path",
+            "url": "../../douyin-download",
+            "symlink": true
         }
     }
 }
