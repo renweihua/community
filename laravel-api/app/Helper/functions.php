@@ -1,5 +1,25 @@
 <?php
 
+if ( !function_exists('make_file_folder_name') ) {
+    /**
+     * 文件夹的名称命名
+     *
+     * @param  string  $string
+     *
+     * @return string
+     */
+    function make_file_folder_name(string $string) : string
+    {
+        return str_replace([
+            '_',
+            '*',
+            '/',
+            '//',
+            '\\',
+        ], '', $string);
+    }
+}
+
 if ( !function_exists('text_asterisk_except_first') ) {
     /**
      * 文本只展示首位，其余全部指定符号隐藏
@@ -23,15 +43,16 @@ if ( !function_exists('text_asterisk_except_first') ) {
     }
 }
 
-if (!function_exists('show_text_duration')){
-    function add_0($str) {
-        if ($str < 10) $str = '0' . $str;
+if ( !function_exists('show_text_duration') ) {
+    function add_0($str)
+    {
+        if ( $str < 10 ) $str = '0' . $str;
         return $str;
     }
 
     /**
      * 时长按照字符串展示（70s => 1:10 ）
-     * 
+     *
      * @param  int  $time
      *
      * @return string
@@ -40,7 +61,7 @@ if (!function_exists('show_text_duration')){
     {
         $hour = $min = $sec = 0;
         $str = '';
-        if ($time > 3600){
+        if ( $time > 3600 ) {
             $hour = floor($time / 3600);
             $str = $hour . ':';
         }
@@ -53,9 +74,9 @@ if (!function_exists('show_text_duration')){
 if ( !function_exists('text_hidden') ) {
     /**
      * 文本隐藏：保留字符串前多少位与后多少位，隐藏中间用*代替（两个字符时只显示第一个）
-     * 
+     *
      * @param  string  $text
-     * @param  int     $show_length 前后展示文本的长度
+     * @param  int     $show_length  前后展示文本的长度
      *
      * @return string
      */
@@ -70,6 +91,7 @@ if ( !function_exists('text_hidden') ) {
 
 /**
  * 匹配内容，追加图片的前缀
+ *
  * @param          $content
  * @param  string  $suffix
  *
@@ -87,25 +109,26 @@ function merge_image_url($content, $suffix = '')
 if ( !function_exists('number_show_text') ) {
     /**
      * 数字转换成文本展示
-
+     *
      * @return string
      */
-    function number_show_text(int $number):string
+    function number_show_text(int $number) : string
     {
         $length = strlen($number);  //数字长度
-        if($length > 8){ //亿单位
-            $str = substr_replace(strstr($number,substr($number,-7),' '),'.',-1,0)."亿";
-        }elseif($length > 4){ //万单位
+        if ( $length > 8 ) { //亿单位
+            $str = substr_replace(strstr($number, substr($number, -7), ' '), '.', -1, 0) . "亿";
+        } elseif ( $length > 4 ) { //万单位
             //截取前俩为
-            $str = substr_replace(strstr($number,substr($number,-3),' '),'.',-1,0)."万";
-        }else{
+            $str = substr_replace(strstr($number, substr($number, -3), ' '), '.', -1, 0) . "万";
+        } else {
             return $number;
         }
         return $str;
     }
 }
 
-function get_query_str($url,$key){
+function get_query_str($url, $key)
+{
     $query = explode($key . '=', urldecode($url));
     return current(explode('&', $query[1]));
 }
@@ -113,7 +136,8 @@ function get_query_str($url,$key){
 /**
  * @计算中文字符串长度，只支持UTF8编码
  */
-function utf8_strlen($string = null) {
+function utf8_strlen($string = null)
+{
     preg_match_all("/./us", $string, $match);
     return count($match[0]);
 }
@@ -126,6 +150,7 @@ if ( !function_exists('get_distance') ) {
      * @param $lng1
      * @param $lat2
      * @param $lng2
+     *
      * @return float|int
      */
     function get_distance($lat1, $lng1, $lat2, $lng2)
@@ -157,7 +182,7 @@ if ( !function_exists('get_encryption_idcard') ) {
      *
      * @return string
      */
-    function get_encryption_idcard(string $identity_card): string
+    function get_encryption_idcard(string $identity_card) : string
     {
         return substr_replace($identity_card, '****', -9, 5);
     }
@@ -1349,7 +1374,7 @@ function get_array_diff($array1, $array2)
     $diff = [];
     foreach ($array1 as $key => $val) {
         // if ( !isset($array2[$val]) ) $diff[$val] = $val;
-        if (!in_array($val, $array2)) $diff[$val] = $val;
+        if ( !in_array($val, $array2) ) $diff[$val] = $val;
     }
     return $diff;
 }
@@ -1531,26 +1556,28 @@ if ( !function_exists('get_ip') ) {
 
 /**
  * [GetClientIP 客户端ip地址]
+ *
+ * @param    [boolean]        $long [是否将ip转成整数]
+ *
+ * @return   [string|int]           [ip地址|ip地址整数]
  * @author   Devil
  * @blog     http://gong.gg/
  * @version  0.0.1
  * @datetime 2017-02-09T12:53:13+0800
- * @param    [boolean]        $long [是否将ip转成整数]
- * @return   [string|int]           [ip地址|ip地址整数]
  */
 function GetClientIP($long = false)
 {
     $onlineip = '';
-    if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+    if ( getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown') ) {
         $onlineip = getenv('HTTP_CLIENT_IP');
-    } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+    } elseif ( getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown') ) {
         $onlineip = getenv('HTTP_X_FORWARDED_FOR');
-    } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+    } elseif ( getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown') ) {
         $onlineip = getenv('REMOTE_ADDR');
-    } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+    } elseif ( isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown') ) {
         $onlineip = $_SERVER['REMOTE_ADDR'];
     }
-    if ($long) {
+    if ( $long ) {
         $onlineip = sprintf("%u", ip2long($onlineip));
     }
     return $onlineip;
