@@ -49,7 +49,7 @@ class SyncDouyinAuthor implements ShouldQueue
 
         // 分发队列，同步当前作者的动态
         SyncDouyinVideos::dispatch($author)
-                        ->delay(now()->addMinutes(rand(0, 60))) // 延迟分钟数
+                        ->delay(now()->addMinutes(rand(0, 100))) // 延迟分钟数
                         ->onConnection('database') // job 存储的服务：当前存储mysql
                         ->onQueue('douyin-queue'); // douyin-queue
     }

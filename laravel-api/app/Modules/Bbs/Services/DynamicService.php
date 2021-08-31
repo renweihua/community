@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Services;
 
+use App\Exceptions\InvalidRequestException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
@@ -117,6 +118,19 @@ class DynamicService extends Service
                         $dynamic_type = (int)$request->input('dynamic_type', -1);
                         if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
                     })
+                    ->where(function ($query) use($login_user_id){
+                        // $dynamic->is_public
+                        if ($login_user_id){
+                            $query->where('is_public', 1)->orWhere(
+                                [
+                                    'is_public' => 0,
+                                    'user_id' => $login_user_id
+                                ]
+                            );
+                        }else{
+                            $query->where('is_public', 1);
+                        }
+                    })
                     ->with(
                         [
                             'userInfo' => function($query) use ($login_user_id) {
@@ -205,7 +219,12 @@ class DynamicService extends Service
                     $query->where('user_id', $login_user_id);
                 },
             ]);
+        }else{
+            if ($dynamic->is_public == 0){
+                throw new InvalidRequestException('动态不可访问！');
+            }
         }
+
         // 浏览量递增
         $dynamic->update(['cache_extends->reads_num' => $dynamic->cache_extends['reads_num'] + 1]);
         // 是否已赞

@@ -30,6 +30,15 @@
                                     placeholder="请使用 Markdown 格式详细并精准的表达，不得少于10个字符~"></editor>
                             <div class="card-footer border-top p-2 d-flex justify-content-between">
                                 <div class="left-actions d-flex align-items-center">
+                                    <span class="text-muted">公开状态</span>
+                                    <div class="dropdown ml-1">
+                                        <el-select filterable v-model="form.is_public">
+                                            <el-option v-for="item in publics" :key="item.value" :value="item.value"
+                                                       :label="item.name"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="left-actions d-flex align-items-center">
                                     <span class="text-muted">发布到</span>
                                     <div class="dropdown ml-1">
                                         <el-select filterable v-model="form.topic_id">
@@ -90,10 +99,21 @@
             return {
                 ready: false,
                 nodes: [],
+                publics: [
+                    {
+                        'value': 1,
+                        'name':'公开',
+                    },
+                    {
+                        'value': 0,
+                        'name': '私密',
+                    },
+                ],
                 busing: false,
                 form: {
                     dynamic_type: 1,
-                    topic_id: 0,
+                    is_public: 1,
+                    topic_id: 10,
                     is_draft: true,
                     dynamic_title: '',
                     content_type: 'markdown',

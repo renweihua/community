@@ -47,7 +47,7 @@
                                         </a>
                                     </share-dropdown>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" v-if="canEdit">
                                     <button
                                         type="button"
                                         class="text-gray-50 btn btn-sm btn-link"
@@ -58,7 +58,7 @@
                                         <more-icon></more-icon>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <template v-if="canEdit">
+                                        <template>
                                             <template v-if="currentUser.is_admin">
                                                 <button
                                                     class="dropdown-item"
@@ -93,6 +93,7 @@
                                                 <pencil-icon class="mr-1"></pencil-icon>
                                                 编辑
                                             </button>
+                                            <!--
                                             <button
                                                 class="dropdown-item text-danger"
                                                 type="button"
@@ -101,7 +102,9 @@
                                                 <delete-icon class="mr-1"></delete-icon>
                                                 删除
                                             </button>
+                                            -->
                                         </template>
+                                        <!--
                                         <button
                                             class="dropdown-item cursor-pointer"
                                             type="button"
@@ -110,6 +113,7 @@
                                             <alert-box-icon class="mr-1"></alert-box-icon>
                                             举报
                                         </button>
+                                        -->
                                     </div>
                                 </li>
                                 <!-- 动态订阅，暂无此功能
@@ -271,10 +275,10 @@
         },
         beforeRouteUpdate (to, from, next) {
             if (to.params.dynamic_id !== from.params.dynamic_id) {
-                this.loadThread()
+                this.loadThread();
             }
 
-            next()
+            next();
         },
         methods: {
             loadThread () {
@@ -298,13 +302,19 @@
                             setTimeout(() => {
                                 this.$router.go(-1)
                             }, 1500);
+                        }else{
+                            this.$message.error(response);
+                            setTimeout(() => {
+                                this.$router.go(-1);
+                            }, 1500);
                         }
                     })
-                    .then(() => {
-                        console.log(this.thread);
-                        window.pageUsers = [this.thread.user_info];
+                    .then(response => {
+                        if(this.thread){
+                            window.pageUsers = [this.thread.user_info];
 
-                        this.getPraiseUsers(this.thread.dynamic_id);
+                            this.getPraiseUsers(this.thread.dynamic_id);
+                        }
                     })
             },
             // 点赞的会员列表

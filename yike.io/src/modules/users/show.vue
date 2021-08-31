@@ -14,7 +14,7 @@
                         {{ user.user_info ? user.user_info.nick_name : '' }}
                         <a
                             class="ml-md-1 d-block d-md-inline text-gray-90 text-16"
-                        >@{{ user.user_info ? user.user_info.user_uuid : '' }}</a>
+                        >@{{ user.user_info ? user.user_info.nick_name : '' }}</a>
                     </h1>
                     <div class="my-1" v-if="!user.banned_at">{{ user.user_info.basic_extends.user_introduction }}</div>
 
