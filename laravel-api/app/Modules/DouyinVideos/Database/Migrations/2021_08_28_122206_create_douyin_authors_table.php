@@ -32,6 +32,7 @@ class CreateDouyinAuthorsTable extends Migration
             $table->integer('last_sync')->unsigned()->default(0)->comment('上一次同步的时间');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
+            $table->json('original_author')->nullable()->comment('作者原始数据');
             $table->index(['is_delete']);
             $table->unique(['sec_uid']);
             $table->unique(['uid']);

@@ -46,7 +46,7 @@ class SyncDouyinVideos extends Command
 
         foreach ($authors as $author){
             SyncDouyinAuthor::dispatch($author)
-                           ->delay(now()->addMinutes(rand(1, 100))) // 延迟分钟数
+                           ->delay(now()->addMinutes(rand(1, 120))) // 延迟分钟数
                            ->onConnection('database') // job 存储的服务：当前存储mysql
                            ->onQueue('douyin-queue'); // douyin-queue 队列
         }
