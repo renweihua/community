@@ -37,6 +37,7 @@ class CreateDouyinAuthorsTable extends Migration
             $table->unique(['sec_uid']);
             $table->unique(['uid']);
             $table->unique(['unique_id']);
+            $table->index(['share_url']);
         });
         $table = env('DB_PREFIX') . $table;
         // 设置表注释

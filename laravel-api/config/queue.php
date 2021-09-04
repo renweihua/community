@@ -38,7 +38,7 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
-            'retry_after' => 90,
+            'retry_after' => 300, // 任务完成处理所需的最大秒数
         ],
 
         'beanstalkd' => [

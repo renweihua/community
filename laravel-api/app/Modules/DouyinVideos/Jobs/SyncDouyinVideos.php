@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 
 class SyncDouyinVideos implements ShouldQueue
 {
@@ -23,10 +24,12 @@ class SyncDouyinVideos implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($author, string $path_file_folder)
+    public function __construct($author)
     {
+        Log::info('同步抖音的视频信息');
         $this->author = $author;
-        $this->path_file_folder = $path_file_folder;
+        // 作者的文件夹目录
+        $this->path_file_folder = 'douyin-videos/' . $author->nick_name . '-' .  make_file_folder_name($author->unique_id);
     }
 
     /**
@@ -102,7 +105,7 @@ class SyncDouyinVideos implements ShouldQueue
                         ],
                         'statistics' => $item['statistics'],
                     ];
-                    $detail = $douyinVideo->where('aweme_id', $item['aweme_id'])->first();
+                    $detail = $douyinVideo->where('aweme_id', $item['aweme_id'])->lock(true)->first();
                     if ( !$detail ) {
                         $douyinVideo->create($data);
                     } else {
