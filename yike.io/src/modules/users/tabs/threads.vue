@@ -10,7 +10,7 @@ export default {
   components: { ThreadsList },
   data () {
     return {
-      threads: {}
+      threads: {},
     }
   },
   methods: {
@@ -24,6 +24,12 @@ export default {
     handlePageChanged (page) {
       this.loadThreads(page)
     }
+  },
+  watch:{
+    // 父级标识变动，重新拉取动态信息
+    '$parent.user.user_id'(new_id, old){
+        this.loadThreads();
+    },
   },
   mounted () {
     this.loadThreads()

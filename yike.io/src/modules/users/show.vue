@@ -163,23 +163,21 @@
         },
         beforeRouteUpdate (to, from, next) {
             if (to.params.user_uuid !== from.params.user_uuid) {
-                this.getUser(to.params.user_uuid)
+                this.getUser(to.params.user_uuid);
             }
-
-            next()
+            next();
         },
         created () {
-            this.getUser(this.$route.params.user_uuid)
-            this.$nextTick(this.registerEventListener)
+            this.getUser(this.$route.params.user_uuid);
+            this.$nextTick(this.registerEventListener);
         },
         methods: {
             async getUser (user_uuid) {
-                user_uuid = user_uuid || this.$route.params.user_uuid
+                user_uuid = user_uuid || this.$route.params.user_uuid;
                 let res = await this.$http.get(`user/${user_uuid}/detail`).catch(() => {
-                    this.$router.replace({ name: 'pages.not-found' })
-                })
-                this.user = res.data
-                console.log(this.user)
+                    this.$router.replace({ name: 'pages.not-found' });
+                });
+                this.user = res.data;
             },
             toggleStatus (timestamp) {
                 this.user[timestamp] = this.user[timestamp]
