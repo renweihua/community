@@ -3,6 +3,7 @@
 namespace App\Modules\DouyinVideos\Jobs;
 
 use App\Models\Douyin\DouyinVideo;
+use App\Services\CosService;
 use Cnpscy\DouyinDownload\Video;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -61,12 +62,25 @@ class SyncDouyinVideos implements ShouldQueue
                         '\\',
                     ], '', $file_name);
                     $path_file_name = $this->path_file_folder . '/' . $file_name . '.mp4';
-                    // 下载文件
-                    if ( $item['video_path'] && !is_file($path_file_name) ) {
-                        file_put_contents($path_file_name, fopen($item['video_path'], 'r'));
-                        ++$download_nums;
-                    }
-                    $item['real_video_path'] = $path_file_name;
+                    // // 下载文件
+                    // if ( $item['video_path'] && !is_file($path_file_name) ) {
+                    //     file_put_contents($path_file_name, fopen($item['video_path'], 'r'));
+                    //     ++$download_nums;
+                    // }
+
+                    // 存储到COS
+                    // 获取在线文件的大小
+                    $res = get_headers($item['video_path'],true);
+
+                    $file_url = CosService::getInstance()->put(
+                        file_get_contents($item['video_path']),
+                        $file_name . '.mp4',
+                        $this->path_file_folder,
+                        $res['Content-Length'],
+                        'video/mp4',
+                        'mp4'
+                    );
+                    $item['real_video_path'] = $file_url;
 
                     $data = [
                         'author_id'  => $this->author->author_id,

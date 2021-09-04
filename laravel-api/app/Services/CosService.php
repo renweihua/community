@@ -48,14 +48,14 @@ class CosService extends Service
      * @throws \App\Exceptions\InvalidRequestException
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function put($file, $file_name = '', $folder = '') : string
+    public function put($file, $file_name = '', $folder = '', int $file_size = 0, $file_type = 'image/jepg', $extension = 'jpg') : string
     {
         if (empty($file)){
             throw new InvalidRequestException('请上传文件！');
         }
         $object = new ObjectClient($this->config);
         if ( is_string($file) ) {
-            $key = (empty($folder) ? '' : ($folder . '/')) . date('Ym') . '/' . $file_name;
+            $key = (empty($folder) ? date('Ym') : ($folder)) . '/' . $file_name;
             $content = $file;
         } else {
             $key = (empty($folder) ? '' : ($folder . '/')) . date('Ym') . '/' . $file->getClientOriginalName();
@@ -65,7 +65,15 @@ class CosService extends Service
         $file_url = $object->getObjectUrl($key);
 
         // 添加文件库记录
-        $uploadFile = UploadFile::addRecord($file_url, $file, 'cos', trim($object->baseUri, '/'));
+        $uploadFile = UploadFile::addRecord(
+            $file_url,
+            $file,
+            'cos',
+            trim($object->baseUri, '/'),
+            $file_size,
+            $file_type,
+            $extension
+        );
 
         return $uploadFile->file_url;
     }

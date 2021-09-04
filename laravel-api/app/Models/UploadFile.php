@@ -76,16 +76,16 @@ class UploadFile extends Model
      *
      * @return UploadFile
      */
-    public static function addRecord(string $file_name, $file, $storage = 'local', $host_url = '')
+    public static function addRecord(string $file_name, $file, $storage = 'local', $host_url = '', int $file_size = 0, $file_type = 'image/jepg', $extension = 'jpg')
     {
         // 添加文件库记录
         return UploadFile::create([
             'storage' => $storage,
             'host_url' => $host_url,
             'file_name' => $file_name,
-            'file_size' => $file->getSize(),
-            'file_type' => $file->getMimeType(),
-            'extension' => $file->getClientOriginalExtension(),
+            'file_size' => is_string($file) ? $file_size : $file->getSize(),
+            'file_type' => is_string($file) ? $file_type : $file->getMimeType(),
+            'extension' => is_string($file) ? $extension : $file->getClientOriginalExtension(),
         ]);
     }
 }
