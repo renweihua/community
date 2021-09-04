@@ -16,6 +16,7 @@ if ( !function_exists('make_file_folder_name') ) {
             '/',
             '//',
             '\\',
+            '.',
         ], '', $string);
     }
 }

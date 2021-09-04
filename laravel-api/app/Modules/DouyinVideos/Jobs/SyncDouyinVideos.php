@@ -2,7 +2,6 @@
 
 namespace App\Modules\DouyinVideos\Jobs;
 
-use App\Models\Douyin\DouyinAuthor;
 use App\Models\Douyin\DouyinVideo;
 use Cnpscy\DouyinDownload\Video;
 use Illuminate\Bus\Queueable;
@@ -16,8 +15,6 @@ class SyncDouyinVideos implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $author;
-    protected $videoService;
-    protected $videoModel;
     protected $path_file_folder;
 
     /**
@@ -28,9 +25,6 @@ class SyncDouyinVideos implements ShouldQueue
     public function __construct($author, string $path_file_folder)
     {
         $this->author = $author;
-
-        $this->videoService = Video::getInstance();
-        $this->videoModel = DouyinVideo::getInstance();
         $this->path_file_folder = $path_file_folder;
     }
 
@@ -41,18 +35,17 @@ class SyncDouyinVideos implements ShouldQueue
      */
     public function handle()
     {
-        $class = $this->videoService;
-        // 通过作者的sec_uid标识，同步最新未记录的视频
-        $this->videoService->getVideosBySecUid($this->author->sec_uid);
+        $douyinVideo = DouyinVideo::getInstance();
+
+        $class = Video::getInstance();
 
         // 是否开启下载
         $open_download = true;
         $max_cursor = $download_nums = $total = 0;
 
-        $douyinVideo = DouyinVideo::getInstance();
         do {
-            // 获取作者的视频列表
-            $class->getVideosBySecUid($this->author->uid, $max_cursor);
+            // 获取作者的视频列表【通过作者的sec_uid标识，同步最新未记录的视频】
+            $class->getVideosBySecUid($this->author->sec_uid, $max_cursor);
             // 视频列表
             $lists = $class->getResult();
             // 是否还有更多

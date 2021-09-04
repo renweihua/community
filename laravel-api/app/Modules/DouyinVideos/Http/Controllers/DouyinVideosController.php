@@ -4,6 +4,7 @@ namespace App\Modules\DouyinVideos\Http\Controllers;
 
 use App\Models\Douyin\DouyinAuthor;
 use App\Models\Douyin\DouyinVideo;
+use App\Modules\DouyinVideos\Jobs\SyncDouyinVideos;
 use Cnpscy\DouyinDownload\Video;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -19,6 +20,15 @@ class DouyinVideosController extends Controller
      */
     public function index(Request $request, Video $videoService)
     {
+        var_dump(111);
+        exit;
+        // 下载的文件路径
+        $path_file_folder = Storage::path('/download');
+        // 创建作者的文件夹目录
+        $path_file_folder = trim($path_file_folder, '/') . '/test';
+        $object = new SyncDouyinVideos(DouyinAuthor::first(), $path_file_folder);
+        $object->handle();
+        exit;
         $class = new $videoService;
         $url = $request->url ?? 'https://v.douyin.com/dNdR5W7/';
         $uid = $class->getSecUidByUrl($url);

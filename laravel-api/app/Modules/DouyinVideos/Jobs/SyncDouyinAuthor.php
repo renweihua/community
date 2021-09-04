@@ -37,6 +37,9 @@ class SyncDouyinAuthor implements ShouldQueue
         $path_file_folder = Storage::path('/download');
         // 创建作者的文件夹目录
         $path_file_folder = trim($path_file_folder, '/') . '/' . $this->author->nick_name . '-' .  make_file_folder_name($this->author->unique_id);
+        if (!is_dir($path_file_folder)) {
+            mkdir($path_file_folder, 0777, true);
+        }
 
         // 重新获取作者的信息【暂时不同步，仅用于记录上一次同步动态的时间】
         if ($this->author instanceof DouyinAuthor){
@@ -51,9 +54,6 @@ class SyncDouyinAuthor implements ShouldQueue
             }
         }else{
             $author = $this->createAuthor();
-            if (!is_dir($path_file_folder)) {
-                mkdir($path_file_folder, 0777, true);
-            }
         }
 
         // 分发队列，同步当前作者的动态
