@@ -24,6 +24,8 @@
 * 定时任务：
     - 自动按月分表：`php artisan command:autotablebuild`
     - 或者使用任务调度：`php artisan schedule:run`
+        - 后置进程：
+            `* * * * * php artisan schedule:run >> /dev/null 2>&1`
 * 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
     - mysql存储的[抖音作者与视频同步]的队列： `php artisan queue:work database --queue=douyin-queue`
