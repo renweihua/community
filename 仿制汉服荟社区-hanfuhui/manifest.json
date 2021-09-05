@@ -140,12 +140,18 @@
     },
     "h5" : {
         "devServer" : {
-            "https" : false
+            "https" : true
         },
         "router" : {
             "mode" : "history",
             "base" : "./"
         },
-        "title" : "小丑路人社区"
+        "title" : "小丑路人社区",
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        },
+        "domain" : "https://bbs-h5.cnpscy.com"
     }
 }
