@@ -54,69 +54,77 @@ class SyncDouyinVideos implements ShouldQueue
             $lists = $class->getResult();
             // 是否还有更多
             $has_more = $class->getHasMore();
+
+            $success_num = 0;
+
             // 开启下载，创建文件夹
             if ( $open_download ) {
                 foreach ($lists as $key => &$item) {
-                    // 开启下载，下载文件
-                    $file_name = empty($item['desc']) ? $item['aweme_id'] : $item['desc'];
-                    $file_name = str_replace([
-                        '/',
-                        '//',
-                        '\\',
-                    ], '', $file_name);
-                    $path_file_name = $this->path_file_folder . '/' . $file_name . '.mp4';
-                    // // 下载文件
-                    // if ( $item['video_path'] && !is_file($path_file_name) ) {
-                    //     file_put_contents($path_file_name, fopen($item['video_path'], 'r'));
-                    //     ++$download_nums;
-                    // }
-
-                    // 存储到COS
-                    // 获取在线文件的大小
-                    $res = get_headers($item['video_path'],true);
-
-                    $file_url = CosService::getInstance()->put(
-                        file_get_contents($item['video_path']),
-                        $file_name . '.mp4',
-                        $this->path_file_folder,
-                        $res['Content-Length'],
-                        'video/mp4',
-                        'mp4'
-                    );
-                    $item['real_video_path'] = $file_url;
-
-                    $data = [
-                        'author_id'  => $this->author->author_id,
-                        'aweme_id'   => $item['aweme_id'],
-                        'cover'      => $item['cover'],
-                        'desc'       => $item['desc'],
-                        'images'     => $item['images'],
-                        'video'      => [
-                            'play_path' => $item['video_path'],
-                            // path 视频地址
-                            'path'      => isset($item['real_video_path']) && !empty($item['real_video_path']) ? str_replace($this->path_file_folder, '', $item['real_video_path']) : $item['video_path'],
-                            // duration 时长
-                            'duration'  => $item['duration'],
-                            // width 宽度
-                            'width'     => $item['width'],
-                            // height 高度
-                            'height'    => $item['height'],
-                            'ratio'     => $item['ratio'],
-                        ],
-                        'statistics' => $item['statistics'],
-                    ];
                     $detail = $douyinVideo->where('aweme_id', $item['aweme_id'])->lock(true)->first();
                     if ( !$detail ) {
+                        // 开启下载，下载文件
+                        $file_name = empty($item['desc']) ? $item['aweme_id'] : $item['desc'];
+                        $file_name = str_replace([
+                            '/',
+                            '//',
+                            '\\',
+                        ], '', $file_name);
+                        $path_file_name = $this->path_file_folder . '/' . $file_name . '.mp4';
+                        // // 下载文件
+                        // if ( $item['video_path'] && !is_file($path_file_name) ) {
+                        //     file_put_contents($path_file_name, fopen($item['video_path'], 'r'));
+                        //     ++$download_nums;
+                        // }
+
+                        // 存储到COS
+                        // 获取在线文件的大小
+                        $res = get_headers($item['video_path'],true);
+
+                        $file_url = CosService::getInstance()->put(
+                            file_get_contents($item['video_path']),
+                            $file_name . '.mp4',
+                            $this->path_file_folder,
+                            $res['Content-Length'],
+                            'video/mp4',
+                            'mp4'
+                        );
+                        $item['real_video_path'] = $file_url;
+
+                        $data = [
+                            'author_id'  => $this->author->author_id,
+                            'aweme_id'   => $item['aweme_id'],
+                            'cover'      => $item['cover'],
+                            'desc'       => $item['desc'],
+                            'images'     => $item['images'],
+                            'video'      => [
+                                'play_path' => $item['video_path'],
+                                // path 视频地址
+                                'path'      => isset($item['real_video_path']) && !empty($item['real_video_path']) ? str_replace($this->path_file_folder, '', $item['real_video_path']) : $item['video_path'],
+                                // duration 时长
+                                'duration'  => $item['duration'],
+                                // width 宽度
+                                'width'     => $item['width'],
+                                // height 高度
+                                'height'    => $item['height'],
+                                'ratio'     => $item['ratio'],
+                            ],
+                            'statistics' => $item['statistics'],
+                        ];
                         $douyinVideo->create($data);
+                        ++$success_num;
                     } else {
-                        $detail->update($data);
                         // 以最后一条视频为准，判断是否存在入库，入库之后，则不继续请求获取视频列表【因为存在置顶视频，只能以最后一条来验证】
                         if ( $key == count($lists) ) {
                             $has_more = false;
                         }
                     }
                 }
+
+                if ($success_num){
+                    Log::info('同步抖音作者`' . $this->author->nick_name . '`，新视频：' . $success_num . ' 个');
+                }
             }
+
             // 获取下一组数据的标识
             $max_cursor = $class->getMaxCursor();
         } while ( $has_more );
