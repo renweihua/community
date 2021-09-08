@@ -140,7 +140,7 @@
     },
     "h5" : {
         "devServer" : {
-            "https" : true
+            "https" : false
         },
         "router" : {
             "mode" : "history",

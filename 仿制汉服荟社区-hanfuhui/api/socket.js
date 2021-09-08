@@ -6,7 +6,7 @@ import config from '../config.js';
 export default {
 	init() {
 		let login_token = uni.getStorageSync('TOKEN') || '';
-		if(!login_token) return;
+		if(!login_token) return false;
 		var start_setInterval;
 
 		const socket = io(config.ws_http, {

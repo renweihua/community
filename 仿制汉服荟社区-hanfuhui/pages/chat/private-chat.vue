@@ -97,6 +97,8 @@ export default {
 		console.log('---onLoad---');
 		// 验证是否已登录
 
+		options.friend_id = 2;
+
 		// 是否设置了聊天会员Id
 		if (!options.friend_id) {
 			uni.showToast({
@@ -261,6 +263,8 @@ export default {
 				uni.hideKeyboard();
 				// #endif
 			});
+
+			uni.hideLoading();
 		},
 		// 自动加载：监听socket
 		monitorSocket() {

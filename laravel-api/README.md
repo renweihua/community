@@ -44,6 +44,13 @@
     var_dump($articles);
 ``` 
 
+##### 部署优化
+    
+配置信息缓存 artisan config:cache
+路由缓存 artisan route:cache
+类映射加载优化 artisan optimize
+自动加载优化 composer dumpautoload
+
 
 #### 使用说明
 
