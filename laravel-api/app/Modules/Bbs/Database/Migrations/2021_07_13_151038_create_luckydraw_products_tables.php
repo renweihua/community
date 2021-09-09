@@ -28,7 +28,7 @@ class CreateLuckydrawProductsTables extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraw_products` comment '抽奖活动的产品表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraw_products` comment '抽奖活动的产品表'");
     }
 
     /**

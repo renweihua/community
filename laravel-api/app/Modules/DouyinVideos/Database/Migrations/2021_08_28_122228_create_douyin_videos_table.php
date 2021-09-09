@@ -39,7 +39,7 @@ class CreateDouyinVideosTable extends Migration
             $table->index(['author_id']);
             $table->index(['is_delete']);
         });
-        $table = env('DB_PREFIX') . $table;
+        $table = get_db_prefix() . $table;
         // 设置表注释
         DB::statement("ALTER TABLE `{$table}` comment '抖音视频表'");
         // 设置自增Id从 10000 开始

@@ -126,7 +126,7 @@ class Notify extends MonthModel
         if ( date(MonthModel::MONTH_FORMAT, strtotime($month_table)) >= MonthModel::MIN_TABLE ) {
             $this->setMonthTable($month_table);
             // 检测表名是否存在
-            if ( !DB::select('SHOW TABLES LIKE "' . env('DB_PREFIX') . $this->getTable() . '"') ) {
+            if ( !DB::select('SHOW TABLES LIKE "' . get_db_prefix() . $this->getTable() . '"') ) {
                 return $count;
             }
             $count += $this->where('is_read', 0)->where('user_id', $user_id)->where($where)->count();

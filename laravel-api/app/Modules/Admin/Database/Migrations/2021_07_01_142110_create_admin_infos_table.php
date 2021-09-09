@@ -29,7 +29,7 @@ class CreateAdminInfosTable extends Migration
             $table->index(['admin_type']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_infos` comment '管理员信息表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_infos` comment '管理员信息表'");
     }
 
     /**

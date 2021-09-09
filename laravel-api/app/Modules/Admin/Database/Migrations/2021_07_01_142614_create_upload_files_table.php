@@ -32,7 +32,7 @@ class CreateUploadFilesTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "upload_files` comment '文件表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "upload_files` comment '文件表'");
     }
 
     /**

@@ -60,7 +60,7 @@ class DatabaseHandler
 
         $backed_table = [];//备份的表
 
-        $db_prefix = env('DB_PREFIX');
+        $db_prefix = get_db_prefix();
         //表中的数据
         foreach ($tables as $k => $table_name) {//循环出表名
             $backed_table[] = $table_name;

@@ -514,7 +514,7 @@ class DynamicService extends Service
             // 获取该评论下的所有回复记录
             $reply_lists = DB::select('SELECT * FROM
               (
-                SELECT * FROM ' . env('DB_PREFIX') . $dynamicCommentInstance->getTable() . ' where reply_id > 0 ORDER BY reply_id, comment_id DESC
+                SELECT * FROM ' . get_db_prefix() . $dynamicCommentInstance->getTable() . ' where reply_id > 0 ORDER BY reply_id, comment_id DESC
               ) realname_sorted,
               (SELECT @pv := ?) initialisation
               WHERE (FIND_IN_SET(reply_id,@pv)>0 And @pv := concat(@pv, \',\', comment_id)) AND is_delete = 0', [$comment->comment_id]);

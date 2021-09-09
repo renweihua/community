@@ -35,7 +35,7 @@ class CreateAdminLoginLogsTable extends Migration
             $table->index(['admin_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_login_logs` comment '管理员登录日志表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_login_logs` comment '管理员登录日志表'");
     }
 
     /**

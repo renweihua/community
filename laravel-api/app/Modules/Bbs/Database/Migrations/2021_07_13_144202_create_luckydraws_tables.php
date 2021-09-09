@@ -26,7 +26,7 @@ class CreateLuckydrawsTables extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraws` comment '抽奖活动表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraws` comment '抽奖活动表'");
     }
 
     /**

@@ -31,7 +31,7 @@ class CreateVersionsTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "versions` comment '版本表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "versions` comment '版本表'");
     }
 
     /**

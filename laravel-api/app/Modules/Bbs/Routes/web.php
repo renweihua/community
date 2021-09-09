@@ -16,5 +16,7 @@ use App\Modules\Bbs\Http\Middleware\RestrictIPAccess;
 
 Route::prefix('')->middleware([
 ])->group(function() {
+    var_dump(get_db_prefix());
+    exit;
     Route::get('/', 'BbsController@index');
 });

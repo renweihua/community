@@ -24,7 +24,7 @@ class CreateAdminRoleWithMenusTable extends Migration
             $table->index(['menu_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_role_with_menus` comment '角色权限表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_role_with_menus` comment '角色权限表'");
     }
 
     /**

@@ -32,7 +32,7 @@ class CreateLuckydrawLogsTables extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraw_logs` comment '抽奖活动的会员抽奖记录表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraw_logs` comment '抽奖活动的会员抽奖记录表'");
     }
 
     /**

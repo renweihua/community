@@ -36,7 +36,7 @@ class CreateLuckydrawRewardsTables extends Migration
             $table->index(['product_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraw_rewards` comment '抽奖活动的领取中奖产品的记录表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraw_rewards` comment '抽奖活动的领取中奖产品的记录表'");
     }
 
     /**

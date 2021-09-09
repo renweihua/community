@@ -28,7 +28,7 @@ class CreateDynamicCommentPraisesTable extends Migration
             $table->index(['comment_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "dynamic_comment_praises` comment '动态的评论点赞记录表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "dynamic_comment_praises` comment '动态的评论点赞记录表'");
     }
 
     /**

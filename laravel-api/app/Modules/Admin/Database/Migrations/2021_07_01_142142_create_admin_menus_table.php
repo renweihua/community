@@ -41,7 +41,7 @@ class CreateAdminMenusTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_menus` comment '后台菜单表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_menus` comment '后台菜单表'");
     }
 
     /**

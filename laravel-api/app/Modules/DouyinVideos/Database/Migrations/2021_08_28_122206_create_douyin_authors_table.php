@@ -39,7 +39,7 @@ class CreateDouyinAuthorsTable extends Migration
             $table->unique(['unique_id']);
             $table->index(['share_url']);
         });
-        $table = env('DB_PREFIX') . $table;
+        $table = get_db_prefix() . $table;
         // 设置表注释
         DB::statement("ALTER TABLE `{$table}` comment '抖音作者表'");
         // 设置自增Id从 10000 开始

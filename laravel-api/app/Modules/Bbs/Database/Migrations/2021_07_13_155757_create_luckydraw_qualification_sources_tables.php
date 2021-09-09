@@ -28,7 +28,7 @@ class CreateLuckydrawQualificationSourcesTables extends Migration
             $table->index(['user_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraw_qualification_sources` comment '抽奖活动的资格来源表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraw_qualification_sources` comment '抽奖活动的资格来源表'");
     }
 
     /**
