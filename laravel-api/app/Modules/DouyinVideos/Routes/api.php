@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Modules\Bbs\Http\Middleware\RecordWebLog;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/douyinvideos', function (Request $request) {
-    return $request->user();
+Route::prefix('douyin')->middleware([RecordWebLog::class])->group(function () {
+    Route::get('/recommend', 'IndexController@recommend');
 });

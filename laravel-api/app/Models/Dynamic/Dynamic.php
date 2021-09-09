@@ -80,6 +80,7 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoInfo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoPath($value)
  * @mixin \Eloquent
+ * @property-read string $dynamic_type_text
  */
 class Dynamic extends Model
 {

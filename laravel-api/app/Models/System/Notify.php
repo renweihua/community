@@ -46,6 +46,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUpdatedTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUserId($value)
  * @mixin \Eloquent
+ * @property-read mixed $time_formatting
  */
 class Notify extends MonthModel
 {

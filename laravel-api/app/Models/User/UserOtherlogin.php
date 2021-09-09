@@ -46,6 +46,9 @@ use App\Modules\Bbs\Database\factories\UserOtherloginFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|UserOtherlogin whereWeiboOpenid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserOtherlogin whereWeixinOpenid($value)
  * @mixin \Eloquent
+ * @property mixed $github_info
+ * @property mixed $qq_info
+ * @property mixed $weibo_info
  */
 class UserOtherlogin extends Model
 {

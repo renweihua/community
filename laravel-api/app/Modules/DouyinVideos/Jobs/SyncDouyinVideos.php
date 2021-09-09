@@ -99,7 +99,7 @@ class SyncDouyinVideos implements ShouldQueue
                             'video'      => [
                                 'play_path' => $item['video_path'],
                                 // path 视频地址
-                                'path'      => isset($item['real_video_path']) && !empty($item['real_video_path']) ? str_replace($this->path_file_folder, '', $item['real_video_path']) : $item['video_path'],
+                                'path'      => isset($item['real_video_path']) && !empty($item['real_video_path']) ? $item['real_video_path'] : $item['video_path'],
                                 // duration 时长
                                 'duration'  => $item['duration'],
                                 // width 宽度
