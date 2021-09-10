@@ -22,7 +22,7 @@ class IndexController extends DouyinVideosController
             ])
             ->select(['video_id', 'author_id', 'aweme_id', 'cover', 'desc', 'images', 'video', 'statistics'])
             ->orderByRaw("RAND()")
-            ->limit(10)
+            ->limit(20)
             ->get();
 
         // foreach ($lists as $item){

@@ -31,15 +31,15 @@
 							<view class="add">+</view>
 						</view>
 						<view class="button">
-							<image @click="collect()" mode="widthFix" class="icon" :src="collectIcon"></image>
+							<image @click="collect()" mode="widthFix" class="icon" src="../../static/icon/shoucang.png"></image>
 							<view>7.6w</view>
 						</view>
 						<view class="button">
-							<image @click="message()" mode="widthFix" class="icon" :src="messageIcon"></image>
+							<image @click="message()" mode="widthFix" class="icon" src="../../static/icon/xiaoxi.png"></image>
 							<view>7.6w</view>
 						</view>
 						<view class="button">
-							<image @click="share()" mode="widthFix" class="icon" :src="shareIcon"></image>
+							<image @click="share()" mode="widthFix" class="icon" src="../../static/icon/fenxiang.png"></image>
 							<view>7.6w</view>
 						</view>
 					</view>
@@ -57,18 +57,18 @@
 				type: Array,
 				default: []
 			},
-			collectIcon: {
-				type: String,
-				default: require('./static/icon/shoucang.png')
-			},
-			messageIcon: {
-				type: String,
-				default: require('./static/icon/xiaoxi.png')
-			},
-			shareIcon: {
-				type: String,
-				default: require('./static/icon/fenxiang.png')
-			}
+			// collectIcon: {
+			// 	type: String,
+			// 	default: require('../../static/icon/shoucang.png')
+			// },
+			// messageIcon: {
+			// 	type: String,
+			// 	default: require('../../static/icon/xiaoxi.png')
+			// },
+			// shareIcon: {
+			// 	type: String,
+			// 	default: require('../../static/icon/fenxiang.png')
+			// }
 		},
 		data() {
 			return {

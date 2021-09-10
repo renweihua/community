@@ -15,11 +15,12 @@
 </script>
 
 <style lang="scss">
-
-   uni-tabbar {
+	uni-tabbar {
+		/* #ifndef APP-NVUE */
         .uni-tabbar { // tab 背景
             background-color: black; // tab 背景色
 			height: 120rpx;
 		}
+		/* #endif */
     }
 </style>
