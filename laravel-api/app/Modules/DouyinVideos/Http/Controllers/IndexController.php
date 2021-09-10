@@ -3,7 +3,6 @@
 namespace App\Modules\DouyinVideos\Http\Controllers;
 
 use App\Models\Douyin\DouyinVideo;
-use App\Models\UploadFile;
 use Illuminate\Http\JsonResponse;
 
 class IndexController extends DouyinVideosController
@@ -25,6 +24,16 @@ class IndexController extends DouyinVideosController
             ->orderByRaw("RAND()")
             ->limit(10)
             ->get();
+
+        // foreach ($lists as $item){
+        //     $res = get_headers($item->video['path']);
+        //     // 删除无效资源的视频
+        //     if (str_replace('HTTP/1.1 ', '', $res[0]) == '404 Not Found'){
+        //         var_dump($item->video_id);
+        //         $item->update(['is_delete' => 1]);
+        //     }
+        // }
+
         // $string = 'https://bbs-1252866470.cos.ap-shanghai.myqcloud.com//';
         // $uploadFile = UploadFile::getInstance();
         // foreach ($lists as $item){
@@ -37,6 +46,7 @@ class IndexController extends DouyinVideosController
         //         }
         //     }
         // }
+
         return $this->successJson($lists);
     }
 }

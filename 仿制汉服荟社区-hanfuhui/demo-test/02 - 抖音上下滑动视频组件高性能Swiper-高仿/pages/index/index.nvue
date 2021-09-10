@@ -1,0 +1,68 @@
+<template>
+	<view class="content">
+		<dt-video :list="videos"></dt-video>
+		<tabbar></tabbar>
+	</view>
+</template>
+
+<script>
+	import tabbar from '@/components/tabbar/tabbar'
+	import dtVideo from "@/components/dt-video/dt-video"
+	export default {
+		components:{
+			tabbar,
+			dtVideo
+		},
+		data() {
+			return {
+				list: [{
+					iconPath: "home",
+					selectedIconPath: "home-fill",
+					text: '首页',
+					count: 2,
+					isDot: true,
+					customIcon: false,
+				}],
+				videos: [
+				],
+			}
+		},
+		onLoad() {
+			this.pushVideoList();
+			console.log(videos);
+		},
+		onReachBottom() {
+			this.throttle(()=>{
+				if(this.videoList.length-newVal-1<this.listNumber){
+					this.pushVideoList()
+				}
+			},200)()
+		},
+		methods: {
+			pushVideoList(){
+				let promise = new Promise((resolve,reject)=>{
+					uni.request({
+						url: 'http://community.local.com/api/douyin/recommend',
+						success: (res) => {
+							let videoGroup = []
+							for (let item of res.data.data) {
+								videoGroup.push({
+									src:item.video.path,
+									desc:item.desc,
+									title:item.author.nick_name
+								})
+							}
+							this.videos = [...this.videos,...videoGroup]
+							resolve()
+						}
+					})
+				}) 
+				return promise
+			},
+		}
+	}
+</script>
+
+<style lang="scss">
+	
+</style>

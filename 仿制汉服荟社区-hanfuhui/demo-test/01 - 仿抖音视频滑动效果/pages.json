@@ -1,0 +1,88 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "swiper",
+				"navigationStyle":"custom",
+				"app-plus": {
+					"titleNView": false,
+					"subNVues": [{
+						"id": "comment",
+						"path": "pages/subnvue/comment",
+						"style": {
+							"height": "100%",
+							"position":"absolute",
+							"bottom":"0",
+							"background":"transparent",
+							"zindex":1
+						}
+					},{
+						"id": "input-box",
+						"path": "pages/subnvue/input-box",
+						"style": {
+							"height": "100%",
+							"position":"absolute",
+							"bottom":"0",
+							"background":"transparent",
+							"zindex":2
+						}
+					}]
+				}
+			}
+		},
+		{
+			"path": "pages/css3/index",
+			"style": {
+				"navigationBarTitleText": "css3",
+				"navigationStyle":"custom"
+				// "app-plus": {
+				// 	"titleNView": false,
+				// 	"subNVues": [{
+				// 		"id": "comment",
+				// 		"path": "pages/subnvue/comment",
+				// 		"style": {
+				// 			"height": "100%",
+				// 			"position":"absolute",
+				// 			"bottom":"0",
+				// 			"background":"transparent",
+				// 			"zindex":1
+							
+				// 		}
+				// 	},{
+				// 		"id": "input-box",
+				// 		"path": "pages/subnvue/input-box",
+				// 		"style": {
+				// 			"height": "100%",
+				// 			"position":"absolute",
+				// 			"bottom":"0",
+				// 			"background":"transparent",
+				// 			"zindex":2
+				// 		}
+				// 	}]
+				// }
+			}
+		}
+		
+		
+	],
+	"tabBar": {
+		"color": "#000000",
+		"selectedColor": "#2F85FC",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+			"pagePath": "pages/css3/index",
+			"text": "css3"
+		},{
+			"pagePath": "pages/index/index",
+			"text": "swiper"
+		}]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}

@@ -1,0 +1,108 @@
+<template>
+	<view class="tabbar">
+		<view class="ul">
+			<view :class="['li',current == index?'cur' :'']" v-for="(item,index) in taBbarList" :key="index" @tap="navigatorTo(item.url)">
+				<image v-if="item.type == 0"  class="img" :src="current == index ? item.selectIcon : item.icon" mode="widthFix"></image>
+				<view class="ic" v-if="item.type == 1">+</view>
+				<view class="p">{{item.name}}</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			current: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				taBbarList: [{
+						type: 0,
+						icon: '/static/icon/tab-home.png',
+							selectIcon: '/static/icon/tab-home.png',
+						name: '首页',
+						url: '/pages/index/index'
+					},
+					{
+						type: 1,
+						icon: '/static/icon/tab-home.png',
+							selectIcon: '/static/icon/tab-home.png',
+						name: '列表',
+						url: '/pages/list/list'
+					},
+					{
+						type: 0,
+						icon: '/static/icon/tab-home.png',
+						selectIcon: '/static/icon/tab-home.png',
+						name: '我的',
+						url: '/pages/my/my'
+					}
+				]
+			}
+		},
+		methods: {
+			navigatorTo(e) {
+				uni.redirectTo({
+					url: e,
+				});
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.tabbar{
+		height: 120rpx;
+		position: fixed;
+			border-top: 1px solid white;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			z-index: 20;
+			background: black;
+			.ul{
+				display: flex;
+				flex-direction: row;
+				.df,.li{
+					flex: 1;
+					padding-top: 5px;
+					position: relative;
+					.img{
+						width: 50upx;
+						height: 50upx;
+						overflow: hidden;
+						margin: 0 auto;
+					}
+					.ic{
+						width: 80upx;
+						height: 80upx;
+						border-radius: 50%;
+						text-align: center;
+						font-size: 45upx;
+						line-height: 80upx;
+						font-weight: bold;
+						background-color: black;
+						color: white;
+						border-top: 2px solid white;
+						margin: -20px auto 5px;
+					}
+					.p{
+						margin-top: 5upx;
+						text-align: center;
+						font-size: 30upx;
+						line-height: 30upx;
+						color: white;
+					}
+					&.cur{
+						.p{
+							color: red;
+						}
+					}
+				}	
+			}
+	}
+</style>
