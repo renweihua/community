@@ -19,7 +19,7 @@ class CreateUserLogsTable extends Migration
             $table->bigIncrements('log_id')->unsigned()->comment('会员登录日志记录表');
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->boolean('log_status')->unsigned()->default(1)->comment('状态：1.成功；0.失败');
             $table->string('description', 200)->default('')->comment('描述');
             $table->decimal('log_duration', 20, 12)->default(0)->comment('请求时长');

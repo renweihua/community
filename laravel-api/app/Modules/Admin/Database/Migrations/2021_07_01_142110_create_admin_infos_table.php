@@ -21,7 +21,7 @@ class CreateAdminInfosTable extends Migration
             $table->bigInteger('admin_id')->unsigned()->default(0)->comment('管理员Id');
             $table->integer('login_num')->unsigned()->default(0)->comment('登录次数');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->boolean('admin_type')->unsigned()->default(0)->comment('管理员类型：0：普通管理员，1：设置的超级管理员（不根据权限表走）');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');

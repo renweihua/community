@@ -431,6 +431,7 @@ class DynamicService extends Service
         }
         DB::beginTransaction();
         try {
+            $ip_agent = get_client_info();
             // 评论信息组装
             $validate_data = [
                 'user_id'          => $login_user_id,
@@ -444,6 +445,8 @@ class DynamicService extends Service
                 'author_id'        => $dynamic->user_id,
                 // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
                 'is_read'          => $login_user_id == $reply_user ? 1 : 0,
+                'created_ip'       => $ip_agent['ip'] ?? get_ip(),
+                'browser_type'     => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ];
             $comment       = $dynamicCommentInstance->create($validate_data);
 

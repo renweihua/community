@@ -33,9 +33,11 @@ class CreateDynamicsTable extends Migration
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->integer('dynamic_type')->unsigned()->default(0)->comment('动态类型：0.动态；1.图文；2.视频；3.相册');
-            $table->integer('excellent_time')->unsigned()->default(0)->comment('精选标记时间');
+            $table->integer('excellent_time')->unsigned()->default(0)->comment('精选标记时间/推荐');
+            $table->boolean('set_top')->unsigned()->default(0)->comment('是否置顶');
+            $table->string('admin_remarks', 300)->default('')->comment('审核备注');
 
             $table->json('cache_extends')->nullable()->comment('统计的扩展字段');
             // $table->integer('read_num')->unsigned()->default(0)->comment('阅读数量');
@@ -47,6 +49,7 @@ class CreateDynamicsTable extends Migration
             $table->index(['is_public']);
             $table->index(['excellent_time']);
             $table->index(['is_delete']);
+            $table->index(['set_top']);
         });
     }
 
