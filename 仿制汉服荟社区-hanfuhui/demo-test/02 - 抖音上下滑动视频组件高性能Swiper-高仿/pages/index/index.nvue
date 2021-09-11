@@ -29,7 +29,7 @@
 		},
 		onLoad() {
 			this.pushVideoList();
-			console.log(videos);
+			console.log(this.videos);
 		},
 		onReachBottom() {
 			this.throttle(()=>{
