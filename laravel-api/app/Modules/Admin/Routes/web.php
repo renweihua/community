@@ -47,7 +47,7 @@ Route::prefix(cnpscy_config('admin_prefix'))
         Route::get('get_month_lists', 'IndexController@getMonthList');
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
-	// 多图批量上传
+        // 多图批量上传
         Route::post('upload_files', 'UploadController@files');
         // 获取文件列表
         Route::get('getFileList', 'FileController@index');
@@ -65,20 +65,21 @@ Route::prefix(cnpscy_config('admin_prefix'))
             Route::delete('/delete', 'FileGroupController@delete');
         });
 
-        // 数据库管理
-        Route::prefix('database')->group(function() {
-            // 数据表列表
-            Route::get('/tables', 'DatabaseController@index');
-            // 数据库备份
-            Route::post('/backupsTables', 'DatabaseController@backupsTables');
-            // 备份记录
-            Route::get('/backups', 'DatabaseController@backups');
-            // 删除指定备份记录
-            Route::delete('/deleteBackup', 'DatabaseController@deleteBackup');
-        });
-
         // 权限中间件
         Route::middleware([CheckRabc::class])->group(function () {
+            // 数据库管理
+            Route::prefix('database')->group(function() {
+                // 数据表列表
+                Route::get('/tables', 'DatabaseController@index');
+                // 数据库备份
+                Route::post('/backupsTables', 'DatabaseController@backupsTables');
+                // 备份记录
+                Route::get('/backups', 'DatabaseController@backups');
+                // 删除指定备份记录
+                Route::delete('/deleteBackup', 'DatabaseController@deleteBackup');
+            });
+
+            // Banner
             Route::prefix('banners')->group(function() {
                 Route::get('/', 'System\BannerController@index');
                 Route::post('/create', 'System\BannerController@create');
@@ -200,6 +201,14 @@ Route::prefix(cnpscy_config('admin_prefix'))
                 Route::get('/getSelectLists', 'Bbs\MenuController@getSelectLists')->withoutMiddleware([CheckRabc::class]);
                 Route::put('/changeFiledStatus', 'Bbs\MenuController@changeFiledStatus');
                 Route::get('/getTplTypeAndViews', 'Bbs\MenuController@getTplTypeAndViews')->withoutMiddleware([CheckRabc::class]);
+            });
+
+            // 动态管理
+            Route::prefix('dynamics')->group(function() {
+                Route::get('/', 'Bbs\DynamicController@index');
+                Route::put('/check', 'Bbs\DynamicController@check');
+                Route::put('/set_top', 'Bbs\DynamicController@setTop');
+                Route::put('/set_excellent', 'Bbs\DynamicController@excellent');
             });
         });
     });

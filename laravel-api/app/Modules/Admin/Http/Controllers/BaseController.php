@@ -2,17 +2,31 @@
 
 namespace App\Modules\Admin\Http\Controllers;
 
+use App\Models\Rabc\Admin;
 use App\Traits\Json;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
     use Json;
 
+    protected $guard = 'admin';
+
     protected $service;
+
+    public function getLoginUser(): Admin
+    {
+        return Auth::guard($this->guard)->user();
+    }
+
+    public function getLoginUserId(): int
+    {
+        return $this->getLoginUser()->admin_id ?? 0;
+    }
 
     /**
      * 列表页
