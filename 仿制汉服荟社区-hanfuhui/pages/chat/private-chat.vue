@@ -39,7 +39,7 @@
 		<view class="box-2" v-if="friend_id">
 			<view class="flex_col">
 				<view class="flex_grow">
-					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容" placeholder-style="color:#DDD;" :cursor-spacing="6" />
+					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容" placeholder-style="color:#DDD;" :cursor-spacing="6" @keyup.enter.native="sendMsg" />
 				</view>
 				<button class="send" @tap="sendMsg">发送</button>
 			</view>
@@ -96,8 +96,7 @@ export default {
 	onLoad(options) {
 		console.log('---onLoad---');
 		// 验证是否已登录
-
-		options.friend_id = 2;
+		console.log(options)
 
 		// 是否设置了聊天会员Id
 		if (!options.friend_id) {

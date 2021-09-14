@@ -1,19 +1,33 @@
 <template>
 	<view>
-    <!-- 商城顶部导航栏 -->
-    <view class="posif posi-tlr0 z500 bgtheme">
-      <!-- #ifdef APP-PLUS -->
-      <view class="status-bar"></view>
-      <!-- #endif -->
-      <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;">静态页面！！！</view>
-	  
-	  <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;" @click="chat(1)"> 进入聊天页-1 </view>
-	  
-	  <view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;" @click="chat(2)"> 进入聊天页-2 </view>
-    </view>
-	
+	    <!-- 商城顶部导航栏 -->
+	    <view class="posif posi-tlr0 z500 bgtheme">
+			<!-- #ifdef APP-PLUS -->
+			<view class="status-bar"></view>
+			<!-- #endif -->
+	    </view>
+	    <!-- 好友列表 -->
 		<mescroll-uni top="100" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 			<view class="list">
+				<view
+					class="flex_col"
+					@longpress="onLongPress"
+					:class="{ active: pickerUserIndex == index }"
+					@tap="chat(item)"
+					v-for="(item, index) in users"
+					:key="index"
+					:data-index="index"
+				>
+					<image :src="item.user_avatar ? item.user_avatar : '../../static/logo.png'" mode="aspectFill"></image>
+					<view class="flex_grow">
+						<view class="flex_col">
+							<view class="flex_grow">{{ item.nick_name }}</view>
+							<view class="time">{{ item.updated_time }}</view>
+						</view>
+						<view class="info">{{ item.basic_extends ? item.basic_extends.user_introduction : '' }}</view>
+					</view>
+				</view>
+				<!--
 				<view
 					class="flex_col"
 					@longpress="onLongPress"
@@ -32,6 +46,7 @@
 						<view class="info">{{ item.info }}</view>
 					</view>
 				</view>
+				-->
 			</view>
 			<view class="shade" v-show="showShade" @tap="hidePop">
 				<view class="pop" :style="popStyle" :class="{ show: showPop }">
@@ -43,7 +58,7 @@
 </template>
 
 <script>
-import { getSpecialList, getProductHottestList, getProductList } from '@/api/ShopServer.js';
+import { friends } from '@/api/friend.js';
 
 export default {
 	components: {},
@@ -59,6 +74,7 @@ export default {
 			// 滚动区实例
 			mescroll: null,
 
+			users: [],
 			userList: [],
 			/* 窗口尺寸 */
 			winSize: {},
@@ -81,23 +97,11 @@ export default {
 		}
 	},
 	computed: {
-		// 专题列表
-		specialListData() {
-			return this.$store.getters['shop/getSpecialListData'];
-		},
-		// 热卖列表
-		productHottestListData() {
-			return this.$store.getters['shop/getProductHottestListData'];
-		},
-		// 精选推荐列表
-		productBestListData() {
-			return this.$store.getters['shop/getProductBestListData'];
-		},
 	},
 	methods: {
-		chat(page){
+		chat(item){
 			uni.navigateTo({
-				url: `/pages/chat/private-chat`
+				url: `/pages/chat/private-chat?friend_id=` + item.user_id
 			});
 		},
 		demoLoad() {
@@ -200,48 +204,13 @@ export default {
 		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
 		upCallback(mescroll) {
 			this.demoLoad();
-			return;
-			if (mescroll.num == 1) {
-				/// 首次加载专题最热推荐
-				Promise.all([
-					getSpecialList({
-						page: 1,
-						limit: 3
-					}),
-					getProductHottestList(),
-					getProductList({
-						good: true,
-						page: mescroll.num,
-						limit: mescroll.size
-					})
-				])
-					.then(resArray => {
-						this.$store.commit('shop/setSpecialListData', resArray[0].data.Data);
-						this.$store.commit('shop/setProductHottestListData', resArray[1].data.Data);
-						this.$store.commit('shop/setProductBestListData', resArray[2].data.Data);
-						mescroll.endSuccess(resArray[2].data.Data.length, resArray[2].data.Data.length >= mescroll.size);
-					})
-					.catch(() => {
-						mescroll.endSuccess(0, false);
-					});
-			} else {
-				// 推荐商品列表追加
-				getProductList({
-					good: true,
-					page: mescroll.num,
-					limit: mescroll.size
-				})
-					.then(productRes => {
-						this.$store.commit('shop/setProductBestListData', this.productBestListData.concat(productRes.data.Data));
-						mescroll.endSuccess(productRes.data.Data.length, productRes.data.Data.length >= mescroll.size);
-					})
-					.catch(() => {
-						mescroll.endErr();
-					});
-			}
+			friends().then(res => {
+				this.users = res.data;
+			})
+			.catch(() => {
+			});
 		},
-
-		/// 获取新数据
+		// 获取新数据
 		fnRefreshData() {
 			this.mescroll.scrollTo(0, 300);
 			setTimeout(() => {

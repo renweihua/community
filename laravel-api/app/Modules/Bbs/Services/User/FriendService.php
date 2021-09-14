@@ -5,11 +5,29 @@ namespace App\Modules\Bbs\Services\User;
 use App\Exceptions\Bbs\FailException;
 use App\Models\System\Notify;
 use App\Models\User\UserFollowFan;
+use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
 class FriendService extends Service
 {
+    public function friends(int $login_user_id)
+    {
+        $users = UserInfo::where('user_id', '<>', $login_user_id)
+            ->with([
+                'isFollow' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+                'isFan' => function($query) use ($login_user_id) {
+                    $query->where('friend_id', $login_user_id);
+                }
+            ])
+            ->orderByDesc('updated_time')
+            ->get();
+
+        return $users;
+    }
+
     /**
      * 我的关注
      *

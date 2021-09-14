@@ -120,6 +120,8 @@ class WebSocketController extends BaseNamespace
             }
             // $redis = redis('token');
             // $value = $redis->get('laravel_database_users_token:' . $data['token']);
+            // var_dump('laravel_database_users_token：');
+            // var_dump($value);
             // if (empty($value)){
             //     throw new Exception('Token过期，请重新登录！');
             // }

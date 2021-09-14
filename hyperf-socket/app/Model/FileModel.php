@@ -21,6 +21,15 @@ class FileModel extends Model
         }
     }
 
+    public function setFileNameAttribute($key): void
+    {
+        // 非本地文件上传，存储文件时自动移除域名
+        if ($this->attributes['storage'] != 'local'){
+            $key = str_replace($this->attributes['host_url'], '', $key);
+        }
+        $this->attributes['file_name'] = $key;
+    }
+
     public static function addRecord($file_name, $file, $user_id = 0)
     {
         return self::query()->create(['storage' => 'local', 'host_url' => '', 'file_name' => $file_name, 'file_size' => $file->getSize(), 'file_type' => $file->getClientMediaType(), 'extension' => $file->getExtension(), 'user_id' => $user_id]);

@@ -118,6 +118,8 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
          * 好友相关
          */
         Route::prefix('user')->group(function () {
+            // 好友列表
+            Route::get('/friends', 'FriendController@friends');
             // 我关注的会员
             Route::get('/follows', 'FriendController@follows');
             // 我关注的荟吧

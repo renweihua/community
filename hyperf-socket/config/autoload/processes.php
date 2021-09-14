@@ -19,5 +19,5 @@ return [
      *
      * 监听器监听 QueueLength 事件，默认执行 500 次消息后触发一次。
      */
-    Hyperf\AsyncQueue\Listener\ReloadChannelListener::class,
+    // Hyperf\AsyncQueue\Listener\ReloadChannelListener::class,
 ];

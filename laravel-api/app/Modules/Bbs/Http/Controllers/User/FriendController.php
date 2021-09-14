@@ -15,6 +15,12 @@ class FriendController extends BbsController
         $this->service = $service;
     }
 
+    public function friends()
+    {
+        // 此项目没有好友申请流程等功能，暂时先返回100条会员
+        return $this->successJson($this->service->friends($this->getLoginUserId()));
+    }
+
     /**
      * 我的关注
      *
