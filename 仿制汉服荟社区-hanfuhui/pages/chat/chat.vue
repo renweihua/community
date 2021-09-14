@@ -5,9 +5,10 @@
 			<!-- #ifdef APP-PLUS -->
 			<view class="status-bar"></view>
 			<!-- #endif -->
+			<view class="hl90r pr28r" style="text-align: center;color: #FFFFFF;"> 会员列表 </view>
 	    </view>
 	    <!-- 好友列表 -->
-		<mescroll-uni top="100" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
+		<mescroll-uni top="250" :bottom="112" @down="downCallback" @up="upCallback" @init="mescrollInit">
 			<view class="list">
 				<view
 					class="flex_col"
