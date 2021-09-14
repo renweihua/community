@@ -62,9 +62,9 @@ export default function request(route, method = 'get', data = {}) {
 				}
 				
 				// 如果服务端返回新的Token，那么自动存储新的Token，避免旧Token过期
-				if (res.headers && res.headers.authorization) {
+				if (res.header && res.header.authorization) {
 					// 存储Token
-					uni.setStorageSync('TOKEN', res.headers.authorization);
+					uni.setStorageSync('TOKEN', res.header.authorization);
 				}
 
 				// 正常

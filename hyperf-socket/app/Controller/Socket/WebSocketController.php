@@ -114,6 +114,8 @@ class WebSocketController extends BaseNamespace
             if (!$token_user){
                 throw new Exception('Token已失效');
             }
+            var_dump('当前时间：' . date('Y-m-d H:i:s'));
+            var_dump('Token过期时间：' . date('Y-m-d H:i:s', $token_user->expires_time));
             // Token 是否过期
             if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 throw new Exception('Token过期，请重新登录！');
