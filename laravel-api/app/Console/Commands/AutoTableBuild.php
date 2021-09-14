@@ -10,6 +10,7 @@ use App\Models\Log\WebLog;
 use App\Models\System\Notify;
 use App\Models\User\UserSign;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -56,6 +57,8 @@ class AutoTableBuild extends Command
      */
     public function handle()
     {
+        Log::info($this->description);
+
         foreach ($this->model_lists as $model){
             $new = (new $model);
             $new->createMonthTable('', strtotime('+0 month'));

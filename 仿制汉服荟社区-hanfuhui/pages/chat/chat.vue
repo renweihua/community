@@ -101,6 +101,7 @@ export default {
 	methods: {
 		chat(item){
 			uni.navigateTo({
+				// url: `/pages/chat/chat1?friend_id=` + item.user_id
 				url: `/pages/chat/private-chat?friend_id=` + item.user_id
 			});
 		},

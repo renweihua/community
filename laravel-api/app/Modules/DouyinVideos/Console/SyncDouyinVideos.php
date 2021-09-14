@@ -5,6 +5,7 @@ namespace App\Modules\DouyinVideos\Console;
 use App\Models\Douyin\DouyinAuthor;
 use App\Modules\DouyinVideos\Jobs\SyncDouyinAuthor;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -41,6 +42,8 @@ class SyncDouyinVideos extends Command
      */
     public function handle(DouyinAuthor $douyinAuthor)
     {
+        Log::info($this->description);
+
         // 每24小时同步一次作者的视频
         $authors = $douyinAuthor->where('last_sync', '<', time() - 24 * 3600)->get();
 

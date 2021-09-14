@@ -39,7 +39,12 @@
 		<view class="box-2" v-if="friend_id">
 			<view class="flex_col">
 				<view class="flex_grow">
-					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容" placeholder-style="color:#DDD;" :cursor-spacing="6" @keyup.enter.native="sendMsg" />
+					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容"
+					 placeholder-style="color:#DDD;" :cursor-spacing="6" 
+					 @keyup.enter.native="sendMsg"
+					 :confirm-type="'send'"
+					@confirm="sendMsg"
+					  />
 				</view>
 				<button class="send" @tap="sendMsg">发送</button>
 			</view>
@@ -96,7 +101,7 @@ export default {
 	onLoad(options) {
 		console.log('---onLoad---');
 		// 验证是否已登录
-		console.log(options)
+		// console.log(options)
 
 		// 是否设置了聊天会员Id
 		if (!options.friend_id) {
@@ -268,7 +273,10 @@ export default {
 		// 自动加载：监听socket
 		monitorSocket() {
 			this.socket = this.$socket;
-
+			// 如果socket未生效，那么不做监听
+			if(!this.socket){
+				return false;
+			}
 			// 监听：私聊发送事件，服务端返回数据
 			this.socket.on('private-chat', (data, status, msg) => {
 				console.log('---获取私聊消息推送事件---');
@@ -351,6 +359,10 @@ export default {
 		getPrivateChatRecords() {
 			if (!this.ajax.flag) {
 				return; //
+			}
+			// 如果socket未生效，那么不做监听
+			if(!this.socket){
+				return false;
 			}
 			this.hideLoadTips();
 			this.ajax.flag = false;
