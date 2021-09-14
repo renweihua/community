@@ -23,7 +23,7 @@ class UserService extends Service
 
     public static function getUserIdBySid(string $sid) : int
     {
-        var_dump(redis('token')->hGet(self::USERS_LIST, $sid)));
+        var_dump(redis('token')->hGet(self::USERS_LIST, $sid));
         return intval(my_json_decode(redis('token')->hGet(self::USERS_LIST, $sid))['user_id']);
     }
 

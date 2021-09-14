@@ -5,7 +5,7 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
@@ -17,14 +17,14 @@ use Monolog\Logger;
 return [
     'default' => [
         //'handler' => [
-        //    'class' => Monolog\Handler\RotatingFileHandler::class,
+        //    'class' => RotatingFileHandler::class,
         //    'constructor' => [
         //        'filename' => BASE_PATH . '/runtime/logs/hyperf.log',
-        //        'level' => Monolog\Logger::DEBUG,
+        //        'level' => Logger::DEBUG,
         //    ],
         //],
         //'formatter' => [
-        //    'class' => Monolog\Formatter\LineFormatter::class,
+        //    'class' => LineFormatter::class,
         //    'constructor' => [
         //        'format' => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
         //        'dateFormat' => 'Y-m-d H:i:s',
@@ -34,13 +34,13 @@ return [
 
         'handlers' => [
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf.log',
-                    'level'    => Monolog\Logger::INFO,
+                    'level'    => Logger::INFO,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -49,13 +49,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-debug.log',
-                    'level'    => Monolog\Logger::DEBUG,
+                    'level'    => Logger::DEBUG,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -64,13 +64,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-notice.log',
-                    'level'    => Monolog\Logger::NOTICE,
+                    'level'    => Logger::NOTICE,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -79,13 +79,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-warning.log',
-                    'level'    => Monolog\Logger::WARNING,
+                    'level'    => Logger::WARNING,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -94,13 +94,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-error.log',
-                    'level'    => Monolog\Logger::ERROR,
+                    'level'    => Logger::ERROR,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -109,13 +109,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-critical.log',
-                    'level'    => Monolog\Logger::CRITICAL,
+                    'level'    => Logger::CRITICAL,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -124,13 +124,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-alert.log',
-                    'level'    => Monolog\Logger::ALERT,
+                    'level'    => Logger::ALERT,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -139,13 +139,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-emergency.log',
-                    'level'    => Monolog\Logger::EMERGENCY,
+                    'level'    => Logger::EMERGENCY,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -158,13 +158,13 @@ return [
     'crontab' => [
         'handlers' => [
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/crontab.log',
-                    'level'    => Monolog\Logger::INFO,
+                    'level'    => Logger::INFO,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -173,13 +173,13 @@ return [
                 ],
             ],
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/hyperf-notice.log',
-                    'level'    => Monolog\Logger::NOTICE,
+                    'level'    => Logger::NOTICE,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',
@@ -192,13 +192,13 @@ return [
     'sql' => [
         'handlers' => [
             [
-                'class'       => Monolog\Handler\RotatingFileHandler::class,
+                'class'       => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/sql.log',
-                    'level'    => Monolog\Logger::INFO,
+                    'level'    => Logger::INFO,
                 ],
                 'formatter'   => [
-                    'class'       => Monolog\Formatter\LineFormatter::class,
+                    'class'       => LineFormatter::class,
                     'constructor' => [
                         'format'                => "||%datetime%||%channel%||%level_name%||%message%||%context%||%extra%\n",
                         'dateFormat'            => 'Y-m-d H:i:s',

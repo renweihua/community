@@ -32,7 +32,7 @@ class WebSocketController extends BaseNamespace
      */
     public function onConnect(Socket $socket, $data)
     {
-//        var_dump('onConnect');
+       // var_dump('onConnect');
     }
 
     /**
@@ -40,7 +40,7 @@ class WebSocketController extends BaseNamespace
      */
     public function onClose(Socket $socket, $data)
     {
-//        var_dump('onClose');
+       // var_dump('onClose');
 
 
         //        return;

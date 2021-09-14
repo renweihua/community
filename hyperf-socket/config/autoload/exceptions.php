@@ -13,7 +13,12 @@ return [
     'handler' => [
         'http' => [
             Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
+
             App\Exception\Handler\AppExceptionHandler::class,
+
+            // 验证类的 异常处理器
+            // \Hyperf\Validation\ValidationExceptionHandler::class,
+            App\Exception\Handler\AppValidationExceptionHandler::class,
         ],
     ],
 ];
