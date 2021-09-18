@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Models\Dynamic\Dynamic;
 use App\Models\System\Banner;
 use App\Models\System\StartDiagram;
+use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -74,12 +75,16 @@ class WebSitesController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function appUpgrade(Request $request, $version_type = 2): JsonResponse
+    public function checkAppVersion(Request $request, $version_type = 1): JsonResponse
     {
         $version = Version::select(['version_number', 'apk_url', 'update_type', 'is_update', 'version_desc', 'version_name'])
-            ->where('version_number', '>', $request->version_number)
+            ->where(function($query) use($request){
+                if ($request->version_number){
+                    $query->where('version_number', '>', $request->version_number);
+                }
+            })
             ->where('version_type', '=', $request->version_type ?? $version_type)
-            ->orderByDesc('version_id')
+            ->orderByDesc('version_number')
             ->first();
 
         /* res的数据说明
@@ -91,18 +96,14 @@ class WebSitesController extends BbsController
           * | updateType      | y        | String    | forcibly = 强制更新, solicit = 弹窗确认更新, silent = 静默更新 |
           * | downloadUrl     | y        | String    | 版本下载链接（IOS安装包更新请放跳转store应用商店链接,安卓apk和wgt文件放文件下载链接）  |
           */
-        return $this->successJson(empty($version) ? [
-            'versionCode' => $request->version_number,
-            'versionName' => '',
-            'versionInfo' => '',
-            'updateType' => '',
-            'downloadUrl' => '',
-            'update_type' => '',
-        ] : [
+        if (empty($version)){
+            return $this->errorJson('暂无新版本！');
+        }
+        return $this->successJson([
             'versionCode' => $version->version_number,
             'versionName' => $version->version_number,
             'versionInfo' => $version->version_desc,
-            'updateType' => 'solicit', // $version->is_update ? 'forcibly' : 'solicit', 全部默认为：弹出更新
+            'updateType' => $version->is_update == 1 ? 'forcibly' : 'solicit',
             'downloadUrl' => $version->apk_url,
             'update_type' => $version->update_type,
         ]);

@@ -36,14 +36,14 @@ trait Json
         $this->data = $data;
     }
 
-    public function success($data = [], $msg = 'success', $other = [])
+    public function successJson($data = [], $msg = 'success', $other = [])
     {
         $this->data = $data;
         $this->msg = $msg;
         return $this->myAjaxReturn($other);
     }
 
-    public function error($msg = 'error', $status = 0, $data = [], $other = [])
+    public function errorJson($msg = 'error', $status = 0, $data = [], $other = [])
     {
         $this->data = $data;
         $this->msg = $msg;

@@ -216,6 +216,8 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
         Route::get('about_us', 'WebSitesController@aboutUs');
         // Banner图
         Route::get('banners', 'WebSitesController@banners');
+        // 检测APP版本是否升级
+        Route::get('check_app_version', 'WebSitesController@checkAppVersion');
 
         // 预览markdown的语法
         Route::post('previewMarkdown', 'WebSitesController@previewMarkdown');

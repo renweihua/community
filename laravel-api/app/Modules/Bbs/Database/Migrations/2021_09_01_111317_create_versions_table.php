@@ -17,11 +17,12 @@ class CreateVersionsTable extends Migration
         Schema::create('versions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('version_id')->unsigned()->comment('版本Id');
-            $table->boolean('version_type')->unsigned()->default(0)->comment('版本类型：1.ios；2.android');
+            $table->boolean('version_type')->unsigned()->default(0)->comment('版本类型：1.android；2.ios');
             $table->string('version_name', 200)->default('')->comment('版本名称');
             $table->string('version_number', 200)->default('')->comment('版本号');
             $table->string('version_desc', 200)->default('')->comment('描述');
             $table->string('apk_url', 200)->default('')->comment('');
+            $table->integer('publish_time')->unsigned()->default(0)->comment('版本的发布时间');
             $table->boolean('is_update')->unsigned()->default(0)->comment('0.不强制更新；1.强制更新');
             $table->boolean('update_type')->unsigned()->default(0)->comment('0.热更新；1.整包更新');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除：0.否；1.是');
