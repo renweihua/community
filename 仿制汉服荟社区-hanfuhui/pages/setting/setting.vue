@@ -112,7 +112,7 @@
 						uni.removeStorageSync('TOKEN');
 						uni.hideLoading()
 						// 跳转登录
-						uni.reLaunch({
+						uni.navigateTo({
 							url: '/pages/login/login'
 						})
 					}, 1500);

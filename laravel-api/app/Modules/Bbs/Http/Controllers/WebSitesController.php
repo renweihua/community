@@ -103,7 +103,7 @@ class WebSitesController extends BbsController
             'versionCode' => $version->version_number,
             'versionName' => $version->version_number,
             'versionInfo' => $version->version_desc,
-            'updateType' => $version->is_update == 1 ? 'forcibly' : 'solicit',
+            'updateType' => 'solicit', // $version->is_update == 1 ? 'forcibly' : 'solicit',
             'downloadUrl' => $version->apk_url,
             'update_type' => $version->update_type,
         ]);

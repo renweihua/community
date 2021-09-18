@@ -153,7 +153,7 @@
             })
             // 延迟2秒跳转
             setTimeout(() => {
-              uni.reLaunch({
+              uni.navigateTo({
                 url: '/pages/login/login',
               })
             }, 1800)

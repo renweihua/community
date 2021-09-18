@@ -70,7 +70,7 @@
 					console.log(err, false);
 					// 登录问题
 					// if (err.data !== 401) {
-					// 	uni.redirectTo({
+					// 	uni.navigateTo({
 					// 		url: '/pages/login/login'
 					// 	})
 					// }
