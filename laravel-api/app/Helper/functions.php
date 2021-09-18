@@ -201,7 +201,8 @@ if ( !function_exists('get_days_in_year') ) {
     {
         $days = 0;
         for ($month = 1; $month <= 12; $month++) {
-            $days = $days + cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            // cal_days_in_month(CAL_GREGORIAN, $month, $year)
+            $days = $days + date("t",strtotime($year . '-' . $month));
         }
         return $days;
     }
