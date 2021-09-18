@@ -17,17 +17,17 @@
 					<view class="my-avatar">
 						<user-avatar :src="userInfoData && userInfoData.user_info ? userInfoData.user_info.user_avatar : '/static/default_avatar.png'" tag="" size="lg"></user-avatar>
 					</view>
-					<text class="my-nickname">{{ userInfoData.user_info.nick_name }}</text>
+					<text class="my-nickname">{{ userInfoData.user_info ? userInfoData.user_info.nick_name : ''}}</text>
 				</view>
 			</view>
 			<!-- 粉丝关注汉币统计 -->
 			<view class="flexr-jsa fcenter bgwhite ptb18r mb18r">
 				<view class="flexc-jsc flex-fitem" @tap="fnOpenWin('fans-list')">
-					<view class="f36r fbold c555">{{ userInfoData.user_info.fans_count || 0 }}</view>
+					<view class="f36r fbold c555">{{ userInfoData.user_info ? userInfoData.user_info.fans_count : 0 }}</view>
 					<view class="f24r cgray">粉丝</view>
 				</view>
 				<view class="flexc-jsc flex-fitem bls2r brs2r" @tap="fnOpenWin('atte-list')">
-					<view class="f36r fbold c555">{{ userInfoData.user_info.follows_count || 0 }}</view>
+					<view class="f36r fbold c555">{{ userInfoData.user_info ? userInfoData.user_info.follows_count : 0 }}</view>
 					<view class="f24r cgray">关注</view>
 				</view>
 				<view class="flexc-jsc flex-fitem">
@@ -133,7 +133,7 @@ export default {
 		},
 		// 签到状态
 		signinStatusData() {
-			return this.userInfoData.user_info.is_sign;
+			return this.userInfoData.user_info ? this.userInfoData.user_info.is_sign : false;
 		},
 		// 用户信息
 		userInfoData() {

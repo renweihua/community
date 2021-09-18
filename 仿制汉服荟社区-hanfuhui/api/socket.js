@@ -33,28 +33,27 @@ export default {
 				console.log('ws 收到服务器消息：', message);
 			});
 
-			// // 后期开启 ping ……
-			// start_setInterval = setInterval(function() {
-			// 	var date = new Date();
-			// 	var year = date.getFullYear();
-			// 	var month = date.getMonth() + 1;
-			// 	var day = date.getDate();
-			// 	var hour = date.getHours();
-			// 	var minute = date.getMinutes();
-			// 	var second = date.getSeconds();
-			// 	month = month < 10 ? ("0" + month) : month;
-			// 	day = day < 10 ? ("0" + day) : day;
-			// 	hour = hour < 10 ? ("0" + hour) : hour;
-			// 	minute = minute < 10 ? ("0" + minute) : minute;
-			// 	second = second < 10 ? ("0" + second) : second;
-			// 	var Timer = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
-			// 	console.log(Timer);
+			// 后期开启 ping ……
+			start_setInterval = setInterval(function() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				var hour = date.getHours();
+				var minute = date.getMinutes();
+				var second = date.getSeconds();
+				month = month < 10 ? ("0" + month) : month;
+				day = day < 10 ? ("0" + day) : day;
+				hour = hour < 10 ? ("0" + hour) : hour;
+				minute = minute < 10 ? ("0" + minute) : minute;
+				second = second < 10 ? ("0" + second) : second;
+				var Timer = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+				// console.log(Timer);
 				
-				
-			// 	socket.emit('start-ping', '{"contnet": ' + Timer +'}', console.log);
-			// }, 3000);
+				socket.emit('start-ping', '{"contnet": ' + Timer +'}', console.log);
+			}, 3000);
 			
-			// // 监听服务端：ping事件
+			// 监听服务端：ping事件
 			// socket.on('start-ping', (data, status) => {
 			// 	console.log(data);
 			// 	console.log(status);

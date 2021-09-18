@@ -44,7 +44,8 @@
 		modifyUserInfo
 	} from '@/api/UserServer.js';
 	import {
-		upload
+		upload,
+		goLogin
 	} from '@/api/CommonServer.js'
 	import {
 		selectImage
@@ -74,9 +75,23 @@
 				return this.info.user_avatar;
 			}
 		},
+		mounted: function(){
+			// 获取登录账户用户信息
+			this.info = this.$store.getters['user/getLoginUserInfoData'].user_info;
+			if(!this.info){
+				// 自动跳转登录页
+				goLogin();
+				return false;
+			}
+		},
 		onLoad(option) {
 			// 获取登录账户用户信息
 			this.info = this.$store.getters['user/getLoginUserInfoData'].user_info;
+			if(!this.info){
+				// 自动跳转登录页
+				goLogin();
+				return false;
+			}
 			// 保存修改副本
 			this.tempInfo = Object.assign({}, this.info);
 		},

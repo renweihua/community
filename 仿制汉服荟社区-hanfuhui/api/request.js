@@ -21,8 +21,10 @@ export default function request(route, method = 'get', data = {}) {
 			success: res => {				
 				// token失效时，自动重新登录
 				if (res.statusCode == 401 || res.data.status == -1) {
+					// 存储Token
+					uni.setStorageSync('TOKEN', '');
 					// 自动跳转登录页
-					uni.redirectTo({
+					uni.navigateTo({
 						url: '/pages/login/login'
 					})
 					return;

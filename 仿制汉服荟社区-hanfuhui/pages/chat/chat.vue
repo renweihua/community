@@ -60,6 +60,9 @@
 
 <script>
 import { friends } from '@/api/friend.js';
+import {
+	goLogin
+} from '@/api/CommonServer.js';
 
 export default {
 	components: {},
@@ -98,6 +101,15 @@ export default {
 		}
 	},
 	computed: {
+	},
+	mounted: function(){
+		// 获取登录账户用户信息
+		let user_info = this.$store.getters['user/getLoginUserInfoData'].user_info;
+		if(!user_info){
+			// 自动跳转登录页
+			goLogin();
+			return false;
+		}
 	},
 	methods: {
 		chat(item){
@@ -211,13 +223,15 @@ export default {
 			})
 			.catch(() => {
 			});
+			
+			this.showShade = false;
 		},
 		// 获取新数据
 		fnRefreshData() {
-			this.mescroll.scrollTo(0, 300);
-			setTimeout(() => {
-				this.mescroll.resetUpScroll(true);
-			}, 1000);
+			// this.mescroll.scrollTo(0, 300);
+			// setTimeout(() => {
+			// 	this.mescroll.resetUpScroll(true);
+			// }, 1000);
 		}
 	}
 };

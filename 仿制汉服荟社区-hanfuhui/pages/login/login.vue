@@ -52,9 +52,9 @@
 				// 登录状态
 				isLogin: false,
 				// 用户名、邮箱、手机号
-				user_name: '13012345678',
+				user_name: '',
 				// 密码
-				password: '123456'
+				password: ''
 			};
 		},
 		onReady() {
@@ -102,11 +102,11 @@
 
 					// 登录之后，要么返回上一页，要么返回主页
 					setTimeout(() => {
-						if(uni.navigateBack()){
+						if(uni.navigateBack({delta: 2})){
 							
 						}else{
 							uni.reLaunch({
-								url: '/pages/index/index?current=0'
+								url: '/pages/index/index'
 							})
 						}
 					}, 1500);
