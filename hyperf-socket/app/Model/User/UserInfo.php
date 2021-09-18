@@ -42,7 +42,7 @@ class UserInfo extends Model
             ||
             substr($value, 0, 7) == 'http://'
         ) return $value;
-        return get_image_url($value);
+        return get_file_url($value);
     }
 
     /**
@@ -52,6 +52,6 @@ class UserInfo extends Model
      */
     public function setUserAvatarAttribute($value)
     {
-        $this->attributes['user_avatar'] = set_image_url($value);
+        $this->attributes['user_avatar'] = set_file_url($value);
     }
 }

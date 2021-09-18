@@ -63,15 +63,36 @@ if ( !function_exists('redis') ) {
 }
 
 /**
- * 获取图片的真实地址
+ * 获取文件URL
  */
-function get_image_url($image){
+function get_file_url($image){
     return env('API_URL') . '/storage/' . $image;
 }
 
 /**
- * 设置图片
+ * 设置文件URL
  */
-function set_image_url($image){
+function set_file_url($image){
     return str_replace(env('API_URL') . '/storage/', '', $image);
+}
+
+function cnpscy_config($key, $default = '')
+{
+    $config = __DIR__ . '/../../laravel-api/config/cnpscy.php';
+    $arr = explode('.', $key);
+    $value = $default;
+    foreach ($arr as $key => $item){
+        if (!isset($config[$item])){
+            break;
+        }else{
+            if ($key + 1 < count($arr)){
+                $config = $config[$item];
+                continue;
+            }else{
+                $value = $config[$item];
+                break;
+            }
+        }
+    }
+    return $value;
 }
