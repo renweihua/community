@@ -68,3 +68,10 @@ if ( !function_exists('redis') ) {
 function get_image_url($image){
     return env('API_URL') . '/storage/' . $image;
 }
+
+/**
+ * 设置图片
+ */
+function set_image_url($image){
+    return str_replace(env('API_URL') . '/storage/', '', $image);
+}

@@ -36,6 +36,22 @@ class UserInfo extends Model
 
     public function getUserAvatarAttribute($value)
     {
+        if (empty($value)) return '';
+        if (
+            substr($value, 0, 8) == 'https://'
+            ||
+            substr($value, 0, 7) == 'http://'
+        ) return $value;
         return get_image_url($value);
+    }
+
+    /**
+     * 设置会员头像
+     *
+     * @param $value
+     */
+    public function setUserAvatarAttribute($value)
+    {
+        $this->attributes['user_avatar'] = set_image_url($value);
     }
 }

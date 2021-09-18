@@ -23,6 +23,7 @@ class FriendService extends Service
                 }
             ])
             ->orderByDesc('updated_time')
+            ->limit(100)
             ->get();
 
         return $users;
