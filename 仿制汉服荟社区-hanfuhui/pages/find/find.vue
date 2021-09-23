@@ -27,7 +27,7 @@
 			<swiper-item>
 				<mescroll-uni v-if="status.recommend" :top="90" :bottom="112" @down="downRecommend" :up="{ use: false }">
 					<!-- 轮播 -->
-					<swiper autoplay="true" interval="3000" duration="300" circular="true" indicator-dots="true" indicator-active-color="#FF6699">
+					<swiper v-if="bannerListData" autoplay="true" interval="3000" duration="300" circular="true" indicator-dots="true" indicator-active-color="#FF6699">
 						<block v-for="banner in bannerListData" :key="banner.banner_id">
 							<swiper-item><image style="width: 100%;height: 100%;" :src="banner.banner_cover" mode="scaleToFill" :lazy-load="true" /></swiper-item>
 						</block>
@@ -321,9 +321,9 @@ export default {
 		/// 顶部导航选项点击
 		fnBarClick(e) {
 			let current = e.hasOwnProperty('detail') ? e.detail.current : e.current;
-			console.log(current);
-			console.log(this.tabBars[current]);
-			console.log(this.tabBars[current].id);
+			// console.log(current);
+			// console.log(this.tabBars[current]);
+			// console.log(this.tabBars[current].id);
 			this.scrollInto = this.tabBars[current].id;
 			// 是否当前项点击
 			if (e.hasOwnProperty('id') && this.current == current) {

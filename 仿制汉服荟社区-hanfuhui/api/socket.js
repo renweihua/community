@@ -54,10 +54,10 @@ export default {
 			}, 3000);
 			
 			// 监听服务端：ping事件
-			// socket.on('start-ping', (data, status) => {
-			// 	console.log(data);
-			// 	console.log(status);
-			// });
+			socket.on('start-ping', (data, status) => {
+				// console.log(data);
+				// console.log(status);
+			});
 
 			// 发送登录
 			socket.emit('user-login', {"type":"login", "token": login_token}, console.log);
@@ -85,7 +85,7 @@ export default {
 		// 断开连接
 		socket.on('disconnect', reason => {
 			// 清除定时器
-			window.clearInterval(start_setInterval);
+			clearInterval(start_setInterval);
 			
 			console.log('断开连接', reason);
 		});

@@ -209,12 +209,22 @@
 				let blackContent = this.item.user_info.is_black ? '是否将该用户移出黑名单' : '拉黑后再广场将看不到TA的动态，TA将无法对你发消息、评论。';
 				console.log('---this.item---')
 				console.log(this.item)
+				console.log(this.item.user_info.is_self);
 				uni.showActionSheet({
 					itemList: this.item.user_info.is_self ? [blackTitle, '举报'] : [atteTitle, blackTitle, '举报'],
 					success: res => {
-						if (res.tapIndex == 0) return this.$emit('follow', this.item);
-						if (res.tapIndex == 2) return this.$emit('report', this.item);
+						if (res.tapIndex == 0){
+							return this.item.user_info.is_self ? uni.showModal({
+								content: blackContent,
+								success: res => {
+									if (res.confirm) {
+										this.$emit('black', this.item)
+									}
+								}
+							}) : this.$emit('follow', this.item);
+						}
 						if (res.tapIndex == 1) {
+							this.item.user_info.is_self ? this.$emit('report', this.item) : 
 							uni.showModal({
 								content: blackContent,
 								success: res => {
@@ -225,6 +235,7 @@
 							});
 							return
 						}
+						if (res.tapIndex == 2) return this.$emit('report', this.item);
 					}
 				});
 			},

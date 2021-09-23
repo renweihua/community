@@ -41,7 +41,7 @@
 				<view class="flex_grow">
 					<input type="text" class="content" v-model="content" placeholder="请输入聊天内容"
 					 placeholder-style="color:#DDD;" :cursor-spacing="6" 
-					 @keyup.enter.native="sendMsg"
+					 @keyup.enter="sendMsg"
 					 :confirm-type="'send'"
 					@confirm="sendMsg"
 					  />
@@ -325,12 +325,14 @@ export default {
 				if (this.ajax.page > 1) {
 					// 非第一页，则取历史消息数据的第一条信息元素
 					if (lists.data.length > 0) selector = `#msg-${this.messages_list[0].record_id}`;
+					// 将获取到的消息数据合并到消息数组中
+					this.messages_list = [...lists.data, ...this.messages_list];
 				} else {
 					// 第一页，则取当前消息数据的最后一条信息元素
 					if (lists.data.length > 0) selector = `#msg-${lists.data[lists.data.length - 1].record_id}`;
+					// 将获取到的消息数据合并到消息数组中
+					this.messages_list = lists.data;
 				}
-				// 将获取到的消息数据合并到消息数组中
-				this.messages_list = [...lists.data, ...this.messages_list];
 				// 数据挂载后执行，不懂的请自行阅读 Vue.js 文档对 Vue.nextTick 函数说明。
 				this.$nextTick(() => {
 					// 设置当前滚动的位置

@@ -120,7 +120,6 @@ export default {
 		},
 		demoLoad() {
 			console.log('---onload---');
-			this.getListData();
 			this.getWindowSize();
 
 			// #ifdef H5
@@ -129,19 +128,6 @@ export default {
 				e.preventDefault();
 			};
 			// #endif
-		},
-		/* 获取列表数据 */
-		getListData() {
-			let list = [];
-			for (let i = 0; i < 20; i++) {
-				list.push({
-					name: `第${i + 1}个用户`,
-					time: '5月20日',
-					info: `这是第${i + 1}个用户的聊天信息`
-				});
-			}
-			this.userList = list;
-			console.log(this.userList);
 		},
 		/* 获取窗口尺寸 */
 		getWindowSize() {
@@ -190,7 +176,7 @@ export default {
 		/* 选择菜单 */
 		pickerMenu(e) {
 			let index = Number(e.currentTarget.dataset.index);
-			console.log(`第${this.pickerUserIndex + 1}个用户,第${index + 1}个按钮`);
+			// console.log(`第${this.pickerUserIndex + 1}个用户,第${index + 1}个按钮`);
 			// 在这里开启你的代码秀
 
 			uni.showToast({
@@ -218,6 +204,7 @@ export default {
 		/// 上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10
 		upCallback(mescroll) {
 			this.demoLoad();
+			
 			friends().then(res => {
 				this.users = res.data;
 			})
@@ -228,10 +215,10 @@ export default {
 		},
 		// 获取新数据
 		fnRefreshData() {
-			// this.mescroll.scrollTo(0, 300);
-			// setTimeout(() => {
-			// 	this.mescroll.resetUpScroll(true);
-			// }, 1000);
+			this.mescroll.scrollTo(0, 300);
+			setTimeout(() => {
+				this.mescroll.resetUpScroll(true);
+			}, 1000);
 		}
 	}
 };
