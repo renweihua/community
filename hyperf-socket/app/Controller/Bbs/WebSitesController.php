@@ -12,7 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class WebSitesController extends BaseController
 {
-
     /**
      * 首页启动图
      *

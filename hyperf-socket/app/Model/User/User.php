@@ -16,7 +16,7 @@ class User extends Model
      *
      * @return \Hyperf\Database\Model\Relations\HasOne
      */
-    public function user_info()
+    public function userInfo()
     {
         return $this->hasOne(UserInfo::class, $this->primaryKey);
     }
@@ -56,6 +56,18 @@ class User extends Model
     public function getUserByEmail(string $user_email)
     {
         return $this->query()->where('user_email', $user_email)->first();
+    }
+
+    /**
+     * 通过手机号进行搜索
+     *
+     * @param  string  $user_mobile
+     *
+     * @return \Hyperf\Database\Model\Builder|\Hyperf\Database\Model\Model|object|null
+     */
+    public function getUserByMobile(string $user_mobile)
+    {
+        return $this->query()->where('user_mobile', $user_mobile)->first();
     }
 
     /**

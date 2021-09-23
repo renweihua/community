@@ -12,7 +12,6 @@ use Hyperf\DbConnection\Db;
 class FriendApply extends Model
 {
     protected $primaryKey = 'apply_id';
-    public    $is_delete  = 1;// 是否删除：0.假删除；1.真删除【默认全部假删除】
 
     public function friend()
     {

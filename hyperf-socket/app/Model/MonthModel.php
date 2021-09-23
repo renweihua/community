@@ -25,7 +25,7 @@ class MonthModel extends Model
      * @param  string  $month
      * @param  string  $model
      */
-    public function setMonthTable(string $month = '') : void
+    public function setMonthTable(string $month = '')
     {
         $month = empty($month) ? date(self::MONTH_FORMAT) : $month;
         // 替换为日期格式，否则将无法转化为时间戳（有效的日期格式 - 拼接才可以）
@@ -35,6 +35,7 @@ class MonthModel extends Model
         if ( $month > str_replace('_', '-', self::MIN_TABLE) ) {
             $this->setTable($this->getOldTable() . '_' . date(self::MONTH_FORMAT, strtotime($month)));
         }
+        return $this;
     }
 
     /**

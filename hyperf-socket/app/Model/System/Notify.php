@@ -11,6 +11,7 @@ use Hyperf\DbConnection\Db;
 class Notify extends MonthModel
 {
     protected $primaryKey = 'notify_id';
+    protected $is_delete  = 0;
 
     public function user()
     {

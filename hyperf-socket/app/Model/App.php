@@ -14,6 +14,7 @@ namespace App\Model;
 class App extends Model
 {
     protected $primaryKey = 'app_id';
+    protected $is_delete  = 0;
 
     /**
      * 生成唯一的key

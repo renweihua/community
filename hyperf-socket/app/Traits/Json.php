@@ -51,6 +51,16 @@ trait Json
         return $this->myAjaxReturn($other);
     }
 
+    public function setResponse($response)
+    {
+        $this->response = $response;
+    }
+
+    public function setHttpCode(int $http_code): void
+    {
+        $this->response->withStatus($http_code);
+    }
+
     public function myAjaxReturn($other)
     {
         $data = array_merge([
@@ -61,6 +71,7 @@ trait Json
         // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
         $data['message'] = $data['msg'];
         $data['code'] = $data['status'];
+
         return $this->response->json($data);
     }
 }

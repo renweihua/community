@@ -13,7 +13,7 @@ use App\Utils\Cache;
 class Banner extends Model
 {
     protected $primaryKey = 'banner_id';
-    public $is_delete  = 0;
+    protected $is_delete  = 0;
 
     public function getBannerCoverAttribute($key)
     {

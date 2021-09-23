@@ -7,7 +7,7 @@ use App\Model\Model;
 class Topic extends Model
 {
     protected $primaryKey = 'topic_id';
-    protected $is_delete = 0;
+    protected $is_delete  = 0;
 
     public function isFollow()
     {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
+use App\Exception\Exception;
 use Hyperf\Di\Annotation\Inject;
 use App\Constants\StatusConst;
 use Hyperf\ExceptionHandler\ExceptionHandler;
@@ -35,6 +36,17 @@ class AppValidationExceptionHandler extends ExceptionHandler
 
         $msg = 'error';
 
+        // Error 监听器
+        if ($throwable instanceof \ErrorException){
+            $msg = $throwable->getMessage();
+        }
+
+        // 自定义的异常类监听
+        if ($throwable instanceof Exception){
+            $msg = $throwable->getMessage();
+        }
+
+        // 验证器的错误类
         if ($throwable instanceof ValidationException){
             $msg = $throwable->validator->errors()->first();
         }

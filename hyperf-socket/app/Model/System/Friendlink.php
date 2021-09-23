@@ -14,7 +14,7 @@ use App\Utils\Cache;
 class Friendlink extends Model
 {
     protected $primaryKey = 'link_id';
-    public $is_delete = 0;
+    protected $is_delete = 0;
 
     public function cover()
     {

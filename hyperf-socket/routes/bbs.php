@@ -14,10 +14,34 @@ declare(strict_types = 1);
 use Hyperf\HttpServer\Router\Router;
 
 use \App\Controller\Bbs\WebSitesController;
+use App\Controller\Bbs\AuthController;
 
 Router::addGroup(
     '/api/',
     function() {
+        // Auth
+        Router::addGroup('auth/', function () {
+            // 邮箱注册，发送验证码
+            Router::get('getCodeByEmail', [AuthController::class, 'getCodeByEmail']);
+            // 注册
+            Router::post('register', [AuthController::class, 'register']);
+            // 登录
+            Router::addRoute(['get', 'post'], 'login', [AuthController::class, 'login']);
+            // 登录会员信息
+            Router::addRoute(['get', 'post'], 'me', [AuthController::class, 'me']);
+            // 退出登录
+            Router::post('logout', [AuthController::class, 'logout']);
+        });
+
+        // 登录会员
+        Router::addGroup('', function () {
+
+        }, [
+            'middleware' => [
+                App\Middleware\CorsMiddleware::class,
+            ],
+        ]);
+
         // 其它系统配置
         Router::addGroup('', function () {
             // 首页启动图

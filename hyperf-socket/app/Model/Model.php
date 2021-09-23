@@ -70,7 +70,7 @@ abstract class Model extends BaseModel
      * @var array
      */
     protected $appends      = [];
-    public    $is_delete    = 0;// 是否删除：0.假删除；1.真删除【默认全部假删除】
+    protected    $is_delete    = 1;// 是否删除：0.假删除；1.真删除【默认全部假删除】
     public    $delete_field = 'is_delete';//删除字段
     // 开启月分表
     const MONTH_SUB_TABLE = false;

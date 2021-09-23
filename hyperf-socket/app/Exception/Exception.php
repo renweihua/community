@@ -12,10 +12,14 @@ declare(strict_types = 1);
 
 namespace App\Exception;
 
+use App\Traits\Json;
+
 class Exception extends \Exception
 {
-    public function __construct(string $message = null)
+    use Json;
+
+    public function __construct(string $message = null, $code = 0)
     {
-        parent::__construct($message);
+        parent::__construct($message, $code = 0);
     }
 }

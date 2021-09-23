@@ -9,6 +9,7 @@ namespace App\Model;
 class FileModel extends Model
 {
     protected $primaryKey = 'file_id';
+    protected $is_delete  = 0;
     // 追加字段：完整展示图片的路径
     protected $appends = ['file_path'];
 

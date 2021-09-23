@@ -15,6 +15,7 @@ use App\Model\Model;
 class Config extends Model
 {
     protected $primaryKey = 'config_id';
+    protected $is_delete  = 0;
 
     /**
      * 配置同步到config文件中

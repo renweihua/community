@@ -2,10 +2,10 @@
 
 namespace App\Service\Bbs;
 
-use App\Exceptions\InvalidRequestException;
-use App\Models\Dynamic\Dynamic;
-use App\Models\Dynamic\DynamicComment;
-use App\Models\Dynamic\DynamicPraise;
+use App\Exception\InvalidRequestException;
+use App\Model\Dynamic\Dynamic;
+use App\Model\Dynamic\DynamicComment;
+use App\Model\Dynamic\DynamicPraise;
 use App\Service\Service;
 
 class DynamicService extends Service

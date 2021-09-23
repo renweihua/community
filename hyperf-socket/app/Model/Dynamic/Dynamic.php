@@ -84,7 +84,6 @@ use Laravel\Scout\Searchable;
  */
 class Dynamic extends Model
 {
-
     use Filterable;
 
 //    use Searchable;
