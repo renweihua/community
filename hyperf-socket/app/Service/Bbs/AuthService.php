@@ -133,7 +133,7 @@ class AuthService extends Service
             $user_info = array_merge($user_info, [
                 'user_id' => $user->user_id,
                 'user_uuid' => UserInfo::getUniqueUuid(),
-                'user_avatar' => !$third_login ? Storage::url(cnpscy_config('site_web_logo')) : $params['user_avatar'],
+                'user_avatar' => !$third_login ? get_file_url(cnpscy_config('site_web_logo')) : $params['user_avatar'],
                 'user_sex' => 0,
                 'user_grade' => 1, // 会员等级
                 'last_actived_time' => time(), // 上一次在线时间

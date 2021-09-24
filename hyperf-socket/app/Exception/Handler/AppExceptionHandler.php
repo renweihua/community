@@ -49,10 +49,12 @@ class AppExceptionHandler extends ExceptionHandler
         //自定义异常处理
         // $this->setResponseServer($response);
         return $this->errorJson($throwable->getMessage(), StatusConst::ERROR, [], [
-            $throwable->getMessage(),
-            $throwable->getLine(),
-            $throwable->getFile(),
-            $throwable->getCode()
+            'error' => [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'code' => $throwable->getCode()
+            ]
         ]);
     }
 

@@ -8,6 +8,7 @@ use App\Middleware\ExecutionMiddleware;
 use App\Utils\ExecutionTime;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Response;
+use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
 trait Json
 {
@@ -66,13 +67,14 @@ trait Json
     public function myAjaxReturn($other)
     {
         $data = array_merge([
-            'data' => $this->data,
+            'data' => is_null($this->data) ? [] : $this->data,
             'status' => $this->status,
             'msg' => $this->msg
         ], $other);
-        // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
-        $data['message'] = $data['msg'];
-        $data['code'] = $data['status'];
+
+        // // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
+        // $data['message'] = $data['msg'];
+        // $data['code'] = $data['status'];
 
         // 执行时长
         $data['execution_time'] = microtime(true) - ExecutionTime::$start_time;

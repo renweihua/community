@@ -9,11 +9,13 @@ use App\Library\Encrypt\Rsa;
 use App\Model\User\User;
 use App\Model\User\UserInfo;
 use App\Traits\Json;
+use Hyperf\Utils\Context;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
 class CheckAuth implements MiddlewareInterface
 {
@@ -24,14 +26,14 @@ class CheckAuth implements MiddlewareInterface
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(HttpResponse $response)
     {
-        $this->container = $container;
+        $this->setResponse($response);
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $token = $request->header('Authorization');
+        $token = $request->getHeader('Authorization');
         if (empty($token)){
             return $this->errorJson('请先登录！', -1);
         }
@@ -98,8 +100,16 @@ class CheckAuth implements MiddlewareInterface
                     break;
             }
 
-            // 把登录会员信息追加到 request类
-            $request->attributes->set('login_user', $user);
+            /**
+             * 把登录会员信息追加到 request类
+             *
+             * 协程上下文：https://hyperf.wiki/2.0/#/zh-cn/coroutine?id=%e5%8d%8f%e7%a8%8b%e4%b8%8a%e4%b8%8b%e6%96%87
+             *
+             * 避免协程间数据混淆：https://hyperf.wiki/2.0/#/zh-cn/controller?id=%e9%81%bf%e5%85%8d%e5%8d%8f%e7%a8%8b%e9%97%b4%e6%95%b0%e6%8d%ae%e6%b7%b7%e6%b7%86
+             */
+            $request = Context::get(ServerRequestInterface::class);
+            $request = $request->withAttribute('login_user', $user);
+            Context::set(ServerRequestInterface::class, $request);
 
         } catch (AuthTokenException $e) {
             return $this->errorJson($e->getMessage());

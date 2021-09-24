@@ -4,6 +4,8 @@ namespace App\Model\Dynamic;
 
 use App\Model\Model;
 use App\Model\User\UserInfo;
+use Hyperf\Database\Model\Events\Created;
+use Hyperf\Database\Model\Events\Deleted;
 
 class DynamicComment extends Model
 {
@@ -11,26 +13,23 @@ class DynamicComment extends Model
     protected $is_delete  = 0;
     protected $appends = ['comment_time'];
 
-    protected static function boot()
+    public function created(Created $event)
     {
-        parent::boot();
-
         // 新增与删除评论时，调用动态的统计缓存字段
-        $saveContent = function (self $dynamicPraise) {
-            $dynamicPraise->dynamic->refreshCache();
-        };
+        $this->dynamic->refreshCache();
+    }
 
-        static::created($saveContent);
+    public function deleted(Deleted $event)
+    {
+        // 新增与删除评论时，调用动态的统计缓存字段
+        $this->dynamic->refreshCache();
+    }
 
-        static::deleted($saveContent);
-
-        static::saving(function ($content) {
-            if ($content->isDirty('comment_markdown') && !empty($content->comment_markdown)) {
-                $content->comment_content = self::toHTML($content->comment_markdown);
-            }
-
-            // $content->body = Purifier::clean($content->body);
-        });
+    public function saving(Deleted $event)
+    {
+        if ($this->isDirty('comment_markdown') && !empty($this->comment_markdown)) {
+            $this->comment_content = self::toHTML($this->comment_markdown);
+        }
     }
 
     public function dynamic()

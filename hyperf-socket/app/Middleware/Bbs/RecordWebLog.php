@@ -42,7 +42,7 @@ class RecordWebLog implements MiddlewareInterface
             $ip_agent = get_client_info();
 
             $user_id = 0;
-            if($token = $request->header('Authorization')){
+            if($token = $request->getHeader('Authorization')){
                 $token_user = Rsa::privDecrypt($token);
                 if ($token_user){
                     $user_id = $token_user->user_id ?? 0;

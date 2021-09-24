@@ -31,7 +31,7 @@ class DynamicService extends Service
      *
      * @return array
      */
-    public function follows(int $login_user_id)
+    public function follows(int $login_user_id, $request)
     {
         $lists = Dynamic::check()
             ->whereHas('fanUser', function($query) use ($login_user_id){
@@ -55,7 +55,7 @@ class DynamicService extends Service
                 ]
             )
             ->orderBy('dynamic_id', 'DESC')
-            ->paginate($this->getLimit(request()->input('limit', 10)));
+            ->paginate($this->getLimit($request->input('limit', 10)));
         foreach ($lists as $item) {
             // 是否已赞
             $item->is_praise = $login_user_id == 0 ? false : ($item->isPraise ? true : false);
@@ -109,9 +109,37 @@ class DynamicService extends Service
      */
     protected function getDynamics($request, int $login_user_id = 0, array $screen_params = [])
     {
-        $lists = Dynamic::check()->filter($request->all())
+        $lists = Dynamic::check()
                     ->select('dynamic_id', 'user_id', 'topic_id', 'dynamic_title', 'dynamic_images', 'video_path', 'video_info', 'created_time', 'dynamic_type', 'cache_extends', 'dynamic_content')
                     ->where(function($query)use($screen_params, $request){
+                        // tab筛选
+                        if ($tab = $request->input('tab', '')){
+                            switch ($tab) {
+                                case 'default':
+                                    $query->latest('dynamic_id');
+                                    break;
+                                case 'featured': // 精选/加精
+                                    $query->where('excellent_time', '>', 0)->latest('excellent_time');
+                                    break;
+                                case 'recent':
+                                    $query->latest()->latest('updated_time');
+                                    break;
+                                case 'zeroComment': // 零评论
+                                    $query->doesntHave('comments')->latest();
+                                    break;
+                            }
+                        }
+                        // 标题筛选
+                        if ($dynamic_title = $request->input('dynamic_title', '')) {
+                            $query->where('dynamic_title', 'LIKE', "%{$dynamic_title}%");
+                        }
+                        if ($name = $request->input('name', '')) {
+                            $query->where('dynamic_title', 'LIKE', "%{$name}%");
+                        }
+                        // 话题筛选
+                        if ($topic_id = $request->input('topic_id', 0)) {
+                            if ($topic_id > 0) $query->where('topic_id', $topic_id);
+                        }
                         // 筛选所属会员动态
                         if (isset($screen_params['user_id']) && $screen_params['user_id'] > 0) $query->where('user_id', $screen_params['user_id']);
                         // 筛选动态类型
@@ -150,7 +178,7 @@ class DynamicService extends Service
                         ]
                     )
                     ->orderBy('dynamic_id', 'DESC')
-                    ->paginate($this->getLimit(request()->input('limit', 10)));
+                    ->paginate($this->getLimit($request->input('limit', 10)));
         foreach ($lists as $item) {
             // 是否已赞
             $item->is_praise = $login_user_id == 0 ? false : ($item->isPraise ? true : false);

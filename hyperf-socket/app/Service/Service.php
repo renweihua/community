@@ -59,4 +59,27 @@ abstract class Service
         $limit = $limit > 100 ? 100 : $limit;
         return $limit;
     }
+
+    /**
+     * 分页数据结构，格式化处理
+     *
+     * @param $paginate
+     *
+     * @return array
+     */
+    public function getPaginateFormat($paginate): array
+    {
+        $paginate = $paginate->toArray();
+        $paginate['count_page'] = $paginate['last_page'];
+        return $paginate;
+        return [
+            'current_page' => $paginate->currentPage(),
+            'per_page' => $paginate->perPage(),
+            'count_page' => $paginate->lastPage(),
+            'total' => $paginate->total(),
+            'data' => $paginate->items(),
+            'path' => $paginate->path(),
+            'first_page_url' => $paginate->get(),
+        ];
+    }
 }

@@ -21,6 +21,7 @@ class AuthException extends Exception
         UserLoginLog::getInstance()->add($this->user_id, 0, $this->msg);
 
         $this->setHttpCode(401);
+
         return $this->errorJson($this->msg);
     }
 }

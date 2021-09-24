@@ -18,7 +18,35 @@ class User extends Model
      */
     public function userInfo()
     {
-        return $this->hasOne(UserInfo::class, $this->primaryKey);
+        return $this->hasOne(UserInfo::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function userOtherlogin()
+    {
+        return $this->hasOne(UserOtherlogin::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'login_token'
+    ];
+
+    /**
+     * 设置密码时，进行hash加密
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function setPasswordAttribute($value)
+    {
+        if ( !empty($value) ) $value = 123456;
+        return $this->attributes['password'] = hash_encryption($value);
     }
 
     /**
@@ -68,19 +96,6 @@ class User extends Model
     public function getUserByMobile(string $user_mobile)
     {
         return $this->query()->where('user_mobile', $user_mobile)->first();
-    }
-
-    /**
-     * 设置密码时，进行hash加密
-     *
-     * @param $value
-     *
-     * @return string
-     */
-    public function setPasswordAttribute($value)
-    {
-        if ( !empty($value) ) $value = 123456;
-        return $this->attributes['password'] = hash_encryption($value);
     }
 
     public function detail(int $user_id, $with = [])

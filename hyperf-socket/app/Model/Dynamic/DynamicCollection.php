@@ -3,25 +3,32 @@
 namespace App\Model\Dynamic;
 
 use App\Model\Model;
+use Hyperf\Database\Model\Events\Created;
+use Hyperf\Database\Model\Events\Deleted;
 
 class DynamicCollection extends Model
 {
     protected $primaryKey = 'relation_id';
     public $timestamps = false;
 
-    protected static function boot()
+    /**
+     * 模型事件
+     */
+
+    public function created(Created $event)
     {
-        parent::boot();
-
         // 新增与删除收藏时，调用动态的统计缓存字段
-        $saveContent = function (self $dynamicPraise) {
-            $dynamicPraise->dynamic->refreshCache();
-        };
-
-        static::created($saveContent);
-
-        static::deleted($saveContent);
+        $this->dynamic->refreshCache();
     }
+
+    public function deleted(Deleted $event)
+    {
+        // 新增与删除收藏时，调用动态的统计缓存字段
+        $this->dynamic->refreshCache();
+    }
+
+
+
 
     public function dynamic()
     {
