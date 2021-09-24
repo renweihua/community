@@ -15,6 +15,7 @@ use Hyperf\HttpServer\Router\Router;
 
 use \App\Controller\Bbs\WebSitesController;
 use App\Controller\Bbs\AuthController;
+use App\Middleware\Bbs\RecordWebLog;
 
 Router::addGroup(
     '/api/',
@@ -36,11 +37,7 @@ Router::addGroup(
         // 登录会员
         Router::addGroup('', function () {
 
-        }, [
-            'middleware' => [
-                App\Middleware\CorsMiddleware::class,
-            ],
-        ]);
+        });
 
         // 其它系统配置
         Router::addGroup('', function () {
@@ -61,8 +58,7 @@ Router::addGroup(
     },
     [
         'middleware' => [
-            App\Middleware\CorsMiddleware::class,
-            App\Middleware\Bbs\RecordWebLog::class,
+            RecordWebLog::class,
         ],
     ]
 );

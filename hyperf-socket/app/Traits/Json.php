@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Traits;
 
+use App\Middleware\ExecutionMiddleware;
+use App\Utils\ExecutionTime;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Response;
 
@@ -71,6 +73,9 @@ trait Json
         // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
         $data['message'] = $data['msg'];
         $data['code'] = $data['status'];
+
+        // 执行时长
+        $data['execution_time'] = microtime(true) - ExecutionTime::$start_time;
 
         return $this->response->json($data);
     }

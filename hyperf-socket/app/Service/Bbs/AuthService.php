@@ -206,7 +206,7 @@ class AuthService extends Service
      * @return array
      * @throws AuthException
      */
-    public function login($params, bool $third_login = false, float $execution_start_time = 0): array
+    public function login($params, bool $third_login = false): array
     {
         $userInstance = User::getInstance();
         if (!$third_login){

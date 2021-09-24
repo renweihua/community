@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Middleware\Bbs;
 
 use App\Library\Encrypt\Rsa;
+use App\Middleware\ExecutionMiddleware;
 use App\Model\Log\WebLog;
+use App\Utils\ExecutionTime;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -56,7 +58,7 @@ class RecordWebLog implements MiddlewareInterface
                     'created_time' => time(),
                     'log_action'   => $request->getUri(),
                     'log_method'   => $request->getMethod(),
-                    'log_duration' => microtime(true) - LARAVEL_START,
+                    'log_duration' => microtime(true) - ExecutionTime::$start_time,
                     'request_url'  => get_request_url(),
                     'this_url'     => get_this_url(),
                 ]

@@ -4,7 +4,7 @@ namespace App\Model\Log;
 
 use App\Model\MonthModel;
 use App\Model\Rabc\Admin;
-use Illuminate\Support\Facades\URL;
+use App\Utils\ExecutionTime;
 
 class AdminLog extends MonthModel
 {
@@ -34,7 +34,7 @@ class AdminLog extends MonthModel
             'created_time' => time(),
             'log_action'   => request()->route()->getActionName(),
             'log_method'   => $method,
-            'log_duration' => microtime(true) - LARAVEL_START,
+            'log_duration' => microtime(true) - ExecutionTime::$start_time,
             'request_url'     => URL::full() ?? get_this_url(),
         ]);
     }

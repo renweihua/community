@@ -4,6 +4,7 @@ namespace App\Model\Log;
 
 use App\Model\MonthModel;
 use App\Model\Rabc\Admin;
+use App\Utils\ExecutionTime;
 
 class AdminLoginLog extends MonthModel
 {
@@ -31,7 +32,7 @@ class AdminLoginLog extends MonthModel
             'description' => $description,
             'log_action'   => request()->route()->getActionName(),
             'log_method'   => request()->getMethod(),
-            'log_duration' => microtime(true) - LARAVEL_START,
+            'log_duration' => microtime(true) - ExecutionTime::$start_time,
             'request_data' => json_encode(request()->all()),
         ]);
     }

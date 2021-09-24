@@ -3,6 +3,7 @@
 namespace App\Model\Log;
 
 use App\Model\MonthModel;
+use App\Utils\ExecutionTime;
 
 class UserLoginLog extends MonthModel
 {
@@ -18,7 +19,7 @@ class UserLoginLog extends MonthModel
             'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             'log_status' => $log_status,
             'description' => $description,
-            // 'log_duration' => microtime(true) - $execution_start_time, // 常驻进程，暂时无法计算
+            'log_duration' => microtime(true) - ExecutionTime::$start_time,
             'request_data' => json_encode($params),
         ]);
     }
