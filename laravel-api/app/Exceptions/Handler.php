@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Traits\Json;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -64,6 +65,11 @@ class Handler extends ExceptionHandler
         if($exception instanceof NotFoundHttpException){
             $this->setHttpCode(404);
             return $this->errorJson("路由{{$request->path()}}不存在！");
+        }
+
+        // 控制器不存在
+        if ($exception instanceof BindingResolutionException){
+            return $this->errorJson($exception->getMessage());
         }
 
         // 模型不存在
