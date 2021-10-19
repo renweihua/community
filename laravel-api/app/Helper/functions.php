@@ -86,6 +86,7 @@ if ( !function_exists('text_hidden') ) {
         $strlen = mb_strlen($text, 'utf-8');
         $firstStr = mb_substr($text, 0, $show_length, 'utf-8');
         $lastStr = mb_substr($text, -2, $show_length, 'utf-8');
+        if ($strlen <= 1) return $text;
         return ($strlen == 2) ? $firstStr . str_repeat('*', mb_strlen($text, 'utf-8') - $show_length) : $firstStr . str_repeat("*", $strlen - $show_length * 2) . $lastStr;
     }
 }
