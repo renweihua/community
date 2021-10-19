@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Services;
 
+use App\Exceptions\Exception;
 use App\Models\MonthModel;
 use App\Services\Service;
 
@@ -65,6 +66,9 @@ class BaseService extends Service
      */
     public function create(array $params)
     {
+        $this->setError('新增成功！');
+        // 新增时，移除唯一标识
+        unset($params[$this->model->getKeyName()]);
         return $this->detail = $this->model->create($this->model->setFilterFields($params));
     }
 
@@ -78,7 +82,13 @@ class BaseService extends Service
     public function update(array $params)
     {
         $primaryKey = $this->model->getKeyName();
+        if (!isset($params[$primaryKey])){
+            throw new Exception('请设置主键');
+        }
         $this->detail = $this->model->find($params[$primaryKey]);
+        if (!$this->detail){
+            throw new Exception('编辑信息不存在！');
+        }
         foreach ($this->model->setFilterFields($params) as $field => $value){
             $this->detail->$field = $value ?? '';
         }
