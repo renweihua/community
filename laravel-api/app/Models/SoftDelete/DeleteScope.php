@@ -44,12 +44,12 @@ class DeleteScope implements Scope
      */
     public function extend(Builder $builder)
     {
-        foreach ($this->extensions as $extension) {
-            $this->{"add{$extension}"}($builder);
-        }
-
-        // 假删除时，才需要更新字段状态
+        // 假删除时，才需要调用扩展方法与更新字段状态
         if ($builder->getModel()->getIsDelete() == 0){
+            foreach ($this->extensions as $extension) {
+                $this->{"add{$extension}"}($builder);
+            }
+
             $builder->onDelete(function (Builder $builder) {
                 $column = $this->getDeletedAtColumn($builder);
 

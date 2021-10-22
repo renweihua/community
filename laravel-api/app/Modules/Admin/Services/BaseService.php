@@ -120,11 +120,7 @@ class BaseService extends Service
         if ($this->model instanceof MonthModel && isset($params['month'])){
             $this->model = $this->model->setMonthTable($params['month']);
         }
-        if ($this->model->getIsDelete() == 0){
-            return $this->model->whereIn($primaryKey, $ids)->update([$this->model->getDeleteField() => 1]);
-        }else{
-            return $this->model->whereIn($primaryKey, $ids)->delete();
-        }
+        return $this->model->whereIn($primaryKey, $ids)->delete();
     }
 
     /**
