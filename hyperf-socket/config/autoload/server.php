@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 use Hyperf\Server\Server;
 use Hyperf\Server\Event;
-use Hyperf\Server\SwooleEvent;
 use Swoole\Constant;
 
 return [
@@ -36,9 +35,9 @@ return [
             'port' => 9502,
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
-                SwooleEvent::ON_HAND_SHAKE => [Hyperf\WebSocketServer\Server::class, 'onHandShake'],
-                SwooleEvent::ON_MESSAGE => [Hyperf\WebSocketServer\Server::class, 'onMessage'],
-                SwooleEvent::ON_CLOSE => [Hyperf\WebSocketServer\Server::class, 'onClose'],
+                Event::ON_HAND_SHAKE => [Hyperf\WebSocketServer\Server::class, 'onHandShake'],
+                Event::ON_MESSAGE => [Hyperf\WebSocketServer\Server::class, 'onMessage'],
+                Event::ON_CLOSE => [Hyperf\WebSocketServer\Server::class, 'onClose'],
             ],
             'settings' => [
                 'open_websocket_protocol' => false,

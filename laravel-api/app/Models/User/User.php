@@ -99,7 +99,7 @@ class User extends Model
     /**
      * 通过手机号进行搜索
      *
-     * @param  string  $user_email
+     * @param  string  $user_mobile
      *
      * @return mixed
      */

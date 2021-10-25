@@ -3,6 +3,8 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Models\Dynamic\Dynamic;
+use App\Models\Dynamic\DynamicComment;
+use App\Models\Dynamic\Topic;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -33,6 +35,18 @@ class NotifyService extends Service
         });
 
         return compact('system_unreads', 'praise_unreads', 'comment_unreads');
+    }
+
+    /**
+     * 我的所有消息通知
+     *
+     * @param  int  $login_user_id
+     *
+     * @return array
+     */
+    public function getAllNotify(int $login_user_id)
+    {
+        return $this->getNotify($login_user_id);
     }
 
     /**
@@ -86,6 +100,7 @@ class NotifyService extends Service
         $notifyInstance = Notify::getInstance();
 
         $paginates = $notifyInstance->setMonthTable($search_month)
+            ->filter(request()->all())
             ->where('user_id', $login_user_id)
             ->where($where)
             ->with(['sender'])
@@ -95,7 +110,7 @@ class NotifyService extends Service
         /**
          * 消息数据格式处理
          */
-        $user_ids = $dynamic_ids = [];
+        $topic_ids = $user_ids = $dynamic_ids = $comment_ids = [];
         $user_infos = $dynamics = [];
         // 设置已读数量
         $set_read_nums = 0;
@@ -103,9 +118,18 @@ class NotifyService extends Service
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $dynamic_ids[] = $item->target_id;
+                    // 评论动态
+                    if(
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']
+                        ||
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE']
+                    ) $comment_ids[] = $item->extend_id;
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $user_ids[] = $item->sender_id;
+                    break;
+                case $notifyInstance::TARGET_TYPE['SUBSCRIBE']: // 订阅话题
+                    $topic_ids[] = $item->target_id;
                     break;
             }
 
@@ -123,15 +147,33 @@ class NotifyService extends Service
         if (!empty($user_ids)){
             $user_infos = UserInfo::getListByIds($user_ids);
         }
+        if (!empty($comment_ids)){
+            $comment_infos = DynamicComment::getListByIds($comment_ids);
+        }
+        if (!empty($topic_ids)){
+            $topic_infos = Topic::getListByIds($topic_ids);
+        }
         foreach ($paginates as $item){
             switch ($item->target_type){
                 case $notifyInstance::TARGET_TYPE['DYNAMIC']: // 动态
                     $item->relation = (object)$dynamics[$item->target_id];
+                    // 评论
+                    if(
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT']
+                        ||
+                        $item->dynamic_type == $notifyInstance::DYNAMIC_TARGET_TYPE['COMMENT_PRAISE']
+                    ){
+                        $item->comment = (object)($comment_infos[$item->extend_id] ?? []);
+                    }
                     $notifyInstance->setExplain($item);
                     break;
                 case $notifyInstance::TARGET_TYPE['FOLLOW']: // 关注
                     $item->relation = (object)$user_infos[$item->sender_id];
                     $item->explain = '关注了您';
+                    break;
+                case $notifyInstance::TARGET_TYPE['SUBSCRIBE']: // 订阅话题
+                    $item->relation = (object)$topic_infos[$item->target_id];
+                    $item->explain = '订阅话题{' . ($item->relation->topic_name ?? '') . '}';
                     break;
                 default:
                     $item->relation = (object)[];

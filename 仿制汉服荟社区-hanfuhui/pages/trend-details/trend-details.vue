@@ -68,12 +68,12 @@
 					</block>
 					<view class="f24r c111 fcenter bgf8 w128r ptb18r" @tap="fnTopList">
 						{{ dynamic.is_praise ? '已赞' : '赞' }}
-						<text class="f24r cbrown ml18r">{{ dynamic.cache_extends.praise_count }}</text>
+						<text class="f24r cbrown ml18r">{{ dynamic.cache_extends ? dynamic.cache_extends.praises_count : 0}}</text>
 					</view>
 				</view>
 			</view>
 			<!-- 评论区 -->
-			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ dynamic.cache_extends.comment_count || 0 }}）</view>
+			<view class="plr18r ptb28r f32r fbold c111 bbs2r bgwhite">评论（{{ dynamic.cache_extends ? dynamic.cache_extends.comment_count : 0 }}）</view>
 			<block v-for="(commData, index) in commentListData" :key="index">
 				<comm-cell :info-data="commData" @user="fnUserInfo" @top="fnTopComm" @comm="fnComm" @more="fnMoreComm"></comm-cell>
 			</block>
@@ -87,11 +87,11 @@
 			</view>
 			<view class="plr28r bls2r brs2r" @tap="fnTop">
 				<i-icon type="dianzan" size="48" :color="dynamic.is_praise ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ dynamic.cache_extends.praise_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ dynamic.cache_extends ? dynamic.cache_extends.praises_count : 0 }}</text>
 			</view>
 			<view class="plr28r" @tap="fnSave">
 				<i-icon type="shoucang" size="48" :color="dynamic.is_collection ? '#FF6699' : '#8F8F94'"></i-icon>
-				<text class="f28r cgray ml8r">{{ dynamic.cache_extends.collection_count || 0 }}</text>
+				<text class="f28r cgray ml8r">{{ dynamic.cache_extends ? dynamic.cache_extends.collection_count : 0 }}</text>
 			</view>
 			<view class="pl28r pr8r bls2r" @tap="fnShare"><i-icon type="fenxiang" size="48" color="#8F8F94"></i-icon></view>
 		</view>
@@ -303,16 +303,16 @@ export default {
 				if (!res.status) return;
 				let login_user = this.$store.getters['user/getLoginUserInfoData'];
 				if (filItem.is_praise) {
-					filItem.cache_extends.praise_count--;
+					filItem.cache_extends.praises_count--;
 					this.trendData.is_praise = filItem.is_praise = false;
-					this.trendData.cache_extends.praise_count--;
+					this.trendData.cache_extends.praises_count--;
 					// 点赞列表减头像
 					let filTopList = this.topListData.filter(item => item.user_id != login_user.user_id);
 					this.$store.commit('interact/setTopListData', filTopList);
 				} else {
-					filItem.cache_extends.praise_count++;
+					filItem.cache_extends.praises_count++;
 					this.trendData.is_praise = filItem.is_praise = true;
-					this.trendData.cache_extends.praise_count++;
+					this.trendData.cache_extends.praises_count++;
 					if (login_user.user_id) {
 						// 点赞列表加会员信息
 						this.topListData.unshift({
@@ -329,13 +329,13 @@ export default {
 			if (filItem.is_praise) {
 				delCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.cache_extends.praise_count--;
+					filItem.cache_extends.praises_count--;
 					filItem.is_praise = false;
 				});
 			} else {
 				addCommentTop(filItem.comment_id).then(res => {
 					if (!res.status) return;
-					filItem.cache_extends.praise_count++;
+					filItem.cache_extends.praises_count++;
 					filItem.is_praise = true;
 				});
 			}

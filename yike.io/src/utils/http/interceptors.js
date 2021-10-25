@@ -37,8 +37,6 @@ export default http => {
          * requests
          */
         error => {
-            console.log('interceptors');
-            console.log(error);
             if (!error['response']) {
                 return Promise.reject(error)
             }

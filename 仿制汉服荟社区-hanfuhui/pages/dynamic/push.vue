@@ -6,13 +6,14 @@
 			<slot name="right" />
 		</view>
 		<!--输入的内容-->
-		<view class="uni-input" v-if="dynamic_type != 0">
+		<view class="uni-input mb18r" v-if="dynamic_type != 0">
 			<input v-model="dynamic_title" type="text" value="" placeholder="请输入标题" />
 		</view>
 		<!--输入的内容-->
-		<view class="uni-textarea">
+		<view class="uni-textarea mb18r">
 			<textarea v-model="dynamic_content" placeholder="说点什么吧..." />
 		</view>
+		<view class="background: #F8F8F8;height:1px;"></view>
 		<!--选择图片-->
 		<uploadImage
 		:imageList="imageList"
@@ -20,15 +21,27 @@
 		@previewImage="previewImage"
 		@chooseImage="chooseImage"
 		:max_nums="max_nums"
+		class="mb18r"
 		>
 		</uploadImage>
+		<view class="background: #F8F8F8;height:1px;"></view>
+        <view class="uni-list">
+            <view class="uni-list-cell">
+                <view class="uni-list-cell-left">
+                    所属话题：
+                </view>
+                <view class="uni-list-cell-db">
+                    <picker @change="selectTopic" :value="index" :range="topics" range-key="topic_name">
+                        <view class="uni-input">{{topic_name}}</view>
+                    </picker>
+                </view>
+            </view>
+        </view>
 		<!--弹出公告-->
-		  <uni-popup :show="show">
+		<uni-popup :show="show">
 			   <view class="gonggao" :class="donghua">
 				   <image src="../../static/gonggao/gonggao.png" mode="aspectFit"></image>
 				   <view class="zhuyi">1.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
-				   <view class="zhuyi">2.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
-				   <view class="zhuyi">3.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
 				   <view class="zhuyi">一经核实将被封禁，情节严重者永久封禁！</view>
 				   <button type="default" @tap="ttt">朕知道了</button>
 			   </view>
@@ -37,6 +50,8 @@
 </template>
 
 <script>
+	// 话题列表
+	import { getTopicList } from '@/api/HuibaServer.js';
 	import {
 		batchUploads,
 	} from "@/api/CommonServer.js";
@@ -64,10 +79,16 @@
 		},
 		data() {
 			return {
+				// 话题列表
+				topics: [],
+				index: 0,
+				topic_name: '请选择话题',
+				
 				push_finish: false,
 				fanhui:true,
 				donghua:'animated zoomInDown',
-				show:true,
+				// 是否展示弹窗
+				show: false,
 				yinsi:'所有人可见',
 				imageList: [],
 				image_files:[],
@@ -84,14 +105,25 @@
 				dynamic_title: '',
 				dynamic_content:'',
 				dynamic_type: 0,
+				topic_id: 0,
 			}
 		},
 		onLoad(options) {
 			this.dynamic_type = options.dynamic_type || 0;
 			// dynamic_type == 3：摄影相册，图片数量上限扩大
 			this.max_nums = this.dynamic_type == 3 ? 15 : 9;
+			// 获取话题列表
+			getTopicList().then(res => {
+				this.topics = res.data;
+			});
 		},
 		methods: {
+	        selectTopic: function(e) {
+	        	// 话题Id
+	            this.topic_id = e.target.value;
+	            // 话题名称
+	            this.topic_name = this.topics[e.target.value].topic_name || '';
+	        },
 			onClickRight() {
 				this.$emit('click-right');
 				if (this.pushing) return;
@@ -100,9 +132,10 @@
 					title: '发布中',
 					mask: true
 				})
-				// 启动封面
+				// 批量上传图片
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
+						'topic_id': this.topic_id,
 						'dynamic_title': this.dynamic_title,
 						'dynamic_type': this.dynamic_type,
 						'dynamic_images': files.join(','),

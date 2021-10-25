@@ -23,7 +23,7 @@ class AuthController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCodeByEmail(EmailRequest $request)
+    public function getCodeByEmail(EmailRequest $request): JsonResponse
     {
         $data = $request->all();
 

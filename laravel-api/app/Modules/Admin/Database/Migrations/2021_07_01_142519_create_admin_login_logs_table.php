@@ -20,7 +20,7 @@ class CreateAdminLoginLogsTable extends Migration
             $table->bigIncrements('log_id')->unsigned()->comment('日志Id');
             $table->integer('admin_id')->unsigned()->default(0)->comment('管理员Id');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->string('log_description', 200)->default('')->comment('描述');
             $table->string('log_action', 200)->default('')->comment('请求方法');
             $table->string('log_method', 10)->default('')->comment('请求类型/请求方式');
@@ -35,7 +35,7 @@ class CreateAdminLoginLogsTable extends Migration
             $table->index(['admin_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_login_logs` comment '管理员登录日志表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_login_logs` comment '管理员登录日志表'");
     }
 
     /**

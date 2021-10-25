@@ -185,7 +185,7 @@ export default {
 		upCallback(mescroll) {
 			let params = {
 				topic_id: this.topic_id,
-				ishot: this.current == 0,
+				tab: this.current == 0 ? 'default' : 'recent',
 				// max_id: this.maxID[this.current],
 				page: mescroll.num,
 				limit: mescroll.size
@@ -217,7 +217,7 @@ export default {
 					mescroll.endErr();
 				});
 		},
-		/// 滚动事件 (需在up配置onScroll:true才生效)
+		// 滚动事件 (需在up配置onScroll:true才生效)
 		scroll(mescroll) {
 			this.topNum = mescroll.getScrollTop();
 			if (mescroll.getScrollTop() >= this.tabbarTop) {
@@ -344,10 +344,10 @@ export default {
 					icon: 'none'
 				});
 				if (filItem.is_praise) {
-					filItem.cache_extends.praise_count--;
+					filItem.cache_extends.praises_count--;
 					filItem.is_praise = false;
 				} else {
-					filItem.cache_extends.praise_count++;
+					filItem.cache_extends.praises_count++;
 					filItem.is_praise = true;
 				}
 			});

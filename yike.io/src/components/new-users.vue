@@ -27,15 +27,14 @@ export default {
   methods: {
     loadUsers () {
       this.$http
-        .get('users?latest=1&limit=12')
+        .get('users?latest=1&limit=8')
         .then(users => {
           this.users = users.data.data;
         })
-
     }
   },
   mounted () {
-    this.loadUsers()
+    this.loadUsers();
   }
 }
 </script>

@@ -116,10 +116,10 @@ export default {
 				if (!res.status) return;
 				// 用户是否点过赞
 				if (filItem.dynamic.is_praise) {
-					filItem.dynamic.cache_extends.praise_count--;
+					filItem.dynamic.cache_extends.praises_count--;
 					filItem.dynamic.is_praise = false;
 				} else {
-					filItem.dynamic.cache_extends.praise_count++;
+					filItem.dynamic.cache_extends.praises_count++;
 					filItem.dynamic.is_praise = true;
 				}
 			});

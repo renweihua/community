@@ -26,7 +26,7 @@
 			<!-- 标题 -->
 			<view class="ellipsis f32r fbold c111 mb18r" v-if="calTitle" @tap="$_click('click')">{{calTitle}}</view>
 			<!-- 内容 -->
-			<view class="fword f28r c555" :class="{mb18r: calImageSrcs}" @tap="$_click('click')">{{calStringCut}}</view>
+			<view class="fword f28r c555" :class="{mb18r: calImageSrcs}" @tap="$_click('click')" v-html="calStringCut"></view>
 			<!-- 摄影信息 -->
 			<view class="bgf8 ptb18r" v-if="calAlbum" :class="{mb18r: calImageSrcs}" @tap="$_click('click')">
 				<view class="mlr18r f24r cgray ellipsis" v-for="album in calAlbum" :key="album.title">
@@ -60,7 +60,7 @@
 				<i-icon type="dianzan" size="48" :color="item.is_praise?'#FF6699':'#8f8f94'"></i-icon>
 				<text class="ml8r f28r cgray">
 				{{item.is_praise?'已赞':'赞'}}
-				<span v-if="item.cache_extends.praise_count > 0">({{item.cache_extends.praise_count}})</span>
+				<span v-if="item.cache_extends.praises_count > 0">({{item.cache_extends.praises_count}})</span>
 				</text>
 			</view>
 			<view class="trend-w20v hl80r fcenter" @tap="$_click('comm')">
@@ -209,12 +209,22 @@
 				let blackContent = this.item.user_info.is_black ? '是否将该用户移出黑名单' : '拉黑后再广场将看不到TA的动态，TA将无法对你发消息、评论。';
 				console.log('---this.item---')
 				console.log(this.item)
+				console.log(this.item.user_info.is_self);
 				uni.showActionSheet({
 					itemList: this.item.user_info.is_self ? [blackTitle, '举报'] : [atteTitle, blackTitle, '举报'],
 					success: res => {
-						if (res.tapIndex == 0) return this.$emit('follow', this.item);
-						if (res.tapIndex == 2) return this.$emit('report', this.item);
+						if (res.tapIndex == 0){
+							return this.item.user_info.is_self ? uni.showModal({
+								content: blackContent,
+								success: res => {
+									if (res.confirm) {
+										this.$emit('black', this.item)
+									}
+								}
+							}) : this.$emit('follow', this.item);
+						}
 						if (res.tapIndex == 1) {
+							this.item.user_info.is_self ? this.$emit('report', this.item) : 
 							uni.showModal({
 								content: blackContent,
 								success: res => {
@@ -225,6 +235,7 @@
 							});
 							return
 						}
+						if (res.tapIndex == 2) return this.$emit('report', this.item);
 					}
 				});
 			},

@@ -5,11 +5,30 @@ namespace App\Modules\Bbs\Services\User;
 use App\Exceptions\Bbs\FailException;
 use App\Models\System\Notify;
 use App\Models\User\UserFollowFan;
+use App\Models\User\UserInfo;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
 class FriendService extends Service
 {
+    public function friends(int $login_user_id)
+    {
+        $users = UserInfo::where('user_id', '<>', $login_user_id)
+            ->with([
+                'isFollow' => function($query) use ($login_user_id) {
+                    $query->where('user_id', $login_user_id);
+                },
+                'isFan' => function($query) use ($login_user_id) {
+                    $query->where('friend_id', $login_user_id);
+                }
+            ])
+            ->orderByDesc('updated_time')
+            ->limit(100)
+            ->get();
+
+        return $users;
+    }
+
     /**
      * 我的关注
      *
@@ -28,7 +47,9 @@ class FriendService extends Service
                               ->orderBy('relation_id', 'DESC')
                               ->paginate(10);
         foreach ($lists as $key => $item){
-            if ($item->friendInfo) $item->friendInfo->is_friend = true;
+            if ($item->friendInfo){
+                $item->is_follow = $item->friendInfo->is_follow = true;
+            }
             else unset($lists[$key]);
         }
         return $this->getPaginateFormat($lists);
@@ -45,13 +66,21 @@ class FriendService extends Service
     {
         $lists = UserFollowFan::where('friend_id', $login_user_id)
                               ->with([
-                                  'userInfo' => function($query) {
-                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
+                                  'userInfo' => function($query) use($login_user_id) {
+                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid')->with([
+                                          'isFollow' => function($query) use ($login_user_id) {
+                                              $query->where('user_id', $login_user_id);
+                                          }
+                                      ]);
                                   },
                               ])
                               ->orderBy('relation_id', 'DESC')
                               ->paginate(10);
 
+        foreach ($lists as $key => $item){
+            $item->is_follow = $item->userInfo->is_follow = $login_user_id == 0 ? false : ($item->userInfo->isFollow ? true : false);
+            unset($item->userInfo->isFollow);
+        }
         return $this->getPaginateFormat($lists);
     }
 
@@ -90,7 +119,7 @@ class FriendService extends Service
 
                     $data['cross_correlation'] = 1;
                 }
-                $detail = $userFollowFan->create(array_merge($data, [
+                $userFollowFan->create(array_merge($data, [
                     'created_time' => time(),
                 ]));
 
@@ -99,7 +128,6 @@ class FriendService extends Service
                     if (!Notify::insert([
                         'notify_type'  => Notify::NOTIFY_TYPE['SYSTEM_MSG'],
                         'user_id'      => $friend_id,
-                        'target_id'    => $detail->relation_id,
                         'target_type'  => Notify::TARGET_TYPE['FOLLOW'],
                         'sender_id'    => $login_user_id,
                         'sender_type'  => Notify::SYSTEM_SENDER,

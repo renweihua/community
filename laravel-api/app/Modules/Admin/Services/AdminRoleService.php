@@ -40,7 +40,7 @@ class AdminRoleService extends BaseService
             if (!empty($search)){
                 $query->where('role_name', 'LIKE', '%' . trim($search) . '%');
             }
-        })->with(['menus'])->orderBy($this->model->getKeyName(), 'ASC')->limit(100)->get();
+        })->where('is_check', 1)->select(['role_id', 'role_name', 'role_remarks'])->orderBy($this->model->getKeyName(), 'ASC')->limit(100)->get();
     }
 
     public function create(array $params)

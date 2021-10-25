@@ -9,18 +9,34 @@
 		<view class="uni-input">
 			<input v-model="dynamic_title" type="text" value="" placeholder="请输入标题" />
 		</view>
+		<view class="background: #F8F8F8;height:1px;"></view>
 		<!--输入的内容-->
 		<view class="uni-textarea">
 			<textarea v-model="dynamic_content" placeholder="说点什么吧..." />
 		</view>
+		<view class="background: #F8F8F8;height:1px;"></view>
 		<!--选择图片-->
 		<uploadVideo
 		:imageList="imageList"
 		@deleted="deleted($event)"
 		@chooseVideo="chooseVideo">
 		</uploadVideo>
+		<view class="background: #F8F8F8;height:1px;"></view>
+        <view class="uni-list">
+            <view class="uni-list-cell">
+                <view class="uni-list-cell-left">
+                    所属话题：
+                </view>
+                <view class="uni-list-cell-db">
+                    <picker @change="selectTopic" :value="index" :range="topics" range-key="topic_name">
+                        <view class="uni-input">{{topic_name}}</view>
+                    </picker>
+                </view>
+            </view>
+        </view>
+		<view class="background: #F8F8F8;height:1px;"></view>
 		<!--弹出公告-->
-		  <uni-popup :show="show">
+		<uni-popup :show="show">
 			   <view class="gonggao" :class="donghua">
 				   <image src="../../static/gonggao/gonggao.png" mode="aspectFit"></image>
 				   <view class="zhuyi">1.涉及黄色，政治，广告及骚扰信息，涉及黄色，政治，广告及骚扰信息</view>
@@ -34,6 +50,8 @@
 </template>
 
 <script>
+	// 话题列表
+	import { getTopicList } from '@/api/HuibaServer.js';
 	import {
 		batchUploads,
 	} from "@/api/CommonServer.js";
@@ -62,10 +80,16 @@
 		},
 		data() {
 			return {
+				// 话题列表
+				topics: [],
+				index: 0,
+				topic_name: '请选择话题',
+
+				
 				push_finish: false,
 				fanhui:true,
 				donghua:'animated zoomInDown',
-				show:true,
+				show:false,
 				yinsi:'所有人可见',
 				imageList: [],
 				image_files:[],
@@ -80,12 +104,23 @@
 				dynamic_title: '',
 				dynamic_content:'',
 				dynamic_type: 0,
+				topic_id: 0,
 			}
 		},
 		onLoad(options) {
 			this.dynamic_type = options.dynamic_type || 0;
+			// 获取话题列表
+			getTopicList().then(res => {
+				this.topics = res.data;
+			});
 		},
 		methods: {
+	        selectTopic: function(e) {
+	        	// 话题Id
+	            this.topic_id = e.target.value;
+	            // 话题名称
+	            this.topic_name = this.topics[e.target.value].topic_name || '';
+	        },
 			onClickRight() {
 				this.$emit('click-right');
 				if (this.pushing) return;
@@ -104,6 +139,7 @@
 				// 启动封面
 				batchUploads(this.image_files).then(files => {
 					return pushDynamic({
+						'topic_id': this.topic_id,
 						'dynamic_title': this.dynamic_title,
 						'dynamic_type': this.dynamic_type,
 						'dynamic_content' : this.dynamic_content,

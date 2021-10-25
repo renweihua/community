@@ -49,7 +49,7 @@ class CreateUserInfosTable extends Migration
 
 
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->integer('user_grade')->unsigned()->default(0)->comment('用户等级');
             $table->integer('user_experience')->unsigned()->default(0)->comment('用户经验');
 

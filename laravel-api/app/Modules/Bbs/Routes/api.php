@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Route;
 use App\Modules\Bbs\Http\Middleware\CheckAuth;
 use App\Modules\Bbs\Http\Middleware\GetUserByToken;
+use App\Modules\Bbs\Http\Middleware\RecordWebLog;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 });
 
 
-Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function () {
+Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::class])->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
         // 邮箱注册，发送验证码
@@ -59,7 +60,7 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         // 指定会员详情
         Route::prefix('user')->group(function () {
             // 通过UUID获取会员详情
-            Route::get('/{user_uuid}', 'UserController@uuid');
+            Route::get('/{user_uuid}/detail', 'UserController@uuid');
             // 检测会员账户是否已被注册
             Route::post('/exists', 'UserController@exists');
             // 指定会员详情
@@ -117,6 +118,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
          * 好友相关
          */
         Route::prefix('user')->group(function () {
+            // 好友列表
+            Route::get('/friends', 'FriendController@friends');
             // 我关注的会员
             Route::get('/follows', 'FriendController@follows');
             // 我关注的荟吧
@@ -167,6 +170,8 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::prefix('dynamic')->group(function () {
             // 发布 - 动态
             Route::post('/push', 'DynamicController@push');
+            // 编辑动态
+            Route::patch('/update/{dynamic_id}', 'DynamicController@update');
             // 点赞 - 动态
             Route::post('/praise', 'DynamicController@praise');
             // 收藏 - 动态
@@ -187,12 +192,14 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::prefix('')->group(function () {
             // 我的未读消息
             Route::get('/notify/unread', 'NotifyController@unread');
+            // 我的所有消息通知
+            Route::get('/getNotify', 'NotifyController@getNotify');
             // 我的{提醒|系统}消息通知
-            Route::get('/user/getSystemByNotify', 'NotifyController@getSystemByNotify');
+            Route::get('/getSystemByNotify', 'NotifyController@getSystemByNotify');
             // 我的{点赞}消息通知
-            Route::get('/user/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
+            Route::get('/getPraiseByNotify', 'NotifyController@getPraiseByNotify');
             // 我的{评论}消息通知
-            Route::get('/user/getCommentByNotify', 'NotifyController@getCommentByNotify');
+            Route::get('/getCommentByNotify', 'NotifyController@getCommentByNotify');
         });
 
         // 登录日志记录
@@ -209,5 +216,10 @@ Route::prefix('')->middleware(\App\Http\Middleware\Cors::class)->group(function 
         Route::get('about_us', 'WebSitesController@aboutUs');
         // Banner图
         Route::get('banners', 'WebSitesController@banners');
+        // 检测APP版本是否升级
+        Route::get('check_app_version', 'WebSitesController@checkAppVersion');
+
+        // 预览markdown的语法
+        Route::post('previewMarkdown', 'WebSitesController@previewMarkdown');
     });
 });

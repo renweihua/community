@@ -3,6 +3,8 @@
 namespace App\Modules\Admin\Http\Controllers;
 
 use App\Models\UploadFile;
+use App\Services\CosService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,21 +18,17 @@ class UploadController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function file(Request $request, $file = 'file')
+    public function file(Request $request, $file = 'file'): JsonResponse
     {
         if (empty($request->file($file))){
             return $this->errorJson('请上传文件！');
         }
 
-        $path = $request->file($file)->storePublicly(
-            date('Ym'),
-            config('filesystems')
-        );
+        $file = $request->file($file);
 
-        // 添加文件库记录
-        $uploadFile = UploadFile::addRecord($path, $request->file($file));
+        $file_url = CosService::getInstance()->put($file);
 
-        return $this->successJson($path, '上传成功', ['file_url' => $uploadFile->file_url]);
+        return $this->successJson($file_url, '上传成功', ['path_url' => $file_url]);
     }
 
     /**
@@ -40,20 +38,19 @@ class UploadController extends BaseController
      * @param string $file
      * @return \Illuminate\Http\JsonResponse
      */
-    public function files(Request $request, $file = 'files')
+    public function files(Request $request, $file = 'files'): JsonResponse
     {
         if (empty($request->file($file))){
             return $this->errorJson('请上传文件！');
         }
+
+        $object = CosService::getInstance();
+
         foreach ($request->file($file) as $file){
-            $path = $file->storePublicly(
-                date('Ym'),
-                config('filesystems')
-            );
-            // 添加文件库记录
-            $uploadFile = UploadFile::addRecord($path, $request->file($file));
-            $path[] = $uploadFile->file_url;
+            $file_url = $object->put($file);
+
+            $paths[] = $file_url;
         }
-        return $this->successJson($path, '上传成功！');
+        return $this->successJson($paths, '上传成功！');
     }
 }

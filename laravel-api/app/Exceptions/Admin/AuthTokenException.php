@@ -3,7 +3,6 @@
 namespace App\Exceptions\Admin;
 
 use App\Exceptions\Exception;
-use App\Modules\Admin\Entities\Log\AdminLoginLog;
 use Illuminate\Http\Request;
 
 class AuthTokenException extends Exception

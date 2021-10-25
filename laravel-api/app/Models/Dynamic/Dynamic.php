@@ -80,9 +80,11 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoInfo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dynamic whereVideoPath($value)
  * @mixin \Eloquent
+ * @property-read string $dynamic_type_text
  */
 class Dynamic extends Model
 {
+
     use Filterable;
 
 //    use Searchable;
@@ -131,7 +133,7 @@ class Dynamic extends Model
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
-    protected $appends = ['time_formatting'];
+    protected $appends = ['time_formatting', 'dynamic_type_text'];
 
     protected static function boot()
     {
@@ -145,6 +147,18 @@ class Dynamic extends Model
         static::created($saveContent);
 
         static::deleted($saveContent);
+
+        static::saving(function ($content) {
+            if ($content->isDirty('dynamic_markdown') && !empty($content->dynamic_markdown)) {
+                $content->dynamic_content = self::toHTML($content->dynamic_markdown);
+            }
+
+            // $content->dynamic_content = Purifier::clean($content->dynamic_content);
+        });
+
+        // static::saved(function ($content) {
+        //     \dispatch(new FetchContentMentions($content));
+        // });
     }
 
     /**
@@ -203,7 +217,9 @@ class Dynamic extends Model
         if (empty($key)) return [];
         $imgs = explode(',', $key);
         foreach ($imgs as &$img) {
-            $img = Storage::url($img);
+            if (!check_url($img)){
+                $img = Storage::url($img);
+            }
         }
         return $imgs;
     }
@@ -234,6 +250,9 @@ class Dynamic extends Model
     public function getVideoPathAttribute($value)
     {
         if (empty($value)) return '';
+        if (check_url($value)){
+            return $value;
+        }
         return Storage::url($value);
     }
 
@@ -275,7 +294,30 @@ class Dynamic extends Model
     // 时间戳格式化
     public function getTimeFormattingAttribute($value)
     {
+        if(!isset($this->attributes['created_time'])) return '';
         return formatting_timestamp($this->attributes['created_time']);
+    }
+
+    /**
+     * 获取动态类型文本
+     *
+     * @return string
+     */
+    public function getDynamicTypeTextAttribute(): string
+    {
+        $text = '动态';
+        switch ($this->attributes['dynamic_type']){
+            case 1: // 图文
+                $text = '图文';
+                break;
+            case 2: // 视频
+                $text = '视频';
+                break;
+            case 3: // 摄影/相册
+                $text = '相册';
+                break;
+        }
+        return $text;
     }
 
     public function userInfo()
@@ -335,7 +377,12 @@ class Dynamic extends Model
 
     public static function getListByIds(array $ids)
     {
-        $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type')->get()->toArray();
+        $list = self::whereIn('dynamic_id', $ids)->select('dynamic_id', 'dynamic_title', 'dynamic_images', 'dynamic_type', 'created_time')->get()->toArray();
         return array_column($list, null, 'dynamic_id');
+    }
+
+    public static function toHTML(string $markdown)
+    {
+        return app(\ParsedownExtra::class)->text(\emoji($markdown));
     }
 }

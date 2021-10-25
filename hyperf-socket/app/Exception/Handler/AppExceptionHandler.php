@@ -11,14 +11,26 @@ declare(strict_types=1);
  */
 namespace App\Exception\Handler;
 
+use App\Traits\Json;
+use Hyperf\Di\Annotation\Inject;
+use App\Constants\StatusConst;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\HttpServer\Response;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
 {
+    use Json;
+
+    /**
+     * @Inject
+     * @var Response
+     */
+    protected $response;
+
     /**
      * @var StdoutLoggerInterface
      */
@@ -33,7 +45,17 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $this->logger->error($throwable->getTraceAsString());
-        return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
+
+        //自定义异常处理
+        // $this->setResponseServer($response);
+        return $this->errorJson($throwable->getMessage(), StatusConst::ERROR, [], [
+            'error' => [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'code' => $throwable->getCode()
+            ]
+        ]);
     }
 
     public function isValid(Throwable $throwable): bool

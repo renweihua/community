@@ -12,7 +12,14 @@
 				}
 				//  #endif
 			}
-		}, {
+		},
+		{
+			"path": "pages/find/find",
+			"style": {
+				"navigationBarTitleText": "广场"
+			}
+		},
+		{
 			"path": "pages/dynamic/push",
 			"style": {
 				"navigationBarTitleText": "发布动态"

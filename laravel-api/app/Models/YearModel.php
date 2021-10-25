@@ -79,7 +79,7 @@ class YearModel extends MonthModel
         $new_table = empty($new_table) ? $this->getOldTableName() . '_' . date($format, empty($time) ? time() : $time) : $new_table;
 
         // 数据表前缀
-        $db_prefix = env('DB_PREFIX');
+        $db_prefix = get_db_prefix();
 
         return $this->setCopyTable($db_prefix . $new_table, $db_prefix . $this->getOldTableName());
     }

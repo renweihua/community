@@ -24,7 +24,7 @@ class CreateAdminWithRolesTable extends Migration
             $table->index(['admin_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_with_roles` comment '管理员关联角色表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admin_with_roles` comment '管理员关联角色表'");
     }
 
     /**

@@ -23,14 +23,16 @@ let emojiCompleter = cm => {
       }
 
       let mapToList = (users = []) => {
-        let results = []
+        if (users.length <= 0) {
+          return [];
+        }
         pageUsers.concat(users).forEach(user => {
-          if (!results.some(o => o.text === user.username + ' ')) {
+          if (!results.some(o => o.text === user.user_info.nick_name + ' ')) {
             results.push({
-              text: user.username + ' ',
+              text: user.user_info.nick_name + ' ',
               render (element) {
                 element.innerHTML = `<img style="width:1.2em;height: 1.2em;" src="${user.avatar}" alt="${user.name}" async > ${
-                  user.username
+                  user.user_info.nick_name
                 }`
               }
             })
@@ -49,10 +51,10 @@ let emojiCompleter = cm => {
       }
 
       if (currentWord.length >= 2) {
-        let users = await http.get('users?query=' + currentWord.substring(1))
+        let users = await http.get('users?query=' + currentWord.substring(1));
 
-        if (users.data.length >= 1) {
-          let filtered = mapToList(users.data)
+        if (users.data.data.length >= 1) {
+          let filtered = mapToList(users.data.data)
 
           return {
             list: filtered,

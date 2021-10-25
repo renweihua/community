@@ -12,7 +12,6 @@
 */
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\Bbs\Http\Middleware\RecordWebLog;
 use App\Modules\Bbs\Http\Middleware\RestrictIPAccess;
 
 Route::prefix('')->middleware([

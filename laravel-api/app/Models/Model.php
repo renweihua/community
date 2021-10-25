@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Scopes\DeleteScope;
+use App\Models\SoftDelete\SoftDelete;
 use App\Traits\Instance;
 use App\Traits\MysqlTable;
 use EloquentFilter\Filterable;
@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Model extends EloquentModel
 {
+    use SoftDelete;
     use MysqlTable;
     use Instance;
     use HasFactory;
@@ -67,40 +68,11 @@ class Model extends EloquentModel
     }
 
     /**
-     * 自定义的软删除
-     */
-    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；0.假删除）
-    protected $delete_field = 'is_delete'; //删除字段
-
-    public function getIsDelete()
-    {
-        return $this->is_delete;
-    }
-
-    public function getDeleteField()
-    {
-        return $this->delete_field;
-    }
-
-    /**
      * 不可批量赋值的属性
      *
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * 模型的 "booted" 方法
-     *
-     * 应用全局作用域
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        // 假删除的作用域
-        static::addGlobalScope(new DeleteScope(new static));
-    }
 
     public static function firstByWhere($where)
     {

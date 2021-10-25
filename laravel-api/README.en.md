@@ -21,7 +21,9 @@ Software architecture description
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`blog-community.sql`
-* 任务调度：`php artisan schedule:run`
+* 定时任务：
+    - 自动按月分表：`php artisan command:autotablebuild`
+    - 或者使用任务调度：`php artisan schedule:run`
 
 
 #### Instructions

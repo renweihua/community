@@ -8,25 +8,30 @@
 
 #### 安装教程
 
-###### 安装Vue
+##### 安装Vue
 * 安装 npm 包：`npm install`
 * 热更新vue项目：`npm run watch-poll`
 
     - vue无法执行：可尝试：
         - npm rebuild node-sass
     
-###### PHP设置
+##### PHP设置
 * 命令行：`composer install`
 * 命令行：`cp .env.example .env`
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`community.sql`
-* 任务调度：`php artisan schedule:run`
-* 队列[后置进程]：`php artisan queue:work --daemon`
+* 定时任务：
+    - 自动按月分表：`php artisan command:autotablebuild`
+    - 或者使用任务调度：`php artisan schedule:run`
+        - 后置进程：
+            `* * * * * php artisan schedule:run >> /dev/null 2>&1`
+* 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
+    - mysql存储的[抖音作者与视频同步]的队列： `php artisan queue:work database --queue=douyin-queue`
 
 
-###### ES设置
+##### ES设置
 * 启动ES：` .\elasticsearch.bat`
 * 初始化ES，创建模板与索引：`php artisan es:init`
 * 导入数据：`php artisan scout:import "模型命名空间"`
@@ -38,6 +43,23 @@
     echo "耗时(毫秒)：{$userTime} \n";
     var_dump($articles);
 ``` 
+
+##### linux系统下，Laravel使用 env 读取环境变量为 null 的问题
+
+###### 原由：`php artisan config:cache`
+    Laravel 将会把 app/config 目录下的所有配置文件“编译”整合成一个缓存配置文件到 bootstrap/cache/config.php，每个配置文件都可以通过 env 函数读取环境变量；但是一旦有了这个缓存配置文件，在其他地方使用 env 函数是读取不到环境变量的，所以返回 null。
+
+###### 解决方式
+* 1.`php artisan config:clear` 不启用配置缓存
+* 2.使用`config()` 替代 `env()` 读取对应实际的配置即可
+
+
+###### 部署优化
+    
+* 配置信息缓存 artisan config:cache
+* 路由缓存 artisan route:cache
+* 类映射加载优化 artisan optimize
+* 自动加载优化 composer dumpautoload
 
 
 #### 使用说明

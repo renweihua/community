@@ -37,7 +37,7 @@ class CreateConfigsTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "configs` comment '系统配置表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "configs` comment '系统配置表'");
     }
 
     /**

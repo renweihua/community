@@ -3,10 +3,12 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\InvalidRequestException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicPraise;
+use App\Models\Dynamic\Topic;
 use App\Models\System\Notify;
 use App\Models\User\UserInfo;
 use App\Services\Service;
@@ -27,44 +29,53 @@ class DynamicService extends Service
      */
     public function push(int $login_user_id, array $params)
     {
-        switch (intval($params['dynamic_type'])){
+        switch (intval($params['dynamic_type'])) {
             case 0: // 动态
-                if (!isset($params['dynamic_content']) || empty($params['dynamic_content'])){
+                if ( !isset($params['dynamic_content']) || empty($params['dynamic_content'])) {
                     $this->setError('请输入动态内容！');
                     return false;
                 }
                 break;
             case 1: // 文章
-                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                if (!isset($params['content_type'])) $params['content_type'] = 'html';
+                if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
                     $this->setError('请输入文章标题！');
                     return false;
                 }
-                if ($params['content_type'] == 'html' && (!isset($params['dynamic_content']) || empty($params['dynamic_content']))){
+                if ($params['content_type'] == 'html' && ( !isset($params['dynamic_content']) || empty($params['dynamic_content']))) {
                     $this->setError('请输入动态内容(html)！');
                     return false;
                 }
-                if ($params['content_type'] == 'markdown' && (!isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))){
+                if ($params['content_type'] == 'markdown' && ( !isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))) {
                     $this->setError('请输入动态内容(markdown)！');
                     return false;
                 }
                 break;
             case 2: // 视频
-                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
                     $this->setError('请输入标题！');
                     return false;
                 }
-                if (!isset($params['video_path']) || empty($params['video_path'])){
+                if ( !isset($params['video_path']) || empty($params['video_path'])) {
                     $this->setError('请上传视频！');
                     return false;
                 }
 
                 // 通过 ffmpeg 获取视频的第一帧作为封面图
                 $params['dynamic_images'] = date('Ym') . '/' . Str::random(40) . '.jpg';
-                $ffmpeg = FFMpeg::create([
-                    'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
-                    'ffprobe.binaries' =>  '/www/server/ffmpeg-4.3.1/ffprobe'
-                ]);
-                $video = $ffmpeg->open($params['video_path']);
+                if (env('APP_DEBUG') == true){
+                    $ffmpeg                   = FFMpeg::create([
+                        'ffmpeg.binaries'  => 'H:/ffmpeg/bin/ffmpeg.exe',
+                        'ffprobe.binaries' => 'H:/ffmpeg/bin/ffprobe.exe',
+                    ]);
+                }else{
+                    $ffmpeg                   = FFMpeg::create([
+                        'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
+                        'ffprobe.binaries' => '/www/server/ffmpeg-4.3.1/ffprobe',
+                    ]);
+                }
+
+                $video                    = $ffmpeg->open($params['video_path']);
                 // 获取封面图
                 $video->frame(TimeCode::fromSeconds(1))->save(storage_path('app/public/' . $params['dynamic_images']));
                 $video_info = $video->getFormat();
@@ -73,11 +84,11 @@ class DynamicService extends Service
 
                 break;
             case 3: // 相册
-                if (!isset($params['dynamic_title']) || empty($params['dynamic_title'])){
+                if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
                     $this->setError('请输入相册标题！');
                     return false;
                 }
-                if (!isset($params['dynamic_images']) || empty($params['dynamic_images'])){
+                if ( !isset($params['dynamic_images']) || empty($params['dynamic_images'])) {
                     $this->setError('请上传相册图片！');
                     return false;
                 }
@@ -85,27 +96,109 @@ class DynamicService extends Service
         }
         DB::beginTransaction();
         try {
+            // 如果未设置归属话题，自动归属到默认话题
+            if (!isset($params['topic_id']) || empty($params['topic_id'])){
+                $params['topic_id'] = Topic::getDetaultTopicId();
+            }
             $ip_agent = get_client_info();
-            $result = Dynamic::create([
-                'user_id' => $login_user_id,
-                'topic_id' => $params['topic_id'] ?? 0,
-                'dynamic_title' => $params['dynamic_title'] ?? '',
-                'dynamic_type' => $params['dynamic_type'],
-                'dynamic_images' => $params['dynamic_images'] ?? '',
-                'video_path' => $params['video_path'] ?? '',
-                'video_info' => $params['video_info'] ?? '',
-                'content_type' => $params['content_type'],
-                'dynamic_content' => $params['dynamic_content'] ?? '',
+            $result   = Dynamic::create([
+                'user_id'          => $login_user_id,
+                'topic_id'         => $params['topic_id'] ?? 0,
+                'dynamic_title'    => $params['dynamic_title'] ?? '',
+                'dynamic_type'     => $params['dynamic_type'],
+                'dynamic_images'   => $params['dynamic_images'] ?? '',
+                'video_path'       => $params['video_path'] ?? '',
+                'video_info'       => $params['video_info'] ?? '',
+                'content_type'     => $params['content_type'] ?? 'html',
+                'dynamic_content'  => $params['dynamic_content'] ?? '',
                 'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
-                'is_check' => 1, // 暂时默认无需审核
-                'is_public' => $params['is_public'] ?? 1,
-                'created_ip' => $ip_agent['ip'] ?? get_ip(),
-                'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
+                'is_check'         => 1, // 暂时默认无需审核
+                'is_public'        => $params['is_public'] ?? 1,
+                'created_ip'       => $ip_agent['ip'] ?? get_ip(),
+                'browser_type'     => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ]);
+
+            Topic::where('topic_id', $result->topic_id)->increment('dynamic_count');
+
             $this->setError('发布成功！');
 
             DB::commit();
             return $result->dynamic_id;
+        } catch (FailException $e) {
+            DB::rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 编辑动态
+     *
+     * @param  int    $login_user_id
+     * @param  int    $dynamic_id
+     * @param  array  $params
+     *
+     * @return bool
+     * @throws \App\Exceptions\InvalidRequestException
+     */
+    public function update(int $login_user_id, int $dynamic_id, array $params)
+    {
+        $dynamic = $this->checkDynamic($dynamic_id);
+        if ( !$dynamic) {
+            return false;
+        }
+        if ($login_user_id != $dynamic->user_id) {
+            throw new InvalidRequestException('请无权编辑此动态！');
+        }
+        switch (intval($params['dynamic_type'])) {
+            case 1: // 文章
+                if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
+                    $this->setError('请输入文章标题！');
+                    return false;
+                }
+                if ($params['content_type'] == 'html' && ( !isset($params['dynamic_content']) || empty($params['dynamic_content']))) {
+                    $this->setError('请输入动态内容(html)！');
+                    return false;
+                }
+                if ($params['content_type'] == 'markdown' && ( !isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))) {
+                    $this->setError('请输入动态内容(markdown)！');
+                    return false;
+                }
+                break;
+            default:
+                throw new InvalidRequestException('暂不支持移动端编辑动态！');
+                break;
+        }
+
+        DB::beginTransaction();
+        try{
+            $update = [
+                'user_id'          => $login_user_id,
+                'topic_id'         => $params['topic_id'] ?? 0,
+                'dynamic_title'    => $params['dynamic_title'] ?? '',
+                'dynamic_type'     => $params['dynamic_type'],
+                'dynamic_images'   => $params['dynamic_images'] ?? '',
+                'video_path'       => $params['video_path'] ?? '',
+                'video_info'       => $params['video_info'] ?? '',
+                'content_type'     => $params['content_type'] ?? 'html',
+                'dynamic_content'  => $params['dynamic_content'] ?? '',
+                'dynamic_markdown' => $params['dynamic_markdown'] ?? '',
+                'is_check'         => 1, // 暂时默认无需审核
+                'is_public'        => $params['is_public'] ?? 1,
+            ];
+
+            // 话题的动态数量统计
+            if ($dynamic->topic_id != $update['topic_id']){
+                Topic::where('topic_id', $dynamic->topic_id)->decrement('dynamic_count');
+                Topic::where('topic_id', $update['topic_id'])->increment('dynamic_count');
+            }
+
+            $dynamic->update($update);
+
+            $this->setError('动态编辑成功！');
+
+            DB::commit();
+            return $dynamic->dynamic_id;
         } catch (FailException $e) {
             DB::rollBack();
             $this->setError($e->getMessage());
@@ -145,8 +238,8 @@ class DynamicService extends Service
             return false;
         }
         $dynamicPraise = DynamicPraise::getInstance();
-        $data = [
-            'user_id' => $login_user_id,
+        $data          = [
+            'user_id'    => $login_user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
@@ -167,15 +260,15 @@ class DynamicService extends Service
                 $ip_agent = get_client_info();
                 $dynamicPraise->create(array_merge($data, [
                     'created_time' => time(),
-                    'created_ip' => $ip_agent['ip'] ?? get_ip(),
+                    'created_ip'   => $ip_agent['ip'] ?? get_ip(),
                     'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
                 ]));
                 // 获赞数递增
                 $userInfoInstance->setGetLikes($author, 1);
 
                 // 互动消息：xxx 点赞了您的动态 xxx。
-                if ($author != $login_user_id){
-                    if (!Notify::insert([
+                if ($author != $login_user_id) {
+                    if ( !Notify::insert([
                         'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
                         'user_id'      => $author,
                         'target_id'    => $dynamic_id,
@@ -183,7 +276,7 @@ class DynamicService extends Service
                         'sender_id'    => $login_user_id,
                         'sender_type'  => Notify::SYSTEM_SENDER,
                         'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['PRAISE'],
-                    ]) ) {
+                    ])) {
                         throw new FailException('互动消息录入失败！');
                     }
                 }
@@ -212,23 +305,24 @@ class DynamicService extends Service
         $lists = DynamicCollection::where('user_id', $login_user_id)
                                   ->select('relation_id', 'user_id', 'dynamic_id', 'created_time')
                                   ->with([
-                                      'dynamic' => function($query) use($login_user_id){
+                                      'dynamic' => function($query) use ($login_user_id) {
                                           $query->select('dynamic_id', 'user_id', 'user_id', 'dynamic_title', 'dynamic_images', 'dynamic_content', 'created_time', 'cache_extends', 'dynamic_type', 'topic_id')
-                                              ->with([
-                                                  'userInfo' => function($query) use($login_user_id){
-                                                      $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex')->with([
-                                                          'isFollow' => function($query) use ($login_user_id) {
-                                                              $query->where('user_id', $login_user_id);
-                                                          }
-                                                      ]);
-                                                  },
-                                                  'isPraise' => function($query) use ($login_user_id) {
-                                                      $query->where('user_id', $login_user_id);
-                                                  },
-                                                  'isCollection' => function($query) use ($login_user_id) {
-                                                      $query->where('user_id', $login_user_id);
-                                                  },
-                                              ]);
+                                                ->with([
+                                                    'userInfo'     => function($query) use ($login_user_id) {
+                                                        $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex')
+                                                              ->with([
+                                                                  'isFollow' => function($query) use ($login_user_id) {
+                                                                      $query->where('user_id', $login_user_id);
+                                                                  },
+                                                              ]);
+                                                    },
+                                                    'isPraise'     => function($query) use ($login_user_id) {
+                                                        $query->where('user_id', $login_user_id);
+                                                    },
+                                                    'isCollection' => function($query) use ($login_user_id) {
+                                                        $query->where('user_id', $login_user_id);
+                                                    },
+                                                ]);
                                       },
                                   ])
                                   ->orderBy('relation_id', 'DESC')
@@ -261,8 +355,8 @@ class DynamicService extends Service
             return false;
         }
         $dynamicCollection = DynamicCollection::getInstance();
-        $data = [
-            'user_id' => $login_user_id,
+        $data              = [
+            'user_id'    => $login_user_id,
             'dynamic_id' => $dynamic_id,
         ];
         DB::beginTransaction();
@@ -276,13 +370,13 @@ class DynamicService extends Service
                 $ip_agent = get_client_info();
                 $dynamicCollection->create(array_merge($data, [
                     'created_time' => time(),
-                    'created_ip' => $ip_agent['ip'] ?? get_ip(),
+                    'created_ip'   => $ip_agent['ip'] ?? get_ip(),
                     'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
                 ]));
 
                 // 互动消息：xxx 收藏了您的动态 xxx。
-                if ($dynamic->user_id != $login_user_id){
-                    if (!Notify::insert([
+                if ($dynamic->user_id != $login_user_id) {
+                    if ( !Notify::insert([
                         'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
                         'user_id'      => $dynamic->user_id,
                         'target_id'    => $dynamic_id,
@@ -290,7 +384,7 @@ class DynamicService extends Service
                         'sender_id'    => $login_user_id,
                         'sender_type'  => Notify::SYSTEM_SENDER,
                         'dynamic_type' => Notify::DYNAMIC_TARGET_TYPE['COLLECTION'],
-                    ]) ) {
+                    ])) {
                         throw new FailException('互动消息录入失败！');
                     }
                 }
@@ -317,14 +411,14 @@ class DynamicService extends Service
      */
     public function comment(int $login_user_id, array $params)
     {
-        if ( !$dynamic = $this->checkDynamic($params['dynamic_id'], true)) {
+        if ( !$dynamic = $this->checkDynamic($params['dynamic_id'])) {
             return false;
         }
         $dynamicCommentInstance = DynamicComment::getInstance();
-        $reply_id = $params['reply_id'] ?? 0;
+        $reply_id               = $params['reply_id'] ?? 0;
         // 如果评论，那么默认就是发布者
         $reply_user = 0;
-        $top_level = 0;
+        $top_level  = 0;
         // 验证回复的评论
         if ( !empty($reply_id)) {
             if ( !$detail = $dynamicCommentInstance->where('comment_id', $params['reply_id'])->first()) {
@@ -332,30 +426,33 @@ class DynamicService extends Service
                 return false;
             }
             // 顶级Id
-            $top_level = $detail->top_level == 0 ? $detail->comment_id : $detail->top_level;
+            $top_level  = $detail->top_level == 0 ? $detail->comment_id : $detail->top_level;
             $reply_user = $detail->user_id;
         }
         DB::beginTransaction();
         try {
+            $ip_agent = get_client_info();
             // 评论信息组装
             $validate_data = [
-                'user_id' => $login_user_id,
-                'reply_user' => $reply_user,
-                'dynamic_id' => $dynamic->dynamic_id,
-                'reply_id' => $reply_id,
-                'top_level' => $top_level,
-                'content_type' => $params['content_type'],
-                'comment_content' => $params['content'] ?? '',
+                'user_id'          => $login_user_id,
+                'reply_user'       => $reply_user,
+                'dynamic_id'       => $dynamic->dynamic_id,
+                'reply_id'         => $reply_id,
+                'top_level'        => $top_level,
+                'content_type'     => $params['content_type'] ?? 'html',
+                'comment_content'  => $params['content'] ?? '',
                 'comment_markdown' => $params['markdown'] ?? '',
-                'author_id' => $dynamic->user_id,
+                'author_id'        => $dynamic->user_id,
                 // 如果评论者与被回复人是同一个人，那么则默认已读，无需通知
-                'is_read' => $login_user_id == $reply_user ? 1 : 0,
+                'is_read'          => $login_user_id == $reply_user ? 1 : 0,
+                'created_ip'       => $ip_agent['ip'] ?? get_ip(),
+                'browser_type'     => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
             ];
-            $comment = $dynamicCommentInstance->create($validate_data);
+            $comment       = $dynamicCommentInstance->create($validate_data);
 
             // 给动态归属者发送消息：互动消息：谁评论了你的动态
-            if ($dynamic->user_id != $login_user_id){
-                if (!Notify::insert([
+            if ($dynamic->user_id != $login_user_id) {
+                if ( !Notify::insert([
                     'notify_type'  => Notify::NOTIFY_TYPE['INTERACT_MSG'],
                     'user_id'      => $dynamic->user_id,
                     'target_id'    => $dynamic->dynamic_id,
@@ -363,7 +460,8 @@ class DynamicService extends Service
                     'sender_id'    => $login_user_id,
                     'sender_type'  => Notify::SYSTEM_SENDER,
                     'dynamic_type' => $reply_id == 0 ? Notify::DYNAMIC_TARGET_TYPE['COMMENT'] : Notify::DYNAMIC_TARGET_TYPE['REPLY_COMMENT'],
-                ]) ) {
+                    'extend_id'    => $comment->comment_id,
+                ])) {
                     throw new FailException('互动消息录入失败！');
                 }
             }
@@ -374,8 +472,8 @@ class DynamicService extends Service
             // 评论加载发布者
             $comment->userInfo;
             // 默认关联数据设置
-            $comment->replies = [];
-            $comment->is_praise = false;
+            $comment->replies       = [];
+            $comment->is_praise     = false;
             $comment->replies_count = 0;
 
             return $comment;
@@ -397,16 +495,16 @@ class DynamicService extends Service
     public function deleteComment(int $login_user_id, int $comment_id)
     {
         $dynamicCommentInstance = DynamicComment::getInstance();
-        $comment = $dynamicCommentInstance->with('dynamic')->lock(true)->find($comment_id);
+        $comment                = $dynamicCommentInstance->with('dynamic')->lock(true)->find($comment_id);
         if ( !$comment) {
             $this->setError('该评论不存在，请刷新重试！');
             return false;
         }
-        if (!$comment->dynamic || $comment->dynamic->is_delete == 1 || $comment->dynamic->is_check != 1){
+        if ( !$comment->dynamic || $comment->dynamic->is_delete == 1 || $comment->dynamic->is_check != 1) {
             $this->setError('动态已失效！');
             return false;
         }
-        if ($comment->author_id != $login_user_id){
+        if ($comment->author_id != $login_user_id) {
             $this->setError('您无权删除！');
             return false;
         }
@@ -419,12 +517,12 @@ class DynamicService extends Service
             // 获取该评论下的所有回复记录
             $reply_lists = DB::select('SELECT * FROM
               (
-                SELECT * FROM ' . env('DB_PREFIX') . $dynamicCommentInstance->getTable() . ' where reply_id > 0 ORDER BY reply_id, comment_id DESC
+                SELECT * FROM ' . get_db_prefix() . $dynamicCommentInstance->getTable() . ' where reply_id > 0 ORDER BY reply_id, comment_id DESC
               ) realname_sorted,
               (SELECT @pv := ?) initialisation
               WHERE (FIND_IN_SET(reply_id,@pv)>0 And @pv := concat(@pv, \',\', comment_id)) AND is_delete = 0', [$comment->comment_id]);
-            $reply_ids = [];
-            if ( !empty($reply_lists) ) {
+            $reply_ids   = [];
+            if ( !empty($reply_lists)) {
                 foreach ($reply_lists as $reply) {
                     $reply_ids[] = $reply->comment_id;
                 }
@@ -438,6 +536,13 @@ class DynamicService extends Service
         } catch (FailException $e) {
             DB::rollBack();
             $this->setError('评论删除失败！');
+            return false;
+        }
+    }
+
+    public function setDynamicFiled($login_user, int $dynamic_id, string $change_field, $change_value)
+    {
+        if ( !$dynamic = $this->checkDynamic($dynamic_id)) {
             return false;
         }
     }

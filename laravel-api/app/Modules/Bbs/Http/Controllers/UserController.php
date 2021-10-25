@@ -26,7 +26,7 @@ class UserController extends BbsController
      */
     public function lists(Request $request): JsonResponse
     {
-        $users = $this->service->lists($request->all(), $request->get('limit', 10));
+        $users = $this->service->lists($request->all(), $request->get('limit', 10), $this->getLoginUserId());
         return $this->successJson($users);
     }
 
@@ -87,7 +87,7 @@ class UserController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function exists(Request $request)
+    public function exists(Request $request): JsonResponse
     {
         $user = User::getInstance();
         if ($request->has('user_email')) {

@@ -31,7 +31,7 @@ class CreateLuckydrawConfigsTables extends Migration
             $table->index(['activity_id']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "luckydraw_configs` comment '抽奖活动转盘配置表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "luckydraw_configs` comment '抽奖活动转盘配置表'");
     }
 
     /**

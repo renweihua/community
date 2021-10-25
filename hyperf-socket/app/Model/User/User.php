@@ -16,9 +16,37 @@ class User extends Model
      *
      * @return \Hyperf\Database\Model\Relations\HasOne
      */
-    public function user_info()
+    public function userInfo()
     {
-        return $this->hasOne(UserInfo::class, $this->primaryKey);
+        return $this->hasOne(UserInfo::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function userOtherlogin()
+    {
+        return $this->hasOne(UserOtherlogin::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'login_token'
+    ];
+
+    /**
+     * 设置密码时，进行hash加密
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function setPasswordAttribute($value)
+    {
+        if ( !empty($value) ) $value = 123456;
+        return $this->attributes['password'] = hash_encryption($value);
     }
 
     /**
@@ -59,16 +87,15 @@ class User extends Model
     }
 
     /**
-     * 设置密码时，进行hash加密
+     * 通过手机号进行搜索
      *
-     * @param $value
+     * @param  string  $user_mobile
      *
-     * @return string
+     * @return \Hyperf\Database\Model\Builder|\Hyperf\Database\Model\Model|object|null
      */
-    public function setPasswordAttribute($value)
+    public function getUserByMobile(string $user_mobile)
     {
-        if ( !empty($value) ) $value = 123456;
-        return $this->attributes['password'] = hash_encryption($value);
+        return $this->query()->where('user_mobile', $user_mobile)->first();
     }
 
     public function detail(int $user_id, $with = [])

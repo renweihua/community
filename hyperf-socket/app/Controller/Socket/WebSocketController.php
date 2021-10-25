@@ -32,7 +32,7 @@ class WebSocketController extends BaseNamespace
      */
     public function onConnect(Socket $socket, $data)
     {
-//        var_dump('onConnect');
+       // var_dump('onConnect');
     }
 
     /**
@@ -40,7 +40,7 @@ class WebSocketController extends BaseNamespace
      */
     public function onClose(Socket $socket, $data)
     {
-//        var_dump('onClose');
+       // var_dump('onClose');
 
 
         //        return;
@@ -114,12 +114,16 @@ class WebSocketController extends BaseNamespace
             if (!$token_user){
                 throw new Exception('Token已失效');
             }
+            var_dump('当前时间：' . date('Y-m-d H:i:s'));
+            var_dump('Token过期时间：' . date('Y-m-d H:i:s', $token_user->expires_time));
             // Token 是否过期
             if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 throw new Exception('Token过期，请重新登录！');
             }
             // $redis = redis('token');
             // $value = $redis->get('laravel_database_users_token:' . $data['token']);
+            // var_dump('laravel_database_users_token：');
+            // var_dump($value);
             // if (empty($value)){
             //     throw new Exception('Token过期，请重新登录！');
             // }

@@ -4,8 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Traits;
 
+use App\Middleware\ExecutionMiddleware;
+use App\Utils\ExecutionTime;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Response;
+use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
 trait Json
 {
@@ -36,14 +39,14 @@ trait Json
         $this->data = $data;
     }
 
-    public function success($data = [], $msg = 'success', $other = [])
+    public function successJson($data = [], $msg = 'success', $other = [])
     {
         $this->data = $data;
         $this->msg = $msg;
         return $this->myAjaxReturn($other);
     }
 
-    public function error($msg = 'error', $status = 0, $data = [], $other = [])
+    public function errorJson($msg = 'error', $status = 0, $data = [], $other = [])
     {
         $this->data = $data;
         $this->msg = $msg;
@@ -51,16 +54,31 @@ trait Json
         return $this->myAjaxReturn($other);
     }
 
+    public function setResponse($response)
+    {
+        $this->response = $response;
+    }
+
+    public function setHttpCode(int $http_code): void
+    {
+        $this->response->withStatus($http_code);
+    }
+
     public function myAjaxReturn($other)
     {
         $data = array_merge([
-            'data' => $this->data,
+            'data' => is_null($this->data) ? [] : $this->data,
             'status' => $this->status,
             'msg' => $this->msg
         ], $other);
-        // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
-        $data['message'] = $data['msg'];
-        $data['code'] = $data['status'];
+
+        // // 后台VUE获取的值，后期如何可能改的了的话，就去掉了
+        // $data['message'] = $data['msg'];
+        // $data['code'] = $data['status'];
+
+        // 执行时长
+        $data['execution_time'] = microtime(true) - ExecutionTime::$start_time;
+
         return $this->response->json($data);
     }
 }

@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.50.0.
+ * Generated for Laravel 8.57.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2607,7 +2607,7 @@
                     /**
          * Apply the echo handler for the value if it exists.
          *
-         * @param $value string
+         * @param string $value
          * @return string 
          * @static 
          */ 
@@ -5449,7 +5449,7 @@
                     /**
          * Register an event listener with the dispatcher.
          *
-         * @param \Closure|string $listener
+         * @param \Closure|string|array $listener
          * @param bool $wildcard
          * @return \Closure 
          * @static 
@@ -5768,6 +5768,20 @@
         {
                         /** @var \Illuminate\Filesystem\Filesystem $instance */
                         $instance->replace($path, $content);
+        }
+                    /**
+         * Replace a given string within a given file.
+         *
+         * @param array|string $search
+         * @param array|string $replace
+         * @param string $path
+         * @return void 
+         * @static 
+         */ 
+        public static function replaceInFile($search, $replace, $path)
+        {
+                        /** @var \Illuminate\Filesystem\Filesystem $instance */
+                        $instance->replaceInFile($search, $replace, $path);
         }
                     /**
          * Prepend to a file.
@@ -6680,7 +6694,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest contentType(string $contentType)
      * @method static \Illuminate\Http\Client\PendingRequest dd()
      * @method static \Illuminate\Http\Client\PendingRequest dump()
-     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleep = 0)
+     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleep = 0, ?callable $when = null)
      * @method static \Illuminate\Http\Client\PendingRequest sink(string|resource $to)
      * @method static \Illuminate\Http\Client\PendingRequest stub(callable $callback)
      * @method static \Illuminate\Http\Client\PendingRequest timeout(int $seconds)
@@ -7590,9 +7604,22 @@
                         $instance->assertSent($mailable, $callback);
         }
                     /**
+         * Determine if a mailable was not sent or queued to be sent based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|null $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNotOutgoing($mailable, $callback = null)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+                        $instance->assertNotOutgoing($mailable, $callback);
+        }
+                    /**
          * Determine if a mailable was not sent based on a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -7601,6 +7628,17 @@
         {
                         /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
                         $instance->assertNotSent($mailable, $callback);
+        }
+                    /**
+         * Assert that no mailables were sent or queued to be sent.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function assertNothingOutgoing()
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+                        $instance->assertNothingOutgoing();
         }
                     /**
          * Assert that no mailables were sent.
@@ -7629,7 +7667,7 @@
                     /**
          * Determine if a mailable was not queued based on a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -7653,7 +7691,7 @@
                     /**
          * Get all of the mailables matching a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|null $callback
          * @return \Illuminate\Support\Collection 
          * @static 
@@ -7678,7 +7716,7 @@
                     /**
          * Get all of the queued mailables matching a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|null $callback
          * @return \Illuminate\Support\Collection 
          * @static 
@@ -8139,7 +8177,6 @@
             /**
      * 
      *
-     * @method static void popUsing(string $workerName, callable $callback)
      * @see \Illuminate\Queue\QueueManager
      * @see \Illuminate\Queue\Queue
      */ 
@@ -9053,6 +9090,18 @@
         {
                         /** @var \Illuminate\Http\Request $instance */
                         return $instance->fullUrlWithQuery($query);
+        }
+                    /**
+         * Get the full URL for the request without the given query string parameters.
+         *
+         * @param array|string $query
+         * @return string 
+         * @static 
+         */ 
+        public static function fullUrlWithoutQuery($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->fullUrlWithoutQuery($keys);
         }
                     /**
          * Get the current path info for the request.
@@ -10649,13 +10698,14 @@
          *
          * @param string $key
          * @param callable $callback
+         * @param callable|null $default
          * @return $this|mixed 
          * @static 
          */ 
-        public static function whenHas($key, $callback)
+        public static function whenHas($key, $callback, $default = null)
         {
                         /** @var \Illuminate\Http\Request $instance */
-                        return $instance->whenHas($key, $callback);
+                        return $instance->whenHas($key, $callback, $default);
         }
                     /**
          * Determine if the request contains a non-empty value for an input item.
@@ -10698,13 +10748,14 @@
          *
          * @param string $key
          * @param callable $callback
+         * @param callable|null $default
          * @return $this|mixed 
          * @static 
          */ 
-        public static function whenFilled($key, $callback)
+        public static function whenFilled($key, $callback, $default = null)
         {
                         /** @var \Illuminate\Http\Request $instance */
-                        return $instance->whenFilled($key, $callback);
+                        return $instance->whenFilled($key, $callback, $default);
         }
                     /**
          * Determine if the request is missing a given input item key.
@@ -13719,6 +13770,56 @@
                         /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
                         return $instance->getDriver();
         }
+                    /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @return void 
+         * @static 
+         */ 
+        public static function macro($name, $macro)
+        {
+                        \Illuminate\Filesystem\FilesystemAdapter::macro($name, $macro);
+        }
+                    /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void 
+         * @throws \ReflectionException
+         * @static 
+         */ 
+        public static function mixin($mixin, $replace = true)
+        {
+                        \Illuminate\Filesystem\FilesystemAdapter::mixin($mixin, $replace);
+        }
+                    /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasMacro($name)
+        {
+                        return \Illuminate\Filesystem\FilesystemAdapter::hasMacro($name);
+        }
+                    /**
+         * Dynamically handle calls to the class.
+         *
+         * @param string $method
+         * @param array $parameters
+         * @return mixed 
+         * @throws \BadMethodCallException
+         * @static 
+         */ 
+        public static function macroCall($method, $parameters)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        return $instance->macroCall($method, $parameters);
+        }
          
     }
             /**
@@ -14846,14 +14947,14 @@
          *
          * @param string $name
          * @param string|null $content
+         * @param array $attributes
          * @return void 
-         * @throws \InvalidArgumentException
          * @static 
          */ 
-        public static function slot($name, $content = null)
+        public static function slot($name, $content = null, $attributes = [])
         {
                         /** @var \Illuminate\View\Factory $instance */
-                        $instance->slot($name, $content);
+                        $instance->slot($name, $content, $attributes);
         }
                     /**
          * Save the slot content for rendering.
@@ -15803,6 +15904,138 @@
      
 }
 
+    namespace Laravel\Socialite\Facades { 
+            /**
+     * 
+     *
+     * @see \Laravel\Socialite\SocialiteManager
+     */ 
+        class Socialite {
+                    /**
+         * Get a driver instance.
+         *
+         * @param string $driver
+         * @return mixed 
+         * @static 
+         */ 
+        public static function with($driver)
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->with($driver);
+        }
+                    /**
+         * Build an OAuth 2 provider instance.
+         *
+         * @param string $provider
+         * @param array $config
+         * @return \Laravel\Socialite\Two\AbstractProvider 
+         * @static 
+         */ 
+        public static function buildProvider($provider, $config)
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->buildProvider($provider, $config);
+        }
+                    /**
+         * Format the server configuration.
+         *
+         * @param array $config
+         * @return array 
+         * @static 
+         */ 
+        public static function formatConfig($config)
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->formatConfig($config);
+        }
+                    /**
+         * Forget all of the resolved driver instances.
+         *
+         * @return \Laravel\Socialite\SocialiteManager 
+         * @static 
+         */ 
+        public static function forgetDrivers()
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->forgetDrivers();
+        }
+                    /**
+         * Set the container instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Container\Container $container
+         * @return \Laravel\Socialite\SocialiteManager 
+         * @static 
+         */ 
+        public static function setContainer($container)
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->setContainer($container);
+        }
+                    /**
+         * Get the default driver name.
+         *
+         * @return string 
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function getDefaultDriver()
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->getDefaultDriver();
+        }
+                    /**
+         * Get a driver instance.
+         *
+         * @param string|null $driver
+         * @return mixed 
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function driver($driver = null)
+        {            //Method inherited from \Illuminate\Support\Manager         
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->driver($driver);
+        }
+                    /**
+         * Register a custom driver creator Closure.
+         *
+         * @param string $driver
+         * @param \Closure $callback
+         * @return \Laravel\Socialite\SocialiteManager 
+         * @static 
+         */ 
+        public static function extend($driver, $callback)
+        {            //Method inherited from \Illuminate\Support\Manager         
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->extend($driver, $callback);
+        }
+                    /**
+         * Get all of the created "drivers".
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getDrivers()
+        {            //Method inherited from \Illuminate\Support\Manager         
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->getDrivers();
+        }
+                    /**
+         * Get the container instance used by the manager.
+         *
+         * @return \Illuminate\Contracts\Container\Container 
+         * @static 
+         */ 
+        public static function getContainer()
+        {            //Method inherited from \Illuminate\Support\Manager         
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->getContainer();
+        }
+         
+    }
+     
+}
+
     namespace Facade\Ignition\Facades { 
             /**
      * Class Flare.
@@ -16596,6 +16829,246 @@
         public static function hasMacro($name)
         {            //Method inherited from \Nwidart\Modules\FileRepository         
                         return \Nwidart\Modules\Laravel\LaravelFileRepository::hasMacro($name);
+        }
+         
+    }
+     
+}
+
+    namespace Overtrue\LaravelEmoji { 
+            /**
+     * Class Emoji.
+     *
+     * @author overtrue <i@overtrue.me>
+     */ 
+        class Emoji {
+                    /**
+         * First pass changes unicode characters into emoji markup.
+         * 
+         * Second pass changes any shortnames into emoji markup.
+         *
+         * @param string $string The input string.
+         * @return string String with appropriate html for rendering emoji.
+         * @static 
+         */ 
+        public static function toImage($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->toImage($string);
+        }
+                    /**
+         * Uses toShort to transform all unicode into a standard shortname
+         * then transforms the shortname into unicode.
+         * 
+         * This is done for standardization when converting several unicode types.
+         *
+         * @param string $string The input string.
+         * @return string String with standardized unicode.
+         * @static 
+         */ 
+        public static function unifyUnicode($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->unifyUnicode($string);
+        }
+                    /**
+         * This will output unicode from shortname input.
+         * 
+         * If Client/$ascii is true it will also output unicode from ascii.
+         * This is useful for sending emojis back to mobile devices.
+         *
+         * @param string $string The input string.
+         * @return string String with unicode replacements.
+         * @static 
+         */ 
+        public static function shortnameToUnicode($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToUnicode($string);
+        }
+                    /**
+         * This will replace shortnames with their ascii equivalent.
+         * 
+         * ex. :wink: --> ;^)
+         * This is useful for systems that don't support unicode or images.
+         *
+         * @param string $string The input string.
+         * @return string String with ascii replacements.
+         * @static 
+         */ 
+        public static function shortnameToAscii($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToAscii($string);
+        }
+                    /**
+         * This will replace ascii with their shortname equivalent, it bases on reversed ::shortnameToAsciiCallback
+         * ex. :) --> :slight_smile:
+         * This is useful for systems that don't ascii emoji.
+         *
+         * @param string $string The input ascii.
+         * @return string String with shortname replacements.
+         * @static 
+         */ 
+        public static function asciiToShortname($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->asciiToShortname($string);
+        }
+                    /**
+         * This will output image markup from shortname input.
+         *
+         * @param string $string The input string.
+         * @return string String with appropriate html for rendering emoji.
+         * @static 
+         */ 
+        public static function shortnameToImage($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToImage($string);
+        }
+                    /**
+         * This will return the shortname from unicode input.
+         *
+         * @param string $string The input string.
+         * @return string shortname
+         * @static 
+         */ 
+        public static function toShort($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->toShort($string);
+        }
+                    /**
+         * This will output image markup from unicode input.
+         *
+         * @param string $string The input string.
+         * @return string String with appropriate html for rendering emoji.
+         * @static 
+         */ 
+        public static function unicodeToImage($string)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->unicodeToImage($string);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Ascii replacement result.
+         * @static 
+         */ 
+        public static function shortnameToAsciiCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToAsciiCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Unicode replacement result.
+         * @static 
+         */ 
+        public static function shortnameToUnicodeCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToUnicodeCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Image HTML replacement result.
+         * @static 
+         */ 
+        public static function shortnameToImageCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->shortnameToImageCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Unicode replacement result.
+         * @static 
+         */ 
+        public static function asciiToUnicodeCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->asciiToUnicodeCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Shortname replacement result.
+         * @static 
+         */ 
+        public static function asciiToShortnameCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->asciiToShortnameCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Image HTML replacement result.
+         * @static 
+         */ 
+        public static function asciiToImageCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->asciiToImageCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string shortname result
+         * @static 
+         */ 
+        public static function toShortCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->toShortCallback($m);
+        }
+                    /**
+         * 
+         *
+         * @param array $m Results of preg_replace_callback().
+         * @return string Image HTML replacement result.
+         * @static 
+         */ 
+        public static function unicodeToImageCallback($m)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->unicodeToImageCallback($m);
+        }
+                    /**
+         * Converts from unicode to hexadecimal NCR.
+         *
+         * @param string $unicode unicode character/s
+         * @return string hexadecimal NCR
+         * @static 
+         */ 
+        public static function convert($unicode)
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->convert($unicode);
+        }
+                    /**
+         * Get the Ruleset
+         *
+         * @return \Emojione\RulesetInterface The Ruleset
+         * @static 
+         */ 
+        public static function getRuleset()
+        {
+                        /** @var \Emojione\Client $instance */
+                        return $instance->getRuleset();
         }
          
     }
@@ -17618,7 +18091,7 @@ namespace  {
              * @param int|null $perPage
              * @param array $columns
              * @param string $cursorName
-             * @param string|null $cursor
+             * @param \Illuminate\Pagination\Cursor|string|null $cursor
              * @return \Illuminate\Contracts\Pagination\CursorPaginator 
              * @static 
              */ 
@@ -18158,6 +18631,72 @@ namespace  {
             }
              
                 /**
+             * Add a basic where clause to a relationship query.
+             *
+             * @param string $relation
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereRelation($relation, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereRelation($relation, $column, $operator, $value);
+            }
+             
+                /**
+             * Add an "or where" clause to a relationship query.
+             *
+             * @param string $relation
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereRelation($relation, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereRelation($relation, $column, $operator, $value);
+            }
+             
+                /**
+             * Add a polymorphic relationship condition to the query with a where clause.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param string|array $types
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereMorphRelation($relation, $types, $column, $operator, $value);
+            }
+             
+                /**
+             * Add a polymorphic relationship condition to the query with an "or where" clause.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param string|array $types
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereMorphRelation($relation, $types, $column, $operator, $value);
+            }
+             
+                /**
              * Add subselect queries to include an aggregate value for a relationship.
              *
              * @param mixed $relations
@@ -18416,7 +18955,7 @@ namespace  {
              * Pass the query to a given callback.
              *
              * @param callable $callback
-             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @return $this|mixed 
              * @static 
              */ 
             public static function tap($callback)
@@ -18431,7 +18970,7 @@ namespace  {
              * @param mixed $value
              * @param callable $callback
              * @param callable|null $default
-             * @return mixed 
+             * @return $this|mixed 
              * @static 
              */ 
             public static function when($value, $callback, $default = null)
@@ -18446,7 +18985,7 @@ namespace  {
              * @param mixed $value
              * @param callable $callback
              * @param callable|null $default
-             * @return mixed 
+             * @return $this|mixed 
              * @static 
              */ 
             public static function unless($value, $callback, $default = null)
@@ -18542,6 +19081,7 @@ namespace  {
                 /**
              * Force the query to only return distinct results.
              *
+             * @param mixed $distinct
              * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
@@ -20407,8 +20947,10 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Debugbar extends \Barryvdh\Debugbar\Facade {}
+            class Socialite extends \Laravel\Socialite\Facades\Socialite {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
             class Module extends \Nwidart\Modules\Facades\Module {}
+            class Emoji extends \Overtrue\LaravelEmoji\Emoji {}
             class JWTAuth extends \Tymon\JWTAuth\Facades\JWTAuth {}
             class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory {}
      

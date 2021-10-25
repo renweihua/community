@@ -46,10 +46,18 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUpdatedTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Notify whereUserId($value)
  * @mixin \Eloquent
+ * @property-read mixed $time_formatting
  */
 class Notify extends MonthModel
 {
     protected $primaryKey = 'notify_id';
+    protected $appends = ['time_formatting'];
+
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value)
+    {
+        return formatting_timestamp($this->attributes['created_time']);
+    }
 
     // 消息类型
     const NOTIFY_TYPE = [
@@ -61,7 +69,8 @@ class Notify extends MonthModel
     const TARGET_TYPE = [
         'REGISTER' => 0, // 注册成功
         'DYNAMIC' => 1, // 动态
-        'FOLLOW' => 2, // 关注
+        'FOLLOW' => 2, // 关注会员
+        'SUBSCRIBE' => 3, // 订阅话题
     ];
 
     // 互动消息的类型，目标类型：动态
@@ -72,6 +81,7 @@ class Notify extends MonthModel
         'REPLY_COMMENT' => 3, // 回复
         'DELETE_COMMENT' => 4, // 删除评论
         'COMMENT_PRAISE' => 5, // 点赞评论
+        'SHARE' => 6, // 分享动态
     ];
 
     // 发送者类型:系统通知
@@ -84,13 +94,15 @@ class Notify extends MonthModel
 
     public function sender()
     {
-        return $this->hasOne(UserInfo::class, 'user_id', 'sender_id')->select('user_id', 'nick_name', 'user_avatar', 'user_sex');
+        return $this->hasOne(UserInfo::class, 'user_id', 'sender_id')->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_uuid');
     }
 
     public static function insert($data)
     {
         if (!isset($data['notify_content'])) $data['notify_content'] = '';
-        return self::create($data);
+        // 如果存在数据，那么不做录入
+        if(!self::where($data)->first()) return self::create($data);
+        return true;
     }
 
     /**
@@ -115,7 +127,7 @@ class Notify extends MonthModel
         if ( date(MonthModel::MONTH_FORMAT, strtotime($month_table)) >= MonthModel::MIN_TABLE ) {
             $this->setMonthTable($month_table);
             // 检测表名是否存在
-            if ( !DB::select('SHOW TABLES LIKE "' . env('DB_PREFIX') . $this->getTable() . '"') ) {
+            if ( !DB::select('SHOW TABLES LIKE "' . get_db_prefix() . $this->getTable() . '"') ) {
                 return $count;
             }
             $count += $this->where('is_read', 0)->where('user_id', $user_id)->where($where)->count();

@@ -3,7 +3,7 @@
     <div class="container">
       <nav class="navbar px-0 py-1 text-14 navbar-expand-lg navbar-light">
         <router-link :to="{ name: 'home' }" class="navbar-brand text-22 d-flex align-items-center antialiased">
-          <img class="mr-2 avatar-40" src="/logo.jpg" alt="小丑路人社区">小丑路人（未上线，申请QQ互联中……）<span class="text-14 text-muted ml-1">| 高品质社区</span><sup class="ml-1 text-10 text-danger"> Beta</sup> </router-link>
+          <img class="mr-2 avatar-40" src="/logo.jpg" alt="小丑路人社区">小丑路人社区<span class="text-14 text-muted ml-1">| 高品质社区</span><sup class="ml-1 text-10 text-danger"> Beta</sup> </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -19,10 +19,16 @@
             <!--<a class="nav-link" href="#">问答</a>-->
             <!--</li>-->
             <router-link :to="{ name: 'nodes.show' }" exact tag="li" class="nav-item">
-              <a href="javascript:void(0);" class="nav-link">节点</a>
+              <a href="javascript:void(0);" class="nav-link">话题</a>
             </router-link>
             <li class="nav-item">
               <a class="nav-link" target="_blank" href="https://www.cnpscy.com"> 个人博客 </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://bbs-h5.cnpscy.com"> H5端 </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://gitee.com/clown-passerby-community/community"> 项目仓库 </a>
             </li>
             <li class="nav-item">
               <nav-search />
@@ -48,15 +54,15 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-item">
-                      <router-link :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }">
+                      <router-link :to="{ name: 'users.threads', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }">
                         <div class="text-16 text-gray-30">{{ currentUser.user_info ? currentUser.user_info.nick_name : '会员' }}</div>
                         <div>@{{ currentUser.user_info ? currentUser.user_info.nick_name : '' }}</div>
                       </router-link>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <router-link class="dropdown-item" :to="{ name: 'users.show', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
+                    <router-link class="dropdown-item" :to="{ name: 'users.threads', params: { user_uuid: currentUser.user_info ? currentUser.user_info.user_uuid : '' } }" exact>
                       <account-icon class="mr-1"></account-icon>
-                      个人中心
+                      我的主页
                     </router-link>
                     <router-link class="dropdown-item" :to="{ name: 'user.profile' }" exact>
                       <account-edit-icon class="mr-1"></account-edit-icon>

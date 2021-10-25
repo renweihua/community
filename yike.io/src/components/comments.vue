@@ -4,7 +4,8 @@
       <div class="text-16 text-gray-50">{{ paginator_list.total ? paginator_list.total : 0 }} 条评论</div>
     </div>
     <div class="box mb-3" v-if="currentUser.user_id">
-      <template v-if="currentUser.user_info.auth_email == 1">
+      <!-- currentUser.user_info.auth_email == 1 -->
+      <template v-if="true">
         <div class="d-flex align-items-center">
           <img :src="currentUser.user_info.user_avatar" class="avatar-40" :alt="currentUser.user_info.nick_name" />
           <div class="text-18 text-muted ml-2 w-100" @click="writing = true">撰写评论...</div>
@@ -29,10 +30,10 @@
     <paginator :meta="paginator_list" @change="handlePaginate"></paginator>
 
     <div class="box box-flush">
-      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_markdown && item.comment_markdown" v-for="(item,index) in comments" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
+      <div class="border-bottom box-body py-2" :class="{'animated flash': $route.hash === '#comment-' + item.comment_id}" v-if="item.comment_content && item.comment_content" v-for="(item,index) in comments" :key="item.comment_id" :id="'comment-' + item.comment_id" :name="'comment-' + item.comment_id">
         <user-media :user="item.user_info">
           <template slot="name-appends">
-            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.show', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
+            <router-link tag="a" class="text-muted text-12 ml-1" :to="{name: 'users.threads', params: {user_uuid: item.user_info ? item.user_info.user_uuid : ''}}">{{ item.user_info.nick_name }}</router-link>
           </template>
           <small slot="description"><a :href="'#comment-' + item.comment_id" class="text-gray-70">{{ item.comment_time }}</a></small>
           <div class="text-16 text-gray-60 ml-auto d-flex align-items-center" slot="appends">
@@ -51,7 +52,7 @@
             </div>
           </div>
         </user-media>
-        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.comment_markdown"></markdown-body>
+        <markdown-body class="comment-content text-gray-40 pt-2" v-model="item.comment_content"></markdown-body>
       </div>
     </div>
 
@@ -106,7 +107,7 @@ export default {
   computed: {
     ...mapGetters(['currentUser']),
     formReady () {
-      return this.content.length >= 3
+      return this.content.length > 1
     },
     cacheKey () {
       return (
@@ -186,7 +187,7 @@ export default {
       this.query.page = page;
     },
     vote (type = 'up', item, index) {
-    
+
       if (!this.$user().user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
@@ -198,6 +199,7 @@ export default {
             this.comments[index][`praise_count`]++;
             this.comments[index][`has_praise`] = true;
           }
+          this.$message.success(res.msg);
         });
     },
     reply (item) {

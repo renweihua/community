@@ -2,10 +2,22 @@
 	import {
 		getStarCover
 	} from "@/api/CommonServer.js"
-
+	// #ifdef APP-PLUS
+	import APPUpdate from '@/uni_modules/zhouWei-APPUpdate/js_sdk/appUpdate';
+	// #endif
 	export default {
 		onLaunch() {
 			// console.log('App Launch')
+
+			// 检测APP版本是否升级
+			// #ifdef APP-PLUS
+			uni.getSystemInfo({
+				success: function (res) {
+					console.log(res);
+				}
+			});
+			APPUpdate();
+			// #endif
 			// 检查token
 			let token = uni.getStorageSync('TOKEN');
 			if (!!token) {
@@ -58,7 +70,7 @@
 					console.log(err, false);
 					// 登录问题
 					// if (err.data !== 401) {
-					// 	uni.redirectTo({
+					// 	uni.navigateTo({
 					// 		url: '/pages/login/login'
 					// 	})
 					// }

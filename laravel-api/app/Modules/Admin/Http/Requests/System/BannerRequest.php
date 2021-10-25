@@ -35,6 +35,7 @@ class BannerRequest extends BaseRequest
     {
         return [
             'banner_title.required' => '请输入Banner标题！',
+            'banner_title.unique' => 'Banner标题已存在！',
             'banner_cover.required'   => '请上传Banner封面！',
         ];
     }

@@ -21,7 +21,6 @@ class DynamicFilter extends ModelFilter
         switch ($tab) {
             case 'default':
                 $this->latest('dynamic_id');
-
                 break;
             case 'featured': // 精选/加精
                 $this->where('excellent_time', '>', 0)->latest('excellent_time');

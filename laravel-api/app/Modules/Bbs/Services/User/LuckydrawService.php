@@ -201,7 +201,7 @@ class LuckydrawService extends Service
      */
     private static function checkRandAvailable($arr, $activity_details)
     {
-        $detail_id = get_rand($arr);
+        $detail_id = get_random_probability($arr);
         if (empty($activity_details[$detail_id])) return self::checkRandAvailable($arr, $activity_details);
         /**
          * 奖励次数已发完的，排除该奖项，重新计算抽奖

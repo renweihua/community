@@ -18,7 +18,7 @@
 			<view class="w128r flex-gitem f28r mlr18r c555 ellipsis" @tap="$emit('user', infoData.user_info)">{{ infoData.user_info.nick_name }}</view>
 			<view class="flex flex-aic" @tap="$emit('click', infoData)">
 				<i-icon type="remen" size="28" color="#FF6699"></i-icon>
-				<text class="f24r cgray ml8r">{{ infoData.praise_count }}</text>
+				<text class="f24r cgray ml8r">{{ infoData.praises_count }}</text>
 			</view>
 		</view>
 	</view>

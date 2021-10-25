@@ -21,7 +21,6 @@ export default {
         });
     } else {
         this.$http.get('oauth/' + platform + '/callback?code=' + this.$route.query.code + '&state=' + this.$route.query.state).then(response => {
-            console.log(response);
             
             this.$store.dispatch('setToken', response.data.access_token);
             this.$store.dispatch('loadUser');

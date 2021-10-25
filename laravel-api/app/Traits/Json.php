@@ -40,6 +40,7 @@ trait Json
 
         // 如果设置的header的Token返回，那么追加参数
         if ($authorization = request()->header('new_authorization')) $header['Authorization'] = $authorization;
-        return response()->json($data, $this->http_code, $header);
+        // JSON_UNESCAPED_UNICODE 256：Json不要编码Unicode
+        return response()->json($data, $this->http_code, $header, 256);
     }
 }

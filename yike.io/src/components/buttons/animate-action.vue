@@ -35,13 +35,13 @@ export default {
   },
   methods: {
     toggle () {
-      if (!this.currentUser.id) {
+      if (!this.currentUser.user_id) {
         return this.$router.push({ name: 'auth.login' })
       }
       this.$http
-        .post(`relations/like`, {
+        .post(`dynamic/praise`, {
           followable_type: 'App\\Thread',
-          followable_id: this.item.id
+          dynamic_id: this.item.dynamic_id
         })
         .then(() => {
           this.item.is_praise = !this.item.is_praise

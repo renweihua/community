@@ -9,7 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "cnpscy/douyin-download": "@dev",
         "cnpscy/socialite": "dev-master",
+        "erusev/parsedown-extra": "^0.7.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "graham-campbell/exceptions": "14.1",
@@ -20,6 +22,8 @@
         "laravel/tinker": "^2.5",
         "matchish/laravel-scout-elasticsearch": "^4.0",
         "nwidart/laravel-modules": "^8.2",
+        "overtrue/laravel-emoji": "^1.0",
+        "overtrue/qcloud-cos-client": "^1.0",
         "php-ffmpeg/php-ffmpeg": "^0.17.0",
         "predis/predis": "^1.1",
         "torann/geoip": "^3.0",
@@ -82,6 +86,11 @@
         "cnpscy-socialite": {
             "type": "path",
             "url": "../cnpscy-socialite"
+        },
+        "douyin-download": {
+            "type": "path",
+            "url": "../../douyin-download",
+            "symlink": true
         }
     }
 }

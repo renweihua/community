@@ -52,32 +52,40 @@ class UploadFile extends Model
     {
         if ($this->attributes['storage'] == 'local'){
             return Storage::url($this->attributes['file_name']);
-            // return env('APP_URL') . '/' . trim($this->attributes['file_name'],'/');
         }
+        // 非本地文件，获取文件时自动追加域名
         return $this->attributes['host_url'] . '/' . trim($this->attributes['file_name'],'/');
+    }
+
+    public function setFileNameAttribute($key): void
+    {
+        // 非本地文件上传，存储文件时自动移除域名
+        if ($this->attributes['storage'] != 'local'){
+            $key = str_replace($this->attributes['host_url'], '', $key);
+        }
+        $this->attributes['file_name'] = $key;
     }
 
     /**
      * 添加文件库上传记录
-     * @param $fileName
-     * @param $fileInfo
-     * @param $fileType
+     *
+     * @param  string  $file_name
+     * @param          $file
+     * @param  string  $storage  存储引擎
+     * @param  string  $host_url 存储域名
+     *
      * @return UploadFile
      */
-    public static function addRecord($file_name, $file)
+    public static function addRecord(string $file_name, $file, $storage = 'local', $host_url = '', int $file_size = 0, $file_type = 'image/jepg', $extension = 'jpg')
     {
-        // 存储引擎
-        $storage = 'local';
-        // 存储域名
-        $host_url = '';
         // 添加文件库记录
         return UploadFile::create([
             'storage' => $storage,
             'host_url' => $host_url,
             'file_name' => $file_name,
-            'file_size' => $file->getSize(),
-            'file_type' => $file->getMimeType(),
-            'extension' => $file->getClientOriginalExtension(),
+            'file_size' => is_string($file) ? $file_size : $file->getSize(),
+            'file_type' => is_string($file) ? $file_type : $file->getMimeType(),
+            'extension' => is_string($file) ? $extension : $file->getClientOriginalExtension(),
         ]);
     }
 }

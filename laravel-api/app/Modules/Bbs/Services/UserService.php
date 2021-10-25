@@ -21,11 +21,14 @@ class UserService extends Service
      *
      * @return mixed
      */
-    public function lists(array $params = [], int $limit = 10)
+    public function lists(array $params = [], int $limit = 10, int $login_user_id = 0)
     {
         return User::filter($params)
-            ->with(['userInfo' => function($query) {
-                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'get_likes', 'basic_extends']);
+            ->with(['userInfo' => function($query) use($login_user_id) {
+                $query->select(['user_id', 'user_uuid', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'auth_status', 'auth_mobile', 'auth_email', 'created_time', 'last_actived_time', 'get_likes', 'basic_extends'])
+                    ->with(['isFollow'  => function($query) use ($login_user_id) {
+                        $query->where('user_id', $login_user_id);
+                    },]);
             }])
             ->paginate($this->getLimit($limit));
     }

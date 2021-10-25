@@ -46,6 +46,9 @@ use App\Modules\Bbs\Database\factories\UserOtherloginFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|UserOtherlogin whereWeiboOpenid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserOtherlogin whereWeixinOpenid($value)
  * @mixin \Eloquent
+ * @property mixed $github_info
+ * @property mixed $qq_info
+ * @property mixed $weibo_info
  */
 class UserOtherlogin extends Model
 {
@@ -59,5 +62,35 @@ class UserOtherlogin extends Model
     public function user()
     {
         return $this->belongsTo(User::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function getQqInfoAttribute()
+    {
+        return json_decode($this->attributes['qq_info'] ?? '{}', true);
+    }
+
+    public function setQqInfoAttribute($value)
+    {
+        $this->attributes['qq_info'] = json_encode($value);
+    }
+
+    public function getWeiboInfoAttribute()
+    {
+        return json_decode($this->attributes['weibo_info'] ?? '{}', true);
+    }
+
+    public function setWeiboInfoAttribute($value)
+    {
+        $this->attributes['weibo_info'] = json_encode($value);
+    }
+
+    public function getGithubInfoAttribute()
+    {
+        return json_decode($this->attributes['github_info'] ?? '{}', true);
+    }
+
+    public function setGithubInfoAttribute($value)
+    {
+        $this->attributes['github_info'] = json_encode($value);
     }
 }

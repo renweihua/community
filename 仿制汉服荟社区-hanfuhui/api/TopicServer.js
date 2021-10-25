@@ -14,7 +14,7 @@ export async function getTopicList(params = {
   page: 1,
   limit: 20
 }) {
-  return await request('/Topic/GetTopicListForHot', 'get', params)
+    return await request('/topics', 'get');
 }
 
 /**

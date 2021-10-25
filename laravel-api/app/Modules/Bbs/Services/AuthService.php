@@ -274,6 +274,7 @@ class AuthService extends Service
             'nick_name' => $user->userInfo->nick_name,
             'user_avatar' => $user->userInfo->user_avatar,
             'login_time' => time(),
+            'auth_type' => 'user', // Token认证类型
             'expires_time' => $result['expires_time'],
         ];
 
@@ -287,21 +288,27 @@ class AuthService extends Service
     {
         $userOtherlogin = UserOtherlogin::getInstance();
         $openid = $oauth_user->getId();
-        $login = $userOtherlogin->with('user')->where($oauth . '_openid', $openid)->first();
+
+        $login = $userOtherlogin->with('user')->where($oauth . '_info->pc_openid', $openid)->first();
         if (!$login){ // 未绑定直接登录即可
             $user_origin = 0;
+            $oauth_info = [
+                'pc_openid' => $openid,
+            ];
             switch (strtoupper($oauth)){
                 case 'QQ': // QQ
                     $user_origin = 1;
-                    break;
-                case 'BAIDU': // 百度
-                    $user_origin = 2;
+                    $oauth_info['union_id'] = $oauth_user->offsetGet('unionid');
                     break;
                 case 'WEIBO': // 新浪微博
                     $user_origin = 3;
                     break;
                 case 'GITHUB': // GitHub
                     $user_origin = 4;
+                    break;
+                default:
+                    $this->error = '未授权的第三方登录！';
+                    return false;
                     break;
             }
             // 注册流程
@@ -310,7 +317,7 @@ class AuthService extends Service
                 'user_avatar' => $oauth_user->getAvatar(),
                 'register_type' => 3, // 第三方登录
                 'otherlogins' => [
-                    $oauth . '_openid' => $openid,
+                    $oauth . '_info' => $oauth_info,
                     'change_account' => 1,
                     'user_origin' => $user_origin,
                 ]

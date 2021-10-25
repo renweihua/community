@@ -1,5 +1,12 @@
 # 汉服荟社区
 
+
+## 博客
+[小丑路人博客](https://www.cnpscy.com)
+
+## 社区
+[小丑路人社区](https://bbs.cnpscy.com)
+
 #### 介绍
 汉服荟社区
 

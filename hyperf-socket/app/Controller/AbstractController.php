@@ -11,13 +11,15 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Traits\Json;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\HttpServer\Contract\ResponseInterface;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractController
 {
+    use Json;
+
     /**
      * @Inject
      * @var ContainerInterface
@@ -30,9 +32,9 @@ abstract class AbstractController
      */
     protected $request;
 
-    /**
-     * @Inject
-     * @var ResponseInterface
-     */
-    protected $response;
+    // /**
+    //  * @Inject
+    //  * @var ResponseInterface
+    //  */
+    // protected $response;
 }

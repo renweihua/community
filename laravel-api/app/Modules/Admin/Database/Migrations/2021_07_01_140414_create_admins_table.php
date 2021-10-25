@@ -29,7 +29,7 @@ class CreateAdminsTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admins` comment '管理员表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "admins` comment '管理员表'");
     }
 
     /**

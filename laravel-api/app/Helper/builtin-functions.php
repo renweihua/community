@@ -6,6 +6,7 @@
  *
  *
  */
+
 function get_request_post()
 {
     return request()->isMethod('post');
@@ -35,4 +36,10 @@ function modifyEnv(array $data)
     });
     $content = implode($contentArray->toArray(), "\n");
     \Illuminate\Support\Facades\File::put($envPath, $content);
+}
+
+// 获取数据表的前缀
+function get_db_prefix()
+{
+    return config('database.connections.' . config('database.default') . '.prefix');
 }

@@ -2,4 +2,7 @@
 unpackage/cache
 unpackage/dist
 unpackage/docres
+unpackage/debug
+unpackage/resources
+unpackage/release
 node_modules

@@ -7,12 +7,12 @@
       <li class="timeline-item" v-for="activity in activities.data" :key="activity.id" v-if="activity.subject">
         <div class="timeline-heading">
           <div class="d-flex">
-            <router-link :to="{name:'users.show', params: {username: $parent.user.username}}">
+            <router-link :to="{name:'users.threads', params: {username: $parent.user.username}}">
               <img :src="$parent.user.avatar" class="avatar-40" :alt="$parent.user.name" />
             </router-link>
             <div class="ml-2">
               <div>
-                <router-link :to="{name:'users.show', params: {username: $parent.user.username}}">
+                <router-link :to="{name:'users.threads', params: {username: $parent.user.username}}">
                   <h6 class="mb-0 text-16 d-inline-block">{{ $parent.user.name }}</h6>
                 </router-link>
                 <span class="text-gray-60 ml-1">
@@ -111,7 +111,7 @@ export default {
         return { name: 'threads.show', params: { id: activity.subject.id } }
       case 'App\\User':
         return {
-          name: 'users.show',
+          name: 'users.threads',
           params: { id: activity.subject.username }
         }
       }

@@ -3,7 +3,11 @@
 namespace App\Exceptions;
 
 use App\Traits\Json;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -19,8 +23,8 @@ class Handler extends ExceptionHandler
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-        \Illuminate\Validation\ValidationException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -57,14 +61,30 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // Exception类的错误监听
-        if($exception instanceof Exception){
-            return $this->errorJson($exception->getMessage(), $exception->getCode());
+        // 路由404异常监听
+        if($exception instanceof NotFoundHttpException){
+            $this->setHttpCode(404);
+            return $this->errorJson("路由{{$request->path()}}不存在！");
+        }
+
+        // 控制器不存在
+        if ($exception instanceof BindingResolutionException){
+            return $this->errorJson($exception->getMessage());
+        }
+
+        // 模型不存在
+        if ($exception instanceof ModelNotFoundException){
+            return $this->errorJson($exception->getMessage());
         }
 
         // 验证器类的错误监听
-        if($exception instanceof \Illuminate\Validation\ValidationException){
+        if($exception instanceof ValidationException){
             return $this->errorJson($exception->validator->errors()->first());
+        }
+
+        // Exception类的错误监听
+        if($exception instanceof Exception){
+            return $this->errorJson($exception->getMessage(), $exception->getCode());
         }
 
         return parent::render($request, $exception);

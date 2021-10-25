@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Http\Controllers;
 use App\Models\Rabc\AdminMenu;
 use App\Modules\Admin\Http\Requests\LoginRequest;
 use App\Modules\Admin\Services\AuthService;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
 {
@@ -21,7 +22,7 @@ class AuthController extends BaseController
      * @throws \App\Exceptions\Admin\AuthException
      * @throws \App\Exceptions\InvalidRequestException
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -37,7 +38,7 @@ class AuthController extends BaseController
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Admin\AuthException
      */
-    public function me()
+    public function me(): JsonResponse
     {
         if (\request()->getMethod() == 'OPTIONS'){
             return $this->successJson();
@@ -51,15 +52,15 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         return $this->successJson($this->service->logout());
     }
 
-    public function getRabcList()
+    public function getRabcList(): JsonResponse
     {
         return $this->successJson($this->service->getRabcList());
-        
+
         // 临时测试数据
         return $this->successJson(list_to_tree(AdminMenu::getInstance()->getAllMenus()->toArray()));
     }

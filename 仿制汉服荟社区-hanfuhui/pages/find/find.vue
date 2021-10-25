@@ -27,20 +27,14 @@
 			<swiper-item>
 				<mescroll-uni v-if="status.recommend" :top="90" :bottom="112" @down="downRecommend" :up="{ use: false }">
 					<!-- 轮播 -->
-					<swiper autoplay="true" interval="3000" duration="300" circular="true" indicator-dots="true" indicator-active-color="#FF6699">
+					<swiper v-if="bannerListData" autoplay="true" interval="3000" duration="300" circular="true" indicator-dots="true" indicator-active-color="#FF6699">
 						<block v-for="banner in bannerListData" :key="banner.banner_id">
 							<swiper-item><image style="width: 100%;height: 100%;" :src="banner.banner_cover" mode="scaleToFill" :lazy-load="true" /></swiper-item>
 						</block>
 					</swiper>
-					<!-- 热门话题 -->
-					<view class="flexr-jsb flex-fww ptb28r plr18r mb18r bgwhite">
-						<block v-for="(hotspot, index) in hotTopicListData" :key="index">
-							<view class="w44v f28r c555 br8r bgf8 ellipsis ptb18r plr18r" :class="{ mb18r: index == 0 || index == 1 }">#{{ hotspot.Title }}</view>
-						</block>
-					</view>
-					<!-- 推荐荟吧 -->
+					<!-- 推荐话题  -->
 					<view class="plr18r ptb18r bgwhite">
-						<view class="f32r fbold c555 mb18r">推荐荟吧</view>
+						<view class="f32r fbold c555 mb18r">话题</view>
 						<view class="flexr-jsb flex-fww flex-aic fcenter">
 							<view v-for="huiba in huibaListData" :key="huiba.topic_id" class="w32v-mb2v"><huiba-card :info-data="huiba" @click="fnHuibaInfo"></huiba-card></view>
 							<view class="w32v-mb2v" v-if="false"><i-icon v-if="huibaListData.length" type="jinru" size="96" color="#555555"></i-icon></view>
@@ -110,7 +104,6 @@
 
 <script>
 import { getBannerTopicList } from '@/api/CommonServer.js';
-import { getHuibaList } from '@/api/HuibaServer.js';
 import { getRankFace } from '@/api/AlbumServer.js';
 import { getTopicList } from '@/api/TopicServer.js';
 import { followUser } from '@/api/UserServer.js';
@@ -126,10 +119,6 @@ import VideoCard from '@/components/video-card/video-card';
 import AlbumCard from '@/components/album-card/album-card';
 // 荟吧展示卡组件
 import HuibaCard from '@/components/huiba-card/huiba-card';
-
-let listData = {
-	3: getTopicList,
-};
 
 export default {
 	components: {
@@ -212,10 +201,6 @@ export default {
 		// Banner图
 		bannerListData() {
 			return this.$store.getters['common/getBannerListData'];
-		},
-		// 热门话题
-		hotTopicListData() {
-			return this.$store.getters['common/getHotTopicListData'];
 		},
 		// 热门荟吧
 		huibaListData() {
@@ -312,19 +297,11 @@ export default {
 		downRecommend(mescroll) {
 			// console.log(mescroll);
 			this.mescroll[this.scrollInto] = mescroll;
-			Promise.all([getBannerTopicList(), getHuibaList()])
+			Promise.all([getBannerTopicList(), getTopicList()])
 				.then(resArray => {
 					// Banner
 					this.$store.commit('common/setBannerListData', resArray[0].data);
-					// 推荐demo数据
-					this.$store.commit('common/setHotTopicListData', [
-						{ ID: 1, Title: '穿汉服给祖国庆生', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 },
-						{ ID: 2, Title: '袍子的第一件入坑汉服', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 },
-						{ ID: 3, Title: '汉服小剧本征集', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 },
-						{ ID: 4, Title: '喜欢什么样的汉服搭配', Link: 'huiapp://open?topic=147207', FaceSrc: '', Datetime: '2019-10-03T20:37:21', ClickCount: 1 }
-					]);
 					// 荟吧列表
-					console.log(resArray[0].data);
 					this.$store.commit('huiba/setHuibaListData', resArray[1].data);
 					mescroll.endDownScroll();
 				})
@@ -344,9 +321,9 @@ export default {
 		/// 顶部导航选项点击
 		fnBarClick(e) {
 			let current = e.hasOwnProperty('detail') ? e.detail.current : e.current;
-			console.log(current);
-			console.log(this.tabBars[current]);
-			console.log(this.tabBars[current].id);
+			// console.log(current);
+			// console.log(this.tabBars[current]);
+			// console.log(this.tabBars[current].id);
 			this.scrollInto = this.tabBars[current].id;
 			// 是否当前项点击
 			if (e.hasOwnProperty('id') && this.current == current) {

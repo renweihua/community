@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Http\Controllers\User;
 
+use App\Models\Dynamic\Dynamic;
 use App\Modules\Bbs\Http\Controllers\BbsController;
 use App\Modules\Bbs\Http\Requests\DynamicIdRequest;
 use App\Modules\Bbs\Http\Requests\User\DynamicCommentIdRequest;
@@ -24,11 +25,29 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function push(DynamicRequest $request):JsonResponse
+    public function push(DynamicRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($result = $this->service->push($this->getLoginUserId(), $request->all())) {
+            return $this->successJson($result, $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    /**
+     * 编辑动态
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\DynamicRequest  $request
+     * @param                                                      $dynamic_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\InvalidRequestException
+     */
+    public function update(DynamicRequest $request, $dynamic_id): JsonResponse
+    {
+        $request->validated();
+        if ($result = $this->service->update($this->getLoginUserId(), $dynamic_id, $request->all())) {
             return $this->successJson($result, $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
@@ -42,10 +61,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function praise(DynamicIdRequest $request) : JsonResponse
+    public function praise(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
@@ -71,10 +89,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function collection(DynamicIdRequest $request) : JsonResponse
+    public function collection(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if ($result = $this->service->collection($this->getLoginUserId(), (int)$data['dynamic_id'])) {
             return $this->successJson([], $this->service->getError());
         } else {
@@ -89,10 +106,9 @@ class DynamicController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function comment(DynamicCommentRequest $request) : JsonResponse
+    public function comment(DynamicCommentRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($data = $this->service->comment($this->getLoginUserId(), $request->all())) {
             return $this->successJson($data, $this->service->getError());
         } else {
@@ -110,9 +126,18 @@ class DynamicController extends BbsController
     public function deleteComment(DynamicCommentIdRequest $request): JsonResponse
     {
         $request->validated();
-
         if ($result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'))) {
             return $this->successJson($result, $this->service->getError());
+        } else {
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    public function setDynamicFiled(DynamicIdRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        if ($result = $this->service->setDynamicFiled($this->getLoginUser(), (int)$data['dynamic_id'], (string)$data['change_field'], $data['change_value'])) {
+            return $this->successJson([], $this->service->getError());
         } else {
             return $this->errorJson($this->service->getError());
         }

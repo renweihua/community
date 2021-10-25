@@ -5,9 +5,21 @@ import config from '../config.js';
  * 常见公共服务接口
  * ===========
  */
+export async function goLogin() {
+	// 自动跳转登录页
+	uni.navigateTo({
+		url: '/pages/login/login'
+	});
+	return false;
+}
 
 export async function get(url, params) {
 	return await request(url, 'GET', params);
+}
+
+// 检测App版本是否升级
+export async function checkAppVersion(params) {
+	return await request('/check_app_version', 'GET', params);
 }
 
 /**

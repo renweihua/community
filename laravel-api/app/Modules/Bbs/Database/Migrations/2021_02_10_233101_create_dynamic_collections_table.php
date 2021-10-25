@@ -21,7 +21,7 @@ class CreateDynamicCollectionsTable extends Migration
             $table->integer('dynamic_id')->unsigned()->default(0)->comment('动态Id-收藏表');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
-            $table->string('browser_type', 200)->default('')->comment('创建时浏览器类型');
+            $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->index(['user_id']);
             $table->index(['dynamic_id']);
         });

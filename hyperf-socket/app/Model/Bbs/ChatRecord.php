@@ -10,6 +10,7 @@ use Hyperf\DbConnection\Db;
 class ChatRecord extends MonthModel
 {
     protected $primaryKey = 'record_id';
+    protected $is_delete  = 0;
 
     public function getChatContentAttribute($value)
     {
