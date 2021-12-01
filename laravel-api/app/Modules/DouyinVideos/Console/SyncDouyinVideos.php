@@ -44,8 +44,8 @@ class SyncDouyinVideos extends Command
     {
         Log::info($this->description);
 
-        // 每24小时同步一次作者的视频
-        $authors = $douyinAuthor->where('last_sync', '<', time() - 24 * 3600)->get();
+        // 每10天同步一次作者的视频
+        $authors = $douyinAuthor->where('last_sync', '<', time() - 10 * 24 * 3600)->get();
 
         foreach ($authors as $author){
             SyncDouyinAuthor::dispatch($author)
