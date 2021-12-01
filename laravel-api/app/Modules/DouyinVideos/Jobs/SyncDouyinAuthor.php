@@ -34,19 +34,14 @@ class SyncDouyinAuthor implements ShouldQueue
      */
     public function handle()
     {
-        // 重新获取作者的信息【暂时不同步，仅用于记录上一次同步动态的时间】
-        if ($this->author instanceof DouyinAuthor){
-            // 检测作者是否存在
-            $author = $this->author->where('uid', $this->author->uid)->lock(true)->first();
-            // 录入作者
-            if (!$author){
-                $author = $this->createAuthor();
-            }else{
-                // 上一次同步时间
-                $author->update(['last_sync' => time()]);
-            }
-        }else{
+        // 检测作者是否存在
+        $author = $this->author->where('uid', $this->author->uid)->lock(true)->first();
+        // 录入作者
+        if (!$author){
             $author = $this->createAuthor();
+        }else{
+            // 上一次同步时间
+            $author->update(['last_sync' => time()]);
         }
 
         // 分发队列，同步当前作者的动态

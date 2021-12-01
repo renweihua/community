@@ -80,11 +80,15 @@ class SyncDouyinVideos implements ShouldQueue
                         // 获取在线文件的大小
                         $res = get_headers($item['video_path'],true);
 
+                        $file_content = @file_get_contents($item['video_path']);
+                        if (!$file_content) {
+                            continue;
+                        }
                         $file_url = CosService::getInstance()->put(
-                            file_get_contents($item['video_path']),
+                            $file_content,
                             $file_name . '.mp4',
                             $this->path_file_folder,
-                            $res['Content-Length'],
+                            $res['Content-Length'] ?? 0,
                             'video/mp4',
                             'mp4'
                         );
