@@ -20,9 +20,9 @@ class CreateDouyinVideosTable extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('video_id')->unsigned()->comment('Id');
             $table->bigInteger('author_id')->unsigned()->default(0)->comment('作者Id');
-            $table->string('aweme_id', 200)->default('')->comment('视频Id');
-            $table->string('cover', 200)->default('')->comment('封面图');
-            $table->string('desc', 200)->default('')->comment('描述');
+            $table->string('aweme_id', 300)->default('')->comment('视频Id');
+            $table->string('cover', 300)->default('')->comment('封面图');
+            $table->string('desc', 300)->default('')->comment('描述');
             $table->json('images')->nullable()->comment('多图');
 
             // path 视频地址
