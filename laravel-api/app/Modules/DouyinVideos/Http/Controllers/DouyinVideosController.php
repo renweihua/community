@@ -37,6 +37,12 @@ class DouyinVideosController extends Controller
 
         $sec_uid = $class->getSecUidByUrl($url);
 
+        // 检测作者是否存在
+        $author = DouyinAuthor::where('sec_uid', $sec_uid)->lock(true)->first();
+        if($author){
+            throw new InvalidRequestException('此作者已录入，系统会定期同步视频！');
+        }
+
         $class->getUserInfoBySecUid($sec_uid);
 
         SyncDouyinAuthor::dispatch(array_merge($class->getAuthor(), ['share_url' => $url]))
@@ -45,10 +51,14 @@ class DouyinVideosController extends Controller
                         ->onQueue('douyin-queue'); // douyin-queue 队列
 
         return $this->successJson([],
-            '队列追加成功....'
-            . PHP_EOL . '作者昵称：' . $class->getNickname()
-            . PHP_EOL . '作者头像：' . $class->getAvatarThumb()
-            . PHP_EOL . '作者sec_uid：' . $class->getSecUid()
+            '队列追加成功....',
+            [
+                '作者UniqueId：' => $class->getUniqueId(),
+                '作者Uid：' => $class->getUid(),
+                '作者sec_uid：' => $class->getSecUid(),
+                '作者昵称：' => $class->getNickname(),
+                '作者头像：' => $class->getAvatarThumb(),
+            ]
         );
     }
 }

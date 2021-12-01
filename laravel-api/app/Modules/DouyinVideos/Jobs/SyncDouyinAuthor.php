@@ -35,7 +35,7 @@ class SyncDouyinAuthor implements ShouldQueue
     public function handle()
     {
         // 检测作者是否存在
-        $author = $this->author->where('uid', $this->author->uid)->lock(true)->first();
+        $author = DouyinAuthor::where('sec_uid', $this->author['sec_uid'])->lock(true)->first();
         // 录入作者
         if (!$author){
             $author = $this->createAuthor();
