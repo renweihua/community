@@ -78,7 +78,10 @@ class SyncDouyinVideos implements ShouldQueue
 
                         // 存储到COS
                         // 获取在线文件的大小
-                        $res = get_headers($item['video_path'],true);
+                        $res = @get_headers($item['video_path'],true);
+                        if (!$res) {
+                            continue;
+                        }
 
                         $file_content = @file_get_contents($item['video_path']);
                         if (!$file_content) {
@@ -92,6 +95,9 @@ class SyncDouyinVideos implements ShouldQueue
                             'video/mp4',
                             'mp4'
                         );
+                        if (!$file_url) {
+                            continue;
+                        }
                         $item['real_video_path'] = $file_url;
 
                         $data = [

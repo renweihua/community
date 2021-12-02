@@ -44,6 +44,9 @@ class SyncDouyinAuthor implements ShouldQueue
             $author->update(['last_sync' => time()]);
         }
 
+        // var_dump($author->toArray());
+
+
         // 分发队列，同步当前作者的动态
         SyncDouyinVideos::dispatch($author)
                         ->delay(now()->addMinutes(rand(1, 20 * 3600))) // 延迟分钟数【在20小时内执行完成即可】
