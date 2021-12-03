@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Models\SoftDelete;
 
-use http\Env\Request;
-
 trait SoftDelete
 {
     public function getIsDelete()
