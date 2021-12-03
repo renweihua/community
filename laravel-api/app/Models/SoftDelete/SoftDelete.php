@@ -10,7 +10,7 @@ trait SoftDelete
 {
     public function getIsDelete()
     {
-        return $this->is_delete;
+        return $this->is_delete ?? 1;
     }
 
     public function getDeleteField()
@@ -77,7 +77,7 @@ trait SoftDelete
 
         $this->{$this->getDeletedAtColumn()} = $time;
 
-        if ($this->timestamps && ! is_null($this->getUpdatedAtColumn())) {
+        if ($this->timestamps && $this->getUpdatedAtColumn() == 0) {
             $this->{$this->getUpdatedAtColumn()} = $time;
 
             $columns[$this->getUpdatedAtColumn()] = $this->fromDateTime($time);
@@ -104,7 +104,7 @@ trait SoftDelete
             return false;
         }
 
-        $this->{$this->getDeletedAtColumn()} = null;
+        $this->{$this->getDeletedAtColumn()} = 0;
 
         // Once we have saved the model, we will fire the "restored" event so this
         // developer will do anything they need to after a restore operation is
@@ -125,7 +125,7 @@ trait SoftDelete
      */
     public function trashed()
     {
-        return ! is_null($this->{$this->getDeletedAtColumn()});
+        return $this->{$this->getDeletedAtColumn()} != 1;
     }
 
     /**
