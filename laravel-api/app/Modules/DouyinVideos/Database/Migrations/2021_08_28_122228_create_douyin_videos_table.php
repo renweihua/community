@@ -31,8 +31,9 @@ class CreateDouyinVideosTable extends Migration
             // height 高度
             // ratio
             $table->json('video')->nullable()->comment('视频信息');
-
             $table->json('statistics')->nullable()->comment('视频统计信息');
+
+            $table->json('old_data')->nullable()->comment('原始数据');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');

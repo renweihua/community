@@ -48,6 +48,7 @@ class DouyinVideo extends Model
         'images' => 'array', // 多图
         'video' => 'array', // 视频信息
         'statistics' => 'array', // 视频统计信息
+        'old_data' => 'array', // 视频原始数据
     ];
 
     public function author()

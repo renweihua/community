@@ -91,7 +91,7 @@ class SyncDouyinVideos implements ShouldQueue
                             $file_content,
                             $file_name . '.mp4',
                             $this->path_file_folder,
-                            $res['Content-Length'] ?? 0,
+                            intval($res['Content-Length'] ?? 0),
                             'video/mp4',
                             'mp4'
                         );
@@ -119,6 +119,7 @@ class SyncDouyinVideos implements ShouldQueue
                                 'ratio'     => $item['ratio'],
                             ],
                             'statistics' => $item['statistics'],
+                            'old_data' => $item['original'] ?? [],
                         ];
                         $douyinVideo->create($data);
                         ++$success_num;
