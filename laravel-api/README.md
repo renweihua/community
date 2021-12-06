@@ -21,12 +21,20 @@
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：`community.sql`
-* 定时任务：
+* 请立即执行 `php artisan command:autotablebuild`
+    - sql文件基本上不会手动更新，那么使用时如果间隔太久，存在几个按月分表的就会缺失表，执行按月分表，生成当月及下月的分表，则避免数据表不存在报错的问题。
+
+
+##### 站点配置
+
+- 站点解析目录：`public`
+- 访问网址：`你的域名/admin`
+- 定时任务：
     - 自动按月分表：`php artisan command:autotablebuild`
     - 或者使用任务调度：`php artisan schedule:run`
         - 后置进程：
             `* * * * * php artisan schedule:run >> /dev/null 2>&1`
-* 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
+- 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
     - mysql存储的[抖音作者与视频同步]的队列： `php artisan queue:work database --queue=douyin-queue`
 
@@ -43,6 +51,7 @@
     echo "耗时(毫秒)：{$userTime} \n";
     var_dump($articles);
 ``` 
+
 
 ##### linux系统下，Laravel使用 env 读取环境变量为 null 的问题
 

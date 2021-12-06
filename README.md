@@ -15,7 +15,7 @@
 ![签到](./demo/sign.png)
 
 #### 软件架构
-软件架构说明
+软件架构说明（各自文件下有对应的安装流程介绍）
 1. laravel APi
 2. hyperf socket服务端
 3. uni-app 汉服荟社区
