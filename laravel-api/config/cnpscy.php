@@ -8,6 +8,7 @@
   'resource_version_number' => '20200410',
   'ARTICLE_CACHE_TIME' => '60',
   'WEB_SITE_CLOSE' => '1',
+  'ip_blacklists' => '',
   'config_group_list' =>
   array (
     0 => '不分组',

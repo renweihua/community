@@ -5,6 +5,7 @@ use \Illuminate\Support\Facades\Route;
 use App\Modules\Bbs\Http\Middleware\CheckAuth;
 use App\Modules\Bbs\Http\Middleware\GetUserByToken;
 use App\Modules\Bbs\Http\Middleware\RecordWebLog;
+use App\Http\Middleware\CheckIpBlacklist;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 });
 
 
-Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::class])->group(function () {
+Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::class, CheckIpBlacklist::class])->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
         // 邮箱注册，发送验证码

@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Admin\Http\Middleware\CheckAuth;
 use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
+use App\Http\Middleware\CheckIpBlacklist;
 
 Route::prefix(cnpscy_config('admin_prefix'))
+    ->middleware(CheckIpBlacklist::class)
     ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
