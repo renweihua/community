@@ -91,21 +91,23 @@ if ( !function_exists('text_hidden') ) {
     }
 }
 
-/**
- * 匹配内容，追加图片的前缀
- *
- * @param          $content
- * @param  string  $suffix
- *
- * @return string|string[]|null
- */
-function merge_image_url($content, $suffix = '')
-{
-    $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
-    // 如果不存在图片，则追加http；否则不变动
-    $pregRule = "/<[img|IMG].*?src=[\'|\"]((?!(http|https)\:\/).*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
-    $content = preg_replace($pregRule, '<img src="' . $suffix . '${1}" style="max-width:100%">', $content);
-    return $content;
+if ( !function_exists('set_img_suffix_for_content') ) {
+    /**
+     * 匹配内容，追加图片的前缀
+     *
+     * @param          $content
+     * @param  string  $suffix
+     *
+     * @return string|string[]|null
+     */
+    function set_img_suffix_for_content($content, $suffix = '')
+    {
+        $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+        // 如果不存在图片，则追加http；否则不变动
+        $pregRule = "/<[img|IMG].*?src=[\'|\"]((?!(http|https)\:\/).*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+        $content = preg_replace($pregRule, '<img src="' . $suffix . '${1}" style="max-width:100%">', $content);
+        return $content;
+    }
 }
 
 if ( !function_exists('number_show_text') ) {
