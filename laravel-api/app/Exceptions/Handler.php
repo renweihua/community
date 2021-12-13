@@ -83,8 +83,13 @@ class Handler extends ExceptionHandler
                 return $this->errorJson($exception->validator->errors()->first());
             }
 
-            // Exception类的错误监听
+            // 自定义Exception类的错误监听
             if($exception instanceof Exception){
+                return $this->setJsonReturn($exception);
+            }
+
+            // ErrorException类的监听
+            if($exception instanceof \ErrorException){
                 return $this->setJsonReturn($exception);
             }
         }
