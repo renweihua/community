@@ -28,9 +28,13 @@ class DouyinVideosController extends Controller
             throw new InvalidRequestException('请设置有效的抖音作者分享URL！');
         }
 
-        // 检测数据库是否存在此作者的分享链接
-        if (DouyinAuthor::where('share_url', $url)->first()){
-            throw new InvalidRequestException('此作者已录入，系统会定期同步视频！');
+        // 检测是否强制更新录入作者与视频下载
+        if (!isset($request->forced_update) || $request->forced_update != 1)
+        {
+            // 检测数据库是否存在此作者的分享链接
+            if (DouyinAuthor::where('share_url', $url)->first()){
+                throw new InvalidRequestException('此作者已录入，系统会定期同步视频！');
+            }
         }
 
         $class = new $videoService;
