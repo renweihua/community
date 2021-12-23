@@ -39,6 +39,8 @@ class EsInit extends Command
      */
     public function handle()
     {
+        // 废弃！！！无法创建模版
+
         $client = new Client();
         //创建模板
         $url = config('scout.elasticsearch.hosts')[0].'/_template/template_1';

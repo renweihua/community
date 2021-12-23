@@ -51,6 +51,15 @@
     echo "耗时(毫秒)：{$userTime} \n";
     var_dump($articles);
 ``` 
+* ES参考：https://learnku.com/articles/59076
+    - 索引配置
+        - `php artisan elastic:create-index  "App\Elasticsearch\IndexConfigurators\DynamicIndexConfigurator"`
+    - 在模型中设置映射后，可以更新 Elasticsearch 类型映射，也就是把我们刚才创建的索引和商品的模型绑定在一起
+        - ` php artisan elastic:update-mapping "App\Models\Dynamic\Dynamic"`
+    - 数据库的数据导入到 Elasticsearch 中
+        - `php artisan scout:import "App\Models\Dynamic\Dynamic"`
+    - 使用
+        - `Dynamic::search('关键字搜索')->paginate();`
 
 
 ##### linux系统下，Laravel使用 env 读取环境变量为 null 的问题
