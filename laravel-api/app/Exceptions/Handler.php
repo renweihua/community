@@ -70,12 +70,12 @@ class Handler extends ExceptionHandler
 
             // 控制器不存在
             if ($exception instanceof BindingResolutionException){
-                    return $this->setJsonReturn($exception);
+                return $this->setJsonReturn($exception);
             }
 
             // 模型不存在
             if ($exception instanceof ModelNotFoundException){
-                    return $this->setJsonReturn($exception);
+                return $this->setJsonReturn($exception);
             }
 
             // 验证器类的错误监听
@@ -100,9 +100,15 @@ class Handler extends ExceptionHandler
     private function setJsonReturn($exception)
     {
         $APP_DEBUG = env('APP_DEBUG');
-        return $this->errorJson($exception->getMessage(), $exception->getCode(), [], $APP_DEBUG ? [
+
+        // 设置HTTP的状态码
+        $http_status = isset($http_status) ? $http_status : (method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 200);
+        
+        return $this->errorJson($exception->getMessage(), 0, [], [
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
-        ] : []);
+            'code' => $exception->getCode(),
+            'http_status' => (int)$http_status
+        ]);
     }
 }
