@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Services\User;
 use App\Exceptions\Bbs\FailException;
 use App\Models\User\UserInfo;
 use App\Models\User\UserSign;
+use App\Modules\Bbs\Jobs\SigninReward;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,9 @@ class SignService extends Service
 
             // 计算登录会员的签到累计天数
             $user_info->setContinuousAttendance($user_info);
+
+            // 分发签到奖励任务：同步立即执行
+            dispatch(SigninReward::class)->onConnection('sync');
 
             DB::commit();
             $this->setError('签到成功！');
