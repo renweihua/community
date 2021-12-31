@@ -90,7 +90,7 @@
         },
         "douyin-download": {
             "type": "path",
-            "url": "../../douyin-download",
+            "url": "../douyin-download",
             "symlink": true
         }
     }
