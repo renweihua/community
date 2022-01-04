@@ -86,7 +86,8 @@
     "repositories": {
         "cnpscy-socialite": {
             "type": "path",
-            "url": "../cnpscy-socialite"
+            "url": "../cnpscy-socialite",
+            "symlink": true
         },
         "douyin-download": {
             "type": "path",
