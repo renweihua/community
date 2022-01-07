@@ -1,0 +1,8 @@
+<?php
+
+namespace App\Models;
+
+class $CLASS$ extends Model
+{
+    protected $is_delete = 0;
+}

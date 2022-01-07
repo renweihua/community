@@ -34,9 +34,10 @@
     - 或者使用任务调度：`php artisan schedule:run`
         - 后置进程：
             `* * * * * php artisan schedule:run >> /dev/null 2>&1`
-- 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
+- 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
-    - mysql存储的[抖音作者与视频同步]的队列： `php artisan queue:work database --queue=douyin-queue`
+- 一键生成模型、控制器、验证器与服务层
+    - php artisan make:modular 名称 模块
 
 
 ##### ES设置

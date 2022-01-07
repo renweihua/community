@@ -1,0 +1,25 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+use $REQUEST_NAMESPACE$ as $REQUEST_NAME$;
+use $SERVICE_NAMESPACE$ as $SERVICE_NAME$;
+use App\Http\Controllers\Controller;
+
+class $CLASS$ extends Controller
+{
+    public function __construct($SERVICE_NAME$ $service)
+    {
+        $this->service = $service;
+    }
+
+    // public function create(ARequest $request)
+    // {
+    //     return $this->createService($request);
+    // }
+    //
+    // public function update(ARequest $request)
+    // {
+    //     return $this->updateService($request);
+    // }
+}
