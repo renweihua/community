@@ -84,6 +84,7 @@ class SystemInfo
 
             $this->memory['total'] = round($memory['TotalVisibleMemorySize'] / 1024, 2);
             $this->memory['free'] = round($memory['FreePhysicalMemory'] / 1024, 2);
+            $this->memory['buffer_cache'] = 0;
             $this->memory['used'] = round($this->memory['total'] - $this->memory['free'], 2);
             $this->memory['usage_ratio'] = round(round($this->memory['used'] / $this->memory['total'], 4) * 100, 2);
         } else {
