@@ -1,5 +1,5 @@
 // #ifdef APP-PLUS 
-import componentConfig from "@/api/appVersion"
+import componentConfig from "@/api/appVersion";
 const platform = uni.getSystemInfoSync().platform;
 // 主颜色
 const $mainColor = componentConfig.appUpdateColor ? componentConfig.appUpdateColor : "FF5B78";

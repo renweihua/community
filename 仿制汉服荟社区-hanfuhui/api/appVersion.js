@@ -1,4 +1,4 @@
-import $http from '@/api/request';
+import {checkAppVersion} from '@/api/CommonServer.js';
 const platform = uni.getSystemInfoSync().platform;
 export default {
 	/****************以下是z-nav-bar插件配置*******************/
@@ -13,16 +13,14 @@ export default {
 	// 发起ajax请求获取服务端版本号
 	getServerNo: (version, isPrompt = false, callback) => {
 		let httpData = {
-			version_number: version.versionCode,
-			// 版本名称
-		    versionName: version.versionName,
+			version_number: version.versionName,
 			// setupPage参数说明（判断用户是不是从设置页面点击的更新，如果是设置页面点击的更新，有不要用静默更新了，不然用户点击没反应很奇怪的）
-			setupPage: isPrompt   
+			// setupPage: isPrompt
 		};
 		if (platform == "android") {
-			httpData.type = 1;
+			httpData.version_type = 1;
 		} else {
-			httpData.type = 2;
+			httpData.version_type = 2;
 		}
 		/* 接口入参说明
 		 * version: 应用当前版本号（已自动获取）
@@ -31,9 +29,7 @@ export default {
 		 */
 		/****************以下是示例*******************/
 		// 可以用自己项目的请求方法
-		$http.get("check_app_version", httpData,{
-			isPrompt: isPrompt
-		}).then(res => {
+		checkAppVersion(httpData).then(res => {
 			/* res的数据说明
 			 * | 参数名称	     | 一定返回 	| 类型	    | 描述
 			 * | -------------|--------- | --------- | ------------- |
@@ -49,7 +45,7 @@ export default {
 				if(data.updateType){
 					callback && callback(data);
 				} else {
-					if(data.updateType){
+					if(data.is_update){
 						data.updateType = "forcibly";
 					} else {
 						data.updateType = "solicit";

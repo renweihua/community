@@ -42,8 +42,9 @@
 			pushVideoList(){
 				let promise = new Promise((resolve,reject)=>{
 					uni.request({
-						url: 'https://bbs-api.cnpscy.com/api/douyin/recommend',
+						url: 'http://cnpscy.local.com/api/douyin/recommend',
 						success: (res) => {
+							console.log(res.data.data);
 							let videoGroup = []
 							for (let item of res.data.data) {
 								videoGroup.push({
@@ -53,6 +54,7 @@
 								})
 							}
 							this.videos = [...this.videos,...videoGroup]
+							console.log(this.videos);
 							resolve()
 						}
 					})
