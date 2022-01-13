@@ -26,15 +26,11 @@ class OauthController extends BbsController
         $user = Socialite::driver($oauth)->stateless()->user();
 
         try{
-            return $this->successJson($authService->oauthLogin($oauth, $user));
+            return $this->successJson($authService->oauthLogin($oauth, $user, $this->getLoginUser()));
         }catch (InvalidStateException $e){
-            var_dump($e->getMessage());
-            var_dump($e->getCode());
-            var_dump($e->getFile());
+            return $this->errorJson($e->getMessage());
         }catch (\Exception $e){
-            var_dump($e->getMessage());
-            var_dump($e->getCode());
-            var_dump($e->getFile());
+            return $this->errorJson($e->getMessage());
         }
     }
 }

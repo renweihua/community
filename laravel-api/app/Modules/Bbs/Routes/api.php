@@ -41,7 +41,7 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
     // 第三方登录
     Route::match(['get', 'post'], 'oauth/{oauth}', 'OauthController@redirect');
     // 第三方登录的回调
-    Route::match(['get', 'post'], 'oauth/{oauth}/callback', 'OauthController@callback');
+    Route::match(['get', 'post'], 'oauth/{oauth}/callback', 'OauthController@callback')->middleware(GetUserByToken::class);
 
     Route::prefix('')->middleware(GetUserByToken::class)->group(function(){
         /**

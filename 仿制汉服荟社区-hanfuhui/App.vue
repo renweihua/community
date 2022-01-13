@@ -10,10 +10,9 @@
 	export default {
 		onLaunch() {			
 			// #ifdef APP-PLUS
-			
 			uni.getSystemInfo({
 				success: function (res) {
-					// console.log(res);
+					console.log(res);
 					// 存储手机信息
 					uni.setStorageSync('equipment-platform', res.platform);
 					uni.setStorageSync('equipment-model', res.model);
@@ -22,7 +21,6 @@
 			});
 			// 检测APP版本是否升级
 			APPUpdate();
-			
 			// #endif
 			
 			// 检查token

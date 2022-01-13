@@ -289,6 +289,16 @@ class AuthService extends Service
         $userOtherlogin = UserOtherlogin::getInstance();
         $openid = $oauth_user->getId();
 
+        // 存在登录会员，那么就是绑定第三方
+        if ($login_user){
+            $otherlogin = $login_user->userOtherlogin;
+
+            if (!$otherlogin->{$oauth . '_info->pc_openid'}){
+                $otherlogin->update([$oauth . '_info->pc_openid' => $openid, $oauth . '_info->union_id' => $oauth_user->offsetGet('unionid')]);
+            }
+            // 登录流程
+            return $this->login($login_user, true);
+        }
         $login = $userOtherlogin->with('user')->where($oauth . '_info->pc_openid', $openid)->first();
         if (!$login){ // 未绑定直接登录即可
             $user_origin = 0;
@@ -340,6 +350,8 @@ class AuthService extends Service
         if (!$user = $request->attributes->get('login_user')){
             throw new AuthTokenException('认证失败！');
         }
+        // 第三方登录信息
+        $user->load(['userOtherlogin']);
         // 加载粉丝与关注人数统计
         $user->userInfo->loadCount([
             'fans',

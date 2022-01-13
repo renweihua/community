@@ -17,6 +17,7 @@ export default {
 			// setupPage参数说明（判断用户是不是从设置页面点击的更新，如果是设置页面点击的更新，有不要用静默更新了，不然用户点击没反应很奇怪的）
 			// setupPage: isPrompt
 		};
+		// 平台
 		if (platform == "android") {
 			httpData.version_type = 1;
 		} else {

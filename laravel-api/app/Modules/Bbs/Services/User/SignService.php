@@ -20,7 +20,7 @@ class SignService extends Service
      */
     public function getSignByToday(int $login_user_id)
     {
-        $user_info = UserInfo::select('sign_days', 'last_sign_time', 'total_sign_days', 'year_sign_days')->find($login_user_id)->append(['is_sign']);
+        $user_info = UserInfo::select(['sign_days', 'last_sign_time', 'total_sign_days', 'year_sign_days'])->find($login_user_id)->append(['is_sign']);
         // 今日签到了，那么计算我的签到排名
         if ($user_info->is_sign){
             $ranking = UserSign::getInstance()->whereBetween('created_time',

@@ -62,19 +62,9 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "speech" : {},
-                "oauth" : {
-                    "qq" : {
-                        "appid" : "101961815",
-                        "UniversalLinks" : ""
-                    }
-                },
+                "oauth" : {},
                 "push" : {},
-                "share" : {
-                    "qq" : {
-                        "appid" : "101961815",
-                        "UniversalLinks" : ""
-                    }
-                },
+                "share" : {},
                 "ad" : {}
             },
             "icons" : {

@@ -100,7 +100,7 @@ class WebSitesController extends BbsController
             return $this->successJson([], '已是最新版本！');
         }
         return $this->successJson([
-            'versionCode' => $version->version_number,
+            'versionCode' => $version->version_code,
             'versionName' => $version->version_number,
             'versionInfo' => $version->version_desc,
             'updateType' => 'solicit', // $version->is_update == 1 ? 'forcibly' : 'solicit',

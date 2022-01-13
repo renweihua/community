@@ -105,7 +105,7 @@ const getDownload = function(data) {
 		}, function(download, status) {
 			if (status == 200) {
 				plus.runtime.install(download.filename, {}, function() {
-					console.log("应用资源更新完成");
+					console.log("APP更新成功！");
 				}, function(e) {
 					plus.nativeUI.alert("安装文件失败[" + e.code + "]：" + e.message);
 				});
@@ -795,7 +795,7 @@ function downloadPopup(data) {
 	return callbackData;
 }
 export default function(isPrompt = false) {
-	getCurrentNo(versionInfo => {
+	getCurrentNo(versionInfo => {		
 		componentConfig.getServerNo(versionInfo, isPrompt, res => {
 			if (res.updateType == "forcibly" || res.updateType == "silent") {
 				if (/\.wgt$/i.test(res.downloadUrl)) {

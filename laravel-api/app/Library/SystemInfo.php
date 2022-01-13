@@ -81,7 +81,7 @@ class SystemInfo
             $path = $this->getMemoryUsageVbsPathByWindows();
             exec("cscript -nologo $path", $usage);
             $memory = my_json_decode($usage[0], true);
-
+            
             $this->memory['total'] = round($memory['TotalVisibleMemorySize'] / 1024, 2);
             $this->memory['free'] = round($memory['FreePhysicalMemory'] / 1024, 2);
             $this->memory['buffer_cache'] = 0;
