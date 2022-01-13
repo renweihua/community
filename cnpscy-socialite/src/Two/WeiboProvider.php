@@ -72,9 +72,9 @@ class WeiboProvider extends AbstractProvider implements ProviderInterface
     {
         return (new User())->setRaw($user)->map([
             'id'     => $user['idstr'],
-            'nickname' => $user['name'],
+            'nickname' => $user['screen_name'],
             'avatar' => $user['avatar_large'],
-            'name' => null,
+            'name' => $user['name'],
             'email' => null,
         ]);
     }
