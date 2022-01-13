@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Services;
 
+use App\Exceptions\Exception;
 use App\Models\UploadFile;
 
 class FileService extends BaseService
@@ -36,8 +37,7 @@ class FileService extends BaseService
             $this->error = '移动成功！';
             return true;
         }else{
-            $this->error = '移动失败！';
-            return false;
+            throw new Exception('移动失败！');
         }
     }
 }

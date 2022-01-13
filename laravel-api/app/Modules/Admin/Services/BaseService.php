@@ -105,8 +105,7 @@ class BaseService extends Service
     {
         $primaryKey = $this->model->getKeyName();
         if ( empty($params[$primaryKey]) && empty($params['is_batch'])) {
-            $this->setError('请指定删除标识！');
-            return false;
+            throw new Exception('请指定删除标识！');
         }
         // 是否为批量删除
         if (isset($params['is_batch']) && $params['is_batch'] == 1){
@@ -133,15 +132,13 @@ class BaseService extends Service
     {
         $primaryKey = $this->model->getKeyName();
         if (empty($params[$primaryKey])) {
-            $this->setError('请指定标识！');
-            return false;
+            throw new Exception('请指定标识！');
         }
         if ( $this->model->where([$primaryKey => $params[$primaryKey]])->update([$params['change_field'] => $params['change_value']]) ) {
             $this->setError('设置成功！');
             return true;
         } else {
-            $this->setError('设置失败！');
-            return false;
+            throw new Exception('设置失败！');
         }
     }
 

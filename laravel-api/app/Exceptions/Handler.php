@@ -103,8 +103,11 @@ class Handler extends ExceptionHandler
 
         // 设置HTTP的状态码
         $http_status = isset($http_status) ? $http_status : (method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 200);
-        
-        return $this->errorJson($exception->getMessage(), 0, [], $APP_DEBUG ? [
+
+        // 可设置`status`，但是也要限制
+        $status = $exception->getCode() != 1 ? 0 : 1;
+
+        return $this->errorJson($exception->getMessage(), $status, [], $APP_DEBUG ? [
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
             'code' => $exception->getCode(),
