@@ -4,7 +4,11 @@
 小丑路人社区
 
 #### Software Architecture
-Software architecture description
+
+* 编程语言：`PHP7.3+`
+* 后端框架： `Laravel8`
+* 前端Vue框架：`vue-element-admin`
+* Nodejs  v14.*
 
 #### Installation
 
