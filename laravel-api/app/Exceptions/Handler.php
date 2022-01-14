@@ -7,6 +7,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -81,6 +82,11 @@ class Handler extends ExceptionHandler
             // 验证器类的错误监听
             if($exception instanceof ValidationException){
                 return $this->errorJson($exception->validator->errors()->first());
+            }
+
+            // 路由的请求方式是否被支持
+            if ($exception instanceof MethodNotAllowedHttpException){
+                return $this->setJsonReturn($exception);
             }
 
             // 自定义Exception类的错误监听
