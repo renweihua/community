@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\User\User;
 use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
@@ -53,8 +54,7 @@ class UserService extends Service
             }])->find(UserInfo::where('user_uuid', $user_id)->select(['user_id'])->first()->user_id);
         }
         if (empty($user)) {
-            $this->setError('会员不存在！');
-            return false;
+            throw new Exception('会员不存在！');
         }
         $user->user_mobile = get_encryption_mobile($user->user_mobile);
         // 是否已关注
@@ -86,14 +86,12 @@ class UserService extends Service
             return false;
         }
         // 废弃，激活与变更邮箱全部使用同一个流程
-        //if ($detail->auth_email == 1){
-        //    $this->setError('已认证！');
-        //    return false;
-        //}
+        // if ($detail->auth_email == 1){
+        //     throw new Exception('已认证！');
+        // }
         // 激活链接有效期为7天
         if ($detail->created_time + 7 * 24 * 3600 < time()){
-            $this->setError('激活链接已过期！');
-            return false;
+            throw new Exception('激活链接已过期！');
         }
         if ($change){ // 变更邮箱的激活流程
             $user = User::where('user_id', $detail->user_id)->with(['userInfo' => function($query){
@@ -105,8 +103,7 @@ class UserService extends Service
             }])->first();
         }
         if (!$user){
-            $this->setError('无效邮箱验证！');
-            return false;
+            throw new Exception('无效邮箱验证！');
         }
         DB::beginTransaction();
         try{
@@ -125,8 +122,7 @@ class UserService extends Service
             return true;
         }catch (FailException $e){
             DB::rollBack();
-            $this->setError('激活失败！');
-            return false;
+            throw new Exception('激活失败！');
         }
     }
 }

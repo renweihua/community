@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\Topic;
 use App\Models\Dynamic\TopicFollow;
@@ -35,12 +36,11 @@ class TopicService extends Service
      *
      * @return bool
      */
-    private function getDetail(int $topic_id, bool $lock = false)
+    private function getDetail(int $topic_id, bool $lock = false, $with = [])
     {
-        $detail = Topic::lock($lock)->find($topic_id);
+        $detail = Topic::with($with)->lock($lock)->find($topic_id);
         if (empty($detail)) {
-            $this->setError('荟吧不存在！');
-            return false;
+            throw new Exception('荟吧不存在！');
         }
         return $detail;
     }
@@ -55,13 +55,12 @@ class TopicService extends Service
      */
     public function detail(int $topic_id, int $login_user_id = 0)
     {
-        if ( !$detail = $this->getDetail($topic_id, false, [
+        $detail = $this->getDetail($topic_id, false, [
             'isFollow' => function($query) use ($login_user_id) {
                 $query->where('user_id', $login_user_id);
             },
-        ])) {
-            return false;
-        }
+        ]);
+
         // 是否已关注
         $detail->is_follow = $login_user_id == 0 ? false : ($detail->isFollow ? true : false);
         unset($detail->isFollow);
@@ -130,8 +129,7 @@ class TopicService extends Service
         // 获取当前荟吧详情
         $topic = Topic::lock(true)->find($topic_id);
         if ( !$topic) {
-            $this->setError('荟吧详情获取失败！');
-            return false;
+            throw new Exception('荟吧详情获取失败！');
         }
         // 登录会员是否关注荟吧
         $follow = $topicFollowFan->checkFollow($login_user_id, $topic_id);
@@ -176,8 +174,7 @@ class TopicService extends Service
             return ['is_follow' => $follow ? false : true];
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($msg . '失败！');
-            return false;
+            throw new Exception($msg . '失败！');
         }
     }
 

@@ -1,5 +1,25 @@
 <template>
     <div class="boxes">
+        <div class="box" id="edit-account">
+            <div class="box-heading border-bottom">
+                <h5>登录账户</h5>
+            </div>
+            <form class="w-50" @submit.prevent="resetUser">
+                <div class="form-group" v-if="currentUser.user_name">
+                    <label>原始账户</label>
+                    <input type="text" disabled class="form-control" :value="show_user_name">
+                </div>
+                <div v-if="changeAccount()">
+                    <div class="form-group">
+                        <label>新账户（仅可更改一次！）</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" v-model="user_name">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary rounded">确定</button>
+                </div>
+            </form>
+        </div>
         <div class="box" id="edit-password">
             <div class="box-heading border-bottom">
                 <h5>修改密码</h5>
@@ -34,37 +54,11 @@
                 <button type="submit" class="btn btn-primary rounded">确定</button>
             </form>
         </div>
-        <div class="box" id="edit-phone" v-if="false">
-            <div class="box-heading border-bottom">
-                <h5>修改手机号码</h5>
-            </div>
-            <form class="w-50">
-                <div class="form-group" v-if="currentUser.user_mobile">
-                    <label>原号码</label>
-                    <input type="text" disabled class="form-control" :value="currentUser.user_mobile">
-                </div>
-                <div class="form-group">
-                    <label>新号码</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" v-model="phone">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary rounded-right">获取验证码</button>
-                        </div>
-                    </div>
-                    <small class="form-text text-muted">修改手机号码需要进行短信验证。</small>
-                </div>
-                <div class="form-group">
-                    <label>验证码</label>
-                    <input type="text" class="form-control">
-                </div>
-                <button class="btn btn-primary rounded">确定</button>
-            </form>
-        </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters} from 'vuex';
 
     export default {
         data() {
@@ -72,11 +66,15 @@
                 password: '',
                 passwordConfirmation: '',
                 email: '',
-                phone: ''
+                user_name: '',
+                show_user_name: '',
             }
         },
         computed: {
             ...mapGetters(['currentUser'])
+        },
+        created(){
+            this.show_user_name = this.currentUser.user_name;
         },
         mounted() {
             if (this.$route.hash) {
@@ -86,6 +84,9 @@
             }
         },
         methods: {
+            changeAccount() {
+                return this.currentUser.user_otherlogin && this.currentUser.user_otherlogin.change_account == 1 ? true : false;
+            },
             async updateEmail() {
                 await this.$http.post('user/changeEmail', {
                     user_email: this.email
@@ -99,9 +100,23 @@
                     password_confirmation: this.passwordConfirmation
                 })
                 .then((res) => {
+                    this.$message.success(res.msg)
+                });
+
+                this.password = '';
+                this.passwordConfirmation = '';
+            },
+            async resetUser() {
+                if(!this.changeAccount){
+                    return false;
+                }
+                await this.$http.patch('user/change-username', {
+                    user_name: this.user_name,
+                })
+                .then((res) => {
+                    this.show_user_name = this.user_name;
                     this.$message.success(res.msg);
-                    this.password = '';
-                    this.passwordConfirmation = '';
+                    this.user_name = '';
                 });
             },
             goAnchor(name) {

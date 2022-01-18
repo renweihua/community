@@ -20,7 +20,7 @@ class OauthController extends BbsController
      *
      * @return \Illuminate\Http\Response
      */
-    public function callback($oauth, AuthService $authService)
+    public function callback($oauth, AuthService $authService): JsonResponse
     {
         // 无状态认证：stateless 方法可用于禁止会话状态验证
         $user = Socialite::driver($oauth)->stateless()->user();

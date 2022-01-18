@@ -39,11 +39,9 @@ class DynamicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['dynamic_id'], $this->getLoginUserId())) {
-            return $this->successJson($detail, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $detail = $this->service->detail((int)$data['dynamic_id'], $this->getLoginUserId());
+
+        return $this->successJson($detail, $this->service->getError());
     }
 
     /**

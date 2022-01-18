@@ -153,6 +153,8 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
             Route::match(['put', 'patch'], '/updateAvatar', 'IndexController@updateAvatar');
             // 更换背景封面图
             Route::put('/updateBackgroundCover', 'IndexController@updateBackgroundCover');
+            // 更改登录账户
+            Route::patch('/change-username', 'IndexController@changeUserName');
             // 更改登录密码
             Route::put('/changePassword', 'IndexController@changePassword');
             // 更改登录密码时，通过邮箱：发送验证码

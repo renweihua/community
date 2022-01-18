@@ -33,11 +33,8 @@ class SignController extends BbsController
      */
     public function signIn() : JsonResponse
     {
-        if ( $result = $this->service->signIn($this->getLoginUserId()) ) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+         $this->service->signIn($this->getLoginUserId());
+        return $this->successJson([], $this->service->getError());
     }
 
     /**

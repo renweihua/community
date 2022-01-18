@@ -23,7 +23,7 @@
         <div class="form-group row d-flex align-items-center">
           <label for="twitter-form" class="col-sm-2 col-form-label">
             <button type="button" class="text-16 btn btn-twitter btn-icon mx-auto">
-            	<github-icon/>
+              <github-icon/>
             </button>
           </label>
           <div class="col-sm-10 pl-0">
@@ -38,7 +38,7 @@
         <div class="form-group row d-flex align-items-center">
           <label for="twitter-form" class="col-sm-2 col-form-label">
             <button type="button" class="text-16 btn btn-twitter btn-icon mx-auto">
-            	<img src="/icon/weibo.ico" />
+              <img src="/icon/weibo.ico" />
             </button>
           </label>
           <div class="col-sm-10 pl-0">
@@ -61,7 +61,7 @@ import GithubIcon from '$icons/GithubCircle';
 
 export default {
   components: {
-  	QqIcon,
+    QqIcon,
     GithubIcon
   },
   data () {
@@ -74,7 +74,7 @@ export default {
     this.user_otherlogin = this.$user().user_otherlogin;
   },
   methods: {
-	oauth (platform) {
+  oauth (platform) {
       let iOSChrome =
         /Mobile/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent)
       let url = '/oauth/oauth-redirect/' + platform

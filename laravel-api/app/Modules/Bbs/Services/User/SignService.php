@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\User\UserInfo;
 use App\Models\User\UserSign;
 use App\Modules\Bbs\Jobs\SigninReward;
@@ -73,8 +74,7 @@ class SignService extends Service
             return true;
         }catch (FailException $e){
             DB::rollBack();
-            $this->setError('签到失败，请重试！');
-            return false;
+            throw new Exception('签到失败，请重试！');
         }
     }
 

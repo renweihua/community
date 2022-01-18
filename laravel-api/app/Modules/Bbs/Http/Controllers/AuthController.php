@@ -42,11 +42,9 @@ class AuthController extends BbsController
         $data = $request->all();
 
         // 注册流程
-        if ($user = $this->service->register($data)){
-            return $this->successJson($user, $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $user = $this->service->register($data);
+
+        return $this->successJson($user, $this->service->getError());
     }
 
     /**

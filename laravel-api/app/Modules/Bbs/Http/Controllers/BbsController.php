@@ -21,18 +21,4 @@ class BbsController extends Controller
     {
         return $this->getLoginUser()->user_id ?? 0;
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Renderable
-     */
-    public function index()
-    {
-        // $rsa = new \App\Library\Encrypt\Rsa;
-        // var_dump($rsa->generate(1024));
-
-
-        return view('bbs::index');
-    }
 }

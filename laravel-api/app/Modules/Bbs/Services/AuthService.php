@@ -6,6 +6,7 @@ use App\Constants\UserCacheKeys;
 use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\AuthTokenException;
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\Log\UserLoginLog;
 use App\Models\System\Notify;
 use App\Models\User\User;
@@ -70,8 +71,7 @@ class AuthService extends Service
             switch ((int)$user_info['register_type']) {
                 case 0: // 用户名注册
                     if ( $userInstance->getUserByName($params['user_name']) ) {
-                        $this->setError('该账户已被注册！');
-                        return false;
+                        throw new Exception('该账户已被注册！');
                     }
                     $user_data['user_name'] = $params['user_name'];
                     break;
@@ -81,12 +81,10 @@ class AuthService extends Service
                         $user_email = $params['user_email'];
                     }
                     if ( !is_email($user_email) ) {
-                        $this->setError('请输入有效的邮箱地址！');
-                        return false;
+                        throw new Exception('请输入有效的邮箱地址！');
                     }
                     if ( $userInstance->getUserByEmail($user_email) ) {
-                        $this->setError('该邮箱已被注册！');
-                        return false;
+                        throw new Exception('该邮箱已被注册！');
                     }
                     // PC端无需验证邮箱验证码，注册之后发送邮件，激活邮箱即可
                     if ( isset($params['is_pc']) && !$params['is_pc'] && isset($params['email_code']) ) {
@@ -95,12 +93,10 @@ class AuthService extends Service
                          */
                         $cache = $this->getMailCode($user_email);
                         if ( !$cache ) {
-                            $this->setError('验证码已过期，请重新发送！');
-                            return false;
+                            throw new Exception('验证码已过期，请重新发送！');
                         }
                         if ( $cache != $params['email_code'] ) {
-                            $this->setError('验证码不匹配！');
-                            return false;
+                            throw new Exception('验证码不匹配！');
                         }
                         // 删除缓存
                         Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $user_email);
@@ -110,18 +106,15 @@ class AuthService extends Service
                     break;
                 case 2: // 手机号注册
                     if ( !is_mobile($params['user_name']) ) {
-                        $this->setError('请输入有效的手机号！');
-                        return false;
+                        throw new Exception('请输入有效的手机号！');
                     }
                     if ( $userInstance->getUserByMobile($params['user_name']) ) {
-                        $this->setError('该手机号已被注册！');
-                        return false;
+                        throw new Exception('该手机号已被注册！');
                     }
                     $user_data['user_mobile'] = $params['user_name'];
                     break;
                 default:
-                    $this->setError('无效注册！');
-                    return false;
+                    throw new Exception('无效注册！');
                     break;
             }
         }
@@ -197,8 +190,7 @@ class AuthService extends Service
             ]);
         }catch (FailException $exception){
             DB::rollBack();
-            $this->setError($exception->getMessage());
-            return false;
+            throw new Exception($exception->getMessage());
         }
     }
 
@@ -284,7 +276,7 @@ class AuthService extends Service
         return $result;
     }
 
-    public function oauthLogin(string $oauth, $oauth_user)
+    public function oauthLogin(string $oauth, $oauth_user, $login_user = [])
     {
         $userOtherlogin = UserOtherlogin::getInstance();
         $openid = $oauth_user->getId();
@@ -317,8 +309,7 @@ class AuthService extends Service
                     $user_origin = 4;
                     break;
                 default:
-                    $this->error = '未授权的第三方登录！';
-                    return false;
+                    throw new Exception('未授权的第三方登录！');
                     break;
             }
             // 注册流程
