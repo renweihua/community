@@ -38,9 +38,6 @@
                 this.$http
                     .post(`user/signIn`)
                     .then((res) => {
-                        if(res.status != 1){
-                            this.$message.error(res.msg);
-                        }
                         this.user_info.is_sign = true;
                         this.$message.success(res.msg);
                     });

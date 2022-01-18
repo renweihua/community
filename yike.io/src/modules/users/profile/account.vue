@@ -91,9 +91,6 @@
                     user_email: this.email
                 }).then((res) => {
                     this.$message.success(res.msg)
-                })
-                .catch((e) => {
-                    this.$message.error(e);
                 });
             },
             resetPassword() {
@@ -102,13 +99,10 @@
                     password_confirmation: this.passwordConfirmation
                 })
                 .then((res) => {
-                    this.$message.success(res.msg)
-                }).catch((e) => {
-                    this.$message.error(e);
+                    this.$message.success(res.msg);
+                    this.password = '';
+                    this.passwordConfirmation = '';
                 });
-
-                this.password = '';
-                this.passwordConfirmation = '';
             },
             goAnchor(name) {
                 let element = document.getElementById(name);

@@ -71,17 +71,11 @@
                 }
 
                 this.$http.post(url, params).then((res) => {
-                    if (res.status == 1) {
-                        this.item[this.actions[this.action]] = !this.item[this.actions[this.action]];
+                    this.item[this.actions[this.action]] = !this.item[this.actions[this.action]];
 
-                        console.log(this.item);
+                    this.$emit('after-toggle', this.item[this.actions[this.action]]);
 
-                        this.$emit('after-toggle', this.item[this.actions[this.action]]);
-
-                        this.$message.success(res.msg);
-                    }else{
-                        this.$message.error(res.msg);
-                    }
+                    this.$message.success(res.msg);
                 })
             }
         }

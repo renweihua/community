@@ -9,7 +9,7 @@ export default http => {
             return config
         },
         error => {
-            return Promise.reject(error)
+            return Promise.reject(error);
         }
     )
     // https://github.com/mzabriskie/axios#interceptors
@@ -17,6 +17,7 @@ export default http => {
         response => {
             let data = response.data;
             if (data.status == 0) {
+                Message.error(data.msg);
                 return Promise.reject(data.msg);
             } else {
                 if (data.status == -1) {
@@ -38,15 +39,15 @@ export default http => {
          */
         error => {
             if (!error['response']) {
-                return Promise.reject(error)
+                return Promise.reject(error);
             }
 
             switch (error.response.status) {
                 case -1:
                 case 0:
                 case 422:
-                    let data = error.response.data.errors
-                    let content = ''
+                    let data = error.response.data.errors;
+                    let content = '';
 
                     Object.keys(data).map(function (key) {
                         let value = data[key]
@@ -54,23 +55,23 @@ export default http => {
                         content = value[0]
                     })
 
-                    Message.error(content)
+                    Message.error(content);
                     break
                 case 403:
-                    Message.error(error.response.data.message || '您没有此操作权限！')
+                    Message.error(error.response.data.message || '您没有此操作权限！');
                     break
                 case 401:
                     if (window.location.pathname !== '/auth/login') {
-                        window.location.href = '/auth/login'
+                        window.location.href = '/auth/login';
                     }
                     break
                 case 500:
                 case 501:
                 case 503:
                 default:
-                    Message.error('服务器出了点小问题，程序员小哥哥要被扣工资了~！')
+                    Message.error('服务器出了点小问题，程序员小哥哥要被扣工资了~！');
             }
-            return Promise.reject(error.response)
+            return Promise.reject(error.response);
         }
     )
 }
