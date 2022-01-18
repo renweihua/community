@@ -181,6 +181,9 @@ class AuthService extends Service
                 'expires_time' => $result['expires_time'],
             ];
 
+            // 记录最新的登录Token
+            $user->update(['login_token' => $result['access_token']]);
+
             // Token存入Redis
             UserLoginRedisService::getInstance()->saveUserToken($redis_user_info, $result['access_token']);
 
@@ -269,6 +272,9 @@ class AuthService extends Service
             'auth_type' => 'user', // Token认证类型
             'expires_time' => $result['expires_time'],
         ];
+
+        // 记录最新的登录Token
+        $user->update(['login_token' => $result['access_token']]);
 
         // Token存入Redis
         UserLoginRedisService::getInstance()->saveUserToken($redis_user_info, $result['access_token']);

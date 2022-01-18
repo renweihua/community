@@ -5,6 +5,7 @@ namespace App\Modules\Bbs\Http\Middleware;
 use App\Constants\UserCacheKeys;
 use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\FailException;
+use App\Library\Encrypt\Aes;
 use App\Library\Encrypt\Rsa;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
@@ -31,7 +32,8 @@ class CheckAuth
         if (empty($token)){
             return $this->errorJson('请先登录！', -1);
         }
-        $token_user = Rsa::privDecrypt($token);
+        // $token_user = Rsa::privDecrypt($token);
+        $token_user = (new Aes)->decrypt($token);
         if (!$token_user){
             return $this->errorJson('认证失败，请重新登录！', -1);
         }
@@ -51,6 +53,8 @@ class CheckAuth
          *  2.过期15分钟以内的，生成新的Token并返回 === 头部返回新的Token，前端读取并设置新的Token
          */
         try {
+            $user = User::find($token_user->user_id);
+
             // Token 是否过期
             if (!isset($token_user->expires_time) || $token_user->expires_time <= time()){
                 // 过期15分钟以内的，生成新的Token并返回
@@ -70,6 +74,9 @@ class CheckAuth
                         'expires_time' => $expires_time,
                     ], $token);
 
+                    // 重新记录会员的登录Token
+                    $user->update(['login_token' => $token]);
+
                     // 设置头部的Token
                     $request->headers->set('new_authorization', $token);
                 }else{
@@ -84,7 +91,6 @@ class CheckAuth
                 $redis->set(UserCacheKeys::USER_LOGIN_TOKEN . $token, my_json_encode($token_user_info), UserCacheKeys::KEY_DEFAULT_TIMEOUT);
             }
 
-            $user = User::find($token_user->user_id);
             switch ($user->is_check) {
                 case 0:
                     throw new AuthException('该账户已被禁用！', 0, $user->user_id);
@@ -92,6 +98,9 @@ class CheckAuth
                 case 2:
                     throw new AuthException('异地登录，请重新登录！', 0, $user->user_id);
                     break;
+            }
+            if ($user->login_token != $token){
+                throw new AuthException('异地登录，请重新登录！', 0, $user->user_id);
             }
 
             // 把登录会员信息追加到 request类

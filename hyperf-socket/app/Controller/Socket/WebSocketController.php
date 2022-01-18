@@ -110,7 +110,9 @@ class WebSocketController extends BaseNamespace
             $socket->disconnect();
         }
         try {
-            $token_user = Rsa::privDecrypt($data['token']);
+
+            $token_user = (new Aes)->decrypt($data['token']);
+            // $token_user = Rsa::privDecrypt($data['token']);
             if (!$token_user){
                 throw new Exception('Token已失效');
             }
