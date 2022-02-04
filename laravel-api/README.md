@@ -4,7 +4,11 @@
 小丑路人社区
 
 #### 软件架构
-软件架构说明
+
+* 编程语言：`PHP7.3+`
+* 后端框架： `Laravel8`
+* 前端Vue框架：`vue-element-admin`
+* Nodejs  v14.*
 
 #### 安装教程
 
@@ -34,9 +38,10 @@
     - 或者使用任务调度：`php artisan schedule:run`
         - 后置进程：
             `* * * * * php artisan schedule:run >> /dev/null 2>&1`
-- 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue,douyin-queue`
+- 队列[后置进程]：`php artisan queue:work database --daemon --queue=mail-queue`
     - mysql存储的[注册邮件]的队列： `php artisan queue:work database --queue=mail-queue`
-    - mysql存储的[抖音作者与视频同步]的队列： `php artisan queue:work database --queue=douyin-queue`
+- 一键生成模型、控制器、验证器与服务层
+    - php artisan make:modular 名称 模块
 
 
 ##### ES设置
@@ -51,6 +56,15 @@
     echo "耗时(毫秒)：{$userTime} \n";
     var_dump($articles);
 ``` 
+* ES参考：https://learnku.com/articles/59076
+    - 索引配置
+        - `php artisan elastic:create-index  "App\Elasticsearch\IndexConfigurators\DynamicIndexConfigurator"`
+    - 在模型中设置映射后，可以更新 Elasticsearch 类型映射，也就是把我们刚才创建的索引和商品的模型绑定在一起
+        - ` php artisan elastic:update-mapping "App\Models\Dynamic\Dynamic"`
+    - 数据库的数据导入到 Elasticsearch 中
+        - `php artisan scout:import "App\Models\Dynamic\Dynamic"`
+    - 使用
+        - `Dynamic::search('关键字搜索')->paginate();`
 
 
 ##### linux系统下，Laravel使用 env 读取环境变量为 null 的问题

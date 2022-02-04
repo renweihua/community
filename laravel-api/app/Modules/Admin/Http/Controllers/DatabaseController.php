@@ -35,11 +35,8 @@ class DatabaseController extends BaseController
     public function backupsTables(Request $request): JsonResponse
     {
         set_time_limit(0);//防止超时
-        if ($result = $this->service->backupsTables($request->tables_list)){
-            return $this->successJson($result, $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $result = $this->service->backupsTables($request->tables_list);
+        return $this->successJson($result, $this->service->getError());
     }
 
     /**
@@ -61,10 +58,8 @@ class DatabaseController extends BaseController
      */
     public function deleteBackup(Request $request): JsonResponse
     {
-        if ($this->service->deleteBackup($request->input('backup_id'))){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->deleteBackup($request->input('backup_id'));
+
+        return $this->successJson([], $this->service->getError());
     }
 }

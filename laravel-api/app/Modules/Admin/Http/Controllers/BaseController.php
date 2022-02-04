@@ -55,11 +55,9 @@ class BaseController extends Controller
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        if ($detail = $this->service->detail($request)){
-            return $this->successJson($detail);
-        }else{
-            return $this->errorJson('数据不存在！');
-        }
+        $detail = $this->service->detail($request);
+
+        return $this->successJson($detail);
     }
 
     /**
@@ -78,11 +76,9 @@ class BaseController extends Controller
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        if ($this->service->create($request->all())){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->create($request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -101,11 +97,9 @@ class BaseController extends Controller
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        if ($this->service->update($request->all())){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->update($request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -120,11 +114,9 @@ class BaseController extends Controller
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        if ($this->service->delete($request->all())){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->delete($request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -140,11 +132,9 @@ class BaseController extends Controller
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
 
-        if ($this->service->changeFiledStatus($request->all())){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->changeFiledStatus($request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**

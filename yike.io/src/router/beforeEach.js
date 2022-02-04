@@ -9,17 +9,20 @@ const beforeEach = (to, from, next) => {
   vuex
     .dispatch('checkUserToken')
     .then(() => {
-      if (vuex.getters.isLogged && to.path.indexOf('auth') > 0) {
-        return next({ name: 'home' })
+      // 需求：登录用户绑定第三方账户
+      // 已登录，进入登录页面，自动返回`首页`
+      // console.log(to.path);
+      if (vuex.getters.isLogged && to.path == '/auth/login') {
+        return next({ name: 'home' });
       }
-      return next()
+      return next();
     })
     .catch(() => {
       if (needAuth(to)) {
         // No token, or it is invalid
-        return next({ name: 'auth.login' }) // redirect to login
+        return next({ name: 'auth.login' }); // redirect to login
       }
-      next()
+      next();
     })
 }
 

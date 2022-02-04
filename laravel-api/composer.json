@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "babenkoivan/scout-elasticsearch-driver": "^4.3",
         "cnpscy/douyin-download": "@dev",
         "cnpscy/socialite": "dev-master",
         "erusev/parsedown-extra": "^0.7.1",
@@ -16,11 +17,11 @@
         "fruitcake/laravel-cors": "^2.0",
         "graham-campbell/exceptions": "14.1",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jaeger/querylist": "^4.2",
         "laravel/framework": "^8.12",
-        "laravel/scout": "^9.2",
+        "laravel/scout": "^8.0",
         "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5",
-        "matchish/laravel-scout-elasticsearch": "^4.0",
         "nwidart/laravel-modules": "^8.2",
         "overtrue/laravel-emoji": "^1.0",
         "overtrue/qcloud-cos-client": "^1.0",
@@ -85,11 +86,12 @@
     "repositories": {
         "cnpscy-socialite": {
             "type": "path",
-            "url": "../cnpscy-socialite"
+            "url": "../cnpscy-socialite",
+            "symlink": true
         },
         "douyin-download": {
             "type": "path",
-            "url": "../../douyin-download",
+            "url": "../douyin-download",
             "symlink": true
         }
     }

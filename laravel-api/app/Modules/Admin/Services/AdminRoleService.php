@@ -55,8 +55,7 @@ class AdminRoleService extends BaseService
             return true;
         }catch (Exception $e){
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -72,8 +71,7 @@ class AdminRoleService extends BaseService
             return true;
         }catch (Exception $e){
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -117,8 +115,7 @@ class AdminRoleService extends BaseService
     {
         $primaryKey = $this->model->getKeyName();
         if (isset($params[$primaryKey]) && $params[$primaryKey] == 1){
-            $this->setError('超管角色禁止删除！');
-            return false;
+            throw new Exception('超管角色禁止删除！');
         }
 
         // 如果是批量删除，那么移除Id

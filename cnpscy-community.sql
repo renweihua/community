@@ -2501,6 +2501,8 @@ CREATE TABLE `cnpscy_versions`  (
   `version_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '版本表',
   `version_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '名称',
   `version_number` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '版本号',
+  `version_code` int(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 100 COMMENT '纯数字版本号',
+  `version_desc` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '描述',
   `version_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '内容',
   `created_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建时间',
   `updated_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '更新时间',

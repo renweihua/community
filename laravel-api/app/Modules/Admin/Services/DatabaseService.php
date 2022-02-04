@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Services;
 
+use App\Exceptions\Exception;
 use App\Handlers\DatabaseHandler;
 use App\Models\TableBackup;
 use App\Models\UploadFile;
@@ -92,7 +93,7 @@ class DatabaseService extends BaseService
         if ( $res ) {
             return $result;
         } else {
-            return false;
+            throw new Exception($this->error);
         }
     }
 
@@ -144,8 +145,7 @@ class DatabaseService extends BaseService
             $this->error = '备份记录删除成功！';
             return true;
         }else{
-            $this->error = '备份记录删除失败，请重试！';
-            return false;
+            throw new Exception('备份记录删除失败，请重试！');
         }
     }
 }

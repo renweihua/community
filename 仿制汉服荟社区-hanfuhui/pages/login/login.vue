@@ -19,7 +19,9 @@
 				<view>没有账号？<text class="ctheme funderline ml8r" @tap="fnPage('register')">注册</text></view>
 			</view>
 		</view>
-		<!-- 社交账号 -->
+		<!-- 社交账号【个人开发废弃】 -->
+		<!--
+		QQ开放平台：提供软著
 		<view class="social">
 			<view class="flex flex-aic mb28r">
 				<view class="flex-fitem line-gr-ctheme"></view>
@@ -27,10 +29,11 @@
 				<view class="flex-fitem line-gl-ctheme"></view>
 			</view>
 			<view class="flexr-jsa">
-				<image class="hw96r br50v" src="/static/icon_weixin.png" mode="aspectFit" @tap="fnWechat"></image>
 				<image class="hw96r br50v" src="/static/icon_qq.png" mode="aspectFit" @tap="fnQQ"></image>
+				<image class="hw96r br50v" src="/static/icon_qq.png" mode="aspectFit" @tap="fnWeibo">微博登录</image>
 			</view>
 		</view>
+		-->
 	</view>
 </template>
 
@@ -172,6 +175,44 @@
 				})
 				setTimeout(() => {
 					uni.hideLoading()
+				}, 1200);
+			},
+			//调起微博登录
+			fnWeibo() {
+				uni.getProvider({
+					service: 'oauth',
+					success: function(res) {
+						// console.log(res);
+						uni.login({
+							provider: 'sinaweibo',
+							success: function(loginRes) {
+								console.log(loginRes)
+							},
+						});
+					},
+				});
+				return;
+				if (this.isLogin) return;
+				uni.login({
+					provider: 'sinaweibo',	// 新浪微博
+					success: function (loginRes) {
+						console.log(loginRes.authResult);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'sinaweibo',	// 新浪微博
+							success: function (infoRes) {
+								console.log('微博信息：');
+								console.log(infoRes);
+							}
+						});
+					}
+				});
+				console.log('微博登录');
+				uni.showLoading({
+					title: '微博登录'
+				})
+				setTimeout(() => {
+					uni.hideLoading();
 				}, 1200);
 			}
 		}

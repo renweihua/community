@@ -15,7 +15,7 @@ class FriendController extends BbsController
         $this->service = $service;
     }
 
-    public function friends()
+    public function friends(): JsonResponse
     {
         // 此项目没有好友申请流程等功能，暂时先返回100条会员
         return $this->successJson($this->service->friends($this->getLoginUserId()));
@@ -58,11 +58,9 @@ class FriendController extends BbsController
             return $this->errorJson('无需关注自己！');
         }
 
-        if ($res = $this->service->setFollow($this->getLoginUserId(), intval($data['user_id']))) {
-            return $this->successJson([], $this->service->getError(), $res);
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $res = $this->service->setFollow($this->getLoginUserId(), intval($data['user_id']));
+
+        return $this->successJson([], $this->service->getError(), $res);
     }
 
     /**
@@ -80,11 +78,8 @@ class FriendController extends BbsController
             return $this->errorJson('无需特别关注自己！');
         }
 
-        if ($res = $this->service->setSpecial($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0))) {
-            return $this->successJson([], $this->service->getError(), $res);
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $res = $this->service->setSpecial($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0));
+        return $this->successJson([], $this->service->getError(), $res);
     }
 
     /**
@@ -102,10 +97,8 @@ class FriendController extends BbsController
             return $this->errorJson('无需拉黑自己！');
         }
 
-        if ($res = $this->service->setBlacklist($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0))) {
-            return $this->successJson([], $this->service->getError(), $res);
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $res = $this->service->setBlacklist($this->getLoginUserId(), intval($data['user_id']), $request->input('is_cancel', 0));
+
+        return $this->successJson([], $this->service->getError(), $res);
     }
 }

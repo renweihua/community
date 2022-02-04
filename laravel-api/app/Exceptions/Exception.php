@@ -11,7 +11,7 @@ class Exception extends \Exception
 
     protected $msg;
 
-    public function __construct($message = "success", $code = 200, Throwable $previous = null)
+    public function __construct($message = "success", $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

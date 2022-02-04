@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\System\Notify;
 use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
@@ -142,8 +143,7 @@ class FriendService extends Service
             return ['is_follow' => $my_follow ? false : true];
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($msg . '失败！');
-            return false;
+            throw new Exception($msg . '失败！');
         }
     }
 
@@ -161,8 +161,7 @@ class FriendService extends Service
         // 我是否关注对方
         $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
         if (!$my_follow){
-            $this->setError('您尚未关注对方，无法设置特别关注！');
-            return false;
+            throw new Exception('您尚未关注对方，无法设置特别关注！');
         }
 
         // 保证设置成功，手动更新updated_time
@@ -186,8 +185,7 @@ class FriendService extends Service
         // 我是否关注对方
         $my_follow = $userFollowFan->checkFollow($login_user_id, $friend_id);
         if (!$my_follow){
-            $this->setError('您尚未关注对方，无法设为黑名单属性！');
-            return false;
+            throw new Exception('您尚未关注对方，无法添加黑名单！');
         }
 
         // 保证设置成功，手动更新updated_time

@@ -1,0 +1,10 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use App\Http\Requests\BaseRequest;
+
+class $CLASS$ extends BaseRequest
+{
+
+}

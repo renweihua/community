@@ -50,11 +50,9 @@ class IndexController extends BaseController
      */
     public function update(Request $request): JsonResponse
     {
-        if ( $this->service->updateAdmin($request) ) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->updateAdmin($request);
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**

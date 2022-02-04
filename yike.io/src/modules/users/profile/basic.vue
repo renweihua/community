@@ -22,9 +22,9 @@
         </div>
       </div>
       <div class="form-group" v-if="true">
-        <label>账户</label>
+        <label>登录账户</label>
         <input type="text" class="form-control" v-model="user.user_name" disabled>
-        <small class="form-text text-muted">您可以管理您的<router-link :to="{ name: 'user.account', hash: '#edit-phone' }" class="text-blue">账户设置</router-link>。</small>
+        <small class="form-text text-muted">您可以管理您的<router-link :to="{ name: 'user.account', hash: '#edit-account' }" class="text-blue">账户设置</router-link>。</small>
       </div>
       <div class="form-group" v-if="false">
         <label>手机号码</label>
@@ -33,7 +33,7 @@
       </div>
       <div class="form-group">
         <label>邮箱地址</label>
-        <input type="email" class="form-control" placeholder="example@yike.io" v-model="user.user_email" disabled>
+        <input type="email" class="form-control" placeholder="example@qq.com" v-model="user.user_email" disabled>
         <small class="form-text text-muted">您可以管理您的<router-link :to="{ name: 'user.account', hash: '#edit-email' }" class="text-blue">邮箱地址设置</router-link>。</small>
       </div>
       <div class="form-group">

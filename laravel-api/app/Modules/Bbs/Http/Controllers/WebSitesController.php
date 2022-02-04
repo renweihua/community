@@ -97,10 +97,10 @@ class WebSitesController extends BbsController
           * | downloadUrl     | y        | String    | 版本下载链接（IOS安装包更新请放跳转store应用商店链接,安卓apk和wgt文件放文件下载链接）  |
           */
         if (empty($version)){
-            return $this->errorJson('暂无新版本！');
+            return $this->successJson([], '已是最新版本！');
         }
         return $this->successJson([
-            'versionCode' => $version->version_number,
+            'versionCode' => $version->version_code,
             'versionName' => $version->version_number,
             'versionInfo' => $version->version_desc,
             'updateType' => 'solicit', // $version->is_update == 1 ? 'forcibly' : 'solicit',

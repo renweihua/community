@@ -171,8 +171,7 @@ export default {
     }
   },
   created () {
-    this.links = this.$user().user_info.other_extends
-    console.log(this.links);
+    this.links = this.$user().user_info.other_extends;
   },
   methods: {
     submit () {
@@ -181,7 +180,7 @@ export default {
           other_extends: this.links
         })
         .then((res) => {
-          this.$message.success(res.msg)
+          this.$message.success(res.msg);
         })
     }
   }

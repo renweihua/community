@@ -75,9 +75,9 @@ class ArticleService extends BaseService
 
             DB::commit();
             return true;
-        }catch (Exception $exception){
+        }catch (Exception $e){
             DB::rollBack();
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class ArticleService extends BaseService
             return true;
         }catch (Exception $e){
             DB::rollBack();
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 

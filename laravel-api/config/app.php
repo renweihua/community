@@ -180,6 +180,7 @@ return [
         EloquentFilter\ServiceProvider::class,
         // ES
         // \Matchish\ScoutElasticSearch\ElasticSearchServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
     ],
 
     /*

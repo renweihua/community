@@ -70,12 +70,10 @@ class Aes
      *
      * @param string $data 要解密的数据
      *
-     * @return string
-     *
      */
-    public function decrypt(string $data)
+    public function decrypt(string $data, bool $assoc = false)
     {
-        return json_decode(openssl_decrypt($data, $this->method, $this->secret_key, $this->options, $this->iv), true);
+        return json_decode(openssl_decrypt($data, $this->method, $this->secret_key, $this->options, $this->iv), $assoc);
     }
 }
 

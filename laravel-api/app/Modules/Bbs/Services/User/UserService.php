@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Constants\UserCacheKeys;
+use App\Exceptions\Exception;
 use App\Models\User\User;
 use App\Models\User\UserEmailVerify;
 use App\Models\User\UserInfo;
@@ -27,12 +28,10 @@ class UserService extends Service
         $userInfoInstance = UserInfo::getInstance();
         $user_info = $userInfoInstance->find($login_user_id);
         if (!$user_info){
-            $this->setError('请重试！');
-            return false;
+            throw new Exception('请重试！');
         }
         if ($userInfoInstance->getUserInfoByNickName($params['nick_name'], $login_user_id)){
-            $this->setError('该昵称已被占用！');
-            return false;
+            throw new Exception('该昵称已被占用！');
         }
 
         // 更改编辑资料的字段设置
@@ -50,8 +49,7 @@ class UserService extends Service
             $this->setError('个人资料编辑成功！');
             return true;
         }else{
-            $this->setError('更新失败！');
-            return false;
+            throw new Exception('更新失败！');
         }
     }
 
@@ -117,6 +115,29 @@ class UserService extends Service
     }
 
     /**
+     * 更改登录账户
+     *
+     * @param          $login_user
+     * @param  string  $password
+     *
+     * @return bool
+     */
+    public function changeUserName($login_user, string $user_name): bool
+    {
+        if ($login_user->userOtherlogin->change_account != 1){
+            throw new Exception('暂时不允许更改登录账户！');
+        }
+
+        $login_user->user_name = $user_name;
+        $login_user->save();
+        
+        $login_user->userOtherlogin()->update(['change_account' => 0]);
+
+        $this->setError('登录账户更改成功！');
+        return true;
+    }
+
+    /**
      * 更改登录密码
      *
      * @param          $login_user
@@ -176,12 +197,10 @@ class UserService extends Service
     {
         $cache = $this->getMailCode($login_user);
         if (!$cache){
-            $this->setError('验证码已过期，请重新发送！');
-            return false;
+            throw new Exception('验证码已过期，请重新发送！');
         }
         if ($cache != $code){
-            $this->setError('验证码不匹配！');
-            return false;
+            throw new Exception('验证码不匹配！');
         }
         // 删除缓存
         Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);

@@ -70,18 +70,16 @@ class Aes
      *
      * @param string $data 要解密的数据
      *
-     * @return string
-     *
      */
-    public function decrypt(string $data)
+    public function decrypt(string $data, bool $assoc = false)
     {
-        return json_decode(openssl_decrypt($data, $this->method, $this->secret_key, $this->options, $this->iv), true);
+        return json_decode(openssl_decrypt($data, $this->method, $this->secret_key, $this->options, $this->iv), $assoc);
     }
 }
 
-$ace_class = new Aes;
+// $ace_class = new Aes;
 
-$string = $ace_class->encrypt(['user_id' => 1, 'nick_name' => '小丑路人']);
-var_dump($string);
+// $string = $ace_class->encrypt(['user_id' => 1, 'nick_name' => '小丑路人']);
+// var_dump($string);
 
-var_dump($ace_class->decrypt($string));
+// var_dump($ace_class->decrypt($string));

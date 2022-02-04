@@ -2,6 +2,7 @@
 
 namespace App\Models\Dynamic;
 
+use App\Elasticsearch\IndexConfigurators\DynamicIndexConfigurator;
 use App\Models\Model;
 use App\Models\User\UserFollowFan;
 use App\Models\User\UserInfo;
@@ -9,7 +10,8 @@ use App\Models\User\UserOtherlogin;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
 use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Scout\Searchable;
+// use Laravel\Scout\Searchable;
+use ScoutElastic\Searchable;
 
 /**
  * App\Models\Dynamic\Dynamic
@@ -87,49 +89,53 @@ class Dynamic extends Model
 
     use Filterable;
 
-//    use Searchable;
-//
-//    /**
-//     * 指定索引
-//     * 搜索的type
-//     *
-//     * @return string
-//     */
-//    public function searchableAs()
-//    {
-//        return 'dynamics_index';
-//    }
-//
-//    /**
-//     * 设置导入索引的数据字段
-//     * @return array
-//     */
-//    public function toSearchableArray()
-//    {
-//        return [
-//            // 'dynamic_id' => $this->dynamic_id,
-//            'title'   => $this->dynamic_title,
-//            'content' => $this->dynamic_content,
-//        ];
-//    }
-//
-//    /**
-//     * 指定 搜索索引中存储的唯一ID
-//     * @return mixed
-//     */
-//    public function getScoutKey()
-//    {
-//        return $this->dynamic_id;
-//    }
-//
-//    /**
-//     * 指定 搜索索引中存储的唯一ID的键名
-//     * @return string
-//     */
-//    public function getScoutKeyName()
-//    {
-//        return $this->primaryKey;
-//    }
+    use Searchable;
+
+
+    protected $indexConfigurator = DynamicIndexConfigurator::class;
+
+    /**
+    * 指定索引
+    * 搜索的type
+    *
+    * @return string
+    */
+    public function searchableAs()
+    {
+        return 'dynamic_index_test';
+    }
+
+   /**
+    * 设置导入索引的数据字段
+    * @return array
+    */
+   public function toSearchableArray()
+   {
+       return [
+           'dynamic_id' => $this->dynamic_id,
+           'dynamic_title'   => $this->dynamic_title,
+           'dynamic_content' => $this->dynamic_content,
+           'dynamic_created_time'   => $this->created_time,
+       ];
+   }
+
+    /**
+    * 指定 搜索索引中存储的唯一ID
+    * @return mixed
+    */
+    public function getScoutKey()
+    {
+       return $this->dynamic_id;
+    }
+
+    /**
+    * 指定 搜索索引中存储的唯一ID的键名
+    * @return string
+    */
+    public function getScoutKeyName()
+    {
+       return $this->primaryKey;
+    }
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
@@ -306,6 +312,7 @@ class Dynamic extends Model
     public function getDynamicTypeTextAttribute(): string
     {
         $text = '动态';
+        if (!isset($this->attributes['dynamic_type'])) return $text;
         switch ($this->attributes['dynamic_type']){
             case 1: // 图文
                 $text = '图文';

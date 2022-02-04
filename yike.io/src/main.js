@@ -9,9 +9,13 @@ import Root from './root'
 import router from './router'
 import store from './vuex'
 
-Vue.config.productionTip = false
+// 时间线|时间树
+import vuetimeline from "@growthbunker/vuetimeline";
+Vue.use(vuetimeline);
 
-sync(store, router)
+Vue.config.productionTip = false;
+
+sync(store, router);
 
 Vue.prototype.$message = Message
 Vue.prototype.$http = http
