@@ -62,9 +62,6 @@ class CosService extends Service
             $content = file_get_contents($file->getRealPath());
         }
         
-        // 必须对文件路径进行转码，否则（存在中文特殊符的文本）上传之后的文件链接会失效
-        $key = \urlencode($key);
-
         $object->putObject($key, $content);
         $file_url = $object->getObjectUrl($key);
 
