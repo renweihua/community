@@ -4,6 +4,7 @@ namespace App\Modules\DouyinVideos\Jobs;
 
 use App\Models\Douyin\DouyinAuthor;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,6 +16,16 @@ class SyncDouyinAuthor implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $author;
+
+    /**
+     * 获取任务的中间件：如果你不希望重试任何重复任务并且立即删除，你可以使用 dontRelease 方法
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return [(new WithoutOverlapping($this->author['sec_uid']))->dontRelease()];
+    }
 
     /**
      * Create a new job instance.
