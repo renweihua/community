@@ -3,8 +3,10 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\User\UserInfo;
 use App\Models\User\UserSign;
+use App\Modules\Bbs\Jobs\SigninReward;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +21,7 @@ class SignService extends Service
      */
     public function getSignByToday(int $login_user_id)
     {
-        $user_info = UserInfo::select('sign_days', 'last_sign_time', 'total_sign_days', 'year_sign_days')->find($login_user_id)->append(['is_sign']);
+        $user_info = UserInfo::select(['sign_days', 'last_sign_time', 'total_sign_days', 'year_sign_days'])->find($login_user_id)->append(['is_sign']);
         // 今日签到了，那么计算我的签到排名
         if ($user_info->is_sign){
             $ranking = UserSign::getInstance()->whereBetween('created_time',
@@ -64,13 +66,15 @@ class SignService extends Service
             // 计算登录会员的签到累计天数
             $user_info->setContinuousAttendance($user_info);
 
+            // 分发签到奖励任务：同步立即执行
+            dispatch(SigninReward::class)->onConnection('sync');
+
             DB::commit();
             $this->setError('签到成功！');
             return true;
         }catch (FailException $e){
             DB::rollBack();
-            $this->setError('签到失败，请重试！');
-            return false;
+            throw new Exception('签到失败，请重试！');
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services;
 
 use App\Constants\UserCacheKeys;
+use App\Library\Encrypt\Aes;
 use App\Library\Encrypt\Rsa;
 use App\Services\Service;
 use Illuminate\Support\Facades\Redis;
@@ -41,6 +42,7 @@ class UserLoginRedisService extends Service
             'user_id'      => $user_id,
             'expires_time' => $expires_time,
         ];
+        return (new Aes)->encrypt($cache);
         return Rsa::publicEncrypt($cache);
     }
 

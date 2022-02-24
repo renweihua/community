@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
 use App\Models\Dynamic\DynamicComment;
@@ -33,8 +34,7 @@ class LuckydrawService extends Service
          */
         $user_info = UserInfo::lock(true)->find($user_id);
         if ($user_info->luckydraw_times <= 0){
-            $this->setError('您的抽奖资格已不足！');
-            return false;
+            throw new Exception('您的抽奖资格已不足！');
         }
 
         /**
@@ -46,8 +46,7 @@ class LuckydrawService extends Service
          */
         $activity = Luckydraw::where(['activity_id' => $activity_id, 'is_open' => 1])->first();
         if (empty($activity)){
-            $this->setError('系统尚未开放抽奖活动');
-            return false;
+            throw new Exception('系统尚未开放抽奖活动');
         }
         $activity_details = LuckydrawConfig::leftJoin(LuckydrawProduct::getInstance()->getTable(), 'ad.product_id = lp.product_id')
             ->where(
@@ -64,8 +63,7 @@ class LuckydrawService extends Service
             ->lock(true)
             ->first();
         if (empty($activity_details)){
-            $this->setError('活动方案尚未设置奖项配置');
-            return false;
+            throw new Exception('活动方案尚未设置奖项配置');
         }
 
         $_activity_details = [];
@@ -83,13 +81,11 @@ class LuckydrawService extends Service
 
         //抽奖最终的数据为：
         if (empty($lucky_draw_results = $_activity_details[$detail_id])){
-            $this->setError('抽奖失败');
-            return false;
+            throw new Exception('抽奖失败！');
         }
 
         if (!array_key_exists($lucky_draw_results['reward_category'], $common_luckydraw_activity_reward_category_list)){
-            $this->setError('后台配置奖励有误');
-            return false;
+            throw new Exception('后台配置奖励有误！');
         }
 
         Db::beginTransaction();
@@ -188,8 +184,7 @@ class LuckydrawService extends Service
             return ['id' => $detail_id, 'images' => $lucky_draw_results['images'], 'reward_category' => $lucky_draw_results['reward_category']];
         } catch (\Exception $e) {
             Db::rollback();// 回滚事务
-            $this->setError('抽奖失败');
-            return false;
+            throw new Exception('抽奖失败');
         }
     }
 

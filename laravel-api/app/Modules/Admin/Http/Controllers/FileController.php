@@ -22,10 +22,8 @@ class FileController extends BaseController
      */
     public function removeFileGroup(Request $request): JsonResponse
     {
-        if ($this->service->removeFileGroup($request->all())){
-            return $this->successJson([], $this->service->getError());
-        }else{
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->removeFileGroup($request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -61,32 +62,62 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // 路由404异常监听
-        if($exception instanceof NotFoundHttpException){
-            $this->setHttpCode(404);
-            return $this->errorJson("路由{{$request->path()}}不存在！");
-        }
+        if ($request->isJson() || $request->is('api/*')){
+            // 路由404异常监听
+            if($exception instanceof NotFoundHttpException){
+                $this->setHttpCode(404);
+                return $this->errorJson("路由{{$request->path()}}不存在！");
+            }
 
-        // 控制器不存在
-        if ($exception instanceof BindingResolutionException){
-            return $this->errorJson($exception->getMessage());
-        }
+            // 控制器不存在
+            if ($exception instanceof BindingResolutionException){
+                return $this->setJsonReturn($exception);
+            }
 
-        // 模型不存在
-        if ($exception instanceof ModelNotFoundException){
-            return $this->errorJson($exception->getMessage());
-        }
+            // 模型不存在
+            if ($exception instanceof ModelNotFoundException){
+                return $this->setJsonReturn($exception);
+            }
 
-        // 验证器类的错误监听
-        if($exception instanceof ValidationException){
-            return $this->errorJson($exception->validator->errors()->first());
-        }
+            // 验证器类的错误监听
+            if($exception instanceof ValidationException){
+                return $this->errorJson($exception->validator->errors()->first());
+            }
 
-        // Exception类的错误监听
-        if($exception instanceof Exception){
-            return $this->errorJson($exception->getMessage(), $exception->getCode());
+            // 路由的请求方式是否被支持
+            if ($exception instanceof MethodNotAllowedHttpException){
+                return $this->setJsonReturn($exception);
+            }
+
+            // 自定义Exception类的错误监听
+            if($exception instanceof Exception){
+                return $this->setJsonReturn($exception);
+            }
+
+            // ErrorException类的监听
+            if($exception instanceof \ErrorException){
+                return $this->setJsonReturn($exception);
+            }
         }
 
         return parent::render($request, $exception);
+    }
+
+    private function setJsonReturn($exception)
+    {
+        $APP_DEBUG = env('APP_DEBUG');
+
+        // 设置HTTP的状态码
+        $http_status = isset($http_status) ? $http_status : (method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 200);
+
+        // 可设置`status`，但是也要限制
+        $status = $exception->getCode() != 1 ? 0 : 1;
+
+        return $this->errorJson($exception->getMessage(), $status, [], $APP_DEBUG ? [
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'code' => $exception->getCode(),
+            'http_status' => (int)$http_status
+        ] : []);
     }
 }

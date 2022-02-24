@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Models\Dynamic\DynamicComment;
 use App\Models\Dynamic\DynamicCommentPraise;
 use App\Models\Dynamic\DynamicPraise;
@@ -25,8 +26,7 @@ class CommentService extends Service
     {
         $dynamic = DynamicComment::with($with)->lock($lock)->find($dynamic_id);
         if (empty($dynamic)) {
-            $this->setError('评论不存在！');
-            return false;
+            throw new Exception('评论不存在！');
         }
         return $dynamic;
     }
@@ -41,9 +41,8 @@ class CommentService extends Service
      */
     public function praise(int $login_user_id, int $comment_id, &$is_cancel = 0) : bool
     {
-        if ( !$comment = $this->checkComment($comment_id, true)) {
-            return false;
-        }
+        $comment = $this->checkComment($comment_id, true);
+
         $commentPraise = DynamicCommentPraise::getInstance();
         $data = [
             'user_id' => $login_user_id,
@@ -103,8 +102,7 @@ class CommentService extends Service
             return true;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 }

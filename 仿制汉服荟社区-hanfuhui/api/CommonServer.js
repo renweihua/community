@@ -19,7 +19,7 @@ export async function get(url, params) {
 
 // 检测App版本是否升级
 export async function checkAppVersion(params) {
-	return await request('/check_app_version', 'GET', params);
+	return await request('/check_app_version', 'GET', params)
 }
 
 /**

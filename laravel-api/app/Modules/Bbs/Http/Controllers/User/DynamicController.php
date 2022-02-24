@@ -28,11 +28,10 @@ class DynamicController extends BbsController
     public function push(DynamicRequest $request): JsonResponse
     {
         $request->validated();
-        if ($result = $this->service->push($this->getLoginUserId(), $request->all())) {
-            return $this->successJson($result, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $result = $this->service->push($this->getLoginUserId(), $request->all());
+
+        return $this->successJson($result, $this->service->getError());
     }
 
     /**
@@ -47,11 +46,10 @@ class DynamicController extends BbsController
     public function update(DynamicRequest $request, $dynamic_id): JsonResponse
     {
         $request->validated();
-        if ($result = $this->service->update($this->getLoginUserId(), $dynamic_id, $request->all())) {
-            return $this->successJson($result, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $result = $this->service->update($this->getLoginUserId(), $dynamic_id, $request->all());
+
+        return $this->successJson($result, $this->service->getError());
     }
 
     /**
@@ -64,11 +62,10 @@ class DynamicController extends BbsController
     public function praise(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-        if ($result = $this->service->praise($this->getLoginUserId(), (int)$data['dynamic_id'])) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $this->service->praise($this->getLoginUserId(), (int)$data['dynamic_id']);
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -92,11 +89,10 @@ class DynamicController extends BbsController
     public function collection(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-        if ($result = $this->service->collection($this->getLoginUserId(), (int)$data['dynamic_id'])) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $this->service->collection($this->getLoginUserId(), (int)$data['dynamic_id']);
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -109,11 +105,10 @@ class DynamicController extends BbsController
     public function comment(DynamicCommentRequest $request): JsonResponse
     {
         $request->validated();
-        if ($data = $this->service->comment($this->getLoginUserId(), $request->all())) {
-            return $this->successJson($data, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $data = $this->service->comment($this->getLoginUserId(), $request->all());
+
+        return $this->successJson($data, $this->service->getError());
     }
 
     /**
@@ -126,20 +121,17 @@ class DynamicController extends BbsController
     public function deleteComment(DynamicCommentIdRequest $request): JsonResponse
     {
         $request->validated();
-        if ($result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'))) {
-            return $this->successJson($result, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $result = $this->service->deleteComment($this->getLoginUserId(), $request->input('comment_id'));
+
+        return $this->successJson($result, $this->service->getError());
     }
 
     public function setDynamicFiled(DynamicIdRequest $request): JsonResponse
     {
         $data = $request->validated();
-        if ($result = $this->service->setDynamicFiled($this->getLoginUser(), (int)$data['dynamic_id'], (string)$data['change_field'], $data['change_value'])) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+
+        $this->service->setDynamicFiled($this->getLoginUser(), (int)$data['dynamic_id'], (string)$data['change_field'], $data['change_value']);
+
+        return $this->successJson([], $this->service->getError());
     }
 }

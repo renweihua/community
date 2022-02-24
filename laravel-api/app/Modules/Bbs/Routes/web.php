@@ -13,8 +13,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\Bbs\Http\Middleware\RestrictIPAccess;
+use App\Http\Middleware\CheckIpBlacklist;
 
 Route::prefix('')->middleware([
+	CheckIpBlacklist::class
 ])->group(function() {
     Route::get('/', 'BbsController@index');
 });

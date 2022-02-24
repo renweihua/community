@@ -2,6 +2,7 @@
 
 namespace App\Modules\Bbs\Services;
 
+use App\Exceptions\Exception;
 use App\Exceptions\InvalidRequestException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicComment;
@@ -179,8 +180,7 @@ class DynamicService extends Service
     {
         $dynamic = Dynamic::check()->with($with)->lock($lock)->find($dynamic_id);
         if (empty($dynamic)) {
-            $this->setError('动态不存在！');
-            return false;
+            throw new Exception('动态不存在！');
         }
         return $dynamic;
     }
@@ -195,7 +195,7 @@ class DynamicService extends Service
      */
     public function detail(int $dynamic_id, int $login_user_id = 0)
     {
-        if ( !$dynamic = $this->getDynamicDetail($dynamic_id, false, [
+        $dynamic = $this->getDynamicDetail($dynamic_id, false, [
             'userInfo' => function($query) use($login_user_id){
                 $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_uuid', 'basic_extends', 'other_extends'])->with([
                     'isFollow' => function($query) use ($login_user_id) {
@@ -207,9 +207,8 @@ class DynamicService extends Service
                 $query->select(['user_id', 'qq_info', 'weibo_info', 'github_info']);
             },
             'topic'
-        ])) {
-            return false;
-        }
+        ]);
+
         if ( !empty($login_user_id)) {
             $dynamic->load([
                 'isPraise' => function($query) use ($login_user_id) {

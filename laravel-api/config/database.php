@@ -151,7 +151,7 @@ return [
             'name' => env('REDIS_NAME', 'default'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '2'),
+            'database' => env('REDIS_TOKEN_DB', '2'),
         ],
 
         // 队列库
@@ -161,7 +161,7 @@ return [
             'name' => env('REDIS_NAME', 'default'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '3'),
+            'database' => env('REDIS_QUEUE_DB', '3'),
         ],
 
     ],

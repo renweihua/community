@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Services\User;
 
 use App\Exceptions\Bbs\FailException;
+use App\Exceptions\Exception;
 use App\Exceptions\InvalidRequestException;
 use App\Models\Dynamic\Dynamic;
 use App\Models\Dynamic\DynamicCollection;
@@ -32,33 +33,27 @@ class DynamicService extends Service
         switch (intval($params['dynamic_type'])) {
             case 0: // 动态
                 if ( !isset($params['dynamic_content']) || empty($params['dynamic_content'])) {
-                    $this->setError('请输入动态内容！');
-                    return false;
+                    throw new Exception('请输入动态内容！');
                 }
                 break;
             case 1: // 文章
                 if (!isset($params['content_type'])) $params['content_type'] = 'html';
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
-                    $this->setError('请输入文章标题！');
-                    return false;
+                    throw new Exception('请输入文章标题！');
                 }
                 if ($params['content_type'] == 'html' && ( !isset($params['dynamic_content']) || empty($params['dynamic_content']))) {
-                    $this->setError('请输入动态内容(html)！');
-                    return false;
+                    throw new Exception('请输入动态内容(html)！');
                 }
                 if ($params['content_type'] == 'markdown' && ( !isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))) {
-                    $this->setError('请输入动态内容(markdown)！');
-                    return false;
+                    throw new Exception('请输入动态内容(markdown)！');
                 }
                 break;
             case 2: // 视频
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
-                    $this->setError('请输入标题！');
-                    return false;
+                    throw new Exception('请输入标题！');
                 }
                 if ( !isset($params['video_path']) || empty($params['video_path'])) {
-                    $this->setError('请上传视频！');
-                    return false;
+                    throw new Exception('请上传视频！');
                 }
 
                 // 通过 ffmpeg 获取视频的第一帧作为封面图
@@ -85,12 +80,10 @@ class DynamicService extends Service
                 break;
             case 3: // 相册
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
-                    $this->setError('请输入相册标题！');
-                    return false;
+                    throw new Exception('请输入相册标题！');
                 }
                 if ( !isset($params['dynamic_images']) || empty($params['dynamic_images'])) {
-                    $this->setError('请上传相册图片！');
-                    return false;
+                    throw new Exception('请上传相册图片！');
                 }
                 break;
         }
@@ -126,8 +119,7 @@ class DynamicService extends Service
             return $result->dynamic_id;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -144,25 +136,20 @@ class DynamicService extends Service
     public function update(int $login_user_id, int $dynamic_id, array $params)
     {
         $dynamic = $this->checkDynamic($dynamic_id);
-        if ( !$dynamic) {
-            return false;
-        }
+
         if ($login_user_id != $dynamic->user_id) {
             throw new InvalidRequestException('请无权编辑此动态！');
         }
         switch (intval($params['dynamic_type'])) {
             case 1: // 文章
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {
-                    $this->setError('请输入文章标题！');
-                    return false;
+                    throw new Exception('请输入文章标题！');
                 }
                 if ($params['content_type'] == 'html' && ( !isset($params['dynamic_content']) || empty($params['dynamic_content']))) {
-                    $this->setError('请输入动态内容(html)！');
-                    return false;
+                    throw new Exception('请输入动态内容(html)！');
                 }
                 if ($params['content_type'] == 'markdown' && ( !isset($params['dynamic_markdown']) || empty($params['dynamic_markdown']))) {
-                    $this->setError('请输入动态内容(markdown)！');
-                    return false;
+                    throw new Exception('请输入动态内容(markdown)！');
                 }
                 break;
             default:
@@ -201,8 +188,7 @@ class DynamicService extends Service
             return $dynamic->dynamic_id;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -218,8 +204,7 @@ class DynamicService extends Service
     {
         $dynamic = Dynamic::check()->with($with)->lock($lock)->find($dynamic_id);
         if (empty($dynamic)) {
-            $this->setError('动态不存在！');
-            return false;
+            throw new Exception('动态不存在！');
         }
         return $dynamic;
     }
@@ -234,9 +219,8 @@ class DynamicService extends Service
      */
     public function praise(int $login_user_id, int $dynamic_id) : bool
     {
-        if ( !$dynamic = $this->checkDynamic($dynamic_id, true)) {
-            return false;
-        }
+        $dynamic = $this->checkDynamic($dynamic_id, true);
+
         $dynamicPraise = DynamicPraise::getInstance();
         $data          = [
             'user_id'    => $login_user_id,
@@ -288,8 +272,7 @@ class DynamicService extends Service
             return true;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -351,9 +334,8 @@ class DynamicService extends Service
      */
     public function collection(int $login_user_id, int $dynamic_id) : bool
     {
-        if ( !$dynamic = $this->checkDynamic($dynamic_id, true)) {
-            return false;
-        }
+        $dynamic = $this->checkDynamic($dynamic_id, true);
+
         $dynamicCollection = DynamicCollection::getInstance();
         $data              = [
             'user_id'    => $login_user_id,
@@ -396,8 +378,7 @@ class DynamicService extends Service
             return true;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -411,9 +392,8 @@ class DynamicService extends Service
      */
     public function comment(int $login_user_id, array $params)
     {
-        if ( !$dynamic = $this->checkDynamic($params['dynamic_id'])) {
-            return false;
-        }
+        $dynamic = $this->checkDynamic($params['dynamic_id']);
+
         $dynamicCommentInstance = DynamicComment::getInstance();
         $reply_id               = $params['reply_id'] ?? 0;
         // 如果评论，那么默认就是发布者
@@ -422,8 +402,7 @@ class DynamicService extends Service
         // 验证回复的评论
         if ( !empty($reply_id)) {
             if ( !$detail = $dynamicCommentInstance->where('comment_id', $params['reply_id'])->first()) {
-                $this->setError('回复的评论信息不存在');
-                return false;
+                throw new Exception('回复的评论信息不存在！');
             }
             // 顶级Id
             $top_level  = $detail->top_level == 0 ? $detail->comment_id : $detail->top_level;
@@ -479,8 +458,7 @@ class DynamicService extends Service
             return $comment;
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError('评论失败！');
-            return false;
+            throw new Exception('评论失败！');
         }
     }
 
@@ -497,16 +475,13 @@ class DynamicService extends Service
         $dynamicCommentInstance = DynamicComment::getInstance();
         $comment                = $dynamicCommentInstance->with('dynamic')->lock(true)->find($comment_id);
         if ( !$comment) {
-            $this->setError('该评论不存在，请刷新重试！');
-            return false;
+            throw new Exception('该评论不存在，请刷新重试！');
         }
         if ( !$comment->dynamic || $comment->dynamic->is_delete == 1 || $comment->dynamic->is_check != 1) {
-            $this->setError('动态已失效！');
-            return false;
+            throw new Exception('动态已失效！');
         }
         if ($comment->author_id != $login_user_id) {
-            $this->setError('您无权删除！');
-            return false;
+            throw new Exception('您无权删除！');
         }
         DB::beginTransaction();
         try {
@@ -535,15 +510,12 @@ class DynamicService extends Service
             return array_merge($reply_ids, [$comment_id]);
         } catch (FailException $e) {
             DB::rollBack();
-            $this->setError('评论删除失败！');
-            return false;
+            throw new Exception('评论删除失败！');
         }
     }
 
     public function setDynamicFiled($login_user, int $dynamic_id, string $change_field, $change_value)
     {
-        if ( !$dynamic = $this->checkDynamic($dynamic_id)) {
-            return false;
-        }
+        $dynamic = $this->checkDynamic($dynamic_id);
     }
 }

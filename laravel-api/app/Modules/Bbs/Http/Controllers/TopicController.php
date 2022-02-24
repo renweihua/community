@@ -36,11 +36,9 @@ class TopicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['topic_id'], $this->getLoginUserId())) {
-            return $this->successJson($detail, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $detail = $this->service->detail((int)$data['topic_id'], $this->getLoginUserId());
+
+        return $this->successJson($detail, $this->service->getError());
     }
 
     /**
@@ -69,10 +67,8 @@ class TopicController extends BbsController
     {
         $data = $request->validated();
 
-        if ($res = $this->service->setFollow($this->getLoginUserId(), (int)$data['topic_id'])) {
-            return $this->successJson([], $this->service->getError(), $res);
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $res = $this->service->setFollow($this->getLoginUserId(), (int)$data['topic_id']);
+
+        return $this->successJson([], $this->service->getError(), $res);
     }
 }

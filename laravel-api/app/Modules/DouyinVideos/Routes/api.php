@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use App\Modules\Bbs\Http\Middleware\RecordWebLog;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +11,10 @@ use App\Modules\Bbs\Http\Middleware\RecordWebLog;
 |
 */
 
-Route::prefix('douyin')->middleware([RecordWebLog::class])->group(function () {
+use Illuminate\Http\Request;
+use App\Modules\Bbs\Http\Middleware\RecordWebLog;
+use App\Http\Middleware\CheckIpBlacklist;
+
+Route::prefix('douyin')->middleware([RecordWebLog::class, CheckIpBlacklist::class])->group(function () {
     Route::get('/recommend', 'IndexController@recommend');
 });

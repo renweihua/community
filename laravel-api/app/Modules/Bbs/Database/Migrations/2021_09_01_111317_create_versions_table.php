@@ -20,6 +20,7 @@ class CreateVersionsTable extends Migration
             $table->boolean('version_type')->unsigned()->default(0)->comment('版本类型：1.android；2.ios');
             $table->string('version_name', 200)->default('')->comment('版本名称');
             $table->string('version_number', 200)->default('')->comment('版本号');
+            $table->integer('version_code')->default(100)->comment('纯数字的版本号');
             $table->string('version_desc', 200)->default('')->comment('描述');
             $table->string('apk_url', 200)->default('')->comment('');
             $table->integer('publish_time')->unsigned()->default(0)->comment('版本的发布时间');

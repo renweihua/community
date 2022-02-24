@@ -7,6 +7,7 @@ use App\Modules\Bbs\Http\Requests\User\BackgroundCoverRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangeEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordByEmailRequest;
 use App\Modules\Bbs\Http\Requests\User\ChangePasswordRequest;
+use App\Modules\Bbs\Http\Requests\User\ChangeUserNameRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateAvatarRequest;
 use App\Modules\Bbs\Http\Requests\User\UpdateRequest;
 use App\Modules\Bbs\Services\User\UserService;
@@ -31,11 +32,9 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        if ($this->service->updateUser($this->getLoginUserId(), $request->all())) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->updateUser($this->getLoginUserId(), $request->all());
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -49,11 +48,9 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        if ($this->service->updateAvatarCover($this->getLoginUser(), $request->input('user_avatar'))) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->updateAvatarCover($this->getLoginUser(), $request->input('user_avatar'));
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -67,11 +64,9 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        if ($this->service->updateBackgroundCover($this->getLoginUser(), $request->input('background_cover'))) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->updateBackgroundCover($this->getLoginUser(), $request->input('background_cover'));
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -83,11 +78,24 @@ class IndexController extends BbsController
      */
     public function extend(Request $request): JsonResponse
     {
-        if ($this->service->updateExtend($this->getLoginUser(), $request->input())) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->updateExtend($this->getLoginUser(), $request->input());
+        return $this->successJson([], $this->service->getError());
+    }
+
+    /**
+     * 更改登录账户
+     *
+     * @param  \App\Modules\Bbs\Http\Requests\User\ChangeUserNameRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeUserName(ChangeUserNameRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        $this->service->changeUserName($this->getLoginUser(), $request->input('user_name'));
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -101,11 +109,9 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        if ($this->service->changePassword($this->getLoginUser(), $request->input('password'))) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->changePassword($this->getLoginUser(), $request->input('password'));
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -130,11 +136,9 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        if ($this->service->checkEmailCodeAndUpdatePassword($this->getLoginUser(), $request->input('code'), $request->input('password'))) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->checkEmailCodeAndUpdatePassword($this->getLoginUser(), $request->input('code'), $request->input('password'));
+
+        return $this->successJson([], $this->service->getError());
     }
 
     /**
@@ -148,10 +152,8 @@ class IndexController extends BbsController
     {
         $data = $request->validated();
 
-        if ($this->service->changeEmail($this->getLoginUser(), $data['user_email'])) {
-            return $this->successJson([], $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $this->service->changeEmail($this->getLoginUser(), $data['user_email']);
+
+        return $this->successJson([], $this->service->getError());
     }
 }

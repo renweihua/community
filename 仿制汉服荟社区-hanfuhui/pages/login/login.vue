@@ -19,18 +19,23 @@
 				<view>没有账号？<text class="ctheme funderline ml8r" @tap="fnPage('register')">注册</text></view>
 			</view>
 		</view>
-		<!-- 社交账号 -->
+		<!-- 社交账号【个人开发废弃】 -->
+		<!--
+		QQ开放平台：提供软著
 		<view class="social">
+		<view class="social" v-if="false">
 			<view class="flex flex-aic mb28r">
 				<view class="flex-fitem line-gr-ctheme"></view>
 				<view class="f32r mlr18r ctheme">社交账号登录</view>
 				<view class="flex-fitem line-gl-ctheme"></view>
 			</view>
 			<view class="flexr-jsa">
-				<image class="hw96r br50v" src="/static/icon_weixin.png" mode="aspectFit" @tap="fnWechat"></image>
 				<image class="hw96r br50v" src="/static/icon_qq.png" mode="aspectFit" @tap="fnQQ"></image>
+				<image class="hw96r br50v" src="/static/icon_qq1.png" mode="aspectFit" @tap="fnWeibo">微博</image>
+				<view class="f32r mlr18r ctheme" @tap="fnWeibo">微博登录</view>
 			</view>
 		</view>
+		-->
 	</view>
 </template>
 
@@ -54,7 +59,7 @@
 				// 用户名、邮箱、手机号
 				user_name: '',
 				// 密码
-				password: ''
+				password: 'cnpscy951753'
 			};
 		},
 		onReady() {
@@ -151,6 +156,12 @@
 			//调起QQ登录
 			fnQQ() {
 				if (this.isLogin) return;
+				
+				console.log('QQ登录');
+				uni.showLoading({
+					title: 'QQ登录'
+				})
+
 				uni.login({
 					provider: 'qq',	//QQ:qq
 					success: function (loginRes) {
@@ -166,12 +177,74 @@
 					}
 				});
 				
-				console.log('QQ登录');
-				uni.showLoading({
-					title: 'QQ登录'
-				})
 				setTimeout(() => {
 					uni.hideLoading()
+				}, 1200);
+			},
+			//调起微博登录
+			fnWeibo() {
+				if (this.isLogin) return;
+				
+				console.log('微博登录');
+				uni.showLoading({
+					title: '微博登录'
+				})
+
+				uni.login({
+					provider: 'sinaweibo',	// 新浪微博
+					success: function (loginRes) {
+						console.log(loginRes.authResult);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'sinaweibo',
+							success: function (infoRes) {
+								console.log('新浪微博信息：');
+								console.log(infoRes);
+							}
+						});
+					}
+				});
+				
+				setTimeout(() => {
+					uni.hideLoading()
+				}, 1200);
+			},
+			//调起微博登录
+			fnWeibo() {
+				uni.getProvider({
+					service: 'oauth',
+					success: function(res) {
+						// console.log(res);
+						uni.login({
+							provider: 'sinaweibo',
+							success: function(loginRes) {
+								console.log(loginRes)
+							},
+						});
+					},
+				});
+				return;
+				if (this.isLogin) return;
+				uni.login({
+					provider: 'sinaweibo',	// 新浪微博
+					success: function (loginRes) {
+						console.log(loginRes.authResult);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'sinaweibo',	// 新浪微博
+							success: function (infoRes) {
+								console.log('微博信息：');
+								console.log(infoRes);
+							}
+						});
+					}
+				});
+				console.log('微博登录');
+				uni.showLoading({
+					title: '微博登录'
+				})
+				setTimeout(() => {
+					uni.hideLoading();
 				}, 1200);
 			}
 		}

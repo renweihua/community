@@ -28,8 +28,8 @@ class SyncDouyinVideos implements ShouldQueue
     {
         Log::info('同步抖音的视频信息');
         $this->author = $author;
-        // 作者的文件夹目录
-        $this->path_file_folder = 'douyin-videos/' . $author->nick_name . '-' .  make_file_folder_name($author->unique_id);
+        // 必须对文件路径进行转码，否则（存在中文特殊符的文本）上传之后的文件链接会失效
+        $this->path_file_folder = 'douyin-videos/' . \urlencode($author->nick_name) . '-' .  make_file_folder_name($author->unique_id);
     }
 
     /**
@@ -69,7 +69,8 @@ class SyncDouyinVideos implements ShouldQueue
                             '//',
                             '\\',
                         ], '', $file_name);
-                        $path_file_name = $this->path_file_folder . '/' . $file_name . '.mp4';
+                        // 必须对文件路径进行转码，否则（存在中文特殊符的文本）上传之后的文件链接会失效
+                        $path_file_name = $this->path_file_folder . '/' . \urlencode($file_name) . '.mp4';
                         // // 下载文件
                         // if ( $item['video_path'] && !is_file($path_file_name) ) {
                         //     file_put_contents($path_file_name, fopen($item['video_path'], 'r'));
@@ -78,16 +79,26 @@ class SyncDouyinVideos implements ShouldQueue
 
                         // 存储到COS
                         // 获取在线文件的大小
-                        $res = get_headers($item['video_path'],true);
+                        $res = @get_headers($item['video_path'],true);
+                        if (!$res) {
+                            continue;
+                        }
 
+                        $file_content = @file_get_contents($item['video_path']);
+                        if (!$file_content) {
+                            continue;
+                        }
                         $file_url = CosService::getInstance()->put(
-                            file_get_contents($item['video_path']),
+                            $file_content,
                             $file_name . '.mp4',
                             $this->path_file_folder,
-                            $res['Content-Length'],
+                            intval($res['Content-Length'] ?? 0),
                             'video/mp4',
                             'mp4'
                         );
+                        if (!$file_url) {
+                            continue;
+                        }
                         $item['real_video_path'] = $file_url;
 
                         $data = [
@@ -109,6 +120,7 @@ class SyncDouyinVideos implements ShouldQueue
                                 'ratio'     => $item['ratio'],
                             ],
                             'statistics' => $item['statistics'],
+                            'old_data' => $item['original'] ?? [],
                         ];
                         $douyinVideo->create($data);
                         ++$success_num;

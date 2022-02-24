@@ -66,8 +66,7 @@ class AdminService extends BaseService
             return true;
         }catch (Exception $e){
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -84,8 +83,7 @@ class AdminService extends BaseService
             return true;
         }catch (Exception $e){
             DB::rollBack();
-            $this->setError($e->getMessage());
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -125,8 +123,7 @@ class AdminService extends BaseService
     {
         $primaryKey = $this->model->getKeyName();
         if (isset($params[$primaryKey]) && $params[$primaryKey] == 1){
-            $this->setError('超管禁止删除！');
-            return false;
+            throw new Exception('超管禁止删除！');
         }
         // 如果是批量删除，那么移除Id
         if(isset($params['is_batch']) && $params['is_batch'] == 1){

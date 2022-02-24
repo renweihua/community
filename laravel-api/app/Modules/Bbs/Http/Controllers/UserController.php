@@ -41,11 +41,9 @@ class UserController extends BbsController
     {
         $data = $request->validated();
 
-        if ($detail = $this->service->detail((int)$data['user_id'], $this->getLoginUserId())) {
-            return $this->successJson($detail, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $detail = $this->service->detail((int)$data['user_id'], $this->getLoginUserId());
+
+        return $this->successJson($detail, $this->service->getError());
     }
 
     /**
@@ -57,11 +55,9 @@ class UserController extends BbsController
      */
     public function uuid($user_uuid): JsonResponse
     {
-        if ($detail = $this->service->detail($user_uuid, $this->getLoginUserId())) {
-            return $this->successJson($detail, $this->service->getError());
-        } else {
-            return $this->errorJson($this->service->getError());
-        }
+        $detail = $this->service->detail($user_uuid, $this->getLoginUserId());
+
+        return $this->successJson($detail, $this->service->getError());
     }
 
     /**

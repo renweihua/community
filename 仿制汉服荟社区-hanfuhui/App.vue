@@ -1,23 +1,28 @@
 <script>
 	import {
 		getStarCover
-	} from "@/api/CommonServer.js"
+	} from "@/api/CommonServer.js";
+	
 	// #ifdef APP-PLUS
 	import APPUpdate from '@/uni_modules/zhouWei-APPUpdate/js_sdk/appUpdate';
 	// #endif
+	
 	export default {
-		onLaunch() {
-			// console.log('App Launch')
-
-			// 检测APP版本是否升级
+		onLaunch() {			
 			// #ifdef APP-PLUS
 			uni.getSystemInfo({
 				success: function (res) {
 					console.log(res);
+					// 存储手机信息
+					uni.setStorageSync('equipment-platform', res.platform);
+					uni.setStorageSync('equipment-model', res.model);
+					uni.setStorageSync('equipment-deviceId', res.deviceId);
 				}
 			});
+			// 检测APP版本是否升级
 			APPUpdate();
 			// #endif
+			
 			// 检查token
 			let token = uni.getStorageSync('TOKEN');
 			if (!!token) {

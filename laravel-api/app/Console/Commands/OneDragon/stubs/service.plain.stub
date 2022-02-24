@@ -1,0 +1,15 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use $MODEL_NAMESPACE$ as $MODEL_NAME$;
+
+use App\Services\Service;
+
+class $CLASS$ extends Service
+{
+    public function __construct($MODEL_NAME$ $model)
+    {
+        $this->model = $model;
+    }
+}

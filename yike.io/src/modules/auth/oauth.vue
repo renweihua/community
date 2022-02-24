@@ -16,7 +16,7 @@ export default {
             if(res.status){
                 window.location = res.data;
             }else{
-                this.$message.error(res.msg);
+                // this.$message.error(res.msg);
             }
         });
     } else {

@@ -4,6 +4,7 @@ namespace App\Modules\DouyinVideos\Jobs;
 
 use App\Models\Douyin\DouyinAuthor;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,6 +16,16 @@ class SyncDouyinAuthor implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $author;
+
+    /**
+     * 获取任务的中间件：如果你不希望重试任何重复任务并且立即删除，你可以使用 dontRelease 方法
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return [(new WithoutOverlapping($this->author['sec_uid']))->dontRelease()];
+    }
 
     /**
      * Create a new job instance.
@@ -34,24 +45,19 @@ class SyncDouyinAuthor implements ShouldQueue
      */
     public function handle()
     {
-        // 重新获取作者的信息【暂时不同步，仅用于记录上一次同步动态的时间】
-        if ($this->author instanceof DouyinAuthor){
-            // 检测作者是否存在
-            $author = $this->author->where('uid', $this->author->uid)->lock(true)->first();
-            // 录入作者
-            if (!$author){
-                $author = $this->createAuthor();
-            }else{
-                // 上一次同步时间
-                $author->update(['last_sync' => time()]);
-            }
-        }else{
+        // 检测作者是否存在
+        $author = DouyinAuthor::where('sec_uid', $this->author['sec_uid'])->lock(true)->first();
+        // 录入作者
+        if (!$author){
             $author = $this->createAuthor();
+        }else{
+            // 上一次同步时间
+            $author->update(['last_sync' => time()]);
         }
 
         // 分发队列，同步当前作者的动态
         SyncDouyinVideos::dispatch($author)
-                        ->delay(now()->addMinutes(rand(1, 20 * 3600))) // 延迟分钟数【在20小时内执行完成即可】
+                        ->delay(now()->addMinutes(rand(1, 10 * 24 * 60))) // 延迟分钟数【在10天内执行完成即可】
                         ->onConnection('database') // job 存储的服务：当前存储mysql
                         ->onQueue('douyin-queue'); // douyin-queue
     }
