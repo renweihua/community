@@ -18,7 +18,7 @@ use App\Modules\Admin\Http\Middleware\AdminLog;
 use App\Http\Middleware\CheckIpBlacklist;
 
 Route::prefix(cnpscy_config('admin_prefix'))
-    ->middleware(CheckIpBlacklist::class, AdminLog::class)
+    ->middleware([CheckIpBlacklist::class, AdminLog::class])
     ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
