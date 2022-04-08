@@ -14,6 +14,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckIpBlacklist;
 
-Route::prefix('douyinvideos')->middleware([CheckIpBlacklist::class])->group(function() {
+Route::prefix('douyinvideos')->middleware([\App\Modules\Bbs\Http\Middleware\RecordWebLog::class, CheckIpBlacklist::class])->group(function() {
     Route::get('/', 'DouyinVideosController@index');
 });
