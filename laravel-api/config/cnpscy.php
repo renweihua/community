@@ -53,7 +53,7 @@
     2 => '作为发布栏目，文章列表模式',
     3 => '单页面模式，例如企业简介',
   ),
-  'admin_prefix' => 'cnpscy_blog_admin',
+  'admin_prefix' => 'admin',
   'privateKey' => '&lt;&lt;&lt;EOD-----BEGIN RSA PRIVATE KEY-----MIICXAIBAAKBgQC8kGa1pSjbSYZVebtTRBLxBz5H4i2p/llLCrEeQhta5kaQu/RnvuER4W8oDH3+3iuIYW4VQAzyqFpwuzjkDI+17t5t0tyazyZ8JXw+KgXTxldMPEL95+qVhgXvwtihXC1c5oGbRlEDvDF6Sa53rcFVsYJ4ehde/zUxo6UvS7UrBQIDAQABAoGAb/MXV46XxCFRx',
   'publicKey' => '&lt;&lt;&lt;EOD-----BEGIN PUBLIC KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8kGa1pSjbSYZVebtTRBLxBz5H4i2p/llLCrEeQhta5kaQu/RnvuER4W8oDH3+3iuIYW4VQAzyqFpwuzjkDI+17t5t0tyazyZ8JXw+KgXTxldMPEL95+qVhgXvwtihXC1c5oGbRlEDvDF6Sa53rcFVsYJ4ehde/zUxo6UvS7UrBQIDAQ',
   'jwt_leeway' => '60',

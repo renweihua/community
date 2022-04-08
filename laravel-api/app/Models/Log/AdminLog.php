@@ -79,6 +79,8 @@ class AdminLog extends MonthModel
             'log_method'   => $method,
             'log_duration' => microtime(true) - LARAVEL_START,
             'request_url'     => URL::full() ?? get_this_url(),
+            // 默认值
+            'log_status'   => 0,
         ]);
     }
 }

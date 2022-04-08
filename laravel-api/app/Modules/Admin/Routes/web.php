@@ -18,7 +18,7 @@ use App\Modules\Admin\Http\Middleware\AdminLog;
 use App\Http\Middleware\CheckIpBlacklist;
 
 Route::prefix(cnpscy_config('admin_prefix'))
-    ->middleware(CheckIpBlacklist::class)
+    ->middleware(CheckIpBlacklist::class, AdminLog::class)
     ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
@@ -34,7 +34,7 @@ Route::prefix(cnpscy_config('admin_prefix'))
         Route::post('getRabcList', 'AuthController@getRabcList')->middleware(CheckAuth::class);
     });
 
-    Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
+    Route::middleware([CheckAuth::class])->group(function () {
         // 首页
         Route::get('indexs', 'IndexController@index');
         // 编辑登录管理员资料
