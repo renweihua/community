@@ -31,4 +31,8 @@ trait Instance
         }
         return self::$instance;
     }
+
+    protected function __construct(){}
+
+    protected function __clone(){}
 }
