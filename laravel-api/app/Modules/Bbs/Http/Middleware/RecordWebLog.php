@@ -31,7 +31,7 @@ class RecordWebLog
         if ($is_start) {
             $ip_agent = get_client_info();
 
-            $user_id = request()->attributes->get('login_user') ?? 0;
+            $user_id = request()->attributes->get('login_user')->user_id ?? 0;
 
             $weblog = WebLog::create(
                 [

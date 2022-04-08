@@ -140,7 +140,7 @@ class AuthService extends Service
             // 第三方登录相关
             $user->userOtherlogin()->create(array_merge([
                 'user_id' => $user->user_id,
-            ], $params['otherlogins']));
+            ], $params['otherlogins'] ?? []));
 
             DB::commit();
 
@@ -175,7 +175,7 @@ class AuthService extends Service
             $result = $this->respondWithToken($user->user_id);
             $redis_user_info = [
                 'user_id' => $user->user_id,
-                'nick_name' => $user_info['nick_name'],
+                'nick_name' => $user_info['nick_name'] ?? '',
                 'user_avatar' => $user_info['user_avatar'],
                 'login_time' => time(),
                 'expires_time' => $result['expires_time'],

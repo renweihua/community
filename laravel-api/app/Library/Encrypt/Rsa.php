@@ -113,7 +113,7 @@ class Rsa {
             "private_key_bits" => $private_key_bits, #此处必须为int类型
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
             // "config" => "D:\phpEnv\php\php-7.3\extras\ssl\openssl.cnf" //如果没有配置这项，openssl_pkey_new会返回false
-            "config" => "D:/phpEnv/php/php-7.3/extras/ssl/openssl.cnf" //如果没有配置这项，openssl_pkey_new会返回false
+            // "config" => "D:/phpEnv/php/php-7.3/extras/ssl/openssl.cnf" //如果没有配置这项，openssl_pkey_new会返回false
         ];
 
 

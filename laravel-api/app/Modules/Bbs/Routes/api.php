@@ -23,7 +23,7 @@ Route::middleware('auth:api')->get('/bbs', function (Request $request) {
 });
 
 
-Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::class, CheckIpBlacklist::class])->group(function () {
+Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, GetUserByToken::class, RecordWebLog::class, CheckIpBlacklist::class])->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
         // 邮箱注册，发送验证码
@@ -43,7 +43,7 @@ Route::prefix('')->middleware([\App\Http\Middleware\Cors::class, RecordWebLog::c
     // 第三方登录的回调
     Route::match(['get', 'post'], 'oauth/{oauth}/callback', 'OauthController@callback')->middleware(GetUserByToken::class);
 
-    Route::prefix('')->middleware(GetUserByToken::class)->group(function(){
+    Route::prefix('')->group(function(){
         /**
          * 首页相关
          */

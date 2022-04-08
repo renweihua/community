@@ -3,6 +3,7 @@
 namespace App\Modules\Bbs\Http\Middleware;
 
 use App\Constants\UserCacheKeys;
+use App\Library\Encrypt\Aes;
 use App\Library\Encrypt\Rsa;
 use App\Models\User\User;
 use App\Traits\Json;
@@ -32,7 +33,7 @@ class GetUserByToken
     {
         $token = $request->header('Authorization');
         if (!empty($token)){
-            if ($token_user = Rsa::privDecrypt($token)){
+            if ($token_user = (new Aes)->decrypt($token)){
                 // Redis 是否存在key
                 if (!empty(Redis::connection('token')->get(UserCacheKeys::USER_LOGIN_TOKEN . $token))){
                     // Token 是否过期
