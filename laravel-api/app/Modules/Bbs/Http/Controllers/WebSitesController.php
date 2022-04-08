@@ -5,7 +5,7 @@ namespace App\Modules\Bbs\Http\Controllers;
 use App\Models\Dynamic\Dynamic;
 use App\Models\System\Banner;
 use App\Models\System\StartDiagram;
-use App\Models\Version;
+use App\Models\AppVersion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -77,7 +77,7 @@ class WebSitesController extends BbsController
      */
     public function checkAppVersion(Request $request, $version_type = 1): JsonResponse
     {
-        $version = Version::select(['version_number', 'apk_url', 'update_type', 'is_update', 'version_desc', 'version_name'])
+        $version = AppVersion::select(['version_number', 'apk_url', 'update_type', 'is_update', 'version_desc', 'version_name'])
             ->where(function($query) use($request){
                 if ($request->version_number){
                     $query->where('version_number', '>', $request->version_number);

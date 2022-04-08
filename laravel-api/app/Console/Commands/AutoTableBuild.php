@@ -64,6 +64,8 @@ class AutoTableBuild extends Command
             $new->createMonthTable('', strtotime('+0 month'));
             $new->createMonthTable('', strtotime('+1 month'));
         }
+
+        $this->info($this->description);
     }
 
     /**

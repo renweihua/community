@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVersionsTable extends Migration
+class CreateAppVersionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateVersionsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('versions')) return;
-        Schema::create('versions', function (Blueprint $table) {
+        if (Schema::hasTable('app_versions')) return;
+        Schema::create('app_versions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('version_id')->unsigned()->comment('版本Id');
             $table->boolean('version_type')->unsigned()->default(0)->comment('版本类型：1.android；2.ios');
@@ -33,7 +33,7 @@ class CreateVersionsTable extends Migration
             $table->index(['is_delete']);
         });
         // 设置表注释
-        DB::statement("ALTER TABLE `" . get_db_prefix() . "versions` comment '版本表'");
+        DB::statement("ALTER TABLE `" . get_db_prefix() . "app_versions` comment '版本表'");
     }
 
     /**
