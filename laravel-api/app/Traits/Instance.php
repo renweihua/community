@@ -32,7 +32,7 @@ trait Instance
         return self::$instance;
     }
 
-    protected function __construct(){}
+    // protected function __construct(){}
 
-    protected function __clone(){}
+    // protected function __clone(){}
 }
