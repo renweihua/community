@@ -75,12 +75,12 @@ class Rsa {
      * @param string $encrypted
      * @return null
      */
-    public static function privDecrypt($encrypted = '')
+    public static function privDecrypt($encrypted = '', bool $assoc = false)
     {
         if (!is_string($encrypted)) {
             return null;
         }
-        return json_decode((openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey())) ? $decrypted : null);
+        return json_decode((openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey())) ? $decrypted : null, $assoc);
     }
 
     /**

@@ -26,7 +26,7 @@ class CreateAdminLogsTable extends Migration
             $table->string('log_method', 10)->default('')->comment('请求类型/请求方式');
             $table->string('request_url', 200)->nullable()->comment('请求的URL');
             $table->string('request_data', 500)->nullable()->comment('请求参数');
-            $table->boolean('log_status')->unsigned()->default(1)->comment('登录状态：1.成功；0.失败');
+            $table->boolean('log_status')->unsigned()->default(1)->comment('状态：1.成功；0.失败');
             $table->decimal('log_duration', 20, 12)->default(0)->comment('请求时长');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除：0.否；1.是');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
