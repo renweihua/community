@@ -5,11 +5,10 @@ namespace App\Modules\Bbs\Http\Middleware;
 use App\Constants\UserCacheKeys;
 use App\Exceptions\Bbs\AuthException;
 use App\Exceptions\Bbs\FailException;
-use App\Library\Encrypt\Aes;
-use App\Library\Encrypt\Rsa;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
 use App\Modules\Bbs\Services\UserLoginRedisService;
+use App\Services\UserAuthEncryptionService;
 use App\Traits\Json;
 use Closure;
 use Illuminate\Http\Request;
@@ -32,8 +31,7 @@ class CheckAuth
         if (empty($token)){
             return $this->errorJson('请先登录！', -1);
         }
-        // $token_user = Rsa::privDecrypt($token);
-        $token_user = (new Aes)->decrypt($token);
+        $token_user = UserAuthEncryptionService::getInstance()->decrypt($token);
         if (!$token_user){
             return $this->errorJson('认证失败，请重新登录！', -1);
         }

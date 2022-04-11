@@ -2,13 +2,10 @@
 
 namespace App\Modules\Bbs\Http\Middleware;
 
-use App\Constants\UserCacheKeys;
-use App\Library\Encrypt\Rsa;
 use App\Models\Log\WebLog;
 use App\Traits\Json;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\URL;
 
 class RecordWebLog
