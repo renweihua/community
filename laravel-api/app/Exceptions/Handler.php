@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Traits\Json;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -96,6 +97,15 @@ class Handler extends ExceptionHandler
 
             // ErrorException类的监听
             if($exception instanceof \ErrorException){
+                return $this->setJsonReturn($exception);
+            }
+
+            // QueryException
+            if ($exception instanceof QueryException){
+                return $this->setJsonReturn($exception);
+            }
+            // Exception类的监听
+            if($exception instanceof \Exception){
                 return $this->setJsonReturn($exception);
             }
         }
