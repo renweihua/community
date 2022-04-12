@@ -67,6 +67,12 @@ class User extends Model
         return $this->hasOne(UserOtherlogin::class, $this->primaryKey, $this->primaryKey);
     }
 
+    // 会员通知设置
+    public function userNotifySetting()
+    {
+        return $this->hasOne(UserNotifySetting::class, $this->primaryKey, $this->primaryKey);
+    }
+
     protected static function newFactory()
     {
         return UserFactory::new();
