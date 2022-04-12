@@ -32,10 +32,10 @@ class Kernel extends ConsoleKernel
         // var_dump('schedule：' . date('Y-m-d H:i:s'));
 
         // 每月1号调用：按月分表自动生成
-        $schedule->command('autotablebuild')->monthlyOn();
+        $schedule->command('command:autotablebuild')->monthlyOn();
 
         // 同步抖音作者的视频
-        $schedule->command('sync_douyin_videos')->wednesdays();
+        $schedule->command('command:sync_douyin_videos')->wednesdays();
     }
 
     /**
