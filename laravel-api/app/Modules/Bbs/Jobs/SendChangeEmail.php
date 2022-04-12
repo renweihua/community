@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 /**
- * 邮件注册成功之后，发送邮件的队列事件
+ * 更换邮箱，发送邮件的队列事件
  *
  * Class SendRegisterEmail
  *

@@ -50,7 +50,7 @@ class EmailRegister extends Notification
         return (new MailMessage)
                     ->greeting('Hello!')
                     ->line('Thank you for your registration.')
-                    ->line('Thank you for using our application!');
+                    ->line('欢迎来到`小丑路人社区`!');
     }
 
     /**

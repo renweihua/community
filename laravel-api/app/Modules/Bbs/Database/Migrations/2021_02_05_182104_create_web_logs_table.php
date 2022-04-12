@@ -17,7 +17,7 @@ class CreateWebLogsTable extends Migration
         Schema::create('web_logs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('log_id')->unsigned()->comment('Id');
-            $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->boolean('log_status')->unsigned()->default(1)->comment('状态：1.成功；0.失败');

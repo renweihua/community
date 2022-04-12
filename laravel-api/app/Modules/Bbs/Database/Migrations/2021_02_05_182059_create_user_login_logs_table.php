@@ -17,7 +17,7 @@ class CreateUserLoginLogsTable extends Migration
         Schema::create('user_login_logs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('log_id')->unsigned()->comment('会员登录日志记录表');
-            $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->string('created_ip', 20)->default('')->comment('创建时的IP');
             $table->string('browser_type', 300)->default('')->comment('创建时浏览器类型');
             $table->string('description', 200)->default('')->comment('描述');
@@ -32,6 +32,8 @@ class CreateUserLoginLogsTable extends Migration
             $table->index(['user_id']);
             $table->index(['is_public']);
         });
+        // 设置表注释
+        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_roles` comment '会员登录日志表'");
     }
 
     /**

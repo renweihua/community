@@ -17,7 +17,7 @@ class CreateUserExperienceRecordsTable extends Migration
         Schema::create('user_experience_records', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('experience_id')->unsigned()->comment('会员经验变动记录表');
-            $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->smallInteger('experience_num')->unsigned()->default(0)->comment('获得多少经验');
             $table->boolean('get_type')->unsigned()->default(0)->comment('获得类型：
                 0：会员登录【一次 + 1】；

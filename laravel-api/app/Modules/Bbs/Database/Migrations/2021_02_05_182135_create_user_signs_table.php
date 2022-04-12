@@ -17,7 +17,7 @@ class CreateUserSignsTable extends Migration
         Schema::create('user_signs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('sign_id')->unsigned()->comment('会员签到记录表');
-            $table->bigInteger('user_id')->unsigned()->default(0)->comment('用户的id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->boolean('sign_type')->unsigned()->default(0)->comment('签到类型：0：会员签到；1：后台手动添加');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
@@ -28,6 +28,8 @@ class CreateUserSignsTable extends Migration
             $table->index(['user_id']);
             $table->index(['is_delete']);
         });
+        // 设置表注释
+        DB::statement("ALTER TABLE `" . env('DB_PREFIX') . "admin_roles` comment '会员签到记录表'");
     }
 
     /**

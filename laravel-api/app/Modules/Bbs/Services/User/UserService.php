@@ -226,7 +226,7 @@ class UserService extends Service
         // 生成待激活邮箱的记录
         $email_verify = UserEmailVerify::randRecord($login_user, $user_email);
 
-        // 注册成功：邮箱激活
+        // 邮箱激活
         SendChangeEmail::dispatch($login_user, $user_email, $email_verify->verify_token)
             ->onConnection('database') // job 存储的服务：当前存储mysql
             ->onQueue('mail-queue'); // mail-queue 队列
