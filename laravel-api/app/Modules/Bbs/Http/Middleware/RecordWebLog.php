@@ -6,6 +6,7 @@ use App\Models\Log\WebLog;
 use App\Traits\Json;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 
 class RecordWebLog
@@ -52,14 +53,17 @@ class RecordWebLog
             $log_description = $weblog->log_description;
             try{
                 $response = $next($request);
-
-                // 获取返回data内容
-                $response_body_content = $response->getData();
-
-                // 根据接口响应，存储返回状态与文本提示语
-                $log_status = $response_body_content->status;
-                $log_description = $response_body_content->msg;
+                // 获取返回data内容，偶尔会遇到 getData 方法不存在
+                if (method_exists($response, 'getData')){
+                    $response_body_content = $response->getData() ?? [];
+                    // 根据接口响应，存储返回状态与文本提示语
+                    $log_status = $response_body_content->status;
+                    $log_description = $response_body_content->msg;
+                }else{
+                    $log_description = 'Method Illuminate\Http\Response::getData does not exist.';
+                }
             }catch(\Exception $e){
+                Log::debug($log_description);
                 $log_description = $e->getMessage();
                 $response = $this->errorJson($log_description);
             }
