@@ -9,6 +9,8 @@ use App\Models\User\UserInfo;
 use App\Models\User\UserOtherlogin;
 use App\Modules\Bbs\Database\factories\DynamicFactory;
 use EloquentFilter\Filterable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 // use Laravel\Scout\Searchable;
 use ScoutElastic\Searchable;
@@ -391,5 +393,41 @@ class Dynamic extends Model
     public static function toHTML(string $markdown)
     {
         return app(\ParsedownExtra::class)->text(\emoji($markdown));
+    }
+
+    public static function getDynamicCacheKey(int $dynamic_id, int $login_user_id = 0): string
+    {
+        return 'cnpscy:bbs:dynamic_id:' . $dynamic_id . ':login_user_id:' . $login_user_id;
+    }
+
+    // 通过动态Id获取动态（如果存在于缓存，则读取缓存；否则读取数据库）
+    public static function getDynamicById(int $dynamic_id, int $login_user_id = 0, bool $force = false)
+    {
+        $key = self::getDynamicCacheKey($dynamic_id, $login_user_id);
+        if (!Cache::has($key) || $force) {
+            $dynamic = Dynamic::check()->with([
+                'userInfo' => function($query) use($login_user_id){
+                    $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_uuid', 'basic_extends', 'other_extends'])->with([
+                        'isFollow' => function($query) use ($login_user_id) {
+                            $query->where('user_id', $login_user_id);
+                        }
+                    ]);
+                },
+                'userOtherLogin' => function($query) use($login_user_id){
+                    $query->select(['user_id', 'qq_info', 'weibo_info', 'github_info']);
+                },
+                'topic'
+            ])->find($dynamic_id);
+            if (empty($dynamic)) {
+                throw new \Exception('动态不存在！');
+            }
+            Cache::put($key, $dynamic, Carbon::now()->addMinutes(5));
+        } else {
+            $dynamic = Cache::get($key);
+        }
+        if (empty($dynamic)) {
+            throw new \Exception('动态不存在！');
+        }
+        return $dynamic;
     }
 }

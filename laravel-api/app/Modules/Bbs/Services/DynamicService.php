@@ -120,16 +120,14 @@ class DynamicService extends Service
                         if ($dynamic_type > -1) $query->where('dynamic_type', $dynamic_type);
                     })
                     ->where(function ($query) use($login_user_id){
-                        // $dynamic->is_public
+                        $query->where('is_public', 1);
                         if ($login_user_id){
-                            $query->where('is_public', 1)->orWhere(
-                                [
+                            $query->orWhere(function ($q) use($login_user_id){
+                                $q->where([
                                     'is_public' => 0,
                                     'user_id' => $login_user_id
-                                ]
-                            );
-                        }else{
-                            $query->where('is_public', 1);
+                                ]);
+                            });
                         }
                     })
                     ->with(
@@ -195,19 +193,7 @@ class DynamicService extends Service
      */
     public function detail(int $dynamic_id, int $login_user_id = 0)
     {
-        $dynamic = $this->getDynamicDetail($dynamic_id, false, [
-            'userInfo' => function($query) use($login_user_id){
-                $query->select(['user_id', 'nick_name', 'user_avatar', 'user_sex', 'user_grade', 'city_info', 'user_uuid', 'basic_extends', 'other_extends'])->with([
-                    'isFollow' => function($query) use ($login_user_id) {
-                        $query->where('user_id', $login_user_id);
-                    }
-                ]);
-            },
-            'userOtherLogin' => function($query) use($login_user_id){
-                $query->select(['user_id', 'qq_info', 'weibo_info', 'github_info']);
-            },
-            'topic'
-        ]);
+        $dynamic = Dynamic::getDynamicById($dynamic_id, $login_user_id);
 
         if ( !empty($login_user_id)) {
             $dynamic->load([
