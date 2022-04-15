@@ -17,8 +17,15 @@ export default http => {
         response => {
             let data = response.data;
             if (data.status == 0) {
-                Message.error(data.msg);
-                return Promise.reject(data.msg);
+                // 是否拦截
+                if (data.no_interceptor) {
+                    return data;
+                }else{
+                    if (data.msg) {
+                        Message.error(data.msg);   
+                    }
+                    return Promise.reject(data.msg);
+                }
             } else {
                 if (data.status == -1) {
                     store.dispatch('setToken', null);
