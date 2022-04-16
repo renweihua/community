@@ -57,7 +57,7 @@ class RecordWebLog
                 if (method_exists($response, 'getData')){
                     $response_body_content = $response->getData() ?? [];
                     // 根据接口响应，存储返回状态与文本提示语
-                    $log_status = $response_body_content->status;
+                    $log_status = $response_body_content->status == 1 ? 1 : 0;
                     $log_description = $response_body_content->msg;
                 }else{
                     $log_description = 'Method Illuminate\Http\Response::getData does not exist.';
