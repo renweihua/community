@@ -43,6 +43,9 @@ import StartCover from '@/pages/start-cover/start-cover';
 
 import { getLoginUserInfo } from '@/api/UserServer.js';
 import { getMessageNoReadCount } from '@/api/MessageServer.js';
+import {
+	goLogin
+} from '@/api/CommonServer.js'
 
 export default {
 	components: {
@@ -109,8 +112,9 @@ export default {
 			// 双击刷新
 			clickRefresh: false,
 			// 刷新间隔
-			timeOut: 0
-			//
+			timeOut: 0,
+			
+			login_user: false,
 		};
 	},
 	// 初始跳转
@@ -135,6 +139,7 @@ export default {
 		let token = uni.getStorageSync('TOKEN');
 		if(token){
 			let login_user = this.$store.getters['user/getLoginUserInfoData'];
+			this.login_user = login_user;
 			if(!login_user.user_info){
 				getLoginUserInfo().then(res => {
 					// 保存登录用户信息
@@ -162,9 +167,8 @@ export default {
 		// 消息气泡
 		bubble() {
 			return this.$store.getters['getNewsTotalData'];
-		}
+		},
 	},
-
 	methods: {
 		/**
 		 * 底部导航选中项
@@ -172,7 +176,15 @@ export default {
 		 */
 		fnCurrent(index) {
 			// 发布选择
-			if (index == 2) return (this.status.release = true);
+			if (index == 2){
+				if(this.login_user){
+					 return this.status.release = true;
+				}else{					
+					// 自动跳转登录页
+					goLogin();
+					return false;
+				}
+			};
 			// 是否当前项点击
 			if (this.current == index) {
 				this.timeOut += 1;
