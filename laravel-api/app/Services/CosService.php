@@ -58,7 +58,7 @@ class CosService extends Service
             $key = (empty($folder) ? date('Ym') : ($folder)) . '/' . $file_name;
             $content = $file;
         } else {
-            $key = (empty($folder) ? '' : ($folder . '/')) . date('Ym') . '/' . $file->getClientOriginalName();
+            $key = (empty($folder) ? '' : ($folder . '/')) . date('Ym') . '/' . \urlencode($file->getClientOriginalName());
             $content = file_get_contents($file->getRealPath());
         }
         
