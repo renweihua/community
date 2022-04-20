@@ -9,15 +9,6 @@ use Illuminate\Database\Eloquent\Scope;
 class DeleteScope implements Scope
 {
     /**
-     * Indicates if the model is currently force deleting.
-     *
-     * @var bool
-     */
-    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；）
-
-    const DELETE_FIELD = 'is_delete'; // 假删除字段
-
-    /**
      * All of the extensions to be added to the builder.
      *
      * @var string[]

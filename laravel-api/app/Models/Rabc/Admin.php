@@ -42,6 +42,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class Admin extends Authenticatable implements JWTSubject
 {
+    // 未继承Model，所以无法 `use SoftDelete`
     use Instance;
     use MysqlTable;
 

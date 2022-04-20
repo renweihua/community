@@ -6,6 +6,14 @@ namespace App\Models\SoftDelete;
 
 trait SoftDelete
 {
+    /**
+     * Indicates if the model is currently force deleting.
+     *
+     * @var bool
+     */
+    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；）
+    protected $delete_field = 'is_delete';
+
     public function getIsDelete()
     {
         return $this->is_delete ?? 1;
@@ -13,7 +21,7 @@ trait SoftDelete
 
     public function getDeleteField()
     {
-        return static::DELETE_FIELD;
+        return $this->getDeletedAtColumn();
     }
 
     /**
@@ -177,7 +185,7 @@ trait SoftDelete
      */
     public function getDeletedAtColumn()
     {
-        return defined('static::DELETED_AT') ? static::DELETED_FIELD : 'is_delete';
+        return defined('static::DELETED_FIELD') ? static::DELETED_FIELD : $this->delete_field;
     }
 
     /**
