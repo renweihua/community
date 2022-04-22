@@ -252,7 +252,7 @@ export default {
     mapCommentsUserForMention (comments) {
       comments.map(comment => {
         window.pageUsers.some(u => function(){
-          console.log(u);
+          // console.log(u);
           u.id === comment.user_id
         }) ||
           window.pageUsers.push(comment.user_info);

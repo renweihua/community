@@ -165,8 +165,8 @@ export default {
       })
       window.inlineAttachment.editors.codemirror4.attach(this.editor, {
         uploadFieldName: 'file',
-        jsonFieldName: 'url',
-        uploadUrl: this.$http.defaults.baseURL + '/files/upload',
+        jsonFieldName: 'data', // api 返回的文件地址
+        uploadUrl: this.$http.defaults.baseURL + 'upload_file',
         extraHeaders: {
           Authorization: `${this.authToken}`
         }
