@@ -20,12 +20,7 @@ class TopicService extends Service
      */
     public function lists($limit = -1)
     {
-        $build = Topic::getInstance();
-        if ($limit > 0) {
-            $build = $build->limit($limit);
-        }
-        $lists = $build->orderBy('topic_sort', 'ASC')->get();
-        return $lists;
+        return Topic::getAllTopics($limit);
     }
 
     /**
