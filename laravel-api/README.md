@@ -5,7 +5,7 @@
 
 #### 软件架构
 
-* 编程语言：`PHP7.3+`
+* 编程语言：`PHP7.4+`
 * 后端框架： `Laravel8`
 * 前端Vue框架：`vue-element-admin`
 * Nodejs  v14.*
