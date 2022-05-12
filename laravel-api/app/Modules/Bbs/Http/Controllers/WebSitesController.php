@@ -14,13 +14,11 @@ class WebSitesController extends BbsController
     /**
      * 首页启动图
      *
-     * @param  \App\Models\System\StartDiagram  $startDiagrams
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getStartDiagrams(StartDiagram $startDiagrams) : JsonResponse
+    public function getStartDiagrams() : JsonResponse
     {
-        $lists = $startDiagrams->select(['diagram_name', 'diagram_cover'])->orderBy('diagram_sort', 'ASC')->get();
+        $lists = StartDiagram::getStartDiagrams();
         return $this->successJson($lists);
     }
 
