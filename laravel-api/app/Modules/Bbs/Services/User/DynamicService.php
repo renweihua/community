@@ -57,26 +57,47 @@ class DynamicService extends Service
                 }
 
                 // 通过 ffmpeg 获取视频的第一帧作为封面图
-                $params['dynamic_images'] = date('Ym') . '/' . Str::random(40) . '.jpg';
-                if (env('APP_DEBUG') == true){
+                $get_video_cover_dir = storage_path('app/public/get_video_cover');
+                if (!is_dir($get_video_cover_dir)){
+                    mkdir($get_video_cover_dir);
+                }
+                $image_name = Str::random(40) . '.jpg';
+                $cover_image_path = $get_video_cover_dir . '/' . $image_name;
+                if (env('APP_ENV') == 'local'){
                     $ffmpeg                   = FFMpeg::create([
-                        'ffmpeg.binaries'  => 'H:/ffmpeg/bin/ffmpeg.exe',
-                        'ffprobe.binaries' => 'H:/ffmpeg/bin/ffprobe.exe',
+                        'ffmpeg.binaries'  => 'H:\ffmpeg\bin\ffmpeg.exe',
+                        'ffprobe.binaries' => 'H:\ffmpeg\bin\ffprobe.exe',
                     ]);
+
+                    $video_path = $params['video_path'];
                 }else{
                     $ffmpeg                   = FFMpeg::create([
                         'ffmpeg.binaries'  => '/www/server/ffmpeg-4.3.1/ffmpeg',
                         'ffprobe.binaries' => '/www/server/ffmpeg-4.3.1/ffprobe',
                     ]);
+
+                    // 线上要把视频先存储在本地，才能够去获取封面图
+                    $video_path = storage_path('app/public/' . md5($params['video_path']) . '.mp4');
+                    file_put_contents($video_path, file_get_contents($params['video_path']));
                 }
 
-                $video                    = $ffmpeg->open($params['video_path']);
+                $video                    = $ffmpeg->open($video_path);
                 // 获取封面图
-                $video->frame(TimeCode::fromSeconds(1))->save(storage_path('app/public/' . $params['dynamic_images']));
+                $video->frame(TimeCode::fromSeconds(1))->save($cover_image_path);
                 $video_info = $video->getFormat();
                 // 存储视频的时长与大小：时长直接向上取整
                 $params['video_info'] = ['duration' => round($video_info->get('duration')), 'size' => $video_info->get('size')];
 
+                // 本地封面图上传第三方
+                $params['dynamic_images'] = CosService::getInstance()->put(file_get_contents($cover_image_path), $image_name);
+
+                // 删除封面图
+                @unlink($cover_image_path);
+
+                // 删除视频
+                if (env('APP_ENV') != 'local'){
+                    @unlink($video_path);
+                }
                 break;
             case 3: // 相册
                 if ( !isset($params['dynamic_title']) || empty($params['dynamic_title'])) {

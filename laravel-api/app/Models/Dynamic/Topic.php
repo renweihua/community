@@ -103,6 +103,6 @@ class Topic extends Model
      */
     public static function getDetaultTopicId(): int
     {
-        return self::where('is_default', 1)->value('topic_id', 0);
+        return (int)self::where('is_default', 1)->value('topic_id', 0);
     }
 }
