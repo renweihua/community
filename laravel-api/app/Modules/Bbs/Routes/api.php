@@ -226,6 +226,8 @@ Route::prefix('')->middleware([
         Route::get('about_us', 'WebSitesController@aboutUs');
         // Banner图
         Route::get('banners', 'WebSitesController@banners');
+        // 友情链接
+        Route::get('friendlinks', 'WebSitesController@friendlinks');
         // 检测APP版本是否升级
         Route::get('check_app_version', 'WebSitesController@checkAppVersion');
 

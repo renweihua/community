@@ -4,6 +4,7 @@ namespace App\Modules\Bbs\Http\Controllers;
 
 use App\Models\Dynamic\Dynamic;
 use App\Models\System\Banner;
+use App\Models\System\Friendlink;
 use App\Models\System\StartDiagram;
 use App\Models\AppVersion;
 use Illuminate\Http\JsonResponse;
@@ -50,6 +51,17 @@ class WebSitesController extends BbsController
     public function banners(): JsonResponse
     {
         $lists = Banner::getBannersByWeb();
+        return $this->successJson($lists);
+    }
+
+    /**
+     * 友情链接
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function friendlinks(): JsonResponse
+    {
+        $lists = Friendlink::getFriendlinksByWeb();
         return $this->successJson($lists);
     }
 
