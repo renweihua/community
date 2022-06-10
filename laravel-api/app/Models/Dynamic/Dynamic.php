@@ -2,6 +2,7 @@
 
 namespace App\Models\Dynamic;
 
+use App\Constants\DynamicCacheKeys;
 use App\Elasticsearch\IndexConfigurators\DynamicIndexConfigurator;
 use App\Models\Model;
 use App\Models\User\UserFollowFan;
@@ -13,7 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 // use Laravel\Scout\Searchable;
-use ScoutElastic\Searchable;
+// use ScoutElastic\Searchable;
 
 /**
  * App\Models\Dynamic\Dynamic
@@ -88,56 +89,54 @@ use ScoutElastic\Searchable;
  */
 class Dynamic extends Model
 {
-
     use Filterable;
 
-    use Searchable;
+    // use Searchable;
+    //
+    // protected $indexConfigurator = DynamicIndexConfigurator::class;
 
-
-    protected $indexConfigurator = DynamicIndexConfigurator::class;
-
-    /**
-    * 指定索引
-    * 搜索的type
-    *
-    * @return string
-    */
-    public function searchableAs()
-    {
-        return 'dynamic_index_test';
-    }
-
-   /**
-    * 设置导入索引的数据字段
-    * @return array
-    */
-   public function toSearchableArray()
-   {
-       return [
-           'dynamic_id' => $this->dynamic_id,
-           'dynamic_title'   => $this->dynamic_title,
-           'dynamic_content' => $this->dynamic_content,
-           'dynamic_created_time'   => $this->created_time,
-       ];
-   }
-
-    /**
-    * 指定 搜索索引中存储的唯一ID
-    * @return mixed
-    */
-    public function getScoutKey()
-    {
-       return $this->dynamic_id;
-    }
-
-    /**
-    * 指定 搜索索引中存储的唯一ID的键名
-    * @return string
-    */
-    public function getScoutKeyName()
-    {
-       return $this->primaryKey;
-    }
+   //  /**
+   //  * 指定索引
+   //  * 搜索的type
+   //  *
+   //  * @return string
+   //  */
+   //  public function searchableAs()
+   //  {
+   //      return 'dynamic_index_test';
+   //  }
+   //
+   // /**
+   //  * 设置导入索引的数据字段
+   //  * @return array
+   //  */
+   // public function toSearchableArray()
+   // {
+   //     return [
+   //         'dynamic_id' => $this->dynamic_id,
+   //         'dynamic_title'   => $this->dynamic_title,
+   //         'dynamic_content' => $this->dynamic_content,
+   //         'dynamic_created_time'   => $this->created_time,
+   //     ];
+   // }
+   //
+   //  /**
+   //  * 指定 搜索索引中存储的唯一ID
+   //  * @return mixed
+   //  */
+   //  public function getScoutKey()
+   //  {
+   //     return $this->dynamic_id;
+   //  }
+   //
+   //  /**
+   //  * 指定 搜索索引中存储的唯一ID的键名
+   //  * @return string
+   //  */
+   //  public function getScoutKeyName()
+   //  {
+   //     return $this->primaryKey;
+   //  }
 
     protected $primaryKey = 'dynamic_id';
     protected $is_delete  = 0;
@@ -147,9 +146,15 @@ class Dynamic extends Model
     {
         parent::boot();
 
+        // 更新一下`话题`缓存
+        $updateTopicsCache = function($dynamic){
+            Topic::clearTopicsCache();
+        };
+
         // 新增与删除动态时，调用会员的统计缓存字段
-        $saveContent = function (self $dynamic) {
+        $saveContent = function ($dynamic) use ($updateTopicsCache){
             $dynamic->userInfo->refreshCache();
+            $updateTopicsCache($dynamic);
         };
 
         static::created($saveContent);
@@ -163,6 +168,10 @@ class Dynamic extends Model
 
             // $content->dynamic_content = Purifier::clean($content->dynamic_content);
         });
+
+        static::saved($updateTopicsCache);
+
+        static::updated($updateTopicsCache);
 
         // static::saved(function ($content) {
         //     \dispatch(new FetchContentMentions($content));
@@ -413,7 +422,7 @@ class Dynamic extends Model
                         }
                     ]);
                 },
-                'userOtherLogin' => function($query) use($login_user_id){
+                'userOtherLogin' => function($query){
                     $query->select(['user_id', 'qq_info', 'weibo_info', 'github_info']);
                 },
                 'topic'
