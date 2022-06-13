@@ -369,7 +369,7 @@ class AuthService extends Service
      */
     public function logout($token)
     {
-        Redis::connection('token')->client()->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
+        UserLoginRedisService::getInstance()->deleteUserToken($token);
         return true;
     }
 

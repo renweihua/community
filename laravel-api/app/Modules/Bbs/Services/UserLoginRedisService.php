@@ -44,6 +44,11 @@ class UserLoginRedisService extends Service
         return UserAuthEncryptionService::getInstance()->encryption($cache);
     }
 
+    public static function decryptUserToken(string $token)
+    {
+        return UserAuthEncryptionService::getInstance()->decrypt($token);
+    }
+
     /**
      * 保存登录会员的Token
      *
@@ -65,6 +70,22 @@ class UserLoginRedisService extends Service
 
         // 进行登录的T欧肯数量检测
         $this->checkMax($user_info['user_id']);
+    }
+
+    // 删除指定Token
+    public function deleteUserToken(string $token): void
+    {
+        $this->redis->del(UserCacheKeys::USER_LOGIN_TOKEN . $token);
+        /**
+         * 删除 会员的token列表中的键
+         */
+        $user = $this->decryptUserToken($token);
+        if ($user){
+            // 已失效的Token，删除会员下发记录的Token
+            $list_user_token = UserCacheKeys::USER_LOGIN_TOKEN_LIST . $user->user_id;
+            // 已失效的Token，删除会员下发记录的Token
+            $this->redis->lRem($list_user_token, $token);
+        }
     }
 
     /**
