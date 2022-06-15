@@ -48,6 +48,6 @@ class TopicFollow extends Model
 
     public function topic()
     {
-        return $this->hasOne(Topic::class, 'topic_id', $this->primaryKey);
+        return $this->hasOne(Topic::class, 'topic_id', 'topic_id');
     }
 }
