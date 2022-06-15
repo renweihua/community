@@ -501,7 +501,7 @@ class DynamicService extends Service
         if ( !$comment->dynamic || $comment->dynamic->is_delete == 1 || $comment->dynamic->is_check != 1) {
             throw new Exception('动态已失效！');
         }
-        if ($comment->author_id != $login_user_id) {
+        if ($comment->user_id != $login_user_id) {
             throw new Exception('您无权删除！');
         }
         DB::beginTransaction();
