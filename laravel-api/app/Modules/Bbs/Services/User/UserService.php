@@ -130,7 +130,7 @@ class UserService extends Service
 
         $login_user->user_name = $user_name;
         $login_user->save();
-        
+
         $login_user->userOtherlogin()->update(['change_account' => 0]);
 
         $this->setError('登录账户更改成功！');
@@ -154,30 +154,35 @@ class UserService extends Service
         return true;
     }
 
-    protected function getMailCode($login_user)
+    protected function getMailCode($email)
     {
-        return Cache::get(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);
+        return Cache::get(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $email);
     }
 
     /**
-     * 更改登录密码时，通过邮箱：发送验证码
+     * 找回密码时，通过邮箱：发送验证码
      *
      * @param $login_user
      *
      * @return bool
      */
-    public function sendMailByChangePassword($login_user): bool
+    public function sendMailByChangePassword($email): bool
     {
-        if ($this->getMailCode($login_user)){
+        $login_user = User::where('user_email', $email)->first();
+        if (!$login_user){
+            throw new Exception('邮箱账户不存在，请检查您输入的邮箱地址！');
+        }
+
+        if ($this->getMailCode($email)){
             return true;
         }
         $code = random_verification_code(6);
 
         // 验证码存入缓存：默认1小时
-        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email, $code, UserCacheKeys::KEY_DEFAULT_TIMEOUT);
+        Cache::put(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $email, $code, UserCacheKeys::KEY_DEFAULT_TIMEOUT);
 
         // 发送邮件
-        Mail::to($login_user->user_email)->send(
+        Mail::to($email)->send(
             new ChangePasswordEmail($code)
         );
 
@@ -193,17 +198,22 @@ class UserService extends Service
      *
      * @return bool
      */
-    public function checkEmailCodeAndUpdatePassword($login_user, string $code, string $password): bool
+    public function checkEmailCodeAndUpdatePassword($email, string $code, string $password): bool
     {
-        $cache = $this->getMailCode($login_user);
+        $cache = $this->getMailCode($email);
         if (!$cache){
             throw new Exception('验证码已过期，请重新发送！');
         }
         if ($cache != $code){
             throw new Exception('验证码不匹配！');
         }
+        $login_user = User::where('user_email', $email)->first();
+        if (!$login_user){
+            throw new Exception('邮箱账户不存在，请检查您输入的邮箱地址！');
+        }
+
         // 删除缓存
-        Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $login_user->user_email);
+        Cache::forget(UserCacheKeys::CHANGE_PASSWORD_EMAIL_CODE . $email);
 
         // 更改登录密码
         $login_user->password = $password;

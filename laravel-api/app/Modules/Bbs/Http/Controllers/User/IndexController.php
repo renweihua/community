@@ -119,9 +119,9 @@ class IndexController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendMailByChangePassword(): JsonResponse
+    public function sendMailByChangePassword(Request $request): JsonResponse
     {
-        $this->service->sendMailByChangePassword($this->getLoginUser());
+        $this->service->sendMailByChangePassword($request->email);
         return $this->successJson([], '邮件已发送，请及时查看！');
     }
 
@@ -136,7 +136,7 @@ class IndexController extends BbsController
     {
         $request->validated();
 
-        $this->service->checkEmailCodeAndUpdatePassword($this->getLoginUser(), $request->input('code'), $request->input('password'));
+        $this->service->checkEmailCodeAndUpdatePassword($request->email, $request->input('code'), $request->input('password'));
 
         return $this->successJson([], $this->service->getError());
     }
