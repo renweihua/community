@@ -80,9 +80,9 @@ Route::prefix('')->middleware([
             // 更改邮箱激活
             Route::get('/activate.changeEamil/{verify_token}', 'UserController@activeChangeEmail')->name('user.activate_change_email');
             // 指定会员的粉丝
-            Route::get('/{user_id}/fans', 'UserController@fans');
+            Route::get('/{user_uuid}/fans', 'UserController@fans');
             // 指定会员的关注
-            Route::get('/{user_id}/follows', 'UserController@follows');
+            Route::get('/{user_uuid}/follows', 'UserController@follows');
         });
 
         /**

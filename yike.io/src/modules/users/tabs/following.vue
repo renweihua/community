@@ -51,7 +51,7 @@
         methods: {
             async followings (page = 1) {
                 let lists = await this.$http.get(
-                    `user/${this.$parent.user.user_id}/follows?page=${page}`
+                    `user/${this.$parent.user.user_info.user_uuid}/follows?page=${page}`
                 )
                 this.paginator_data = lists.data;
                 this.users = lists.data.data;
