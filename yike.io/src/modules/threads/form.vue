@@ -209,7 +209,7 @@
 
                         this.$router.replace({
                             name: 'threads.show',
-                            params: {dynamic_id: response.data}
+                            params: {dynamic_id: response.data.dynamic_id}
                         });
 
                         this.clearCache();
