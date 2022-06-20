@@ -33,13 +33,13 @@ class FriendService extends Service
     /**
      * 我的关注
      *
-     * @param  int  $login_user_id
+     * @param  int  $user_id
      *
      * @return array
      */
-    public function getFollows(int $login_user_id)
+    public function getFollows(int $user_id)
     {
-        $lists = UserFollowFan::where('user_id', $login_user_id)
+        $lists = UserFollowFan::where('user_id', $user_id)
                               ->with([
                                   'friendInfo' => function($query) {
                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid');
@@ -59,13 +59,14 @@ class FriendService extends Service
     /**
      * 我的粉丝
      *
-     * @param  int  $login_user_id
+     * @param  int  $user_id
      *
      * @return array
      */
-    public function getFans(int $login_user_id)
+    public function getFans($login_user_id, int $user_id = 0)
     {
-        $lists = UserFollowFan::where('friend_id', $login_user_id)
+        if (!$user_id) $user_id = $login_user_id;
+        $lists = UserFollowFan::where('friend_id', $user_id)
                               ->with([
                                   'userInfo' => function($query) use($login_user_id) {
                                       $query->select('user_id', 'nick_name', 'user_avatar', 'user_sex', 'basic_extends', 'user_uuid')->with([

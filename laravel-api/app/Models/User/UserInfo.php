@@ -399,4 +399,9 @@ class UserInfo extends Model
         $list = self::whereIn('user_id', $ids)->select('user_id', 'nick_name', 'user_avatar', 'user_sex')->get()->toArray();
         return array_column($list, null, 'user_id');
     }
+
+    public static function getIdByUuid($user_uuid): int
+    {
+        return (int)self::where('user_uuid', $user_uuid)->value('user_id', 0);
+    }
 }

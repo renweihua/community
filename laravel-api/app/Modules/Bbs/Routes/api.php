@@ -80,9 +80,13 @@ Route::prefix('')->middleware([
             // 更改邮箱激活
             Route::get('/activate.changeEamil/{verify_token}', 'UserController@activeChangeEmail')->name('user.activate_change_email');
             // 指定会员的粉丝
-            Route::get('/{user_id}/fans', 'UserController@fans');
+            Route::get('/{user_uuid}/fans', 'UserController@fans');
             // 指定会员的关注
-            Route::get('/{user_id}/follows', 'UserController@follows');
+            Route::get('/{user_uuid}/follows', 'UserController@follows');
+            // 找回登录密码时，通过邮箱：发送验证码
+            Route::post('/forget-password-by-email', 'User\IndexController@sendMailByChangePassword');
+            // 通过邮箱更改登录密码
+            Route::post('/change-password-by-email', 'User\IndexController@changePassByEmail');
         });
 
         /**
@@ -164,10 +168,6 @@ Route::prefix('')->middleware([
             Route::patch('/change-username', 'IndexController@changeUserName');
             // 更改登录密码
             Route::put('/changePassword', 'IndexController@changePassword');
-            // 更改登录密码时，通过邮箱：发送验证码
-            Route::get('/sendMailByChangePassword', 'IndexController@sendMailByChangePassword')->withoutMiddleware(CheckAuth::class);
-            // 通过邮箱更改登录密码
-            Route::put('/changePassByEmail', 'IndexController@changePassByEmail');
             // 更改邮箱，发送邮件
             Route::post('/changeEmail', 'IndexController@changeEmail');
             // 指定会员是否在黑名单：前期先测试数据返回

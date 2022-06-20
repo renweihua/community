@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     getNodes () {
-        this.$http.get('topics?all=true').then(({ data }) => {
+        this.$http.get('topics').then(({ data }) => {
             this.nodes = data;
         });
     }

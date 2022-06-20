@@ -2,7 +2,9 @@
 
 namespace App\Modules\Bbs\Http\Controllers;
 
+use App\Exceptions\Exception;
 use App\Models\User\User;
+use App\Models\User\UserInfo;
 use App\Modules\Bbs\Http\Requests\UserIdRequest;
 use App\Modules\Bbs\Services\DynamicService;
 use App\Modules\Bbs\Services\User\FriendService;
@@ -140,8 +142,12 @@ class UserController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function follows($user_id, FriendService $service) : JsonResponse
+    public function follows($user_uuid, FriendService $service) : JsonResponse
     {
+        $user_id = UserInfo::getIdByUuid($user_uuid);
+        if (!$user_id){
+            throw new Exception('未找到会员');
+        }
         $lists = $service->getFollows($user_id);
         return $this->successJson($lists);
     }
@@ -151,9 +157,13 @@ class UserController extends BbsController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function fans($user_id, FriendService $service) : JsonResponse
+    public function fans($user_uuid, FriendService $service) : JsonResponse
     {
-        $lists = $service->getFans($user_id);
+        $user_id = UserInfo::getIdByUuid($user_uuid);
+        if (!$user_id){
+            throw new Exception('未找到会员');
+        }
+        $lists = $service->getFans($this->getLoginUserId(), $user_id);
         return $this->successJson($lists);
     }
 }
