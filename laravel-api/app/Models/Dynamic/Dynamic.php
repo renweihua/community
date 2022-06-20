@@ -153,7 +153,7 @@ class Dynamic extends Model
 
         // 新增与删除动态时，调用会员的统计缓存字段
         $saveContent = function ($dynamic) use ($updateTopicsCache){
-            $dynamic->userInfo->refreshCache();
+            if (isset($dynamic->userInfo)) $dynamic->userInfo->refreshCache();
             $updateTopicsCache($dynamic);
         };
 
