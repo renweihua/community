@@ -75,7 +75,8 @@ class Topic extends Model
 
     public static function clearTopicsCache()
     {
-        Cache::tags('topics')->flush();
+        // tags('topics')->
+        Cache::flush();
     }
 
     // 获取所有的话题列表
@@ -83,9 +84,11 @@ class Topic extends Model
     {
         $key = 'topics:limit:' . $limit;
         if ($force){
-            Cache::tags('topics')->delete($key);
+            // tags('topics')->
+            Cache::delete($key);
         }
-        return Cache::tags('topics')->remember($key, Carbon::now()->addDays(7 + rand(0, 7)), function () use ($limit){
+        // tags('topics')->
+        return Cache::remember($key, Carbon::now()->addDays(7 + rand(0, 7)), function () use ($limit){
             $build = Topic::getInstance();
             if ($limit > 0) {
                 $build = $build->limit($limit);
