@@ -52,7 +52,7 @@ export default {
         this.$message.success('欢迎回来~');
         this.$router.push({ name: 'home' });
       } catch (e) {
-        // this.$message.error(e);
+      
       }
     }
   }
