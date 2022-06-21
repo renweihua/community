@@ -40,11 +40,11 @@ export default {
   },
   methods: {
     handleUploaded (response) {
-      if (!response['path_url']) {
+      if (!response.data.path_url) {
         this.$message.error(response.error);
       }
 
-      this.url = this.newUrl = response.path_url;
+      this.url = this.newUrl = response.data.path_url;
     },
     async submit () {
       await this.$http
