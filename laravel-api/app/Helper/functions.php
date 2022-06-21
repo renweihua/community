@@ -1,5 +1,16 @@
 <?php
 
+if ( !function_exists('check_ip_range') ) {
+    // 检测IP是否在区间范围内
+    function check_ip_range($ip, $ip_one, $ip_two = false)
+    {
+        if (!$ip_two) {
+            return $ip_one === $ip;
+        }
+        return ip2long($ip_one) * -1 >= ip2long($ip) * -1 && ip2long($ip_two) * -1 <= ip2long($ip) * -1;
+    }
+}
+
 if ( !function_exists('make_file_folder_name') ) {
     /**
      * 文件夹的名称命名

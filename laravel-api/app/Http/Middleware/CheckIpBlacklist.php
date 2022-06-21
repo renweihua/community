@@ -38,6 +38,16 @@ class CheckIpBlacklist
             }
         }
 
+        // IP段访问限制（上海腾讯云的IP）
+        if (check_ip_range($ip, '175.24.211.1', '175.24.214.255')){
+            $msg = '您的IP段已被禁止访问！';
+            if ($request->expectsJson()) {
+                return $this->errorJson($msg);
+            }else{
+                abort(403, $msg);
+            }
+        }
+
 
         return $next($request);
     }
