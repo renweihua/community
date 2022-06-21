@@ -2,7 +2,7 @@
   <div class="boxes">
     <div class="box">
       <div class="box-heading border-bottom">
-        <h5>µÚÈı·½ÕË»§°ó¶¨</h5>
+        <h5>ç¬¬ä¸‰æ–¹è´¦æˆ·ç»‘å®š</h5>
       </div>
       <form class="w-100">
         <div class="form-group row d-flex align-items-center">
@@ -14,8 +14,8 @@
           <div class="col-sm-10 pl-0">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text" v-if="!user_otherlogin.qq_info || !user_otherlogin.qq_info.pc_openid" @click="oauth('qq')">Á¢¼´°ó¶¨</span>
-                <span class="input-group-text" v-else>ÒÑ°ó¶¨</span>
+                <span class="input-group-text" v-if="!user_otherlogin.qq_info || !user_otherlogin.qq_info.pc_openid" @click="oauth('qq')">ç«‹å³ç»‘å®š</span>
+                <span class="input-group-text" v-else>å·²ç»‘å®š</span>
               </div>
             </div>
           </div>
@@ -23,14 +23,14 @@
         <div class="form-group row d-flex align-items-center">
           <label for="twitter-form" class="col-sm-2 col-form-label">
             <button type="button" class="text-16 btn btn-twitter btn-icon mx-auto">
-              <github-icon/>
+            	<github-icon/>
             </button>
           </label>
           <div class="col-sm-10 pl-0">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text" v-if="!user_otherlogin.github_info || !user_otherlogin.github_info.pc_openid" @click="oauth('github')">Á¢¼´°ó¶¨</span>
-                <span class="input-group-text" v-else>ÒÑ°ó¶¨</span>
+                <span class="input-group-text" v-if="!user_otherlogin.github_info || !user_otherlogin.github_info.pc_openid" @click="oauth('github')">ç«‹å³ç»‘å®š</span>
+                <span class="input-group-text" v-else>å·²ç»‘å®š</span>
               </div>
             </div>
           </div>
@@ -38,14 +38,14 @@
         <div class="form-group row d-flex align-items-center">
           <label for="twitter-form" class="col-sm-2 col-form-label">
             <button type="button" class="text-16 btn btn-twitter btn-icon mx-auto">
-              <img src="/icon/weibo.ico" />
+            	<img src="/icon/weibo.ico" />
             </button>
           </label>
           <div class="col-sm-10 pl-0">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text" v-if="!user_otherlogin.weibo_info || !user_otherlogin.weibo_info.pc_openid" @click="oauth('weibo')">Á¢¼´°ó¶¨</span>
-                <span class="input-group-text" v-else>ÒÑ°ó¶¨</span>
+                <span class="input-group-text" v-if="!user_otherlogin.weibo_info || !user_otherlogin.weibo_info.pc_openid" @click="oauth('weibo')">ç«‹å³ç»‘å®š</span>
+                <span class="input-group-text" v-else>å·²ç»‘å®š</span>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@ import GithubIcon from '$icons/GithubCircle';
 
 export default {
   components: {
-    QqIcon,
+  	QqIcon,
     GithubIcon
   },
   data () {
@@ -74,7 +74,7 @@ export default {
     this.user_otherlogin = this.$user().user_otherlogin;
   },
   methods: {
-  oauth (platform) {
+	oauth (platform) {
       let iOSChrome =
         /Mobile/.test(navigator.userAgent) && /CriOS/.test(navigator.userAgent)
       let url = '/oauth/oauth-redirect/' + platform
