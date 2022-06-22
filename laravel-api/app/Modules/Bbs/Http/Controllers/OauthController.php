@@ -12,7 +12,7 @@ class OauthController extends BbsController
     // http://community.cnpscy.com/oauth/github
     public function redirect($oauth): JsonResponse
     {
-        return $this->successJson(Socialite::driver($oauth)->redirect()->getTargetUrl());
+        return $this->successJson(['url' => Socialite::driver($oauth)->redirect()->getTargetUrl()]);
     }
 
     /**

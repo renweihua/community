@@ -14,7 +14,7 @@ export default {
         this.$http.get('oauth/' + platform).then(res => {
             console.log(res.data);
             if(res.status){
-                window.location = res.data;
+                window.location = res.data.url;
             }else{
                 // this.$message.error(res.msg);
             }
