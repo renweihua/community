@@ -317,7 +317,7 @@ if ( !function_exists('get_cover_by_video') ) {
     }
 }
 
-if ( !function_exists('get_last_month') ) {
+if ( !function_exists('is_windows') ) {
     /**
      * 是否为windows系统
      *
@@ -328,6 +328,26 @@ if ( !function_exists('get_last_month') ) {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? true : false;
     }
 }
+
+    /**
+     * 是否为mac系统
+     *
+     * @return bool
+     */
+    function is_mac() : bool
+    {
+        return preg_match('/macintosh|mac os x/i', getenv("HTTP_USER_AGENT")) ? true : false;
+    }
+
+    /**
+     * 是否为linux系统
+     *
+     * @return bool
+     */
+    function is_linux() : bool
+    {
+        return strtoupper(PHP_OS) === 'LINUX' ? true : false;
+    }
 
 if ( !function_exists('get_last_month') ) {
     /**

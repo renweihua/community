@@ -87,18 +87,26 @@ class SystemInfo
             $this->memory['buffer_cache'] = 0;
             $this->memory['used'] = round($this->memory['total'] - $this->memory['free'], 2);
             $this->memory['usage_ratio'] = round(round($this->memory['used'] / $this->memory['total'], 4) * 100, 2);
-        } else {
-            //内存使用率
-            $fp = popen('top -b -n 2 | grep -E "(Mem)"', "r");
-            $rs = fread($fp, 1024);
-            $sys_info = explode("\n", $rs);
-            $mem_info = explode(",", $sys_info[2]); //内存占有量 数组
+        }else{
+            if (is_mac()){
+                $this->memory['total'] = '';
+                $this->memory['used'] = round(memory_get_usage() / 1024, 2);
+                $this->memory['buffer_cache'] = 0;
+                $this->memory['free'] = '';
+                $this->memory['usage_ratio'] = ''; //百分比
+            }else{
+                //内存使用率
+                $fp = popen('top -b -n 2 | grep -E "(Mem)"', "r");
+                $rs = fread($fp, 1024);
+                $sys_info = explode("\n", $rs);
+                $mem_info = explode(",", $sys_info[2]); //内存占有量 数组
 
-            $this->memory['total'] = round(trim(trim($mem_info[0], 'KiB Mem : '), ' total'), 0);
-            $this->memory['used'] = round(trim(trim($mem_info[2], 'used')), 0);
-            $this->memory['buffer_cache'] = trim(trim($mem_info[3], 'buff/cache'));
-            $this->memory['free'] = round(trim(trim($mem_info[1], 'free')), 0);
-            $this->memory['usage_ratio'] = round($this->memory['used'] / $this->memory['total'], 4) * 100; //百分比
+                $this->memory['total'] = round((float)(trim(trim($mem_info[0], 'KiB Mem : '), ' total')), 0);
+                $this->memory['used'] = round((float)(trim(trim($mem_info[2], 'used'))), 0);
+                $this->memory['buffer_cache'] = (float)(trim(trim($mem_info[3], 'buff/cache')));
+                $this->memory['free'] = round((float)(trim(trim($mem_info[1], 'free'))), 0);
+                $this->memory['usage_ratio'] = round($this->memory['used'] / $this->memory['total'], 4) * 100; //百分比
+            }
         }
         return $this->memory;
     }
