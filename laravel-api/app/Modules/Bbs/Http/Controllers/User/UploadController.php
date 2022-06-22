@@ -30,9 +30,9 @@ class UploadController extends BbsController
 
         $file = $request->file($file);
 
-        $file_url = CosService::getInstance()->put($file);
+        $path_url = CosService::getInstance()->put($file);
 
-        return $this->successJson($file_url, '上传成功', ['path_url' => $file_url]);
+        return $this->successJson(compact('path_url'), '上传成功', ['path_url' => $path_url]);
     }
 
     /**

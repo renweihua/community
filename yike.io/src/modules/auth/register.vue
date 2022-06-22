@@ -154,13 +154,13 @@ export default {
       this.submit();
     },
     async submit () {
+      
       try {
         await this.attemptRegister(this.$data);
 
         this.$message.warning('注册成功，请先验证你邮箱地址！');
         this.$router.push({ name: 'home' });
       } catch (e) {
-          this.$message.error(e);
       }
     }
   }

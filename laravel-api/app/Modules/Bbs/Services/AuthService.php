@@ -71,7 +71,7 @@ class AuthService extends Service
             switch ((int)$user_info['register_type']) {
                 case 0: // 用户名注册
                     if ( $userInstance->getUserByName($params['user_name']) ) {
-                        throw new Exception('该账户已被注册！');
+                        throw new FailException('该`用户名`已被注册！');
                     }
                     $user_data['user_name'] = $params['user_name'];
                     break;
@@ -103,6 +103,12 @@ class AuthService extends Service
                     }
 
                     $user_data['user_email'] = $user_email;
+                    if (isset($params['user_name'])){
+                        $user_data['user_name'] = $params['user_name'];
+                        if ( $userInstance->getUserByName($user_data['user_name']) ) {
+                            throw new FailException('该`用户名`已被注册！');
+                        }
+                    }
                     break;
                 case 2: // 手机号注册
                     if ( !is_mobile($params['user_name']) ) {

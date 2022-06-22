@@ -65,13 +65,17 @@ export default http => {
                     Message.error(content);
                     break
                 case 403:
-                    Message.error(error.response.data.message || '您没有此操作权限！');
+                    Message.error(error.response.data.msg || '您没有此操作权限！');
+                    break
+                case 400:
+                    Message.error(error.response.data.msg);
                     break
                 case 401:
+                    Message.error(error.response.data.msg || 'UNAUTHORIZED！');
                     if (window.location.pathname !== '/auth/login') {
                         window.location.href = '/auth/login';
                     }
-                    break
+                    break;
                 case 500:
                 case 501:
                 case 503:
