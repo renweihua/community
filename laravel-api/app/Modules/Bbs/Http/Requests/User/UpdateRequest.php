@@ -14,7 +14,7 @@ class UpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'nick_name' => 'required|max:10',
+            'nick_name' => 'required|max:20',
             'user_sex' => 'required',
             'user_avatar' => 'required',
         ];
