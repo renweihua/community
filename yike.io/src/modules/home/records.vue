@@ -4,6 +4,15 @@
         <div class="box-body">
             <!-- Another update -->
             <vue-timeline-update
+              :date="new Date('2022-06-25 16:41:00')"
+              title="v1.3.4 - 小丑路人社区"
+              description="Hyperf服务端上线"
+              category="v1.3.4"
+              icon="code"
+              color="yellow"
+            />
+
+            <vue-timeline-update
               :date="new Date('2022-01-12 20:12:04')"
               title="v1.3.0 - 小丑路人社区"
               description="登录账户绑定第三方账户。"
