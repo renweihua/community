@@ -1,14 +1,35 @@
 # 汉服荟社区
 
-## [小丑路人社区](https://bbs.cnpscy.com)（PC端）
+### [小丑路人社区](https://bbs.cnpscy.com)（PC端）
 ![首页](./demo/pc.png)
 
-## 仿汉服荟（移动端）
+### 仿汉服荟（移动端）
 ![首页](./demo/home.png)
 ![聊天](./demo/chat.png)
 ![签到](./demo/sign.png)
 
-#### 软件架构
+
+### 介绍
+
+<p align="center">
+    <a href="https://gitee.com/clown-passerby-community/community" target="_blank">laravel-小丑路人社区</a>
+</p>
+<p align="center">
+    <img src="https://gitee.com/clown-passerby-community/community/badge/star.svg?theme=dark" />
+    <img src="https://gitee.com/clown-passerby-community/community/badge/fork.svg?theme=dark" />
+    <img src="https://svg.hamm.cn/badge.svg?key=License&value=Apache-2.0&color=da4a00" />
+</p>
+
+<p align="center">
+    <a href="https://gitee.com/clown-passerby-community/hyperf-community" target="_blank">Hyperf-小丑路人社区</a>
+</p>
+<p align="center">
+    <img src="https://gitee.com/clown-passerby-community/hyperf-community/badge/star.svg?theme=dark" />
+    <img src="https://gitee.com/clown-passerby-community/hyperf-community/badge/fork.svg?theme=dark" />
+    <img src="https://svg.hamm.cn/badge.svg?key=License&value=Apache-2.0&color=da4a00" />
+</p>
+
+### 软件架构
 软件架构说明（各自文件下有对应的安装流程介绍）
 1. laravel APi
 	* 编程语言：`PHP7.3+`
