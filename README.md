@@ -9,7 +9,7 @@
 ![签到](./demo/sign.png)
 
 
-### 介绍
+### Hyperf与Laravel版
 
 <p align="center">
     <a href="https://gitee.com/clown-passerby-community/community" target="_blank">laravel-小丑路人社区</a>
