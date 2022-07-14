@@ -2,7 +2,7 @@
   <notification :notification="notification">
     <template slot="title">
       订阅了你的文章
-      <router-link :to="{name: 'threads.show', params: {id: notification.data.thread_id}}">
+      <router-link :to="{name: 'threads.show', params: {dynamic_id: notification.relation.dynamic_id}}">
         《{{ notification.data.thread_title }}》
       </router-link>
     </template>
