@@ -376,7 +376,8 @@
             },
             async confirmRole() {
                 // 当前角色选中的菜单栏目列表
-                this.role.menu_ids = this.$refs.tree.getCheckedKeys();
+                // this.$refs.tree.getHalfCheckedKeys() 返回选中子节点的父节点的key
+                this.role.menu_ids = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
 
                 this.$refs['role'].validate(async (valid) => {
                     if (valid) {
