@@ -72,7 +72,9 @@ export default http => {
                     break
                 case 401:
                     Message.error(error.response.data.msg || 'UNAUTHORIZED！');
-                    if (window.location.pathname !== '/auth/login') {
+                    let path = window.location.pathname;
+                    // 401，首页也无需跳转
+                    if (path !== '/' && path !== '/auth/login') {
                         window.location.href = '/auth/login';
                     }
                     break;
